@@ -1,7 +1,7 @@
 <template>
 	<div class='index'>
 		<div class='thread_sorting'>
-			<div class='button'>New</div>
+			<div class='button button--orange'>New</div>
 			<div class='button'>Most active</div>
 			<div class='button'>No replies</div>
 		</div>
