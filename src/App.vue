@@ -53,6 +53,11 @@
 	$color__gray--darker: #E0E0E0;
 	$color__gray--darkest: #BDBDBD;
 
+	$color__orange--primary: #F57C00;
+	$color__orange--darker: #EF6C00;
+	$color__orange--darkest: #de621c;
+
+
 	@mixin text($family: $font--role-default, $size: 1rem, $weight: 300) {
 		font-family: $family;
 		font-size: $size;
@@ -139,6 +144,12 @@
 
 		@at-root #{&}--borderless {
 			border: 0;
+		}
+
+		@at-root #{&}--orange {
+			border-color: $color__orange--primary;
+			&:hover { border-color: $color__orange--darker; }
+			&:active { border-color: $color__orange--darkest; }
 		}
 	}
 
