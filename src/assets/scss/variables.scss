@@ -1,0 +1,49 @@
+
+$font--role-default: 'Lato', sans-serif;
+$font--role-emphasis: 'Montserrat', sans-serif;
+
+$color__text--primary: rgba(0, 0, 0, 0.87);
+$color__text--secondary: rgba(0, 0, 0, 0.54);
+
+$color__lightgray--primary: #F5F5F5;
+$color__lightgray--darker: #EEEEEE;
+$color__lightgray--darkest: #E0E0E0;
+
+$color__gray--primary: #EEEEEE;
+$color__gray--darker: #E0E0E0;
+$color__gray--darkest: #BDBDBD;
+
+$color__orange--primary: #F57C00;
+$color__orange--darker: #EF6C00;
+$color__orange--darkest: #de621c;
+
+
+@mixin text($family: $font--role-default, $size: 1rem, $weight: 300) {
+	font-family: $family;
+	font-size: $size;
+	font-weight: $weight;
+}
+
+@mixin optional-at-root($sel) {
+	@at-root #{if(not &, $sel, selector-append(&, $sel))} {
+		@content;
+	}
+}
+
+@mixin placeholder {
+	@include optional-at-root('::-webkit-input-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root(':-moz-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root('::-moz-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root(':-ms-input-placeholder') {
+		@content;
+	}
+}
