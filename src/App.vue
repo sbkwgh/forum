@@ -18,6 +18,9 @@
 			</div>
 		</header>
 		<router-view></router-view>
+		<footer class='footer'>
+			Forum.
+		</footer>
 	</div>
 </template>
 
@@ -82,14 +85,19 @@
 			@content;
 		}
 	}
-	html, body {
+	html {
 		width: 100%;
-		height: 100%;
 		margin: 0;
 		padding: 0;
+		position: relative;
+		min-height: 100%;
 
 		color: $color__text--primary;
 		@include text;	
+	}
+
+	body {
+		margin: 0 0 2rem;
 	}
 
 	* {
@@ -163,5 +171,18 @@
 				@include text;
 			}
 		}
+	}
+
+	.footer {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		text-align: center;
+		color: $color__text--secondary;
+		font-size: 0.85rem;
+		height: 1rem;
+		margin-bottom: 0.2rem;
+		border-top: thin solid $color__lightgray--darkest;
+		width: 100%;
 	}
 </style>
