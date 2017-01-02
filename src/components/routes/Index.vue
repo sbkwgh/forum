@@ -3,10 +3,10 @@
 		<modal-window :showModal='showModal'>
 			<tab-view :tabs='["Sign up", "Login"]'>
 				<div slot='first'>
-					text
+					text 1
 				</div>
 				<div slot='second'>
-					text
+					text 2
 				</div>
 			</tab-view>
 		</modal-window>
