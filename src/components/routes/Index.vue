@@ -1,9 +1,14 @@
 <template>
 	<div class='index'>
 		<modal-window :showModal='showModal'>
-			<slot>
-				
-			</slot>
+			<tab-view :tabs='["Sign up", "Login"]'>
+				<div slot='first'>
+					text
+				</div>
+				<div slot='second'>
+					text
+				</div>
+			</tab-view>
 		</modal-window>
 
 
@@ -46,12 +51,14 @@
 <script>
 	import SelectButton from '../SelectButton'
 	import ModalWindow from '../ModalWindow'
+	import TabView from '../TabView'
 
 	export default {
 		name: 'index',
 		components: {
 			SelectButton,
-			ModalWindow
+			ModalWindow,
+			TabView
 		},
 		data () {
 			var categories = [
