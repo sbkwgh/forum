@@ -1,6 +1,6 @@
 <template>
 	<div class='index'>
-		<modal-window showModal='true'></modal-window>
+		<modal-window :showModal='showModal'></modal-window>
 
 
 		<div class='thread_sorting'>
@@ -59,6 +59,7 @@
 
 			return {
 				selected: null,
+				showModal: true,
 				categories
 			}
 		}
