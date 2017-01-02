@@ -1,13 +1,7 @@
 <template>
 	<div class='modal_window__overlay' :class='{"modal_window--show": internalShowModal}' @click.self='hideModal'>
 		<div class='modal_window' :class='{"modal_window--show": internalShowModal}'>
-			Placeholder content<br/>
-			Placeholder content<br/>
-			Placeholder content<br/>
-			Placeholder content<br/>
-			Placeholder content<br/>
-			Placeholder content<br/>
-			Placeholder content<br/>
+			<slot></slot>
 		</div>
 	</div>
 </template>

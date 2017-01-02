@@ -1,6 +1,10 @@
 <template>
 	<div class='index'>
-		<modal-window :showModal='showModal'></modal-window>
+		<modal-window :showModal='showModal'>
+			<slot>
+				
+			</slot>
+		</modal-window>
 
 
 		<div class='thread_sorting'>
