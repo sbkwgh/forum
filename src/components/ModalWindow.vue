@@ -1,6 +1,6 @@
 <template>
-	<div class='modal_window__overlay'>
-		<div class='modal_window'>
+	<div class='modal_window__overlay' :class='{"modal_window--show": showModal}'>
+		<div class='modal_window' :class='{"modal_window--show": showModal}'>
 			Placeholder content<br/>
 			Placeholder content<br/>
 			Placeholder content<br/>
@@ -35,9 +35,32 @@
 		position: absolute;
 		top: 0;
 		left: 0;
+
+		opacity: 0;
+		pointer-events: none;
+		transition:  opacity 0.3s;
+
+		@at-root #{&}--show {
+			opacity: 1;
+			pointer-events: all;
+			transition: opacity 0.3s;
+		}
 	}
 	.modal_window {
 		width: 20rem;
 		background-color: #fff;
+		margin-top: -3rem;
+		opacity: 0;
+		pointer-events: none;
+
+		transition: margin-top 0.3s, opacity 0.3s;
+
+		@at-root #{&}--show {
+			margin-top: 0;
+			opacity: 1;
+			pointer-events: all;
+
+			transition: all 0.3s;
+		}
 	}
 </style>
