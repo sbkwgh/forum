@@ -95,6 +95,9 @@
 			border-color: $color__gray--darkest;
 		}
 
+		@at-root #{&}__icon {
+		}
+
 		@at-root #{&}--borderless {
 			border: 0;
 		}
