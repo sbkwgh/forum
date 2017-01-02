@@ -1,5 +1,8 @@
 <template>
 	<div class='index'>
+		<modal-window showModal='true'></modal-window>
+
+
 		<div class='thread_sorting'>
 			<select-button style='margin-right: 1rem' v-model='selected' :options='categories'></select-button>
 			<div class='button button--orange'>New</div>
@@ -38,11 +41,13 @@
 
 <script>
 	import SelectButton from '../SelectButton'
+	import ModalWindow from '../ModalWindow'
 
 	export default {
 		name: 'index',
 		components: {
-			SelectButton
+			SelectButton,
+			ModalWindow
 		},
 		data () {
 			var categories = [
