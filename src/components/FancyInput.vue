@@ -46,6 +46,7 @@
 
 	.fancy_input {
 		position: relative;
+		margin-top: 0.25rem;
 
 		@at-root #{&}__placeholder {
 			position: absolute;
