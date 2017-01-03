@@ -7,7 +7,7 @@
 			{{placeholder}}
 		</div>
 		<input
-			type='text'
+			v-bind:type='type || "text"'
 			class='input'
 			v-bind:value='value'
 			v-bind:style='{width: width || "10rem"}'
@@ -21,7 +21,7 @@
 <script>
 	export default {
 		name: 'FancyInput',
-		props: ['value', 'placeholder', 'width'],
+		props: ['value', 'placeholder', 'width', 'type'],
 		data () {
 			return {
 				active: false
@@ -47,6 +47,7 @@
 	.fancy_input {
 		position: relative;
 		margin-top: 0.25rem;
+		margin-bottom: 0.5rem;
 
 		@at-root #{&}__placeholder {
 			position: absolute;
