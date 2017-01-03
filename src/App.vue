@@ -3,12 +3,7 @@
 		<modal-window v-model='loginSignupModalVisible'>
 			<tab-view :tabs='["Sign up", "Login"]'>
 				<div slot='first'>
-					text 1<br/>
-					text 1<br/>
-					text 1<br/>
-					text 1<br/>
-					text 1<br/>
-					text 1<br/>
+					<fancy-input v-model='signup.username' placeholder='Username'></fancy-input>
 				</div>
 				<div slot='second'>
 					text 2<br/>
@@ -46,19 +41,24 @@ window.MODAL_TAB = 0;
 
 	import ModalWindow from './components/ModalWindow'
 	import TabView from './components/TabView'
+	import FancyInput from './components/FancyInput'
 
 	export default {
 		name: 'app',
 		components: {
 			ModalWindow,
-			TabView
+			TabView,
+			FancyInput
 		},
 		data () {
 			return {
 				meta: {
 					name: 'Forum'
 				},
-				loginSignupModalVisible: false
+				signup: {
+					username: '',
+				},
+				loginSignupModalVisible: true
 			}
 		},
 		methods: {
