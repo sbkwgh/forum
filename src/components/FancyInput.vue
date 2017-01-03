@@ -1,7 +1,7 @@
 <template>
 	<div class='fancy_input'>
 		<div class='fancy_input__placeholder'>{{placeholder}}</div>
-		<input type='text' v-bind:value='value' v-on:input='updateValue($event.target.value)'>
+		<input type='text' class='input' v-bind:value='value' v-on:input='updateValue($event.target.value)'>
 	</div>
 </template>
 

@@ -144,6 +144,20 @@ window.MODAL_TAB = 0;
 		}
 	}
 
+	.input {
+		border: 0.125rem solid $color__gray--primary;
+		@include text;
+		padding: 0.25rem;
+		outline: none;
+
+		&:hover {
+			border-color: $color__gray--darker;
+		}
+		&:focus {
+			border-color: $color__gray--darkest;
+		}
+	}
+
 	.search {
 		border: 0.125rem solid $color__gray--primary;
 
