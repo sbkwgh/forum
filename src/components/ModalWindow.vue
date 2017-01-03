@@ -1,6 +1,6 @@
 <template>
 	<div class='modal_window__overlay' :class='{"modal_window--show": internalShowModal}' @click.self='hideModal'>
-		<div class='modal_window' :class='{"modal_window--show": internalShowModal}'>
+		<div class='modal_window' :class='{"modal_window--show": internalShowModal}' v-on:hideModal='hideModal'>
 			<slot></slot>
 		</div>
 	</div>
