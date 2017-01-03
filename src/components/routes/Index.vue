@@ -1,17 +1,5 @@
 <template>
 	<div class='index'>
-		<modal-window :showModal='showModal'>
-			<tab-view :tabs='["Sign up", "Login"]'>
-				<div slot='first'>
-					text 1
-				</div>
-				<div slot='second'>
-					text 2
-				</div>
-			</tab-view>
-		</modal-window>
-
-
 		<div class='thread_sorting'>
 			<select-button style='margin-right: 1rem' v-model='selected' :options='categories'></select-button>
 			<div class='button button--orange'>New</div>
@@ -50,14 +38,12 @@
 
 <script>
 	import SelectButton from '../SelectButton'
-	import ModalWindow from '../ModalWindow'
 	import TabView from '../TabView'
 
 	export default {
 		name: 'index',
 		components: {
 			SelectButton,
-			ModalWindow,
 			TabView
 		},
 		data () {
@@ -70,7 +56,6 @@
 
 			return {
 				selected: null,
-				showModal: true,
 				categories
 			}
 		}

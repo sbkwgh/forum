@@ -1,5 +1,25 @@
 <template>
 	<div id='app'>
+		<modal-window :showModal='showLoginSignupModal'>
+			<tab-view :tabs='["Sign up", "Login"]'>
+				<div slot='first'>
+					text 1<br/>
+					text 1<br/>
+					text 1<br/>
+					text 1<br/>
+					text 1<br/>
+					text 1<br/>
+				</div>
+				<div slot='second'>
+					text 2<br/>
+					text 2<br/>
+					text 2<br/>
+					text 2<br/>
+					text 2<br/>
+					text 2<br/>
+				</div>
+			</tab-view>
+		</modal-window>
 		<header class='header'>
 			<div class='header__group'>
 				<div class='logo'>{{meta.name}}</div>
@@ -22,15 +42,21 @@
 </template>
 
 <script>
+	import ModalWindow from './components/ModalWindow'
+	import TabView from './components/TabView'
+
 	export default {
 		name: 'app',
 		components: {
+			ModalWindow,
+			TabView
 		},
 		data () {
 			return {
 				meta: {
 					name: 'Forum'
-				}
+				},
+				showLoginSignupModal: true
 			}
 		}
 	}
