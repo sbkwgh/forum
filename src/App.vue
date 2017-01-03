@@ -2,17 +2,47 @@
 	<div id='app'>
 		<modal-window v-model='loginSignupModalVisible'>
 			<tab-view :tabs='["Sign up", "Login"]'>
-				<div slot='first'>
-					<fancy-input v-model='signup.username' placeholder='Username'></fancy-input>
-				</div>
-				<div slot='second'>
+				<template slot='first'>
+					<p style='margin-top: 0;'>
+						Sign up to create and post in threads.
+						<br/>It only takes a few seconds
+					</p>
+					{{signup.username}}
+					<fancy-input
+						v-model='signup.username'
+						placeholder='Username'
+						width='100%'
+					>
+					</fancy-input>
+					<fancy-input
+						v-model='signup.password'
+						placeholder='Password'
+						type='password'
+						width='100%'
+					>
+					</fancy-input>
+					<fancy-input
+						v-model='signup.confirmPassword'
+						placeholder='Confirm password'
+						type='password'
+						width='100%'
+					>
+					</fancy-input>
+					<button class='button'>
+						Sign up
+					</button>
+					<button class='button' @click='cancel'>
+						Cancel
+					</button>
+				</template>
+				<template slot='second'>
 					text 2<br/>
 					text 2<br/>
 					text 2<br/>
 					text 2<br/>
 					text 2<br/>
 					text 2<br/>
-				</div>
+				</template>
 			</tab-view>
 		</modal-window>
 		<header class='header'>
@@ -57,8 +87,10 @@ window.MODAL_TAB = 0;
 				},
 				signup: {
 					username: '',
+					password: '',
+					confirmPassword: ''
 				},
-				loginSignupModalVisible: true
+				loginSignupModalVisible: false
 			}
 		},
 		methods: {
@@ -66,6 +98,8 @@ window.MODAL_TAB = 0;
 				//TODO: show different tab depending on button
 
 				this.loginSignupModalVisible = true;
+			},
+			cancel () {
 			}
 		}
 	}
