@@ -48,7 +48,7 @@
 				background-color: $color__gray--darker;
 			}
 			&:active {
-				background-color: $color__gray--darkest;
+				background-color: $color__gray--darker;
 			}
 
 			@at-root #{&}--selected {
