@@ -10,7 +10,9 @@
 		name: 'FancyInput',
 		props: ['value', 'placeholder'],
 		data () {
-			active: false
+			return {
+				active: false
+			}
 		},
 		methods: {
 			updateValue (val) {
