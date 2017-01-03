@@ -1,6 +1,6 @@
 <template>
 	<div id='app'>
-		<modal-window :showModal='showLoginSignupModal'>
+		<modal-window :showModal='loginSignupModalVisible'>
 			<tab-view :tabs='["Sign up", "Login"]'>
 				<div slot='first'>
 					text 1<br/>
@@ -25,10 +25,10 @@
 				<div class='logo'>{{meta.name}}</div>
 			</div>
 			<div class='header__group'>
-				<div class='button button--green'>
+				<div class='button button--green' @click='showLoginSignupModal'>
 					Sign up
 				</div>
-				<div class='button'>
+				<div class='button' @click='showLoginSignupModal'>
 					Login
 				</div>
 				<div class='search' tabindex='0'>
@@ -56,7 +56,12 @@
 				meta: {
 					name: 'Forum'
 				},
-				showLoginSignupModal: true
+				loginSignupModalVisible: false
+			}
+		},
+		methods: {
+			showLoginSignupModal () {
+				this.loginSignupModalVisible = true;
 			}
 		}
 	}
