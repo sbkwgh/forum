@@ -1,6 +1,6 @@
 <template>
-	<div class='modal_window__overlay' :class='{"modal_window--show": internalShowModal}' @click.self='hideModal'>
-		<div class='modal_window' :class='{"modal_window--show": internalShowModal}' v-on:hideModal='hideModal'>
+	<div class='modal_window__overlay' :class='{"modal_window--show": showModal}' @click.self='hideModal'>
+		<div class='modal_window' :class='{"modal_window--show": showModal}' v-on:hideModal='hideModal'>
 			<slot></slot>
 		</div>
 	</div>
@@ -9,20 +9,21 @@
 <script>
 	export default {
 		name: 'ModalWindow',
-		props: ['showModal'],
+		props: ['value'],
 		data () {
 			return {
-				internalShowModal: this.showModal
+				showModal: this.value
 			}
 		},
 		methods: {
 			hideModal () {
-				this.internalShowModal = false;
+				this.showModal = false;
+				this.$emit('input', this.showModal)
 			}
 		},
 		mounted () {
-			this.$watch('showModal', function(newVal) {
-				this.internalShowModal = newVal;
+			this.$watch('value', function(newVal) {
+				this.showModal = newVal;
 			});
 		}
 	}

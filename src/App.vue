@@ -1,6 +1,6 @@
 <template>
 	<div id='app'>
-		<modal-window :showModal='loginSignupModalVisible'>
+		<modal-window v-model='loginSignupModalVisible'>
 			<tab-view :tabs='["Sign up", "Login"]'>
 				<div slot='first'>
 					text 1<br/>
