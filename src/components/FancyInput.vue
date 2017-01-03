@@ -1,14 +1,27 @@
 <template>
 	<div class='fancy_input'>
-		<div class='fancy_input__placeholder'>{{placeholder}}</div>
-		<input type='text' class='input' v-bind:value='value' v-on:input='updateValue($event.target.value)'>
+		<div
+			class='fancy_input__placeholder'
+			:class='{"fancy_input__placeholder--active": active || value.length}'
+		>
+			{{placeholder}}
+		</div>
+		<input
+			type='text'
+			class='input'
+			v-bind:value='value'
+			v-bind:style='{width: width || "10rem"}'
+			v-on:input='updateValue($event.target.value)'
+			@focus='addActive'
+			@blur='removeActive'
+		>
 	</div>
 </template>
 
 <script>
 	export default {
 		name: 'FancyInput',
-		props: ['value', 'placeholder'],
+		props: ['value', 'placeholder', 'width'],
 		data () {
 			return {
 				active: false
@@ -17,11 +30,37 @@
 		methods: {
 			updateValue (val) {
 				this.$emit('input', val);
+			},
+			addActive () {
+				this.active = true;
+			},
+			removeActive () {
+				this.active = false;
 			}
 		}
 	}
 </script>
 
 <style lang='scss' scoped>
-	
+	@import '../assets/scss/variables.scss';
+
+	.fancy_input {
+		position: relative;
+
+		@at-root #{&}__placeholder {
+			position: absolute;
+			top: 0.35rem;
+			background-color: #fff;
+			left: 0.35rem;
+			color: $color__gray--darkest;
+			pointer-events: none;
+			transition: top 0.2s, font-size 0.2s;
+
+			@at-root #{&}--active {
+				top: -0.5rem;
+				font-size: 0.75rem;
+				transition: top 0.2s, font-size 0.2s;
+			}
+		}
+	}
 </style>
