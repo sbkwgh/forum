@@ -25,10 +25,10 @@
 				<div class='logo'>{{meta.name}}</div>
 			</div>
 			<div class='header__group'>
-				<div class='button button--green' @click='showLoginSignupModal'>
+				<div class='button button--green' @click='showLoginSignupModal("signup")'>
 					Sign up
 				</div>
-				<div class='button' @click='showLoginSignupModal'>
+				<div class='button' @click='showLoginSignupModal("login")'>
 					Login
 				</div>
 				<div class='search' tabindex='0'>
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+window.MODAL_TAB = 0;
+
 	import ModalWindow from './components/ModalWindow'
 	import TabView from './components/TabView'
 
@@ -60,7 +62,9 @@
 			}
 		},
 		methods: {
-			showLoginSignupModal () {
+			showLoginSignupModal (tab) {
+				//TODO: show different tab depending on button
+
 				this.loginSignupModalVisible = true;
 			}
 		}
