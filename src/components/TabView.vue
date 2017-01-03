@@ -64,6 +64,7 @@
 		}
 		@at-root #{&}__content {
 			background-color: #fff;
+			padding: 1rem;
 		}
 	}
 </style>
