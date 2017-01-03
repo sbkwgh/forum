@@ -29,6 +29,8 @@
 </script>
 
 <style lang='scss' scoped>
+	@import '../assets/scss/variables.scss';
+
 	.modal_window__overlay {
 		width: 100%;
 		height: 100%;
@@ -55,6 +57,7 @@
 		background-color: #fff;
 		margin-top: -3rem;
 		opacity: 0;
+		border: 0.125rem solid $color__gray--darkest;
 		pointer-events: none;
 
 		transition: margin-top 0.3s, opacity 0.3s;
