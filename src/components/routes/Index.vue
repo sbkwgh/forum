@@ -29,6 +29,9 @@
 					<td>{{thread.category}}</td>
 					<td>{{thread.replies}}</td>
 				</tr>
+				<tr class='thread' v-if='!threads.length' colspan='4'>
+					<td colspan='4' class='thread--empty'>No threads or posts.</td>
+				</tr>
 			</tbody>
 		</div>
 	</div>
@@ -116,6 +119,20 @@
 				font-weight: 400;
 				padding-bottom: 0.25rem;
 				border-bottom: thin solid $color__lightgray--darkest;
+			}
+		}
+
+		@at-root #{&}--empty {
+			height: 5rem;
+			text-align: center;
+			font-size: 2rem;
+			user-select: none;
+			cursor: default;
+			transition: none;
+
+			&:hover {
+				transition: none;
+				background-color: #fff;
 			}
 		}
 
