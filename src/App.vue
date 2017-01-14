@@ -2,7 +2,7 @@
 	<div id='app'>
 		<modal-window name='account'>
 			<tab-view :tabs='["Sign up", "Login"]' name="account">
-				<template slot='first'>
+				<template slot='Sign up'>
 					<p style='margin-top: 0;'>
 						Sign up to create and post in threads.
 						<br/>It only takes a few seconds
@@ -34,7 +34,7 @@
 						Cancel
 					</button>
 				</template>
-				<template slot='second'>
+				<template slot='Login'>
 					<p style='margin-top: 0;'>
 						Login to create and post in threads.
 					</p>

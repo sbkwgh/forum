@@ -1,12 +1,22 @@
 <template>
 	<div class='tab_view'>
 		<div class='tab_view__tabs'>
-			<div class='tab_view__tab' :class='{"tab_view__tab--selected": tabIndex === 0}' @click='changeTab(0)'>{{tabs[0]}}</div>
-			<div class='tab_view__tab' :class='{"tab_view__tab--selected": tabIndex === 1}' @click='changeTab(1)'>{{tabs[1]}}</div>
+			<div
+				class='tab_view__tab'
+				v-for='(tab, index) in tabs'
+				:class='{"tab_view__tab--selected": tabIndex === index}'
+				@click='changeTab(index)'
+			>
+				{{tab}}
+			</div>
 		</div>
 		<div class='tab_view__content'>
-			<slot name='first' v-if='tabIndex === 0'></slot>
-			<slot name='second' v-if='tabIndex === 1'></slot>
+			<slot
+				v-for='(tab, index) in tabs'
+				:name='tab'
+				v-if='tabIndex === index'
+			>
+			</slot>
 		</div>
 	</div>
 </template>
