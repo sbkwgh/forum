@@ -7,6 +7,7 @@ import store from './store/index'
 import Index from './components/routes/Index'
 
 Vue.use(VueRouter)
+Vue.use(Vuex)
 
 const router = new VueRouter({
 	routes: [
