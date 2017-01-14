@@ -150,9 +150,17 @@
 		box-sizing: border-box;
 	}
 
+	#app {
+		padding-bottom: 2rem;
+		padding-top: 5rem;
+	}
+
 	.header {
 		width: 100%;
 		padding: 1rem 2rem;
+		position: fixed;
+		top: 0;
+		background-color: #fff;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;

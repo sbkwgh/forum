@@ -33,7 +33,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		position: absolute;
+		position: fixed;
+		z-index: 2;
 		top: 0;
 		left: 0;
 
