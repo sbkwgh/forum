@@ -22,14 +22,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr class='thread'>
-					<td>A thread title here........</td>
+				<tr class='thread' v-for='thread in threads'>
+					<td>{{thread.title}}</td>
 					<td>
-						<div>User</div>
-						<div>0201/2017 10:07</div>
+						<div>{{thread.latestPostUser}}</div>
+						<div>{{thread.latestPostDate}}</div>
 					</td>
-					<td>A category here</td>
-					<td>29</td>
+					<td>{{thread.category}}</td>
+					<td>{{thread.replies}}</td>
 				</tr>
 			</tbody>
 		</div>
