@@ -9,22 +9,16 @@
 <script>
 	export default {
 		name: 'ModalWindow',
-		props: ['value'],
-		data () {
-			return {
-				showModal: this.value
-			}
-		},
+		props: ['name'],
 		methods: {
 			hideModal () {
-				this.showModal = false;
-				this.$emit('input', this.showModal)
+				this.$store.commit('hideModal', this.name);
 			}
 		},
-		mounted () {
-			this.$watch('value', function(newVal) {
-				this.showModal = newVal;
-			});
+		computed: {
+			showModal () {
+				return this.$store.state.modals[this.name];
+			}
 		}
 	}
 </script>

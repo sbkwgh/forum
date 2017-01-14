@@ -1,13 +1,12 @@
 <template>
 	<div id='app'>
-		<modal-window v-model='loginSignupModalVisible'>
-			<tab-view :tabs='["Sign up", "Login"]'>
+		<modal-window name='account'>
+			<tab-view :tabs='["Sign up", "Login"]' name="account">
 				<template slot='first'>
 					<p style='margin-top: 0;'>
 						Sign up to create and post in threads.
 						<br/>It only takes a few seconds
 					</p>
-					{{signup.username}}
 					<fancy-input
 						v-model='signup.username'
 						placeholder='Username'
@@ -28,7 +27,7 @@
 						width='100%'
 					>
 					</fancy-input>
-					<button class='button'>
+					<button class='button' @click='signup'>
 						Sign up
 					</button>
 					<button class='button' @click='cancel'>
@@ -36,24 +35,40 @@
 					</button>
 				</template>
 				<template slot='second'>
-					text 2<br/>
-					text 2<br/>
-					text 2<br/>
-					text 2<br/>
-					text 2<br/>
-					text 2<br/>
+					<p style='margin-top: 0;'>
+						Login to create and post in threads.
+					</p>
+					<fancy-input
+						v-model='login.username'
+						placeholder='Username'
+						width='100%'
+					>
+					</fancy-input>
+					<fancy-input
+						v-model='login.password'
+						placeholder='Password'
+						type='password'
+						width='100%'
+					>
+					</fancy-input>
+					<button class='button' @click='signup'>
+						Log in
+					</button>
+					<button class='button' @click='cancel'>
+						Cancel
+					</button>
 				</template>
 			</tab-view>
 		</modal-window>
 		<header class='header'>
 			<div class='header__group'>
-				<div class='logo'>{{meta.name}}</div>
+				<div class='logo'>{{metaName}}</div>
 			</div>
 			<div class='header__group'>
-				<div class='button button--green' @click='showLoginSignupModal("signup")'>
+				<div class='button button--green' @click='showAccountModal(0)'>
 					Sign up
 				</div>
-				<div class='button' @click='showLoginSignupModal("login")'>
+				<div class='button' @click='showAccountModal(1)'>
 					Login
 				</div>
 				<div class='search' tabindex='0'>
@@ -67,11 +82,11 @@
 </template>
 
 <script>
-window.MODAL_TAB = 0;
-
 	import ModalWindow from './components/ModalWindow'
 	import TabView from './components/TabView'
 	import FancyInput from './components/FancyInput'
+
+	import mapGetters from 'vuex'
 
 	export default {
 		name: 'app',
@@ -82,24 +97,36 @@ window.MODAL_TAB = 0;
 		},
 		data () {
 			return {
-				meta: {
-					name: 'Forum'
-				},
 				signup: {
 					username: '',
 					password: '',
 					confirmPassword: ''
 				},
-				loginSignupModalVisible: false
+				login: {
+					username: '',
+					password: ''
+				}
+			}
+		},
+		computed: {
+			metaName () {
+				return this.$store.state.meta.name
 			}
 		},
 		methods: {
-			showLoginSignupModal (tab) {
-				//TODO: show different tab depending on button
-
-				this.loginSignupModalVisible = true;
+			showAccountModal (index) {
+				this.$store.commit('showModal', 'account');
+				this.$store.commit({
+					type: 'setTab',
+					tab: 'account',
+					index: index
+				});
 			},
 			cancel () {
+				this.$store.commit('hideModal', 'account');
+			},
+			signup () {
+				this.$store.commit('hideModal', 'account');
 			}
 		}
 	}
