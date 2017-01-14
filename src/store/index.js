@@ -20,6 +20,9 @@ export default new Vuex.Store({
 		tabs: {
 			account: 0
 		},
+		selectOptions: {
+			filterOptions: 'NEW'
+		},
 		modals: {
 			account: false
 		}
@@ -27,6 +30,9 @@ export default new Vuex.Store({
 	mutations: {
 		setTab (state, payload) {
 			state.tabs[payload.tab] = payload.index;
+		},
+		setSelectOptions (state, payload) {
+			state.selectOptions[payload.name] = payload.value;
 		},
 		showModal (state, modal) {
 			state.modals[modal] = true;

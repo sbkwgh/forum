@@ -2,9 +2,7 @@
 	<div class='index'>
 		<div class='thread_sorting'>
 			<select-button style='margin-right: 1rem' v-model='selectedCategory' :options='categories'></select-button>
-			<div class='button button--orange'>New</div>
-			<div class='button'>Most active</div>
-			<div class='button'>No replies</div>
+			<select-options :options='options' name='filterOptions'></select-options>
 		</div>
 		<table class='threads'>
 			<colgroup>
@@ -39,16 +37,23 @@
 <script>
 	import SelectButton from '../SelectButton'
 	import TabView from '../TabView'
+	import SelectOptions from '../SelectOptions'
 
 	export default {
 		name: 'index',
 		components: {
 			SelectButton,
-			TabView
+			TabView,
+			SelectOptions
 		},
 		data () {
 			return {
-			
+				options: [
+					{name: 'New', value: 'NEW'},
+					{name: 'Most active', value: 'MOST_ACTIVE'},
+					{name: 'No replies', value: 'NO_REPLIES'}
+				],
+				selected: null
 			}
 		},
 		computed: {

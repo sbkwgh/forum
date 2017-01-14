@@ -19,7 +19,7 @@
 <script>
 	export default {
 		name: 'SelectButton',
-		props: ['options', 'value'],
+		props: ['options', 'value', 'name'],
 		data () {
 			var self = this;
 			var index = 0;
