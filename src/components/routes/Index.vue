@@ -53,7 +53,7 @@
 		},
 		computed: {
 			threads () {
-				return this.$store.state.index.threads;
+				return this.$store.getters.filteredThreads;
 			},
 			categories () {
 				return this.$store.state.meta.categories
