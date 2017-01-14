@@ -8,7 +8,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		meta: {
-			name: 'Forum'
+			name: 'Forum',
+			categories: [
+				{name: 'All categories'},
+				{name: 'category'},
+				{name: 'category'},
+				{name: 'category'},
+				{name: 'category'}
+			]
 		},
 		tabs: {
 			account: 0

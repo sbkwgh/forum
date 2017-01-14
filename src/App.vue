@@ -62,7 +62,7 @@
 		</modal-window>
 		<header class='header'>
 			<div class='header__group'>
-				<div class='logo'>{{metaName}}</div>
+				<div class='logo'>{{name}}</div>
 			</div>
 			<div class='header__group'>
 				<div class='button button--green' @click='showAccountModal(0)'>
@@ -109,7 +109,7 @@
 			}
 		},
 		computed: {
-			metaName () {
+			name () {
 				return this.$store.state.meta.name
 			}
 		},

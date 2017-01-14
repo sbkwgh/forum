@@ -47,21 +47,16 @@
 			TabView
 		},
 		data () {
-			var categories = [
-				{ name: 'All categories', value: '1' },
-				{ name: 'Photography', value: '1' },
-				{ name: 'Baking', value: '1' },
-				{ name: 'Maps', value: '1' }
-			];
-
 			return {
-				selected: null,
-				categories
+				selectedCategory: null
 			}
 		},
 		computed: {
 			threads () {
 				return this.$store.state.index.threads;
+			},
+			categories () {
+				return this.$store.state.meta.categories
 			}
 		}
 	}
