@@ -26,7 +26,7 @@
 					<td>{{thread.title}}</td>
 					<td>
 						<div>{{thread.latestPostUser}}</div>
-						<div>{{thread.latestPostDate}}</div>
+						<div>{{thread.latestPostDate | formatDate('time|date', ' - ') }}</div>
 					</td>
 					<td>{{thread.category}}</td>
 					<td>{{thread.replies}}</td>
