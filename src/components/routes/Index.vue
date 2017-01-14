@@ -58,6 +58,11 @@
 				selected: null,
 				categories
 			}
+		},
+		computed: {
+			threads () {
+				return this.$store.state.index.threads;
+			}
 		}
 	}
 </script>

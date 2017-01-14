@@ -1,4 +1,20 @@
-const state = {}
+const state = {
+	threads: [
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30},
+		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), replies: 30}
+	]
+}
 
 const getters = {}
 

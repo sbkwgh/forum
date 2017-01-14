@@ -27,5 +27,8 @@ export default new Vuex.Store({
 		hideModal (state, modal) {
 			state.modals[modal] = false;
 		}
+	},
+	modules: {
+		index
 	}
 })
