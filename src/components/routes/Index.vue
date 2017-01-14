@@ -1,7 +1,7 @@
 <template>
 	<div class='index'>
 		<div class='thread_sorting'>
-			<select-button style='margin-right: 1rem' v-model='selected' :options='categories'></select-button>
+			<select-button style='margin-right: 1rem' v-model='selectedCategory' :options='categories'></select-button>
 			<div class='button button--orange'>New</div>
 			<div class='button'>Most active</div>
 			<div class='button'>No replies</div>
@@ -48,7 +48,7 @@
 		},
 		data () {
 			return {
-				selectedCategory: null
+			
 			}
 		},
 		computed: {
@@ -57,6 +57,14 @@
 			},
 			categories () {
 				return this.$store.state.meta.categories
+			},
+			selectedCategory: {
+				get () {
+					return this.$store.state.index.selectedCategory;
+				},
+				set (category) {
+					this.$store.commit('selectCategory', category);
+				}
 			}
 		}
 	}
