@@ -21,12 +21,16 @@
 		name: 'SelectButton',
 		props: ['options', 'value'],
 		data () {
-			//If value prop is an item of options prop,
-			//use that as the default option
-			var index = this.options.indexOf(this.value);
+			var self = this;
+			var index = 0;
 
-			//Otherwise just use the first item
-			if(index === -1) index = 0;
+			if(this.value !== null) {
+				this.options.forEach((option, i) => {
+					if(option.value === self.value) {
+						index = i;
+					}
+				})
+			}
 
 			return {
 				selectedIndex: index,
@@ -41,7 +45,7 @@
 				this.selectedIndex = index;
 				this.hideMenu = true;
 
-				this.$emit('input', this.options[index]);
+				this.$emit('input', this.options[index].value);
 			}
 		}
 	}

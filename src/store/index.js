@@ -10,11 +10,11 @@ export default new Vuex.Store({
 		meta: {
 			name: 'Forum',
 			categories: [
-				{name: 'All categories'},
-				{name: 'category'},
-				{name: 'category'},
-				{name: 'category'},
-				{name: 'category'}
+				{name: 'All categories', value: 'ALL'},
+				{name: 'Technology', value: 'TECHNOLOGY'},
+				{name: 'Food', value: 'FOOD'},
+				{name: 'Programming', value: 'PROGRAMMING'},
+				{name: 'Books', value: 'BOOKS'}
 			]
 		},
 		tabs: {

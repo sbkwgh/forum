@@ -1,5 +1,5 @@
 const state = {
-	selectedCategory: 0,
+	selectedCategory: 'ALL',
 	threads: [
 		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'Category', replies: 30},
 		{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'Category', replies: 30},
