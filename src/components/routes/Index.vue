@@ -107,7 +107,8 @@
 		}
 
 		td, th {
-			padding: 0 0.5rem;
+			padding: 0.3rem 0.5rem;
+			border-bottom: solid thin $color__lightgray--primary;
 		}
 
 		@at-root #{&}--header {
