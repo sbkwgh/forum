@@ -1,5 +1,5 @@
 <template>
-	<div class='index'>
+	<div class='route_container'>
 		<div class='thread_sorting'>
 			<select-button style='margin-right: 1rem' v-model='selectedCategory' :options='categories'></select-button>
 			<select-options :options='options' name='filterOptions'></select-options>
@@ -85,12 +85,6 @@
 
 <style lang='scss' scoped>
 	@import '../../assets/scss/variables.scss';
-
-	.index {
-		width: 80%;
-		margin: 0 auto;
-		margin-top: 2rem;
-	}
 
 	.thread_sorting {
 		margin-bottom: 1rem;

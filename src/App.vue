@@ -150,6 +150,12 @@
 		box-sizing: border-box;
 	}
 
+	.route_container {
+		width: 80%;
+		margin: 0 auto;
+		margin-top: 2rem;
+	}
+
 	#app {
 		padding-bottom: 2rem;
 		padding-top: 5rem;
