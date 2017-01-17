@@ -1,11 +1,17 @@
 <template>
 	<div class='route_container'>
+		<input-editor></input-editor>
 	</div>
 </template>
 
 <script>
+	import InputEditor from '../InputEditor'
+
 	export default {
-		name: 'Thread'
+		name: 'Thread',
+		components: {
+			InputEditor
+		}
 	}
 </script>
 
