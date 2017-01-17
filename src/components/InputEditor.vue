@@ -1,12 +1,26 @@
 <template>
 	<div class='input_editor'>
-		<modal-window name='thread_editor--link'></modal-window>
+		<modal-window name='thread_editor--link'>
+			<div style='padding: 1rem;'>
+				<p style='margin-top: 0;'>
+					Enter the web address in the input box below
+				</p>
+				<fancy-input placeholder='Web address for link' width='100%' v-model='linkURL'></fancy-input>
+				<fancy-input placeholder='Text for link' width='100%' v-model='linkText'></fancy-input>
+				<button class='button' @click='addLink'>
+					OK
+				</button>
+				<button class='button' @click='hideModal("thread_editor--link")'>
+					Cancel
+				</button>
+			</div>
+		</modal-window>
 		<modal-window name='thread_editor--picture'></modal-window>
 		<div class='input_editor__format_bar'>
 			<div class='input_editor__format_button'>B</div>
 			<div class='input_editor__format_button'>I</div>
 			<div class='input_editor__spacer'></div>
-			<div class='input_editor__format_button'><span class='fa fa-link'></span></div>
+			<div class='input_editor__format_button' @click='showModal("thread_editor--link")'><span class='fa fa-link'></span></div>
 			<div class='input_editor__format_button'><span class='fa fa-code'></span></div>
 			<div class='input_editor__format_button'><span class='fa fa-picture-o'></span></div>
 		</div>
@@ -16,11 +30,30 @@
 
 <script>
 	import ModalWindow from './ModalWindow'
+	import FancyInput from './FancyInput'
 
 	export default {
 		name: 'InputEditor',
 		components: {
-			ModalWindow
+			ModalWindow,
+			FancyInput
+		},
+		data () {
+			return {
+				linkText: '',
+				linkURL: ''
+			}
+		},
+		methods: {
+			showModal (name) {
+				this.$store.commit('showModal', name);
+			},
+			hideModal (name) {
+				this.$store.commit('hideModal', name);
+			},
+			addLink () {
+				this.$store.commit('hideModal', 'thread_editor--link');
+			}
 		}
 	}
 </script>
