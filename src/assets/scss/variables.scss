@@ -21,6 +21,11 @@ $color__orange--primary: #F57C00;
 $color__orange--darker: #EF6C00;
 $color__orange--darkest: #de621c;
 
+$color__green--primary: rgba(76, 175, 80, 0.86);
+$color__green--darker: #43A047;
+$color__green--darkest: #1B5E20;
+$color__green--darkester: rgba(79, 152, 82, 0.84);
+
 
 @mixin text($family: $font--role-default, $size: 1rem, $weight: 300) {
 	font-family: $family;

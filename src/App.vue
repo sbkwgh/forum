@@ -27,7 +27,7 @@
 						width='100%'
 					>
 					</fancy-input>
-					<button class='button' @click='signup'>
+					<button class='button button--green' @click='signup'>
 						Sign up
 					</button>
 					<button class='button' @click='cancel'>
@@ -51,7 +51,7 @@
 						width='100%'
 					>
 					</fancy-input>
-					<button class='button' @click='signup'>
+					<button class='button button--green' @click='signup'>
 						Log in
 					</button>
 					<button class='button' @click='cancel'>
@@ -216,6 +216,20 @@
 			border-color: $color__orange--primary;
 			&:hover { border-color: $color__orange--darker; }
 			&:active { border-color: $color__orange--darkest; }
+		}
+		@at-root #{&}--green {
+			background-color: $color__green--primary;
+			color: #fff;
+			border-color: $color__green--darker;
+
+			&:hover { 
+				border-color: $color__green--darker;
+				background-color: rgba(75, 171, 79, 0.86);
+			}
+			&:active {
+				border-color: $color__green--darker;
+				background-color: $color__green--darkester;
+			}
 		}
 	}
 
