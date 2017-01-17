@@ -20,7 +20,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr class='thread' v-for='thread in threads'>
+				<tr class='thread' v-for='thread in threads' @click='navigateToThread(thread.slug, thread.id)'>
 					<td>{{thread.title}}</td>
 					<td>
 						<div>{{thread.latestPostUser}}</div>
@@ -73,6 +73,11 @@
 				set (category) {
 					this.$store.commit('selectCategory', category);
 				}
+			}
+		},
+		methods: {
+			navigateToThread (slug, id) {
+				this.$router.push('thread/' + slug + '/' + id);
 			}
 		}
 	}

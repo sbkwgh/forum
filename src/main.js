@@ -4,14 +4,17 @@ import Vuex from 'vuex'
 
 import App from './App'
 import store from './store/index'
+
 import Index from './components/routes/Index'
+import Thread from './components/routes/Thread'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
 const router = new VueRouter({
 	routes: [
-		{ path: '/', component: Index }
+		{ path: '/', component: Index },
+		{ path: '/thread/:slug/:id', component: Thread }
 	],
 	mode: 'history'
 })
