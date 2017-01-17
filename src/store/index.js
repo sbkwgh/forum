@@ -24,7 +24,9 @@ export default new Vuex.Store({
 			filterOptions: 'NEW'
 		},
 		modals: {
-			account: false
+			account: false,
+			'thread_editor--picture': false,
+			'thread_editor--link': false
 		}
 	},
 	mutations: {

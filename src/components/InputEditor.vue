@@ -1,5 +1,7 @@
 <template>
 	<div class='input_editor'>
+		<modal-window name='thread_editor--link'></modal-window>
+		<modal-window name='thread_editor--picture'></modal-window>
 		<div class='input_editor__format_bar'>
 			<div class='input_editor__format_button'>B</div>
 			<div class='input_editor__format_button'>I</div>
@@ -13,8 +15,13 @@
 </template>
 
 <script>
+	import ModalWindow from './ModalWindow'
+
 	export default {
-		name: 'InputEditor'
+		name: 'InputEditor',
+		components: {
+			ModalWindow
+		}
 	}
 </script>
 
