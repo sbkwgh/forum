@@ -13,6 +13,10 @@ $color__gray--primary: #EEEEEE;
 $color__gray--darker: #E0E0E0;
 $color__gray--darkest: #BDBDBD;
 
+$color__darkgray--primary: #757575;
+$color__darkgray--darker: #525252;
+$color__darkgray--darkest: #424242;
+
 $color__orange--primary: #F57C00;
 $color__orange--darker: #EF6C00;
 $color__orange--darkest: #de621c;
@@ -46,4 +50,11 @@ $color__orange--darkest: #de621c;
 	@include optional-at-root(':-ms-input-placeholder') {
 		@content;
 	}
+}
+
+@mixin user-select($select) {
+	@each $pre in -webkit-, -moz-, -ms-, -o- {
+		#{$pre + user-select}: #{$select};
+	}
+	#{user-select}: #{$select};
 }
