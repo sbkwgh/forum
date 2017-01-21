@@ -1,6 +1,6 @@
 <template>
 	<div class='input_editor'>
-		<tab-view :tabs='["Editor", "Preview"]' :name='name'>
+		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
 			<template slot='Editor'>
 				<div class='input_editor__format_bar'>
 					<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
@@ -13,9 +13,7 @@
 				<textarea class='input_editor__input' ref='textarea' :value='editor' @input='setEditor($event.target.value)'></textarea>
 			</template>
 
-			<template slot='Preview'>
-				d
-			</template>
+			<div slot='Preview' v-html='markdownHTML' class='input_editor__markdownHTML'></div>
 		</tab-view>
 
 		<modal-window name='thread_editor--link'>
@@ -44,6 +42,8 @@
 	import FancyInput from './FancyInput'
 	import TabView from './TabView'
 
+	import Marked from 'marked'
+
 	export default {
 		name: 'InputEditor',
 		props: ['name'],
@@ -61,6 +61,9 @@
 		computed: {
 			editor () {
 				return this.$store.state.editors[this.name];
+			},
+			markdownHTML () {
+				return Marked(this.editor);
 			}
 		},
 		methods: {
@@ -153,6 +156,7 @@
 	.input_editor {
 		width: 35rem;
 		border: 0.125rem solid $color__gray--primary;
+		position: relative;
 
 		&:hover {
 			border-color: $color__gray--darker;
@@ -162,31 +166,34 @@
 		}
 
 		@at-root #{&}__format_bar {
-			width: 100%;
+			width: auto;
+			position: absolute;
 			height: 2rem;
-			background-color: $color__darkgray--primary;
+			top: 0.25rem;
+			right: 0;
+			background-color: transparent;
 			display: flex;
 			align-items: center;
-			padding: 0 0.25rem;
+			padding: 0 0.125rem;
 		}
 		@at-root #{&}__format_button {
 			height: 1.5rem;
 			width: 1.5rem;
 			text-align: center;
-			font-weight: bold;
 			line-height: 1.4rem;
 			cursor: pointer;
 			@include user-select(none);
-			color: $color__lightgray--primary;
-			border: thin solid $color__lightgray--primary;
+			@include text($font--role-default, 1rem, 600);
+			color: $color__darkgray--primary;
+			border: thin solid $color__gray--primary;
 			transition: background-color 0.2s;
-			margin: 0 0.2rem;
+			margin: 0;
 
 			&:hover {
-				background-color: $color__darkgray--darker;
+				background-color: $color__gray--darker;
 			}
 			&:active {
-				background-color: $color__darkgray--darkest;
+				background-color: $color__gray--darkest;
 			}
 		}
 
@@ -202,6 +209,13 @@
 			@include text;
 			outline: none;
 			resize: none;
+		}
+
+		@at-root #{&}__markdownHTML {
+			height: 8.2rem;
+			overflow: auto;
+			word-break: break-word;
+			padding: 0.5rem;
 		}
 	}
 </style>
