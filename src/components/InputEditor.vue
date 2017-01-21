@@ -1,26 +1,29 @@
 <template>
 	<div class='input_editor'>
+
 		<modal-window name='thread_editor--link'>
 			<div style='padding: 1rem;'>
 				<p style='margin-top: 0;'>
 					Enter the web address in the input box below
 				</p>
-				<fancy-input placeholder='Web address for link' width='100%' v-model='linkURL'></fancy-input>
 				<fancy-input placeholder='Text for link' width='100%' v-model='linkText'></fancy-input>
+				<fancy-input placeholder='Web address for link' width='100%' v-model='linkURL'></fancy-input>
 				<button class='button' @click='addLink'>
 					OK
 				</button>
-				<button class='button' @click='hideModal("thread_editor--link")'>
+				<button class='button' @click='hideLinkModal'>
 					Cancel
 				</button>
 			</div>
 		</modal-window>
+
 		<modal-window name='thread_editor--picture'></modal-window>
+
 		<div class='input_editor__format_bar'>
 			<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
 			<div class='input_editor__format_button' @click='replaceSelectedText("*", "*")'>I</div>
 			<div class='input_editor__spacer'></div>
-			<div class='input_editor__format_button' @click='showModal("thread_editor--link")'><span class='fa fa-link'></span></div>
+			<div class='input_editor__format_button' @click='showLinkModal("thread_editor--link")'><span class='fa fa-link'></span></div>
 			<div class='input_editor__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
 			<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
 		</div>
@@ -42,8 +45,7 @@
 		data () {
 			return {
 				linkText: '',
-				linkURL: '',
-				textarea: ''
+				linkURL: ''
 			}
 		},
 		computed: {
@@ -52,15 +54,22 @@
 			}
 		},
 		methods: {
-			showModal (name) {
-				this.$store.commit('showModal', name);
+			showImageModal () {
+				this.$store.commit('showModal', 'thread_editor--image');
 			},
-			hideModal (name) {
-				this.$store.commit('hideModal', name);
+			hideImageModal () {
+				this.$store.commit('hideModal', 'thread_editor--image');
 			},
-			addLink () {
+			showLinkModal () {
+				this.$store.commit('showModal', 'thread_editor--link');
+				this.linkText = this.getSelectionData().val;
+			},
+			hideLinkModal () {
 				this.$store.commit('hideModal', 'thread_editor--link');
+				this.linkText = '';
+				this.linkURL = '';
 			},
+
 			setEditor (value) {
 				this.$store.commit({
 					type: 'setEditor',
@@ -84,20 +93,36 @@
 				var selectionData = this.getSelectionData();
 				var el = this.$refs.textarea;
 
-				var updatedTextarea =
+				this.setEditor(
 					this.editor.slice(0, selectionData.start) +
-					before +
-					selectionData.val +
-					after +
-					this.editor.slice(selectionData.end);
-
-				this.setEditor(updatedTextarea);
+					before + selectionData.val + after +
+					this.editor.slice(selectionData.end)
+				);
 				el.focus();
 
 				setTimeout(function() {
 					el.selectionStart = selectionData.start + before.length;
-					el.selectionEnd = selectionData.end + after.length;
-				}, 1)
+					el.selectionEnd = selectionData.end + before.length;
+				}, 1);
+			},
+			addLink () {
+				var linkTextLength = this.linkText.length;
+				var selectionData = this.getSelectionData();
+				var el = this.$refs.textarea;
+
+				this.setEditor(
+					this.editor.slice(0, selectionData.start) +
+					'[' + this.linkText + '](' + this.linkURL + ')' +
+					this.editor.slice(selectionData.end)
+				);
+				el.focus();
+
+				setTimeout(function() {
+					el.selectionStart = selectionData.start + 1;
+					el.selectionEnd = selectionData.start + 1 + linkTextLength;
+				}, 1);
+
+				this.hideLinkModal();
 			},
 			formatCode () {
 				var selectionData = this.getSelectionData();
