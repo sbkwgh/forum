@@ -10,10 +10,22 @@
 					<div class='input_editor__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
 					<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
 				</div>
-				<textarea class='input_editor__input' ref='textarea' :value='editor' @input='setEditor($event.target.value)'></textarea>
+				<textarea
+					class='input_editor__input'
+					ref='textarea'
+					:value='editor'
+					@input='setEditor($event.target.value)'
+					placeholder='Type here - you can format using Markdown'
+				>
+				</textarea>
 			</template>
 
-			<div slot='Preview' v-html='markdownHTML' class='input_editor__markdownHTML'></div>
+			<div slot='Preview' class='input_editor__markdownHTML'>
+				<div v-html='markdownHTML'></div>
+				<div v-if='!editor.trim().length' class='input_editor__markdownHTML--empty'>
+					Nothing to preview
+				</div>
+			</div>
 		</tab-view>
 
 		<modal-window name='thread_editor--link'>
@@ -209,6 +221,15 @@
 			@include text;
 			outline: none;
 			resize: none;
+
+			@include placeholder {
+				@include text($font--role-emphasis, 1rem);
+				display: flex;
+				align-content: center;
+				@include user-select(none);
+				cursor: default;
+				color: $color__gray--darker;
+			}
 		}
 
 		@at-root #{&}__markdownHTML {
@@ -216,6 +237,15 @@
 			overflow: auto;
 			word-break: break-word;
 			padding: 0.5rem;
+
+			@at-root #{&}--empty {
+				@include text($font--role-emphasis, 1rem);
+				display: flex;
+				align-content: center;
+				@include user-select(none);
+				cursor: default;
+				color: $color__gray--darker;
+			}
 		}
 	}
 </style>
