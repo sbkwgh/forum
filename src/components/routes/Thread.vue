@@ -2,7 +2,7 @@
 	<div class='route_container'>
 		<header class='thread_header'>
 			<div class='thread_header__thread_title'>Thread title</div>
-			<button class='button thread_header_header__reply_button'>Reply to thread</button>
+			<button class='button thread_header__reply_button'>Reply to thread</button>
 		</header>
 		<input-editor name='thread'></input-editor>
 		<div class='posts'>
