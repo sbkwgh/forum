@@ -4,7 +4,7 @@
 			<div class='thread_header__thread_title'>{{thread}}</div>
 			<button class='button thread_header__reply_button' @click='showEditor'>Reply to thread</button>
 		</header>
-		<input-editor name='thread' float='true'></input-editor>
+		<input-editor name='thread' float='true' replying='John'></input-editor>
 		<div class='posts'>
 			<div class='post' v-for='post in posts'>
 				<div class='post__meta_data'>

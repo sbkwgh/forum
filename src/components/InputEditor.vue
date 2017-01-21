@@ -7,6 +7,7 @@
 			"input_editor--hidden": !visible
 		}'
 	>
+		<div class='input_editor__replying' v-if='replying'>Replying to <strong>{{replying}}</strong></div>
 		<div class='input_editor__close input_editor__format_button' @click='closeEditor'>&times;</div>
 		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
 			<template slot='Editor'>
@@ -67,7 +68,7 @@
 
 	export default {
 		name: 'InputEditor',
-		props: ['name', 'float'],
+		props: ['name', 'float', 'replying'],
 		components: {
 			ModalWindow,
 			FancyInput,
@@ -218,6 +219,13 @@
 		@at-root #{&}__close {
 			position: absolute;
 			right: 0.3rem;
+			top: 0.5rem;
+		}
+
+		@at-root #{&}__replying {
+			position: absolute;
+			width: 100%;
+			text-align: center;
 			top: 0.5rem;
 		}
 
