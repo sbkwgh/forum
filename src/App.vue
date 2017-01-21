@@ -166,6 +166,7 @@
 		padding: 1rem 2rem;
 		position: fixed;
 		top: 0;
+		z-index: 2;
 		background-color: #fff;
 		display: flex;
 		align-items: center;
