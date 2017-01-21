@@ -1,7 +1,7 @@
 <template>
 	<div id='app'>
 		<modal-window name='account'>
-			<tab-view :tabs='["Sign up", "Login"]' name="account">
+			<tab-view :tabs='["Sign up", "Login"]' name="account" padding='true'>
 				<template slot='Sign up'>
 					<p style='margin-top: 0;'>
 						Sign up to create and post in threads.
