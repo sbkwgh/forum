@@ -2,7 +2,7 @@
 	<div class='route_container'>
 		<header class='thread_header'>
 			<div class='thread_header__thread_title'>Thread title</div>
-			<button class='button thread_header__reply_button'>Reply to thread</button>
+			<button class='button thread_header__reply_button' @click='showEditor'>Reply to thread</button>
 		</header>
 		<input-editor name='thread' float='true'></input-editor>
 		<div class='posts'>
@@ -19,7 +19,7 @@
 				</div>
 				<div class='post__actions'>
 					<div class='post__action post__share'>Share</div>
-					<div class='post__action post__reply'>Reply</div>
+					<div class='post__action post__reply' @click='showEditor'>Reply</div>
 				</div>
 			</div>
 		</div>
@@ -33,6 +33,15 @@
 		name: 'Thread',
 		components: {
 			InputEditor
+		},
+		methods: {
+			showEditor () {
+				this.$store.commit({
+					type: 'showEditor',
+					name: 'thread',
+					value: true
+				})
+			}
 		}
 	}
 </script>

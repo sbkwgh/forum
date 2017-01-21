@@ -31,7 +31,10 @@ export default new Vuex.Store({
 			'thread_editor--link': false
 		},
 		editors: {
-			thread: ''
+			thread: {
+				value: '',
+				visible: true
+			}
 		}
 	},
 	mutations: {
@@ -39,7 +42,10 @@ export default new Vuex.Store({
 			state.tabs[payload.tab] = payload.index;
 		},
 		setEditor (state, payload) {
-			state.editors[payload.name] = payload.value;
+			state.editors[payload.name].value = payload.value;
+		},
+		showEditor (state, payload) {
+			state.editors[payload.name].visible = payload.value;
 		},
 		setSelectOptions (state, payload) {
 			state.selectOptions[payload.name] = payload.value;

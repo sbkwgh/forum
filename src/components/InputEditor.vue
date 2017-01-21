@@ -1,14 +1,18 @@
 <template>
 	<div
 		class='input_editor'
-		:class='{"input_editor--focus": focused, "input_editor--float": float}'
+		:class='{
+			"input_editor--focus": focused,
+			"input_editor--float": float,
+			"input_editor--hidden": !visible
+		}'
 	>
+		<div class='input_editor__close input_editor__format_button' @click='closeEditor'>&times;</div>
 		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
 			<template slot='Editor'>
 				<div class='input_editor__format_bar'>
 					<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
 					<div class='input_editor__format_button' @click='replaceSelectedText("*", "*")'>I</div>
-					<div class='input_editor__spacer'></div>
 					<div class='input_editor__format_button' @click='showLinkModal("thread_editor--link")'><span class='fa fa-link'></span></div>
 					<div class='input_editor__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
 					<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
@@ -78,7 +82,10 @@
 		},
 		computed: {
 			editor () {
-				return this.$store.state.editors[this.name];
+				return this.$store.state.editors[this.name].value;
+			},
+			visible () {
+				return this.$store.state.editors[this.name].visible;
 			},
 			markdownHTML () {
 				return Marked(this.editor);
@@ -103,7 +110,13 @@
 				this.linkText = '';
 				this.linkURL = '';
 			},
-
+			closeEditor () {
+				this.$store.commit({
+					type: 'showEditor',
+					name: this.name,
+					value: false
+				});
+			},
 			setEditor (value) {
 				this.$store.commit({
 					type: 'setEditor',
@@ -179,13 +192,33 @@
 		border: 0.125rem solid $color__gray--darker;
 		position: relative;
 
+		margin-bottom: 0;
+		pointer-events: all;
+		opacity: 1;
+		transition:  margin-bottom 0.2s, opacity 0.2s;
+
 		@at-root #{&}--focus {
 			border-color: $color__gray--darkest;
 		}
 
 		@at-root #{&}--float {
 			position: fixed;
+			z-index: 2;
 			bottom: 0;
+		}
+
+		@at-root #{&}--hidden {
+			pointer-events: none;
+			opacity: 0;
+			margin-bottom: -3rem;
+			transition:  margin-bottom 0.2s, opacity 0.2s;
+		}
+
+
+		@at-root #{&}__close {
+			position: absolute;
+			right: 0.3rem;
+			top: 0.5rem;
 		}
 
 		@at-root #{&}__format_bar {
@@ -198,6 +231,7 @@
 			display: flex;
 			align-items: center;
 			padding: 0 0.125rem;
+			margin-right: 2.4rem;
 		}
 		@at-root #{&}__format_button {
 			height: 1.5rem;
