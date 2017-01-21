@@ -1,22 +1,18 @@
 <template>
 	<div class='route_container'>
 		<header class='thread_header'>
-			<div class='thread_header__thread_title'>Thread title</div>
+			<div class='thread_header__thread_title'>{{thread}}</div>
 			<button class='button thread_header__reply_button' @click='showEditor'>Reply to thread</button>
 		</header>
 		<input-editor name='thread' float='true'></input-editor>
 		<div class='posts'>
-			<div class='post'>
+			<div class='post' v-for='post in posts'>
 				<div class='post__meta_data'>
-					<div class='post__avatar'>U</div>
-					<div class='post__user'>Username</div>
-					<div class='post__date'>17:34 21/01/17</div>
+					<div class='post__avatar'>{{post.username[0]}}</div>
+					<div class='post__user'>{{post.username}}</div>
+					<div class='post__date'>{{post.date | formatDate('time|date', ', ')}}</div>
 				</div>
-				<div class='post__content'>
-					Consectetur rhoncus a massa interdum quisque habitasse turpis est parturient arcu cum fusce id a eu odio ligula a praesent. Aliquam dis enim netus malesuada ridiculus convallis imperdiet nisi eu vestibulum imperdiet nibh a quam orci dignissim maecenas pretium lorem hac suspendisse hendrerit donec lacinia. Eu suspendisse sem diam nullam taciti dapibus lorem non euismod iaculis ante eros turpis parturient per. A diam auctor cras condimentum a aliquet odio egestas parturient condimentum ut tempus a massa a condimentum a a ullamcorper turpis a facilisi cubilia justo hendrerit adipiscing. Nascetur eu parturient purus dis rutrum placerat egestas adipiscing scelerisque odio penatibus a leo tristique risus eu mi a accumsan. 
-					<br/><br/>
-					Consectetur sagittis vulputate sit eget senectus mi nam curabitur cubilia sapien a habitant vestibulum suspendisse himenaeos ut a cubilia. Fames at a metus porttitor mi proin mollis lobortis proin id vulputate id vel libero malesuada nam id mattis justo sit tristique luctus taciti suspendisse.
-				</div>
+				<div class='post__content' v-html='post.content'></div>
 				<div class='post__actions'>
 					<div class='post__action post__share'>Share</div>
 					<div class='post__action post__reply' @click='showEditor'>Reply</div>
@@ -33,6 +29,14 @@
 		name: 'Thread',
 		components: {
 			InputEditor
+		},
+		computed: {
+			thread () {
+				return this.$store.state.thread.thread;
+			},
+			posts () {
+				return this.$store.state.thread.posts;
+			}
 		},
 		methods: {
 			showEditor () {
@@ -87,7 +91,7 @@
 			position: absolute;
 			height: 3rem;
 			width: 3rem;
-			line-height: 3.3rem;
+			line-height: 3rem;
 			@include text($font--role-emphasis, 2rem)
 			text-align: center;
 			border-radius: 100%;
