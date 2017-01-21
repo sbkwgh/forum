@@ -71,15 +71,15 @@
 
 	.posts {
 		width: 80%;
+
+		&:last-child {
+			border-bottom: thin solid $color__gray--primary;
+		}
 	}
 
 	.post {
 		border-top: thin solid $color__gray--primary;
 		margin: 0.5rem 0;
-
-		&::last-child {
-			border-bottom: thin solid $color__gray--primary;
-		}
 
 		@at-root #{&}__meta_data {
 			display: flex;
