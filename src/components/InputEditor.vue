@@ -1,5 +1,8 @@
 <template>
-	<div class='input_editor'>
+	<div
+		class='input_editor'
+		:class='{"input_editor--focus": focused}'
+	>
 		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
 			<template slot='Editor'>
 				<div class='input_editor__format_bar'>
@@ -15,13 +18,15 @@
 					ref='textarea'
 					:value='editor'
 					@input='setEditor($event.target.value)'
+					@focus='focusEditor(true)'
+					@blur='focusEditor(false)'
 					placeholder='Type here - you can format using Markdown'
 				>
 				</textarea>
 			</template>
 
 			<div slot='Preview' class='input_editor__markdownHTML'>
-				<div v-html='markdownHTML'></div>
+				<div v-html='markdownHTML' style='margin-top: -0.5rem;'></div>
 				<div v-if='!editor.trim().length' class='input_editor__markdownHTML--empty'>
 					Nothing to preview
 				</div>
@@ -67,7 +72,8 @@
 		data () {
 			return {
 				linkText: '',
-				linkURL: ''
+				linkURL: '',
+				focused: false
 			}
 		},
 		computed: {
@@ -79,6 +85,9 @@
 			}
 		},
 		methods: {
+			focusEditor (val) {
+				this.focused = val;
+			},
 			showImageModal () {
 				this.$store.commit('showModal', 'thread_editor--image');
 			},
@@ -167,13 +176,10 @@
 
 	.input_editor {
 		width: 35rem;
-		border: 0.125rem solid $color__gray--primary;
+		border: 0.125rem solid $color__gray--darker;
 		position: relative;
 
-		&:hover {
-			border-color: $color__gray--darker;
-		}
-		&:focus {
+		@at-root #{&}--focus {
 			border-color: $color__gray--darkest;
 		}
 
@@ -237,10 +243,12 @@
 			overflow: auto;
 			word-break: break-word;
 			padding: 0.5rem;
+			padding-top: 0;
 
 			@at-root #{&}--empty {
 				@include text($font--role-emphasis, 1rem);
 				display: flex;
+				margin-top: 1rem;
 				align-content: center;
 				@include user-select(none);
 				cursor: default;
