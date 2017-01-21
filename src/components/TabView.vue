@@ -10,7 +10,7 @@
 				{{tab}}
 			</div>
 		</div>
-		<div class='tab_view__content'>
+		<div class='tab_view__content' :class='{"tab_view__content--padding": padding}'>
 			<slot
 				v-for='(tab, index) in tabs'
 				:name='tab'
@@ -26,7 +26,7 @@
 
 	export default {
 		name: 'TabView',
-		props: ['tabs', 'name'],
+		props: ['tabs', 'name', 'padding'],
 		methods: {
 			changeTab (index) {
 				this.$store.commit({
@@ -80,7 +80,10 @@
 		}
 		@at-root #{&}__content {
 			background-color: #fff;
-			padding: 1rem;
+
+			@at-root #{&}--padding {
+				padding: 1rem;
+			}
 		}
 	}
 </style>
