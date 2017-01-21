@@ -33,7 +33,7 @@ export default new Vuex.Store({
 		editors: {
 			thread: {
 				value: '',
-				visible: true
+				visible: false
 			}
 		}
 	},
