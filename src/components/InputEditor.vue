@@ -18,10 +18,10 @@
 		<modal-window name='thread_editor--picture'></modal-window>
 		<div class='input_editor__format_bar'>
 			<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
-			<div class='input_editor__format_button'>I</div>
+			<div class='input_editor__format_button' @click='replaceSelectedText("*", "*")'>I</div>
 			<div class='input_editor__spacer'></div>
 			<div class='input_editor__format_button' @click='showModal("thread_editor--link")'><span class='fa fa-link'></span></div>
-			<div class='input_editor__format_button'><span class='fa fa-code'></span></div>
+			<div class='input_editor__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
 			<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
 		</div>
 		<textarea class='input_editor__input' ref='textarea' :value='editor' @input='setEditor($event.target.value)'></textarea>
@@ -98,6 +98,15 @@
 					el.selectionStart = selectionData.start + before.length;
 					el.selectionEnd = selectionData.end + after.length;
 				}, 1)
+			},
+			formatCode () {
+				var selectionData = this.getSelectionData();
+
+				if(this.editor[selectionData.start-1] === '\n' || selectionData.start === 0) {
+					this.replaceSelectedText('    ', '');
+				} else {
+					this.replaceSelectedText('`', '`');
+				}
 			}
 		}
 	}
