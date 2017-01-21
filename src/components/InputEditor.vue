@@ -17,14 +17,14 @@
 		</modal-window>
 		<modal-window name='thread_editor--picture'></modal-window>
 		<div class='input_editor__format_bar'>
-			<div class='input_editor__format_button'>B</div>
+			<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
 			<div class='input_editor__format_button'>I</div>
 			<div class='input_editor__spacer'></div>
 			<div class='input_editor__format_button' @click='showModal("thread_editor--link")'><span class='fa fa-link'></span></div>
 			<div class='input_editor__format_button'><span class='fa fa-code'></span></div>
 			<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
 		</div>
-		<textarea class='input_editor__input'></textarea>
+		<textarea class='input_editor__input' ref='textarea' @input='updateTextarea'></textarea>
 	</div>
 </template>
 
@@ -41,7 +41,8 @@
 		data () {
 			return {
 				linkText: '',
-				linkURL: ''
+				linkURL: '',
+				textarea: ''
 			}
 		},
 		methods: {
@@ -53,6 +54,39 @@
 			},
 			addLink () {
 				this.$store.commit('hideModal', 'thread_editor--link');
+			},
+			getSelectionData () {
+				var el = this.$refs.textarea,
+					start = el.selectionStart,
+					end = el.selectionEnd;
+
+				return {
+					val: el.value.slice(start, end),
+					start,
+					end
+				};
+
+			},
+			updateTextarea () {
+				this.textarea = this.$refs.textarea.value;
+			},
+			replaceSelectedText (before, after) {
+				var selectionData = this.getSelectionData();
+				var el = this.$refs.textarea;
+
+				var updatedTextarea =
+					this.textarea.slice(0, selectionData.start) +
+					before +
+					selectionData.val +
+					after +
+					this.textarea.slice(selectionData.end);
+
+				this.textarea = updatedTextarea;
+				el.value = updatedTextarea;
+
+				el.selectionStart = selectionData.start + before.length;
+				el.selectionEnd = selectionData.end + after.length;
+				el.focus();
 			}
 		}
 	}
