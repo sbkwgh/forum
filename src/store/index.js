@@ -18,7 +18,8 @@ export default new Vuex.Store({
 			]
 		},
 		tabs: {
-			account: 0
+			account: 0,
+			thread: 0
 		},
 		selectOptions: {
 			filterOptions: 'NEW'

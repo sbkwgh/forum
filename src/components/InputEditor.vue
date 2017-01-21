@@ -1,5 +1,22 @@
 <template>
 	<div class='input_editor'>
+		<tab-view :tabs='["Editor", "Preview"]' :name='name'>
+			<template slot='Editor'>
+				<div class='input_editor__format_bar'>
+					<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
+					<div class='input_editor__format_button' @click='replaceSelectedText("*", "*")'>I</div>
+					<div class='input_editor__spacer'></div>
+					<div class='input_editor__format_button' @click='showLinkModal("thread_editor--link")'><span class='fa fa-link'></span></div>
+					<div class='input_editor__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
+					<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
+				</div>
+				<textarea class='input_editor__input' ref='textarea' :value='editor' @input='setEditor($event.target.value)'></textarea>
+			</template>
+
+			<template slot='Preview'>
+				d
+			</template>
+		</tab-view>
 
 		<modal-window name='thread_editor--link'>
 			<div style='padding: 1rem;'>
@@ -19,28 +36,21 @@
 
 		<modal-window name='thread_editor--picture'></modal-window>
 
-		<div class='input_editor__format_bar'>
-			<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
-			<div class='input_editor__format_button' @click='replaceSelectedText("*", "*")'>I</div>
-			<div class='input_editor__spacer'></div>
-			<div class='input_editor__format_button' @click='showLinkModal("thread_editor--link")'><span class='fa fa-link'></span></div>
-			<div class='input_editor__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
-			<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
-		</div>
-		<textarea class='input_editor__input' ref='textarea' :value='editor' @input='setEditor($event.target.value)'></textarea>
 	</div>
 </template>
 
 <script>
 	import ModalWindow from './ModalWindow'
 	import FancyInput from './FancyInput'
+	import TabView from './TabView'
 
 	export default {
 		name: 'InputEditor',
 		props: ['name'],
 		components: {
 			ModalWindow,
-			FancyInput
+			FancyInput,
+			TabView
 		},
 		data () {
 			return {
