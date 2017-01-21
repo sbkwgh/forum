@@ -1,6 +1,6 @@
 <template>
 	<div class='route_container'>
-		<input-editor></input-editor>
+		<input-editor name='thread'></input-editor>
 	</div>
 </template>
 

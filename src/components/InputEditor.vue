@@ -24,7 +24,7 @@
 			<div class='input_editor__format_button'><span class='fa fa-code'></span></div>
 			<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
 		</div>
-		<textarea class='input_editor__input' ref='textarea' @input='updateTextarea'></textarea>
+		<textarea class='input_editor__input' ref='textarea' :value='editor' @input='setEditor($event.target.value)'></textarea>
 	</div>
 </template>
 
@@ -34,6 +34,7 @@
 
 	export default {
 		name: 'InputEditor',
+		props: ['name'],
 		components: {
 			ModalWindow,
 			FancyInput
@@ -45,6 +46,11 @@
 				textarea: ''
 			}
 		},
+		computed: {
+			editor () {
+				return this.$store.state.editors[this.name];
+			}
+		},
 		methods: {
 			showModal (name) {
 				this.$store.commit('showModal', name);
@@ -54,6 +60,13 @@
 			},
 			addLink () {
 				this.$store.commit('hideModal', 'thread_editor--link');
+			},
+			setEditor (value) {
+				this.$store.commit({
+					type: 'setEditor',
+					name: this.name,
+					value: value
+				});
 			},
 			getSelectionData () {
 				var el = this.$refs.textarea,
@@ -67,26 +80,24 @@
 				};
 
 			},
-			updateTextarea () {
-				this.textarea = this.$refs.textarea.value;
-			},
 			replaceSelectedText (before, after) {
 				var selectionData = this.getSelectionData();
 				var el = this.$refs.textarea;
 
 				var updatedTextarea =
-					this.textarea.slice(0, selectionData.start) +
+					this.editor.slice(0, selectionData.start) +
 					before +
 					selectionData.val +
 					after +
-					this.textarea.slice(selectionData.end);
+					this.editor.slice(selectionData.end);
 
-				this.textarea = updatedTextarea;
-				el.value = updatedTextarea;
-
-				el.selectionStart = selectionData.start + before.length;
-				el.selectionEnd = selectionData.end + after.length;
+				this.setEditor(updatedTextarea);
 				el.focus();
+
+				setTimeout(function() {
+					el.selectionStart = selectionData.start + before.length;
+					el.selectionEnd = selectionData.end + after.length;
+				}, 1)
 			}
 		}
 	}
