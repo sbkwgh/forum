@@ -22,7 +22,7 @@
 			<div class='input_editor__spacer'></div>
 			<div class='input_editor__format_button' @click='showModal("thread_editor--link")'><span class='fa fa-link'></span></div>
 			<div class='input_editor__format_button'><span class='fa fa-code'></span></div>
-			<div class='input_editor__format_button'><span class='fa fa-picture-o'></span></div>
+			<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
 		</div>
 		<textarea class='input_editor__input'></textarea>
 	</div>
