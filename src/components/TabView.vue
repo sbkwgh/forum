@@ -31,7 +31,7 @@
 			changeTab (index) {
 				this.$store.commit({
 					type: 'setTab',
-					tab: 'account',
+					tab: this.name,
 					index: index
 				});
 			}
