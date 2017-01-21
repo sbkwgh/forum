@@ -1,7 +1,7 @@
 <template>
 	<div
 		class='input_editor'
-		:class='{"input_editor--focus": focused}'
+		:class='{"input_editor--focus": focused, "input_editor--float": float}'
 	>
 		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
 			<template slot='Editor'>
@@ -63,7 +63,7 @@
 
 	export default {
 		name: 'InputEditor',
-		props: ['name'],
+		props: ['name', 'float'],
 		components: {
 			ModalWindow,
 			FancyInput,
@@ -181,6 +181,11 @@
 
 		@at-root #{&}--focus {
 			border-color: $color__gray--darkest;
+		}
+
+		@at-root #{&}--float {
+			position: fixed;
+			bottom: 0;
 		}
 
 		@at-root #{&}__format_bar {

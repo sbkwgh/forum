@@ -4,7 +4,7 @@
 			<div class='thread_header__thread_title'>Thread title</div>
 			<button class='button thread_header__reply_button'>Reply to thread</button>
 		</header>
-		<input-editor name='thread'></input-editor>
+		<input-editor name='thread' float='true'></input-editor>
 		<div class='posts'>
 			<div class='post'>
 				<div class='post__meta_data'>
