@@ -127,7 +127,6 @@
 
 				@at-root #{&}-show {
 					opacity: 1;
-					pointer-events: all;
 					transition: opacity 0.2s;
 				}
 			}
