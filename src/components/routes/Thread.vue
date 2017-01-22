@@ -2,20 +2,22 @@
 	<div class='route_container'>
 		<header class='thread_header'>
 			<div class='thread_header__thread_title'>{{thread}}</div>
-			<button class='button thread_header__reply_button' @click='showEditor'>Reply to thread</button>
+			<button class='button thread_header__reply_button' @click='showEditor(true)'>Reply to thread</button>
 		</header>
-		<input-editor name='thread' float='true' replying='John'></input-editor>
+		<input-editor name='thread' float='true' :replying='replyingUsername' v-on:submit='addPost'></input-editor>
 		<div class='posts'>
 			<div class='post' v-for='post in posts'>
 				<div class='post__meta_data'>
 					<div class='post__avatar'>{{post.username[0]}}</div>
 					<div class='post__user'>{{post.username}}</div>
+					<span class='fa fa-long-arrow-right fa-fw' v-if='post.replyingUsername'></span>
+					<div class='post__reply' v-if='post.replyingUsername'>{{post.replyingUsername}}</div>
 					<div class='post__date'>{{post.date | formatDate('time|date', ', ')}}</div>
 				</div>
 				<div class='post__content' v-html='post.content'></div>
 				<div class='post__actions'>
 					<div class='post__action post__share'>Share</div>
-					<div class='post__action post__reply' @click='showEditor'>Reply</div>
+					<div class='post__action post__reply' @click='reply("id", post.username)'>Reply</div>
 				</div>
 			</div>
 		</div>
@@ -36,15 +38,36 @@
 			},
 			posts () {
 				return this.$store.state.thread.posts;
+			},
+			replyingUsername () {
+				return this.$store.state.thread.replying.username
 			}
 		},
 		methods: {
-			showEditor () {
+			showEditor (clearReply) {
 				this.$store.commit({
 					type: 'showEditor',
 					name: 'thread',
 					value: true
-				})
+				});
+				if(clearReply) {
+					this.$store.commit({
+						type: 'setReply',
+						username: '',
+						id: ''
+					});
+				}
+			},
+			reply (id, username) {
+				this.$store.commit({
+					type: 'setReply',
+					username,
+					id
+				});
+				this.showEditor();
+			},
+			addPost () {
+				this.$store.dispatch('addPostAsync');
 			}
 		}
 	}
@@ -102,6 +125,9 @@
 		@at-root #{&}__user {
 			@include text($font--role-default, 1rem, 600);
 			margin-right: 0.5rem;
+		}
+		@at-root #{&}__reply {
+			margin: 0 0.5rem;
 		}
 		@at-root #{&}__date {
 			color: $color__gray--darkest;

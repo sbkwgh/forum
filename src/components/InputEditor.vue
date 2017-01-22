@@ -38,6 +38,10 @@
 			</div>
 		</tab-view>
 
+		<div class='input_editor__submit_bar'>
+			<button class='button' @click='submit'>Submit</button>
+		</div>
+
 		<modal-window name='thread_editor--link'>
 			<div style='padding: 1rem;'>
 				<p style='margin-top: 0;'>
@@ -93,6 +97,11 @@
 			}
 		},
 		methods: {
+			submit () {
+				if(this.editor.trim().length) {
+					this.$emit('submit');
+				}
+			},
 			focusEditor (val) {
 				this.focused = val;
 			},
@@ -204,6 +213,7 @@
 
 		@at-root #{&}--float {
 			position: fixed;
+			border-bottom: none;
 			z-index: 2;
 			bottom: 0;
 		}
@@ -300,6 +310,22 @@
 				@include user-select(none);
 				cursor: default;
 				color: $color__gray--darker;
+			}
+		}
+
+		@at-root #{&}__submit_bar {
+			display: flex;
+			justify-content: flex-end;
+			height: 2rem;
+			align-items: center;
+			padding-right: 0.3rem;
+			background-color: $color__gray--primary;
+
+			button {
+				font-size: 0.8rem;
+				height: 1.5rem;
+				padding: 0 0.25rem;
+				border-color: $color__gray--darkest;
 			}
 		}
 	}
