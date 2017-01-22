@@ -1,7 +1,17 @@
 <template>
 	<div class='route_container'>
 		<header class='thread_header'>
-			<div class='thread_header__thread_title'>{{thread}}</div>
+			<div
+				class='thread_header__thread_title thread_header__thread_title--app_header'
+				:class='{
+					"thread_header__thread_title--app_header-show": headerTitle
+				}'
+			>
+				{{thread}}
+			</div>
+			<div class='thread_header__thread_title' ref='title'>
+				{{thread}}
+			</div>
 			<button class='button thread_header__reply_button' @click='showEditor(true)'>Reply to thread</button>
 		</header>
 		<input-editor name='thread' float='true' :replying='replyingUsername' v-on:submit='addPost'></input-editor>
@@ -26,11 +36,15 @@
 
 <script>
 	import InputEditor from '../InputEditor'
+	import throttle from 'lodash.throttle'
 
 	export default {
 		name: 'Thread',
 		components: {
 			InputEditor
+		},
+		data () {
+			return { headerTitle: false }
 		},
 		computed: {
 			thread () {
@@ -69,6 +83,21 @@
 			addPost () {
 				this.$store.dispatch('addPostAsync');
 			}
+		},
+		mounted () {
+			var self = this;
+			var setHeader = function() {
+				if(!self.$refs.title) return;
+
+				if(self.$refs.title.getBoundingClientRect().top <= 32) {
+					self.headerTitle = true;
+				} else {
+					self.headerTitle = false;
+				}
+			};
+
+			setHeader();
+			document.addEventListener('scroll', throttle(setHeader, 200));
 		}
 	}
 </script>
@@ -81,8 +110,27 @@
 		justify-content: space-between;
 
 		@at-root #{&}__thread_title {
-			@include text($font--role-default, 3rem, 300);
+			@include text($font--role-default, 3rem, 400);
 			margin-bottom: 1rem;
+
+			@at-root #{&}--app_header {
+				position: fixed;
+				width: 80%;
+				z-index: 2;
+				text-align: center;
+				left: 0;
+				font-size: 2rem;
+				top: 1rem;
+				opacity: 0;
+				pointer-events: 0;
+				transition: opacity 0.2s;
+
+				@at-root #{&}-show {
+					opacity: 1;
+					pointer-events: all;
+					transition: opacity 0.2s;
+				}
+			}
 		}
 		@at-root #{&}__reply_button {
 			height: 3rem;
