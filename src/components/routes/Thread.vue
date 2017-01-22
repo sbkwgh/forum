@@ -122,7 +122,7 @@
 				font-size: 2rem;
 				top: 1rem;
 				opacity: 0;
-				pointer-events: 0;
+				pointer-events: none;
 				transition: opacity 0.2s;
 
 				@at-root #{&}-show {
