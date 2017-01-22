@@ -12,22 +12,22 @@
 			<div class='thread_header__thread_title' ref='title'>
 				{{thread}}
 			</div>
-			<button class='button thread_header__reply_button' @click='showEditor(true)'>Reply to thread</button>
+			<button class='button thread_header__reply_button' @click='replyThread'>Reply to thread</button>
 		</header>
-		<input-editor name='thread' float='true' :replying='replyingUsername' v-on:submit='addPost'></input-editor>
+		<input-editor name='thread' float='true' :replyUsername='replyUsername' v-on:close='clearReply' v-on:submit='addPost'></input-editor>
 		<div class='posts'>
 			<div class='post' v-for='post in posts'>
 				<div class='post__meta_data'>
 					<div class='post__avatar'>{{post.username[0]}}</div>
 					<div class='post__user'>{{post.username}}</div>
-					<span class='fa fa-long-arrow-right fa-fw' v-if='post.replyingUsername'></span>
-					<div class='post__reply' v-if='post.replyingUsername'>{{post.replyingUsername}}</div>
+					<span class='fa fa-long-arrow-right fa-fw' v-if='post.replyUsername'></span>
+					<div class='post__reply' v-if='post.replyUsername'>{{post.replyUsername}}</div>
 					<div class='post__date'>{{post.date | formatDate('time|date', ', ')}}</div>
 				</div>
 				<div class='post__content' v-html='post.content'></div>
 				<div class='post__actions'>
 					<div class='post__action post__share'>Share</div>
-					<div class='post__action post__reply' @click='reply("id", post.username)'>Reply</div>
+					<div class='post__action post__reply' @click='replyUser("id", post.username)'>Reply</div>
 				</div>
 			</div>
 		</div>
@@ -53,26 +53,30 @@
 			posts () {
 				return this.$store.state.thread.posts;
 			},
-			replyingUsername () {
-				return this.$store.state.thread.replying.username
+			replyUsername () {
+				return this.$store.state.thread.reply.username
 			}
 		},
 		methods: {
-			showEditor (clearReply) {
+			showEditor () {
 				this.$store.commit({
 					type: 'showEditor',
 					name: 'thread',
 					value: true
 				});
-				if(clearReply) {
-					this.$store.commit({
-						type: 'setReply',
-						username: '',
-						id: ''
-					});
-				}
 			},
-			reply (id, username) {
+			clearReply () {
+				this.$store.commit({
+					type: 'setReply',
+					username: '',
+					id: ''
+				});
+			},
+			replyThread () {
+				this.clearReply();
+				this.showEditor();
+			},
+			replyUser (id, username) {
 				this.$store.commit({
 					type: 'setReply',
 					username,

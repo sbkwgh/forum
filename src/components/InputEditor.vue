@@ -7,7 +7,7 @@
 			"input_editor--hidden": !visible
 		}'
 	>
-		<div class='input_editor__replying' v-if='replying'>Replying to <strong>{{replying}}</strong></div>
+		<div class='input_editor__reply_username' v-if='replyUsername'>Replying to <strong>{{replyUsername}}</strong></div>
 		<div class='input_editor__close input_editor__format_button' @click='closeEditor'>&times;</div>
 		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
 			<template slot='Editor'>
@@ -72,7 +72,7 @@
 
 	export default {
 		name: 'InputEditor',
-		props: ['name', 'float', 'replying'],
+		props: ['name', 'float', 'replyUsername'],
 		components: {
 			ModalWindow,
 			FancyInput,
@@ -126,6 +126,12 @@
 					name: this.name,
 					value: false
 				});
+				this.$store.commit({
+					type: 'setEditor',
+					name: this.name,
+					value: ''
+				});
+				this.$emit('close')
 			},
 			setEditor (value) {
 				this.$store.commit({
@@ -232,7 +238,7 @@
 			top: 0.5rem;
 		}
 
-		@at-root #{&}__replying {
+		@at-root #{&}__reply_username {
 			position: absolute;
 			width: 100%;
 			text-align: center;

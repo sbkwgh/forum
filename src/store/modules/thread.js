@@ -16,7 +16,7 @@ const state = {
 		{username: 'Abc', date: new Date(), content: 'Consectetur rhoncus a massa interdum quisque habitasse turpis est parturient arcu cum fusce id a eu odio ligula a praesent. Aliquam dis enim netus malesuada ridiculus convallis imperdiet nisi eu vestibulum imperdiet nibh a quam orci dignissim maecenas pretium lorem hac suspendisse hendrerit donec lacinia. Eu suspendisse sem diam nullam taciti dapibus lorem non euismod iaculis ante eros turpis parturient per. A diam auctor cras condimentum a aliquet odio egestas parturient condimentum ut tempus a massa a condimentum a a ullamcorper turpis a facilisi cubilia justo hendrerit adipiscing. Nascetur eu parturient purus dis rutrum placerat egestas adipiscing scelerisque odio penatibus a leo tristique risus eu mi a accumsan. <BR/><br/>,Consectetur sagittis vulputate sit eget senectus mi nam curabitur cubilia sapien a habitant vestibulum suspendisse himenaeos ut a cubilia. Fames at a metus porttitor mi proin mollis lobortis proin id vulputate id vel libero malesuada nam id mattis justo sit tristique luctus taciti suspendisse.'},
 		{username: 'Def', date: new Date(), content: 'Consectetur rhoncus a massa interdum quisque habitasse turpis est parturient arcu cum fusce id a eu odio ligula a praesent. Aliquam dis enim netus malesuada ridiculus convallis imperdiet nisi eu vestibulum imperdiet nibh a quam orci dignissim maecenas pretium lorem hac suspendisse hendrerit donec lacinia. Eu suspendisse sem diam nullam taciti dapibus lorem non euismod iaculis ante eros turpis parturient per. A diam auctor cras condimentum a aliquet odio egestas parturient condimentum ut tempus a massa a condimentum a a ullamcorper turpis a facilisi cubilia justo hendrerit adipiscing. Nascetur eu parturient purus dis rutrum placerat egestas adipiscing scelerisque odio penatibus a leo tristique risus eu mi a accumsan. <BR/><br/>,Consectetur sagittis vulputate sit eget senectus mi nam curabitur cubilia sapien a habitant vestibulum suspendisse himenaeos ut a cubilia. Fames at a metus porttitor mi proin mollis lobortis proin id vulputate id vel libero malesuada nam id mattis justo sit tristique luctus taciti suspendisse.'}
 	],
-	replying: {
+	reply: {
 		username: '',
 		id: ''
 	}
@@ -32,9 +32,9 @@ const actions = {
 			date: new Date()
 		};
 
-		if(state.replying.id.length) {
-			post.replyingUsername = state.replying.username;
-			post.replyingId = state.replying.id;
+		if(state.reply.id.length) {
+			post.replyUsername = state.reply.username;
+			post.replyId = state.reply.id;
 		}
 
 		//Post to server
@@ -61,8 +61,8 @@ const actions = {
 
 const mutations = {
 	setReply (state, payload) {
-		state.replying.username = payload.username;
-		state.replying.id = payload.id;
+		state.reply.username = payload.username;
+		state.reply.id = payload.id;
 	},
 	addPost (state, post) {
 		state.posts.push(post);
