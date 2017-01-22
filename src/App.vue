@@ -62,7 +62,7 @@
 		</modal-window>
 		<header class='header'>
 			<div class='header__group'>
-				<div class='logo'>{{name}}</div>
+				<div class='logo' @click='$router.push("/")'>{{name}}</div>
 			</div>
 			<div class='header__group'>
 				<div class='button button--green' @click='showAccountModal(0)'>
@@ -184,6 +184,7 @@
 
 	.logo {
 		@include text($font--role-emphasis, 2rem, normal);
+		cursor: pointer;
 	}
 
 	.button {
