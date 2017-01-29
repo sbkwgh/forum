@@ -26,7 +26,7 @@
 		},
 		computed: {
 			categories () {
-				return this.$store.state.meta.categories
+				return this.$store.getters.categoriesWithoutAll
 			}
 		},
 		methods: {}

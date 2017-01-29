@@ -7,8 +7,9 @@
 		<div class='select_button__options' :class='{"select_button__options--hidden": hideMenu}'>
 			<div
 				v-for='(option, index) in options'
-				@click='select(index)'
+				@click='select(index, option.disabled)'
 				class='select_button__option'
+				:class='{"select_button__option--disabled": option.disabled}'
 			>
 				{{option.name}}
 			</div>
@@ -24,7 +25,9 @@
 			toggleMenu () {
 				this.hideMenu = !this.hideMenu;
 			},
-			select (index) {
+			select (index, disabled) {
+				if(disabled) return;
+
 				this.selectedIndex = index;
 				this.hideMenu = true;
 
@@ -96,6 +99,11 @@
 			}
 			&:active {
 				background-color: $color__lightgray--darker;
+			}
+
+			@at-root #{&}--disabled {
+				color: $color__gray--darkest;
+				pointer-events: none;
 			}
 		}
 
