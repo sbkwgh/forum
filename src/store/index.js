@@ -43,6 +43,18 @@ export default new Vuex.Store({
 			}
 		}
 	},
+	getters: {
+		categoriesWithoutAll (state) {
+			var categories = state.meta.categories;
+			categories.shift();
+			categories.unshift({
+				name: 'Select a category',
+				disabled: true
+			});
+
+			return categories;
+		}
+	},
 	mutations: {
 		setTab (state, payload) {
 			state.tabs[payload.tab] = payload.index;
