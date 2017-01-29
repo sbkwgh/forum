@@ -45,7 +45,7 @@ export default new Vuex.Store({
 	},
 	getters: {
 		categoriesWithoutAll (state) {
-			var categories = state.meta.categories;
+			var categories = JSON.parse(JSON.stringify(state.meta.categories));
 			categories.shift();
 			categories.unshift({
 				name: 'Select a category',
