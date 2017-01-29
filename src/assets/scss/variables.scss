@@ -63,3 +63,7 @@ $color__green--darkester: rgba(79, 152, 82, 0.84);
 	}
 	#{user-select}: #{$select};
 }
+
+.h1 {
+	@include text($font--role-default, 3rem);
+}
