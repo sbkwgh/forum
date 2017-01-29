@@ -1,0 +1,164 @@
+<template>
+	<div class='route_container'>
+		<div class='thread_sorting'>
+			<div>
+				<select-button style='margin-right: 1rem' v-model='selectedCategory' :options='categories'></select-button>
+				<select-options :options='options' name='filterOptions'></select-options>
+			</div>
+			<button class='button' @click='$router.push("/thread/new")'>Post new thread</button>
+		</div>
+		<table class='threads'>
+			<colgroup>
+				<col span="1" style="width: 50%;">
+				<col span="1" style="width: 22.5%;">
+				<col span="1" style="width: 22.5%;">
+				<col span="1" style="width: 5%;">
+			</colgroup>
+			<thead>
+				<tr class='thread thread--header'>
+					<th>Title</th>
+					<th>Latest post</th>
+					<th>Category</th>
+					<th>Replies</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class='thread' v-for='thread in threads' @click='navigateToThread(thread.slug, thread.id)'>
+					<td>{{thread.title}}</td>
+					<td>
+						<div>{{thread.latestPostUser}}</div>
+						<div>{{thread.latestPostDate | formatDate('time|date', ' - ') }}</div>
+					</td>
+					<td>{{thread.category}}</td>
+					<td>{{thread.replies}}</td>
+				</tr>
+				<tr class='thread' v-if='!threads.length' colspan='4'>
+					<td colspan='4' class='thread--empty'>No threads or posts.</td>
+				</tr>
+			</tbody>
+		</div>
+	</div>
+</template>
+
+<script>
+	import SelectButton from '../SelectButton'
+	import TabView from '../TabView'
+	import SelectOptions from '../SelectOptions'
+
+	export default {
+		name: 'index',
+		components: {
+			SelectButton,
+			TabView,
+			SelectOptions
+		},
+		data () {
+			return {
+				options: [
+					{name: 'New', value: 'NEW'},
+					{name: 'Most active', value: 'MOST_ACTIVE'},
+					{name: 'No replies', value: 'NO_REPLIES'}
+				],
+				selected: null
+			}
+		},
+		computed: {
+			threads () {
+				return this.$store.getters.filteredThreads;
+			},
+			categories () {
+				return this.$store.state.meta.categories
+			},
+			selectedCategory: {
+				get () {
+					return this.$store.state.category.selectedCategory;
+				},
+				set (category) {
+					this.$store.commit('selectCategory', category);
+				}
+			}
+		},
+		methods: {
+			navigateToThread (slug, id) {
+				this.$router.push('/thread/' + slug + '/' + id);
+			}
+		},
+		watch: {
+			selectedCategory (newValue) {
+				this.$router.push('/category/' + newValue.toLowerCase());
+			}
+		},
+		mounted () {
+			this.selectedCategory = this.$route.params.category.toUpperCase();
+		}
+	}
+</script>
+
+<style lang='scss' scoped>
+	@import '../../assets/scss/variables.scss';
+
+	.thread_sorting {
+		margin-bottom: 1rem;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.threads {
+		border-collapse: collapse;
+	}
+
+	.thread {
+		background-color: #fff;
+		padding: 0.5rem 0;
+		cursor: default;
+		text-align: left;
+		transition: background-color 0.2s;
+
+		&:hover {
+			background-color: $color__lightgray--primary;
+		}
+
+		td, th {
+			padding: 0.3rem 0.5rem;
+			border-bottom: solid thin $color__lightgray--primary;
+		}
+
+		@at-root #{&}--header {
+			&:hover {
+				background-color: #fff;
+			}
+
+			th {
+				font-weight: 400;
+				padding-bottom: 0.25rem;
+				border-bottom: thin solid $color__lightgray--darkest;
+			}
+		}
+
+		@at-root #{&}--empty {
+			height: 5rem;
+			text-align: center;
+			font-size: 2rem;
+			user-select: none;
+			cursor: default;
+			transition: none;
+
+			&:hover {
+				transition: none;
+				background-color: #fff;
+			}
+		}
+
+		@at-root #{&}__section {
+			padding: 0 0.5rem;
+		}
+
+		@at-root #{&}__user {
+			display: inline-block;
+		}
+		@at-root #{&}__date {
+			color: $color__text--secondary;
+			display: inline-block;
+		}
+	}
+</style>
