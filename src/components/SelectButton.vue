@@ -20,23 +20,6 @@
 	export default {
 		name: 'SelectButton',
 		props: ['options', 'value', 'name'],
-		data () {
-			var self = this;
-			var index = 0;
-
-			if(this.value !== null) {
-				this.options.forEach((option, i) => {
-					if(option.value === self.value) {
-						index = i;
-					}
-				})
-			}
-
-			return {
-				selectedIndex: index,
-				hideMenu: true
-			}
-		},
 		methods: {
 			toggleMenu () {
 				this.hideMenu = !this.hideMenu;
@@ -46,6 +29,31 @@
 				this.hideMenu = true;
 
 				this.$emit('input', this.options[index].value);
+			},
+			getIndexFromValue () {
+				var index = 0;
+				var self = this;
+
+				if(this.value !== null) {
+					this.options.forEach((option, i) => {
+						if(option.value === self.value) {
+							index = i;
+						}
+					})
+				}
+
+				return index;
+			}
+		},
+		data () {
+			return {
+				selectedIndex: this.getIndexFromValue(),
+				hideMenu: true
+			}
+		},
+		watch: {
+			value () {
+				this.selectedIndex = this.getIndexFromValue();
 			}
 		}
 	}
@@ -58,6 +66,7 @@
 
 		@at-root #{&}__options {
 			position: absolute;
+			z-index: 1;
 			overflow: hidden;
 			background-color: #fff;
 			width: 15rem;
