@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import index from './modules/index'
+import category from './modules/category'
 import thread from './modules/thread'
 
 Vue.use(Vuex)
@@ -20,7 +21,8 @@ export default new Vuex.Store({
 		},
 		tabs: {
 			account: 0,
-			thread: 0
+			thread: 0,
+			'new-thread': 0
 		},
 		selectOptions: {
 			filterOptions: 'NEW'
@@ -34,6 +36,10 @@ export default new Vuex.Store({
 			thread: {
 				value: '',
 				visible: false
+			},
+			'new-thread': {
+				value: '',
+				visible: true
 			}
 		}
 	},
@@ -59,6 +65,7 @@ export default new Vuex.Store({
 	},
 	modules: {
 		index,
+		category,
 		thread
 	}
 })
