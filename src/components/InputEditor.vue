@@ -8,7 +8,7 @@
 		}'
 	>
 		<div class='input_editor__reply_username' v-if='replyUsername'>Replying to <strong>{{replyUsername}}</strong></div>
-		<div class='input_editor__close input_editor__format_button' @click='closeEditor'>&times;</div>
+		<div class='input_editor__close input_editor__format_button' @click='closeEditor' v-if='!hideClose'>&times;</div>
 		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
 			<template slot='Editor'>
 				<div class='input_editor__format_bar'>
@@ -38,7 +38,7 @@
 			</div>
 		</tab-view>
 
-		<div class='input_editor__submit_bar'>
+		<div class='input_editor__submit_bar' v-if='float'>
 			<button class='button' @click='submit'>Submit</button>
 		</div>
 
@@ -72,7 +72,7 @@
 
 	export default {
 		name: 'InputEditor',
-		props: ['name', 'float', 'replyUsername'],
+		props: ['name', 'float', 'replyUsername', 'hideClose'],
 		components: {
 			ModalWindow,
 			FancyInput,
