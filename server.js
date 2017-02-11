@@ -8,6 +8,7 @@ let bodyParser = require('body-parser')
 let morgan = require('morgan')
 
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 if(process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
 	app.use(morgan('dev'))
