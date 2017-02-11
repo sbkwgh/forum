@@ -35,7 +35,7 @@ describe('User', () => {
 				.end((err, res) => {
 					res.should.have.status(200)
 					res.should.be.json
-					res.body.should.have.property('username', 'test')
+					res.body.should.have.property('username', 'username')
 					res.body.should.have.property('hash')
 					
 					done()
