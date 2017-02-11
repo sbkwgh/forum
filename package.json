@@ -4,19 +4,24 @@
   "description": "Backend for forum",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate && node ./node_modules/mocha/bin/mocha  --harmony --timeout 10000",
+    "start": "cros-env NODE_ENV=development && node_modules/.bin/sequelize db:migrate && node --harmony server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.16.0",
+    "cross-env": "^3.1.4",
     "express": "^4.14.1",
-    "pg": "^6.1.2",
-    "pg-hstore": "^2.3.2",
-    "sequelize": "^3.30.0"
+    "indicative": "^2.2.1",
+    "mysql": "^2.13.0",
+    "sequelize": "^3.30.0",
+    "sequelize-cli": "^2.5.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.2.0",
     "morgan": "^1.7.0"
   }
 }
