@@ -12,13 +12,16 @@ describe('User', () => {
 		it('should create an account', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
-				.field('username', 'test')
-				.field('password', 'pass')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: 'test',
+					password: 'pass'
+				})
 				.end((err, res) => {
 					res.should.have.status(200)
 					res.should.be.json
-					res.should.have.property('username', 'test')
-					res.should.have.property('hash')
+					res.body.should.have.property('username', 'test')
+					res.body.should.have.property('hash')
 					
 					done()
 				})
