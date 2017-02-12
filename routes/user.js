@@ -42,11 +42,15 @@ router.post('/', async (req, res) => {
 
 		res.json(user.toJSON())
 	} catch (err) {
-		console.log(err)
 		if(err === Errors.VALIDATION_ERROR) {
 			res.status(400)
 			res.json({
 				errors: validationErrors
+			})
+		} else if(err.name === 'SequelizeUniqueConstraintError') {
+			res.status(400)
+			res.json({
+				errors: [Errors.accountAlreadyCreated]
 			})
 		} else {
 			res.status(500)
