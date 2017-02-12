@@ -79,7 +79,7 @@ describe('User', () => {
 		it('should throw an error if username or password are not a string', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
-				.set('content-type', 'application/x-www-form-urlencoded')
+				.set('content-type', 'application/json')
 				.send({
 					username: 123,
 					password: 123
@@ -104,11 +104,11 @@ describe('User', () => {
 					password: 'pass'
 				})
 				.end((err, res) => {
-					res.should.have.status(500)
+					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('username', '6'))
-					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('password', '6'))
+					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('username', '6'))
+					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('password', '6'))
 					
 					done()
 				})
@@ -122,11 +122,11 @@ describe('User', () => {
 					password: '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901'
 				})
 				.end((err, res) => {
-					res.should.have.status(500)
+					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooGreat('username', '50'))
-					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooGreat('password', '100'))
+					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('username', '50'))
+					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('password', '100'))
 					
 					done()
 				})
