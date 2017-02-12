@@ -1,14 +1,14 @@
 process.env.NODE_ENV = 'test'
 
 let chai = require('chai')
-let chaiHttp = require('chai-http')
 let server = require('../server')
 let should = chai.should()
 
 let User = require('../models').User
 const Errors = require('../lib/errors.js')
 
-chai.use(chaiHttp)
+chai.use(require('chai-http'))
+chai.use(require('chai-things'))
 
 describe('User', () => {
 	//Delete all rows in table after
@@ -51,151 +51,86 @@ describe('User', () => {
 					password: 'password'
 				})
 				.end((err, res) => {
-					res.should.have.status(500)
+					res.should.have.status(400)
 					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.accountAlreadyCreated)
+					res.body.should.have.property('errors')
+					res.body.errors.should.include.something.that.deep.equals(Errors.accountAlreadyCreated)
 					
 					done()
 				})
 		})
 
 
-		it('should throw an error if no username', (done) => {
+		it('should throw an error if no username or password', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
-				.send({
-					password: 'password'
-				})
+				.send({})
 				.end((err, res) => {
-					res.should.have.status(500)
+					res.should.have.status(400)
 					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.missingParameter('username'))
+					res.body.should.have.property('errors')
+					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('username'))
+					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('password'))
 					
 					done()
 				})
 		})
-		it('should throw an error if username is not a string', (done) => {
+		it('should throw an error if username or password are not a string', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
 					username: 123,
-					password: 'password'
+					password: 123
 				})
 				.end((err, res) => {
-					res.should.have.status(500)
+					res.should.have.status(400)
 					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.invalidParameterType('username', 'string'))
+					res.body.should.have.property('errors')
+					res.body.should.have.property('errors')
+					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('username', 'string'))
+					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('password', 'string'))
 					
 					done()
 				})
 		})
-		it('should throw an error if username less than 6 characters', (done) => {
+		it('should throw an error if username or password less than 6 characters', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
 					username: 'test',
-					password: 'password'
-				})
-				.end((err, res) => {
-					res.should.have.status(500)
-					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.parameterLengthTooSmall('username', '6'))
-					
-					done()
-				})
-		})
-		it('should throw an error if username greater than 50 characters', (done) => {
-			chai.request(server)
-				.post('/api/v1/user')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send({
-					username: '123456789012345678901234567890123456789012345678901',
-					password: 'password'
-				})
-				.end((err, res) => {
-					res.should.have.status(500)
-					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.parameterLengthTooGreat('username', '50'))
-					
-					done()
-				})
-		})
-
-
-		it('should throw an error if no password', (done) => {
-			chai.request(server)
-				.post('/api/v1/user')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send({
-					username: 'username1'
-				})
-				.end((err, res) => {
-					res.should.have.status(500)
-					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.missingParameter('password'))
-					
-					done()
-				})
-		})
-		it('should throw an error if password is not a string', (done) => {
-			chai.request(server)
-				.post('/api/v1/user')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send({
-					username: 'username1',
-					password: 123
-				})
-				.end((err, res) => {
-					res.should.have.status(500)
-					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.invalidParameterType('password', 'string'))
-					
-					done()
-				})
-		})
-		it('should throw an error if password less than 6 characters', (done) => {
-			chai.request(server)
-				.post('/api/v1/user')
-				.set('content-type', 'application/x-www-form-urlencoded')
-				.send({
-					username: 'username1',
 					password: 'pass'
 				})
 				.end((err, res) => {
 					res.should.have.status(500)
 					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.parameterLengthTooSmall('password', '6'))
+					res.body.should.have.property('errors')
+					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('username', '6'))
+					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('password', '6'))
 					
 					done()
 				})
 		})
-		it('should throw an error if password greater than 100 characters', (done) => {
+		it('should throw an error if username greater than 50 characters or password is greater than 100 characters', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
-					username: 'username1',
+					username: '123456789012345678901234567890123456789012345678901',
 					password: '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901'
 				})
 				.end((err, res) => {
 					res.should.have.status(500)
 					res.should.be.json
-					res.body.should.have.property('error')
-					res.body.error.should.deep.equal(Errors.parameterLengthTooGreat('password', '100'))
+					res.body.should.have.property('errors')
+					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooGreat('username', '50'))
+					res.body.error.should.contain.something.that.deep.equals(Errors.parameterLengthTooGreat('password', '100'))
 					
 					done()
 				})
 		})
+
 	})
 })
