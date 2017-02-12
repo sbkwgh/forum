@@ -13,7 +13,6 @@
     "body-parser": "^1.16.0",
     "cross-env": "^3.1.4",
     "express": "^4.14.1",
-    "indicative": "^2.2.1",
     "mysql": "^2.13.0",
     "sequelize": "^3.30.0",
     "sequelize-cli": "^2.5.1"
