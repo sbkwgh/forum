@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			unique: true
 		},
-		hash: type: DataTypes.STRING
+		hash: DataTypes.STRING
 	}, {
 		classMethods: {
 			associate: (models) => {
