@@ -1,7 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
 	let User = sequelize.define('User', {
-		username: DataTypes.STRING,
-		hash: DataTypes.STRING
+		username: {
+			type: DataTypes.STRING,
+			unique: true
+		},
+		hash: type: DataTypes.STRING
 	}, {
 		classMethods: {
 			associate: (models) => {
