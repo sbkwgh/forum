@@ -23,7 +23,7 @@ describe('User', () => {
 			})
 	})
 
-	describe('/POST user', () => {
+	describe('/ POST user', () => {
 		it('should create an account', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
@@ -132,5 +132,97 @@ describe('User', () => {
 				})
 		})
 
+	})
+
+	describe('/login POST user', () => {
+		let agent = chai.request.agent(server)
+
+		it('should throw an error if invalid username is provided', (done) => {
+			chai.request(server)
+				.post('/api/v1/user/login')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: 'invalid_username',
+					password: 'password'
+				})
+				.end((err, res) => {
+					res.should.have.status(401)
+					res.body.should.have.property('errors')
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidLoginCredentials)
+
+					done()
+				})
+		})
+
+		it('should throw an error if invalid password is provided', (done) => {
+			chai.request(server)
+				.post('/api/v1/user/login')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: 'username',
+					password: 'invalid_password'
+				})
+				.end((err, res) => {
+					res.should.have.status(401)
+					res.body.should.have.property('errors')
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidLoginCredentials)
+
+					done()
+				})
+		})
+
+		it('should log in the user', (done) => {
+			agent
+				.post('/api/v1/user/login')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: 'username',
+					password: 'password'
+				})
+				.end((err, res) => {
+					res.should.have.status(200)
+					res.should.be.json
+					res.should.have.cookie('connect.sid')
+
+					agent
+						.get('/api/v1/user/username')
+						.then((err, res) => {
+							res.should.have.status(200)
+
+							done()
+						})
+				})
+		})
+	})
+
+	describe('/logout POST user', () => {
+		let agent = chai.request.agent(server)
+
+		it('should log out the user', (done) => {
+			agent
+				.post('/api/v1/user/login')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: 'username',
+					password: 'password'
+				})
+				.end((err, res) => {
+
+					agent
+						.post('/api/v1/user/logout')
+						.end((err, res) => {
+							res.should.have.status(200)
+
+							agent
+								.get('/api/v1/user/username')
+								.then((err, res) => {
+									res.should.have.status(403)
+									res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+									done()
+								})
+						})
+				})
+		})
 	})
 })
