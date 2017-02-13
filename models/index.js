@@ -9,7 +9,8 @@ const db = {};
 let sequelize = new Sequelize(
 	config[env].database, config[env].username, config[env].password, {
 		host: config[env].host,
-		dialect: config[env].dialect
+		dialect: config[env].dialect,
+		logging: false
 	}
 );
 
