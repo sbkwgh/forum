@@ -64,17 +64,42 @@ router.post('/', async (req, res) => {
 	}
 })
 
-router.post('/login', async (req, res) => {
+router.get('/:username', async (req, res) => {
+	try {
+		if(
+			!req.session.loggedIn ||
+			req.session.username !== req.params.username
+		) {
+			throw Errors.requestNotAuthorized
+		}
+
+		let user = async User.findOne({
+			attributes: { exclude: ['hash', 'id'] },
+			where: { username: req.params.username }
+		})
+
+		res.json(user.toJSON())
+	} catch (err) {
+		if(err === Errors.requestNotAuthorized) {
+			res.json({
+				errors: [Errors.requestNotAuthorized]
+			})
+		} else {
+			console.log(err)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
+router.post('/:username/login', async (req, res) => {
 	let user, bcryptRes, validationErrors = []
 
 	try {
 		//Validations
-		if(req.body.username === undefined) {
-			validationErrors.push(Errors.missingParameter('username'))
-		} else if(typeof req.body.username !== 'string') {
-			validationErrors.push(Errors.invalidParameterType('username', 'string'))
-		}
-
 		if(req.body.password === undefined) {
 			validationErrors.push(Errors.missingParameter('password'))
 		} else if(typeof req.body.password !== 'string') {
@@ -85,7 +110,7 @@ router.post('/login', async (req, res) => {
 
 		user = await User.findOne({
 			where: {
-				username: req.body.username,
+				username: req.params.username,
 			}
 		})
 
@@ -93,7 +118,9 @@ router.post('/login', async (req, res) => {
 			bcryptRes = await bcrypt.compare(req.body.password, user.hash)
 
 			if(bcryptRes) {
-				req.session.loggedIn = true;
+				req.session.loggedIn = true
+				req.session.username = user.username
+
 				res.json({
 					username: user.username,
 					success: true
@@ -127,8 +154,9 @@ router.post('/login', async (req, res) => {
 	}
 })
 
-router.post('/logout', async (req, res) => {
-	req.session.loggedIn = false;
+router.post('/:username/logout', async (req, res) => {
+	req.session.loggedIn = false
+	req.session.username = undefined
 	res.json({
 		success: true
 	})
