@@ -134,15 +134,14 @@ describe('User', () => {
 
 	})
 
-	describe('/login POST user', () => {
+	describe('/:username/login POST user', () => {
 		let agent = chai.request.agent(server)
 
 		it('should throw an error if invalid username is provided', (done) => {
 			chai.request(server)
-				.post('/api/v1/user/login')
+				.post('/api/v1/user/invalid_username/login')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
-					username: 'invalid_username',
 					password: 'password'
 				})
 				.end((err, res) => {
@@ -156,10 +155,9 @@ describe('User', () => {
 
 		it('should throw an error if invalid password is provided', (done) => {
 			chai.request(server)
-				.post('/api/v1/user/login')
+				.post('/api/v1/user/username/login')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
-					username: 'username',
 					password: 'invalid_password'
 				})
 				.end((err, res) => {
@@ -173,10 +171,9 @@ describe('User', () => {
 
 		it('should log in the user', (done) => {
 			agent
-				.post('/api/v1/user/login')
+				.post('/api/v1/user/username/login')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
-					username: 'username',
 					password: 'password'
 				})
 				.end((err, res) => {
