@@ -183,16 +183,17 @@ describe('User', () => {
 
 					agent
 						.get('/api/v1/user/username')
-						.then((err, res) => {
+						.then((res) => {
 							res.should.have.status(200)
 
 							done()
 						})
+						.catch(done)
 				})
 		})
 	})
 
-	describe('/logout POST user', () => {
+	describe('/:username/logout POST user', () => {
 		let agent = chai.request.agent(server)
 
 		it('should log out the user', (done) => {
@@ -206,18 +207,19 @@ describe('User', () => {
 				.end((err, res) => {
 
 					agent
-						.post('/api/v1/user/logout')
+						.post('/api/v1/user/username/logout')
 						.end((err, res) => {
 							res.should.have.status(200)
 
 							agent
 								.get('/api/v1/user/username')
-								.then((err, res) => {
+								.then((res) => {
 									res.should.have.status(403)
 									res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
 									done()
 								})
+								.catch(done)
 						})
 				})
 		})
