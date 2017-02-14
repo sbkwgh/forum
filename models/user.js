@@ -4,13 +4,8 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			unique: true
 		},
-		hash: DataTypes.STRING
-	}, {
-		classMethods: {
-			associate: (models) => {
-				// associations can be defined here
-			}
-		}
+		hash: DataTypes.STRING,
+		admin: DataTypes.BOOLEAN
 	})
 
 	return User
