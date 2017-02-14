@@ -4,8 +4,8 @@
   "description": "Backend for forum",
   "main": "server.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate && node ./node_modules/mocha/bin/mocha  --harmony --timeout 10000",
-    "start": "cross-env NODE_ENV=development node_modules/.bin/sequelize db:migrate && node --harmony server.js"
+    "test": "cross-env NODE_ENV=test && node ./node_modules/mocha/bin/mocha  --harmony --timeout 10000",
+    "start": "cross-env NODE_ENV=development && node --harmony server.js"
   },
   "author": "",
   "license": "ISC",
