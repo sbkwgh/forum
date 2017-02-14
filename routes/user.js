@@ -77,6 +77,10 @@ router.post('/', async (req, res) => {
 		userParams.hash = hash
 		user = await User.create(userParams)
 
+		if(req.body.token) {
+			await token.destroy()
+		}
+
 		req.session.loggedIn = true
 		req.session.username = user.username
 		res.json(user.toJSON())
