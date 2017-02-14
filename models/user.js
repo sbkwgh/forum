@@ -5,7 +5,10 @@ module.exports = (sequelize, DataTypes) => {
 			unique: true
 		},
 		hash: DataTypes.STRING,
-		admin: DataTypes.BOOLEAN
+		admin: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
+		}
 	})
 
 	return User
