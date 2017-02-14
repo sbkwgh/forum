@@ -42,6 +42,137 @@ describe('User', () => {
 				})
 		})
 
+		it('should create an admin account if no is already created', (done) => {
+			chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/json')
+				.send({
+					username: 'adminaccount',
+					password: 'password',
+					admin: true
+				})
+				.end((err, res) => {
+					res.should.have.status(200)
+					res.body.should.have.property('username', 'adminaccount')
+					res.body.should.have.property('hash')
+					res.body.should.have.property('admin', true)
+
+					done()
+				})
+		})
+
+		it('should give an error if an admin account is already created and no token is provided', (done) => {
+			chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/json')
+				.send({
+					username: 'adminaccount1',
+					password: 'password',
+					admin: true
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.should.be.json
+					res.body.should.have.property('errors')
+					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('token'))
+
+					done()
+				})
+		})
+
+		it('should give an error if admin and token fields are not of the correct type ', (done) => {
+			chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/json')
+				.send({
+					username: 'adminaccount1',
+					password: 'password',
+					admin: 'not a boolean',
+					token: 123
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.should.be.json
+					res.body.should.have.property('errors')
+					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('admin', 'boolean'))
+					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('token', 'string'))
+
+					done()
+				})
+		})
+
+		it('should give an error if an admin account is already created and token is invalid', (done) => {
+			chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/json')
+				.send({
+					username: 'adminaccount1',
+					password: 'password',
+					admin: true,
+					token: 'invalid_token'
+				})
+				.end((err, res) => {
+					res.should.have.status(401)
+					res.should.be.json
+					res.body.should.have.property('errors')
+					res.body.errors.should.include.something.that.deep.equals(Errors.invalidToken)
+
+					done()
+				})
+		})
+
+		it('should create an admin account provided with a token', async (done) => {
+			let agent = chai.request.agent(server)
+
+			try {
+				await agent
+					.post('/api/v1/user/adminaccount/login')
+					.set('content-type', 'application/json')
+					.send({
+						password: 'password'
+					})
+
+				let tokenRes = await agent.post('/api/v1/admin_token')
+				let token = tokenRes.body.token
+							
+				let accountRes = await chai.request(server)
+					.post('/api/v1/user')
+					.set('content-type', 'application/json')
+					.send({
+						username: 'adminaccount1',
+						password: 'password',
+						admin: true,
+						token: token
+					})
+
+				accountRes.should.have.status(200)
+				accountRes.should.be.json
+				accountRes.body.should.have.property('admin', true)
+				accountRes.body.should.have.property('username', 'adminaccount1')
+				accountRes.body.should.have.property('hash')	
+
+				let invalidAccountRes = await chai.request(server)
+					.post('/api/v1/user')
+					.set('content-type', 'application/json')
+					.send({
+						username: 'adminaccount2',
+						password: 'password',
+						admin: true,
+						token: token
+					})
+
+				invalidAccountRes.should.have.status(401)
+				invalidAccountRes.should.be.json
+				invalidAccountRes.body.should.have.property('errors')
+				invalidAccountRes.body.errors.should.include.something.that.deep.equals(Errors.invalidToken)
+
+				done()
+				
+			} catch (err) {
+				done(err)
+			}	
+		})
+
 		it('should log in the user after creating an account', (done) => {
 			let agent = chai.request.agent(server)
 
