@@ -43,6 +43,8 @@ router.post('/', async (req, res) => {
 			hash: hash
 		})
 
+		req.session.loggedIn = true
+		req.session.username = user.username
 		res.json(user.toJSON())
 	} catch (err) {
 		if(err === Errors.VALIDATION_ERROR) {

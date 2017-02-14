@@ -42,6 +42,29 @@ describe('User', () => {
 				})
 		})
 
+		it('should log in the user after creating an account', (done) => {
+			let agent = chai.request.agent(server)
+
+			agent
+				.post('/api/v1/user')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: 'username1',
+					password: 'password'
+				})
+				.end((err, res) => {
+					
+					agent
+						.get('/api/v1/user/username1')
+						.then((res) => {
+							res.should.have.status(200)
+
+							done()
+						})
+						.catch(done)
+				})
+		})
+
 		it('should throw an error if account already created', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
