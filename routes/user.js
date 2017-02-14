@@ -3,10 +3,14 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let User = require('../models').User
+let Models = require('../models')
+let User = Models.User
+let AdminToken = Models.AdminToken
 
 router.post('/', async (req, res) => {
-	let user, hash, validationErrors = [];
+	let user, adminUser, hash, token
+	let validationErrors = []
+	let userParams = {}
 
 	try {
 		//Validations
@@ -34,14 +38,44 @@ router.post('/', async (req, res) => {
 			}
 		}
 
+		if(req.body.token !== undefined && typeof req.body.token !== 'string') {
+			validationErrors.push(Errors.invalidParameterType('token', 'string'))
+		}
+		if(req.body.admin !== undefined && typeof req.body.admin !== 'boolean') {
+			validationErrors.push(Errors.invalidParameterType('admin', 'boolean'))
+		}
+
 		if(validationErrors.length) throw Errors.VALIDATION_ERROR
+
+		if(req.body.admin && !req.body.token) {
+			adminUser = await User.findOne({ where: {
+				admin: true
+			}})
+
+			if(admin) {
+				validationErrors.push(Errors.missingParameter('token'))
+				throw Errors.VALIDATION_ERROR
+			} else {
+				userParams.admin = true
+			}
+		} else if(req.body.admin && req.body.token) {
+			token = await AdminToken.findOne({ where: {
+				token: req.body.token
+			}})
+
+			if(token && token.isValid()) {
+				userParams.admin = true
+			} else {
+				validationErrors.push(Errors.invalidToken)
+				throw Errors.VALIDATION_ERROR
+			}
+		}
 
 		hash = await bcrypt.hash(req.body.password, 12)
 
-		user = await User.create({
-			username: req.body.username,
-			hash: hash
-		})
+		userParams.username = req.body.username
+		userParams.hash = hash
+		user = await User.create(userParams)
 
 		req.session.loggedIn = true
 		req.session.username = user.username
