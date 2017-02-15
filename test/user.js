@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'test'
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 let chai = require('chai')
 let server = require('../server')
@@ -20,15 +21,7 @@ describe('User', () => {
 
 	//Delete all rows in table after
 	//tests completed
-	after((done) => {
-		User.sync({ force: true })
-			.then(() => {
-				done(null);
-			})
-			.catch((err) => {
-				done(err)
-			})
-	})
+	after(() => User.sync({ force: true }) )
 
 	describe('/ POST user', () => {
 		it('should create an account', (done) => {
@@ -128,36 +121,36 @@ describe('User', () => {
 				})
 		})
 
-		it('should create an admin account provided with a token', async (done) => {
+		it('should create an admin account provided with a token', async () => {
 			let agent = chai.request.agent(server)
 
+			await agent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({
+					password: 'password'
+				})
+
+			let tokenRes = await agent.post('/api/v1/admin_token')
+			let token = tokenRes.body.token
+						
+			let accountRes = await chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/json')
+				.send({
+					username: 'adminaccount1',
+					password: 'password',
+					admin: true,
+					token: token
+				})
+
+			accountRes.should.have.status(200)
+			accountRes.should.be.json
+			accountRes.body.should.have.property('admin', true)
+			accountRes.body.should.have.property('username', 'adminaccount1')
+			accountRes.body.should.have.property('hash')	
+
 			try {
-				await agent
-					.post('/api/v1/user/adminaccount/login')
-					.set('content-type', 'application/json')
-					.send({
-						password: 'password'
-					})
-
-				let tokenRes = await agent.post('/api/v1/admin_token')
-				let token = tokenRes.body.token
-							
-				let accountRes = await chai.request(server)
-					.post('/api/v1/user')
-					.set('content-type', 'application/json')
-					.send({
-						username: 'adminaccount1',
-						password: 'password',
-						admin: true,
-						token: token
-					})
-
-				accountRes.should.have.status(200)
-				accountRes.should.be.json
-				accountRes.body.should.have.property('admin', true)
-				accountRes.body.should.have.property('username', 'adminaccount1')
-				accountRes.body.should.have.property('hash')	
-
 				let invalidAccountRes = await chai.request(server)
 					.post('/api/v1/user')
 					.set('content-type', 'application/json')
@@ -167,17 +160,15 @@ describe('User', () => {
 						admin: true,
 						token: token
 					})
-
+				
 				invalidAccountRes.should.have.status(401)
 				invalidAccountRes.should.be.json
 				invalidAccountRes.body.should.have.property('errors')
 				invalidAccountRes.body.errors.should.include.something.that.deep.equals(Errors.invalidToken)
-
-				done()
-
-			} catch (err) {
-				done(err)
-			}	
+			} catch (res) {
+				res.should.have.status(401)
+				JSON.parse(res.response.text).errors.should.include.something.that.deep.equals(Errors.invalidToken)
+			}
 		})
 
 		it('should log in the user after creating an account', (done) => {
@@ -380,7 +371,15 @@ describe('User', () => {
 
 									done()
 								})
-								.catch(done)
+								.catch((res) => {
+									res.should.have.status(403)
+									JSON
+										.parse(res.response.text)
+										.errors.should.contain.something
+										.that.deep.equals(Errors.requestNotAuthorized)
+
+									done()
+								})
 						})
 				})
 		})
