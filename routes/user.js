@@ -53,7 +53,6 @@ router.post('/', async (req, res) => {
 			}})
 
 			if(adminUser) {
-
 				validationErrors.push(Errors.missingParameter('token'))
 				throw Errors.VALIDATION_ERROR
 			} else {
@@ -68,8 +67,7 @@ router.post('/', async (req, res) => {
 			if(token && token.isValid()) {
 				userParams.admin = true
 			} else {
-				validationErrors.push(Errors.invalidToken)
-				throw Errors.VALIDATION_ERROR
+				throw Errors.invalidToken
 			}
 		}
 
@@ -96,6 +94,11 @@ router.post('/', async (req, res) => {
 			res.status(400)
 			res.json({
 				errors: [Errors.accountAlreadyCreated]
+			})
+		} else if (err = Errors.invalidToken) {
+			res.status(401)
+			res.json({
+				errors: [Errors.invalidToken]
 			})
 		} else {
 			res.status(500)
