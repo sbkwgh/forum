@@ -1,6 +1,13 @@
+let marked = require('marked')
+
 module.exports = (sequelize, DataTypes) => {
 	let Post = sequelize.define('Thread', {
-		title: DataTypes.STRING
+		content: {
+			type: DataTypes.STRING,
+			set (val) {
+				return marked(val)
+			}
+		}
 	}, {
 		classMethods: {
 			associate (models) {
