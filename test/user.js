@@ -11,6 +11,13 @@ chai.use(require('chai-http'))
 chai.use(require('chai-things'))
 
 describe('User', () => {
+	//Wait for app to start before commencing
+	before((done) => {
+		server.on('appStarted', () => {
+			done()
+		})
+	})
+
 	//Delete all rows in table after
 	//tests completed
 	after((done) => {
@@ -167,7 +174,7 @@ describe('User', () => {
 				invalidAccountRes.body.errors.should.include.something.that.deep.equals(Errors.invalidToken)
 
 				done()
-				
+
 			} catch (err) {
 				done(err)
 			}	
