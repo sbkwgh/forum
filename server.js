@@ -28,12 +28,15 @@ if(process.env.NODE_ENV === 'production') {
 }
 
 app.use('/api/v1/user', require('./routes/user'))
+app.use('/api/v1/admin_token', require('./routes/admin_token'))
 
 sequelize
 	.sync({ force: true })
 	.then(() => {
 		app.listen(config.port, () => {
 			console.log('Listening on ' + config.port)
+
+			app.emit('appStarted')
 		})
 	})
 	.catch((err) => {
