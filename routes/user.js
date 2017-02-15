@@ -52,10 +52,12 @@ router.post('/', async (req, res) => {
 				admin: true
 			}})
 
-			if(admin) {
+			if(adminUser) {
+
 				validationErrors.push(Errors.missingParameter('token'))
 				throw Errors.VALIDATION_ERROR
 			} else {
+				
 				userParams.admin = true
 			}
 		} else if(req.body.admin && req.body.token) {
