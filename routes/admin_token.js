@@ -23,9 +23,9 @@ router.post('/', async (req, res) => {
 			console.log(err)
 
 			res.status(500)
-			res.json{
+			res.json({
 				errors: [Errors.unknown]
-			}
+			})
 		}
 	}
 })
