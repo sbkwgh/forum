@@ -14,6 +14,8 @@ chai.use(require('chai-things'))
 describe('Category', () => {
 	//Wait for app to start before commencing
 	before((done) => {
+		if(server.locals.appStarted) done()
+
 		server.on('appStarted', () => {
 			done()
 		})

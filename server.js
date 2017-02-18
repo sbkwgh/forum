@@ -37,6 +37,7 @@ sequelize
 		app.listen(config.port, () => {
 			console.log('Listening on ' + config.port)
 
+			app.locals.appStarted = true
 			app.emit('appStarted')
 		})
 	})
