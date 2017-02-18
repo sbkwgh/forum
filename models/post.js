@@ -1,7 +1,7 @@
 let marked = require('marked')
 
 module.exports = (sequelize, DataTypes) => {
-	let Post = sequelize.define('Thread', {
+	let Post = sequelize.define('Post', {
 		content: {
 			type: DataTypes.STRING,
 			set (val) {
