@@ -10,14 +10,15 @@ router.all('*', (req, res, next) => {
 	} else {
 		res.status(401)
 		res.json({
-			errors: Errors.requestNotAuthorized
+			errors: [Errors.requestNotAuthorized]
 		})
 	}
 })
 
 router.post('/', async (req, res) => {
+	let validationErrors = []
+
 	try {
-		let validationErrors = []
 
 		if(req.body.name === undefined) {
 			validationErrors.push(Errors.missingParameter('name'))
@@ -50,26 +51,30 @@ router.post('/', async (req, res) => {
 		await thread.setCategory(category)
 		await thread.setUser(user)
 
-		res.json(thread.toJSON())
+		res.json(await thread.reload({
+			include: [
+				{ model: User, attributes: ['username', 'createdAt', 'updatedAt', 'id'] }, 
+				Category
+			]
+		}))
 
 	} catch (e) {
-		switch (e) {
-			case Errors.VALIDATION_ERROR:
-				res.status(400)
-				res.json({
-					errors: validationErrors
-				})
-				break
-			case Errors.invalidCategory
-				res.status(401)
-				res.json({
-					errors: [Errors.invalidCategory]
-				})
-			default:
-				res.status(500)
-				res.json({
-					errors: [Errors.unknown]
-				}) 
+		if(e === Errors.VALIDATION_ERROR) {
+			res.status(400)
+			res.json({
+				errors: validationErrors
+			})
+		} else if(e === Errors.invalidCategory) {
+			res.status(400)
+			res.json({
+				errors: [Errors.invalidCategory]
+			})
+		} else {
+			console.log(e)
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			}) 
 		}
 	}
 })
