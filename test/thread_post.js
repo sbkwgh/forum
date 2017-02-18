@@ -58,13 +58,15 @@ describe('Thread and post', () => {
 				.post('/api/v1/thread')
 				.set('content-type', 'application/json')
 				.send({
-					name: 'thread'
+					name: 'thread',
+					category: 'category_name'
 				})
 
-			res.should.be.status(200)
-			res.body.should.be.json
+			res.should.have.status(200)
+			res.should.be.json
 			res.body.should.have.property('name', 'thread')
-
+			res.body.should.have.deep.property('User.username', 'username')
+			res.body.should.have.deep.property('Category.name', 'category_name')
 		})
 		it('should return an error if not logged in', async () => {
 			try {
@@ -86,7 +88,7 @@ describe('Thread and post', () => {
 		})
 		it('should return an error if missing parameters', async () => {
 			try {
-				let res = await agent
+				let res = await userAgent
 					.post('/api/v1/thread')
 
 				res.should.be.json
@@ -102,7 +104,7 @@ describe('Thread and post', () => {
 		})
 		it('should return an error if invalid types', async () => {
 			try {
-				let res = await agent
+				let res = await userAgent
 					.post('/api/v1/thread')
 					.set('content-type', 'application/json')
 					.send({
@@ -123,7 +125,7 @@ describe('Thread and post', () => {
 		})
 		it('should return an error if category does not exist', async () => {
 			try {
-				let res = await agent
+				let res = await userAgent
 					.post('/api/v1/thread')
 					.set('content-type', 'application/json')
 					.send({
