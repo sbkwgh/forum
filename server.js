@@ -29,6 +29,7 @@ if(process.env.NODE_ENV === 'production') {
 
 app.use('/api/v1/user', require('./routes/user'))
 app.use('/api/v1/admin_token', require('./routes/admin_token'))
+app.use('/api/v1/category', require('./routes/category'))
 
 sequelize
 	.sync({ force: true })
