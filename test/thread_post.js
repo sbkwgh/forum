@@ -12,13 +12,32 @@ chai.use(require('chai-http'))
 chai.use(require('chai-things'))
 
 describe('Thread and post', () => {
+	let userAgent
+
 	//Wait for app to start before commencing
 	before((done) => {
-		if(server.locals.appStarted) done()
+		if(server.locals.appStarted) createUser()
 
 		server.on('appStarted', () => {
-			done()
+			createUser()
 		})
+
+		function createUser() {
+			userAgent = chai.request.agent(server)
+
+			userAgent
+				.post('/api/v1/user')
+				.set('content-type', 'application/json')
+				.send({
+					username: 'username',
+					password: 'password',
+				})
+				.then(() => {
+					done()
+				})
+				.catch(done)
+		}
+
 	})
 
 	//Delete all rows in table after
