@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
 		classMethods: {
 			associate (models) {
 				Thread.belongsTo(models.User)
+				Thread.belongsTo(models.Category)
 				Thread.hasMany(models.Post)
 			}
 		}
