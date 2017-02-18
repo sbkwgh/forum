@@ -16,13 +16,13 @@ describe('Thread and post', () => {
 
 	//Wait for app to start before commencing
 	before((done) => {
-		if(server.locals.appStarted) createUser()
+		if(server.locals.appStarted) mockData()
 
 		server.on('appStarted', () => {
-			createUser()
+			mockData()
 		})
 
-		function createUser() {
+		function mockData() {
 			userAgent = chai.request.agent(server)
 
 			userAgent
@@ -31,9 +31,15 @@ describe('Thread and post', () => {
 				.send({
 					username: 'username',
 					password: 'password',
+					admin: true
 				})
 				.then(() => {
-					done()
+					userAgent
+						.post('/api/v1/category')
+						.set('content-type', 'application/json')
+						.send({ name: 'category_name' })
+						.then(() => { done() })
+						.catch(done)
 				})
 				.catch(done)
 		}
@@ -100,15 +106,19 @@ describe('Thread and post', () => {
 					.post('/api/v1/thread')
 					.set('content-type', 'application/json')
 					.send({
-						name: 123
+						name: 123,
+						category: 123
 					})
 
 				res.should.be.json
 				res.should.have.status(400)
 				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('name', 'string'))
+				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('category', 'string'))
 			} catch (res) {
+				let body = JSON.parse(res.response.text)
 				res.should.have.status(400)
-				JSON.parse(res.response.text).errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('name', 'string'))
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('name', 'string'))
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('category', 'string'))
 			}
 		})
 		it('should return an error if category does not exist', async () => {
