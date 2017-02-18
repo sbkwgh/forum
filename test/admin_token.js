@@ -4,9 +4,7 @@ let chai = require('chai')
 let server = require('../server')
 let should = chai.should()
 
-let Models = require('../models')
-let User = Models.User
-let AdminToken = Models.AdminToken
+let { sequelize } = require('../models')
 
 const Errors = require('../lib/errors.js')
 
@@ -23,18 +21,7 @@ describe('AdminToken', () => {
 
 	//Delete all rows in table after
 	//tests completed
-	after((done) => {
-		Promise.all([
-			User.sync({ force: true }),
-			AdminToken.sync({ force: true })
-		])
-			.then(() => {
-				done(null);
-			})
-			.catch((err) => {
-				done(err)
-			})
-	})
+	after(() => sequelize.sync({ force: true }))
 
 	describe('POST /admin_token', async () => {
 		let token

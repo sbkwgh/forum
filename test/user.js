@@ -5,7 +5,7 @@ let chai = require('chai')
 let server = require('../server')
 let should = chai.should()
 
-let User = require('../models').User
+let { sequelize } = require('../models')
 const Errors = require('../lib/errors.js')
 
 chai.use(require('chai-http'))
@@ -21,7 +21,7 @@ describe('User', () => {
 
 	//Delete all rows in table after
 	//tests completed
-	after(() => User.sync({ force: true }) )
+	after(() => sequelize.sync({ force: true }) )
 
 	describe('/ POST user', () => {
 		it('should create an account', (done) => {
