@@ -83,6 +83,8 @@ router.post('/', async (req, res) => {
 
 		req.session.loggedIn = true
 		req.session.username = user.username
+		if(userParams.admin) req.session.admin = true
+
 		res.json(user.toJSON())
 	} catch (err) {
 		if(err === Errors.VALIDATION_ERROR) {
@@ -167,6 +169,8 @@ router.post('/:username/login', async (req, res) => {
 				req.session.loggedIn = true
 				req.session.username = user.username
 
+				if(user.admin) req.session.admin = true
+
 				res.json({
 					username: user.username,
 					success: true
@@ -201,8 +205,8 @@ router.post('/:username/login', async (req, res) => {
 })
 
 router.post('/:username/logout', async (req, res) => {
-	req.session.loggedIn = false
-	req.session.username = undefined
+	req.session = null
+	
 	res.json({
 		success: true
 	})
