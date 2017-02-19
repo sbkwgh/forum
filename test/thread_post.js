@@ -269,7 +269,7 @@ describe('Thread and post', () => {
 					.post('/api/v1/post')
 					.set('content-type', 'application/json')
 					.send({
-						content: 'another post',
+						content: 'yet another post',
 						threadId: 1,
 						replyingToId: 10
 					})
@@ -297,7 +297,7 @@ describe('Thread and post', () => {
 					.post('/api/v1/post')
 					.set('content-type', 'application/json')
 					.send({
-						content: 'another post',
+						content: 'yet another post',
 						threadId: threadId,
 						replyingToId: 1
 					})
@@ -314,14 +314,63 @@ describe('Thread and post', () => {
 	})
 
 	describe('GET /thread/:id', () => {
-		it('should return the thread and corresponding posts', async () => {})
-		it('should return an error if :id is invalid', async () => {})
+		it('should return the thread and corresponding posts', async () => {
+			let res = await chai.request(server).get('/api/v1/thread/1')
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.should.have.property('name', 'thread')
+			res.body.should.have.deep.property('Category.name', 'category_name')
+			res.body.should.have.deep.property('User.username', 'username')
+			res.body.should.have.property('Posts')
+			
+			res.body.Posts.should.have.property('length', 2)
+
+			res.body.Posts.should.contain.something.that.has.property('content', '<p>content</p>\n')
+			res.body.Posts.should.contain.something.that.has.deep.property('User.username', 'username')
+			
+			res.body.Posts.should.contain.something.that.has.property('content', '<p>another post</p>\n')
+			res.body.Posts.should.contain.something.that.has.deep.property('User.username', 'username1')
+		})
+		it('should return an error if :id is invalid', async () => {
+			try {
+				let res = await chai.request(server).get('/api/v1/thread/invalid')
+
+				res.should.have.status(400)
+				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'thread does not exist'))
+			} catch (res) {
+				let body = JSON.parse(res.response.text)
+
+				res.should.have.status(400)
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'thread does not exist'))
+			}
+		})
 	})
 
-	
-
 	describe('GET /post/:id', () => {
-		it('should return the post', async () => {})
-		it('should return an error if invalid post id', async () => {})
+		it('should return the post', async () => {
+			let res = await chai.request(server).get('/api/v1/post/1')
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.should.have.property('content', '<p>content</p>\n')
+			res.body.should.have.deep.property('User.username', 'username')
+			res.body.should.have.deep.property('Thread.name', 'thread')
+			res.body.should.have.deep.property('Thread.Category.name', 'category_name')
+			res.body.should.have.deep.property('Replies.0.User.username', 'username1')
+		})
+		it('should return an error if invalid post id', async () => {
+			try {
+				let res = await chai.request(server).get('/api/v1/post/invalid')
+
+				res.should.have.status(400)
+				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'post does not exist'))
+			} catch (res) {
+				let body = JSON.parse(res.response.text)
+
+				res.should.have.status(400)
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'post does not exist'))
+			}
+		})
 	})
 })
