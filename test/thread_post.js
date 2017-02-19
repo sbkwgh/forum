@@ -187,18 +187,18 @@ describe('Thread and post', () => {
 				res.should.be.json
 				res.should.have.status(400)
 				res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('content'))
-				res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('thread'))
+				res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('threadId'))
 			} catch (res) {
 				let body = JSON.parse(res.response.text)
 				res.should.have.status(400)
 				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('content'))
-				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('thread'))
+				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('threadId'))
 			}
 		})
 		it('should return an error if invalid types', async () => {
 			try {
 				let res = await userAgent
-					.post('/api/v1/thread')
+					.post('/api/v1/post')
 					.set('content-type', 'application/json')
 					.send({
 						content: 123,
@@ -209,13 +209,13 @@ describe('Thread and post', () => {
 				res.should.be.json
 				res.should.have.status(400)
 				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('content', 'string'))
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('thread', 'integer'))
+				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('threadId', 'integer'))
 				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('replyingToId', 'integer'))
 			} catch (res) {
 				let body = JSON.parse(res.response.text)
 				res.should.have.status(400)
 				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('content', 'string'))
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('thread', 'integer'))
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('threadId', 'integer'))
 				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('replyingToId', 'integer'))
 			}
 		})
@@ -231,11 +231,11 @@ describe('Thread and post', () => {
 
 				res.should.be.json
 				res.should.have.status(400)
-				res.body.should.include.something.that.deep.equals(Errors.invalidParameter('thread', 'thread does not exist'))
-			} catch (e) {
+				res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameter('threadId', 'thread does not exist'))
+			} catch (res) {
 				let body = JSON.parse(res.response.text)
 				res.should.have.status(400)
-				body.should.include.something.that.deep.equals(Errors.invalidParameter('thread', 'thread does not exist'))
+				body.errors.should.include.something.that.deep.equals(Errors.invalidParameter('threadId', 'thread does not exist'))
 			}
 		})
 		it('should be able to reply to a post', async () => {
@@ -247,7 +247,7 @@ describe('Thread and post', () => {
 					password: 'password'
 				})
 
-			let res = replyAgent
+			let res = await replyAgent
 				.post('/api/v1/post')
 				.set('content-type', 'application/json')
 				.send({
@@ -261,11 +261,11 @@ describe('Thread and post', () => {
 			res.body.should.have.property('content', '<p>another post</p>\n')
 			res.body.should.have.deep.property('User.username', 'username1')
 			res.body.should.have.deep.property('Thread.name', 'thread')
-			res.body.should.have.deep.property('replyingToId.username', 'username')
+			res.body.should.have.deep.property('ReplyingTo.User.username', 'username')
 		})
 		it('should return an error if reply id does not exist', async () => {
 			try {
-				let res = replyAgent
+				let res = await replyAgent
 					.post('/api/v1/post')
 					.set('content-type', 'application/json')
 					.send({
@@ -275,12 +275,12 @@ describe('Thread and post', () => {
 					})
 
 				res.should.have.status(400)
-				res.body.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'post does not exist'))
-			} catch (e) {
+				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'post does not exist'))
+			} catch (res) {
 				let body = JSON.parse(res.response.text)
 
 				res.should.have.status(400)
-				body.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'post does not exist'))
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'post does not exist'))
 			}
 		})
 		it('should return an error if post reply not in same thread', async () => {
@@ -303,12 +303,12 @@ describe('Thread and post', () => {
 					})
 
 				res.should.have.status(400)
-				res.body.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'replies must be in same thread'))
+				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'replies must be in same thread'))
 			} catch (res) {
 				let body = JSON.parse(res.response.text)
 
 				res.should.have.status(400)
-				body.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'replies must be in same thread'))
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('replyingToId', 'replies must be in same thread'))
 			}
 		})
 	})

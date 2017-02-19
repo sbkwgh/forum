@@ -23,16 +23,16 @@ router.post('/', async (req, res) => {
 		if(req.body.content === undefined) {
 			validationErrors.push(Errors.missingParameter('content'))
 		} else if(typeof req.body.content !== 'string') {
-			validationErrors.push(Errors.invalidParamterType('content', 'string'))
+			validationErrors.push(Errors.invalidParameterType('content', 'string'))
 		} if (req.body.threadId === undefined) {
 			validationErrors.push(Errors.missingParameter('threadId'))
-		} else if(!Object.isInteger(req.body.threadId)) {
-			validationErrors.push(Errors.invalidParamterType('threadId', 'integer'))
-		} if(req.body.replyingToId !== undefined && !Object.isInteger(req.body.replyingToId)) {
-			validationErrors.push(Errors.invalidParamterType('replyingToId', 'integer'))
+		} else if(!Number.isInteger(req.body.threadId)) {
+			validationErrors.push(Errors.invalidParameterType('threadId', 'integer'))
+		} if(req.body.replyingToId !== undefined && !Number.isInteger(req.body.replyingToId)) {
+			validationErrors.push(Errors.invalidParameterType('replyingToId', 'integer'))
 		}
 
-		if(validationErrors) throw Errors.VALIDATION_ERROR
+		if(validationErrors.length) throw Errors.VALIDATION_ERROR
 
 		post = await Post.create({
 			content: req.body.content
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
 			username: req.session.username
 		}})
 
-		if(!thread) throw Errors.invalidParamter('threadId', 'thread does not exist')
+		if(!thread) throw Errors.invalidParameter('threadId', 'thread does not exist')
 
 		await post.setUser(user)
 		await post.setThread(thread)
@@ -57,9 +57,9 @@ router.post('/', async (req, res) => {
 			}, include: [Thread] })
 
 			if(!replyingToPost) {
-				throw Errors.invalidParamter('replyingToId', 'post does not exist')
+				throw Errors.invalidParameter('replyingToId', 'post does not exist')
 			} else if(replyingToPost.Thread.id !== thread.id) {
-				throw Errors.invalidParamter('replyingToId', 'replies must be in same thread')
+				throw Errors.invalidParameter('replyingToId', 'replies must be in same thread')
 			} else {
 				await post.setReplyingTo(replyingToPost)
 				await replyingToPost.addReplies(post)
@@ -81,12 +81,13 @@ router.post('/', async (req, res) => {
 			res.json({
 				errors: validationErrors
 			})
-		} else if(e.name === 'invalidParamter') {
+		} else if(e.name === 'invalidParameter') {
 			res.status(400)
 			res.json({
 				errors: [e]
 			})
 		} else {
+			console.log(e)
 			res.status(500)
 			res.json({
 				errors: [Errors.unknown]
@@ -95,4 +96,4 @@ router.post('/', async (req, res) => {
 	}
 })
 
-module.exports  router
+module.exports = router
