@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
 			associate (models) {
 				Post.belongsTo(models.User)
 				Post.belongsTo(models.Thread)
-				Post.hasMany(models.Post, { as: 'replies' })
-				Post.hasOne(models.Post, { as: 'replyingTo' })
+				Post.hasMany(models.Post, { as: 'Replies' })
+				Post.hasOne(models.Post, { as: 'ReplyingTo' })
 			}
 		}
 	})
