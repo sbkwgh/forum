@@ -4,6 +4,17 @@ let router = express.Router()
 const Errors = require('../lib/errors')
 let { User, Thread, Post } = require('../models')
 
+router.all('*', (req, res, next) {
+	if(req.session.loggedIn) {
+		next()
+	} else {
+		res.status(401)
+		res.json({
+			errors: [Errors.requestNotAuthorized]
+		})
+	}
+})
+
 router.post('/', async (req, res) => {
 	let validationErrors = []
 	let thread, replyingToPost, post
