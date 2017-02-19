@@ -52,7 +52,7 @@
 	}
 
 	.admin_menu {
-		width: 15%;
+		width: 15rem;
 		height: 100%;
 		border-right: 0.125rem solid $color__gray--primary;
 
@@ -88,6 +88,6 @@
 		}
 	}
 	.admin_page {
-		width: 85%;
+		width: calc(100% - 15rem);
 	}
 </style>
