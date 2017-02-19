@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import index from './modules/index'
 import category from './modules/category'
 import thread from './modules/thread'
+import admin from './modules/admin'
 
 Vue.use(Vuex)
 
@@ -78,6 +79,7 @@ export default new Vuex.Store({
 	modules: {
 		index,
 		category,
-		thread
+		thread,
+		admin
 	}
 })
