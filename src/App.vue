@@ -154,11 +154,12 @@
 		width: 80%;
 		margin: 0 auto;
 		margin-top: 2rem;
+		padding-bottom: 2rem;
 	}
 
 	#app {
-		padding-bottom: 2rem;
-		padding-top: 5rem;
+		padding-top: 4.5rem;
+		height: 100%;
 	}
 
 	.header {
