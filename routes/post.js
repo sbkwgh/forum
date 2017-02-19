@@ -4,7 +4,7 @@ let router = express.Router()
 const Errors = require('../lib/errors')
 let { User, Thread, Post } = require('../models')
 
-router.all('*', (req, res, next) {
+router.all('*', (req, res, next) => {
 	if(req.session.loggedIn) {
 		next()
 	} else {
