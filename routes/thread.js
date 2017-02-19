@@ -4,6 +4,27 @@ let router = express.Router()
 const Errors = require('../lib/errors.js')
 let { User, Thread, Category } = require('../models')
 
+router.get('/:thread_id', async (req, res) => {
+	try {
+		let thread = await Thread.findById(req.params.thread_id, { include: Thread.includeOptions() })
+		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
+
+		res.json(thread.toJSON())
+	} catch (e) {
+		if(e.name === 'invalidParameter') {
+			res.status(400)
+			res.json({
+				errors: [e]
+			})
+		} else {
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 router.all('*', (req, res, next) => {
 	if(req.session.loggedIn) {
 		next()
