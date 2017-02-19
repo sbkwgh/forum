@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
 		content: {
 			type: DataTypes.STRING,
 			set (val) {
-				return marked(val)
+				this.setDataValue('content', marked(val))
 			}
 		}
 	}, {
