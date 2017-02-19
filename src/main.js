@@ -9,6 +9,7 @@ import Index from './components/routes/Index'
 import Category from './components/routes/Category'
 import Thread from './components/routes/Thread'
 import ThreadNew from './components/routes/ThreadNew'
+import Admin from './components/routes/Admin'
 
 import onResize from './assets/js/flexBoxGridCorrect'
 
@@ -22,7 +23,8 @@ const router = new VueRouter({
 		{ path: '/', component: Index },
 		{ path: '/category/:category', component: Category },
 		{ path: '/thread/:slug/:id', component: Thread },
-		{ path: '/thread/new', component: ThreadNew }
+		{ path: '/thread/new', component: ThreadNew },
+		{ path: '/admin', component: Admin }
 	],
 	mode: 'history'
 })
