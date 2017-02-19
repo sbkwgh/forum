@@ -28,7 +28,14 @@
 				return this.$store.state.admin.selected
 			}
 		},
-		methods: {}
+		mounted () {
+			this.$store.commit('setMenuItem', this.$route.path.split('/')[2])
+		},
+		watch: {
+			$route (to, from) {
+				this.$store.commit('setMenuItem', to.path.split('/')[2])
+			}
+		}
 	}
 </script>
 
