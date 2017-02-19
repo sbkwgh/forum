@@ -1,9 +1,14 @@
 <template>
 	<div class='route_container route_container--admin'>
 		<div class='admin_menu'>
-			<div class='admin_menu__item'>Dashboard</div>
-			<div class='admin_menu__item admin_menu__item--selected'>Settings</div>
-			<div class='admin_menu__item'>Users</div>
+			<div
+				class='admin_menu__item'
+				v-for='(item, index) in menuItems'
+				:class="{'admin_menu__item--selected': index === selected}"
+				@click='$router.push("/admin/" + item.route)'
+			>
+				{{item.name}}
+			</div>
 		</div>
 		<div class='admin_page'>
 			<router-view></router-view>
@@ -15,7 +20,14 @@
 	export default {
 		name: 'index',
 		components: {},
-		computed: {},
+		computed: {
+			menuItems () {
+				return this.$store.state.admin.menuItems
+			},
+			selected () {
+				return this.$store.state.admin.selected
+			}
+		},
 		methods: {}
 	}
 </script>

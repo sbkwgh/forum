@@ -10,6 +10,8 @@ import Category from './components/routes/Category'
 import Thread from './components/routes/Thread'
 import ThreadNew from './components/routes/ThreadNew'
 import Admin from './components/routes/Admin'
+import Admin from './components/routes/Admin'
+import Admin from './components/routes/Admin'
 
 import onResize from './assets/js/flexBoxGridCorrect'
 
