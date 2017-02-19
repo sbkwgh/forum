@@ -10,8 +10,9 @@ import Category from './components/routes/Category'
 import Thread from './components/routes/Thread'
 import ThreadNew from './components/routes/ThreadNew'
 import Admin from './components/routes/Admin'
-import Admin from './components/routes/Admin'
-import Admin from './components/routes/Admin'
+import AdminDashboard from './components/routes/AdminDashboard'
+import AdminUsers from './components/routes/AdminUsers'
+import AdminSettings from './components/routes/AdminSettings'
 
 import onResize from './assets/js/flexBoxGridCorrect'
 
@@ -26,7 +27,11 @@ const router = new VueRouter({
 		{ path: '/category/:category', component: Category },
 		{ path: '/thread/:slug/:id', component: Thread },
 		{ path: '/thread/new', component: ThreadNew },
-		{ path: '/admin', component: Admin }
+		{ path: '/admin', redirect: '/admin/dashboard', component: Admin, children: [
+			{ path: 'dashboard', component: AdminDashboard },
+			{ path: 'settings', component: AdminSettings },
+			{ path: 'users', component: AdminUsers }
+		] }
 	],
 	mode: 'history'
 })
