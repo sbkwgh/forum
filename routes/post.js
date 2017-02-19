@@ -4,6 +4,27 @@ let router = express.Router()
 const Errors = require('../lib/errors')
 let { User, Thread, Post } = require('../models')
 
+router.get('/:post_id', async (req, res) => {
+	try {
+		let post = await Post.findById(req.params.post_id, { include: Post.includeOptions() })
+		if(!post) throw Errors.invalidParameter('id', 'post does not exist')
+
+		res.json(post.toJSON())
+	} catch (e) {
+		if(e.name === 'invalidParameter') {
+			res.status(400)
+			res.json({
+				errors: [e]
+			})
+		} else {
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 router.all('*', (req, res, next) => {
 	if(req.session.loggedIn) {
 		next()
@@ -34,10 +55,6 @@ router.post('/', async (req, res) => {
 
 		if(validationErrors.length) throw Errors.VALIDATION_ERROR
 
-		post = await Post.create({
-			content: req.body.content
-		})
-
 		thread = await Thread.findOne({ where: {
 			id: req.body.threadId
 		}})
@@ -46,10 +63,6 @@ router.post('/', async (req, res) => {
 		}})
 
 		if(!thread) throw Errors.invalidParameter('threadId', 'thread does not exist')
-
-		await post.setUser(user)
-		await post.setThread(thread)
-		await thread.addPost(post)
 
 		if(req.body.replyingToId) {
 			replyingToPost = await Post.findOne({ where: {
@@ -61,19 +74,20 @@ router.post('/', async (req, res) => {
 			} else if(replyingToPost.Thread.id !== thread.id) {
 				throw Errors.invalidParameter('replyingToId', 'replies must be in same thread')
 			} else {
+				post = await Post.create({ content: req.body.content })
+
 				await post.setReplyingTo(replyingToPost)
 				await replyingToPost.addReplies(post)
 			}
+		} else {
+			post = await Post.create({ content: req.body.content })
 		}
 
+		await post.setUser(user)
+		await post.setThread(thread)
+
 		res.json(await post.reload({
-			include: [
-				{ model: User, attributes: ['username', 'createdAt', 'updatedAt', 'id'] }, 
-				Thread,
-				{ model: Post, as: 'ReplyingTo', include:
-					[{ model: User, attributes: ['username', 'createdAt', 'updatedAt', 'id'] }]
-				}
-			]
+			include: Post.includeOptions()
 		}))
 	} catch (e) {
 		if(e === Errors.VALIDATION_ERROR) {
