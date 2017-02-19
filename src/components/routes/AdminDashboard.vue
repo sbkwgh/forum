@@ -1,5 +1,6 @@
 <template>
 	<div class='route_container'>
+		<div class='h1'>Dashboard</div>
 	</div>
 </template>
 
