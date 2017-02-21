@@ -1,6 +1,6 @@
 <template>
 	<div id='app'>
-		<modal-window :show='showAccountModal'>
+		<modal-window v-model='showAccountModal'>
 			<tab-view :tabs='["Sign up", "Login"]' name="account" padding='true'>
 				<template slot='Sign up'>
 					<p style='margin-top: 0;'>
@@ -112,8 +112,11 @@
 			name () {
 				return this.$store.state.meta.name
 			},
-			showAccountModal () {
-				return this.$store.state.modals.account
+			showAccountModal: {
+				get () { return this.$store.state.modals.account },
+				set (val) {
+					this.$store.commit('hideModal', 'account');
+				}
 			}
 		},
 		methods: {

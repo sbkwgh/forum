@@ -1,6 +1,6 @@
 <template>
-	<div class='modal_window__overlay' :class='{"modal_window--show": show}'>
-		<div class='modal_window' :class='{"modal_window--show": show}'>
+	<div class='modal_window__overlay' :class='{"modal_window--show": value}' @click.self='closeModal'>
+		<div class='modal_window' :class='{"modal_window--show": value}'>
 			<slot></slot>
 		</div>
 	</div>
@@ -9,7 +9,12 @@
 <script>
 	export default {
 		name: 'ModalWindow',
-		props: ['show']
+		props: ['value'],
+		methods: {
+			closeModal () {
+				this.$emit('input', false)
+			}
+		}
 	}
 </script>
 

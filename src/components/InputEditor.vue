@@ -14,9 +14,9 @@
 				<div class='input_editor__format_bar'>
 					<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
 					<div class='input_editor__format_button' @click='replaceSelectedText("*", "*")'>I</div>
-					<div class='input_editor__format_button' @click='showLinkModal("thread_editor--link")'><span class='fa fa-link'></span></div>
+					<div class='input_editor__format_button' @click='setModalState("link", true)'><span class='fa fa-link'></span></div>
 					<div class='input_editor__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
-					<div class='input_editor__format_button' @click='showModal("thread_editor--picture")'><span class='fa fa-picture-o'></span></div>
+					<div class='input_editor__format_button' @click='setModalState("image", true)'><span class='fa fa-picture-o'></span></div>
 				</div>
 				<textarea
 					class='input_editor__input'
@@ -25,7 +25,7 @@
 					@input='setEditor($event.target.value)'
 					@focus='focusEditor(true)'
 					@blur='focusEditor(false)'
-					placeholder='Type here - you can format using Markdown'
+					placeuholder='Type here - you can format using Markdown'
 				>
 				</textarea>
 			</template>
@@ -42,7 +42,7 @@
 			<button class='button' @click='submit'>Submit</button>
 		</div>
 
-		<modal-window name='thread_editor--link'>
+		<modal-window v-model='linkModalVisible'>
 			<div style='padding: 1rem;'>
 				<p style='margin-top: 0;'>
 					Enter the web address in the input box below
@@ -52,13 +52,13 @@
 				<button class='button' @click='addLink'>
 					OK
 				</button>
-				<button class='button' @click='hideLinkModal'>
+				<button class='button' @click='setModalState("link", false)'>
 					Cancel
 				</button>
 			</div>
 		</modal-window>
 
-		<modal-window name='thread_editor--picture'></modal-window>
+		<modal-window v-model='imageModalVisible'></modal-window>
 
 	</div>
 </template>
@@ -82,7 +82,9 @@
 			return {
 				linkText: '',
 				linkURL: '',
-				focused: false
+				focused: false,
+				linkModalVisible: false,
+				imageModalVisible: false
 			}
 		},
 		computed: {
@@ -105,20 +107,19 @@
 			focusEditor (val) {
 				this.focused = val;
 			},
-			showImageModal () {
-				this.$store.commit('showModal', 'thread_editor--image');
-			},
-			hideImageModal () {
-				this.$store.commit('hideModal', 'thread_editor--image');
-			},
-			showLinkModal () {
-				this.$store.commit('showModal', 'thread_editor--link');
-				this.linkText = this.getSelectionData().val;
-			},
-			hideLinkModal () {
-				this.$store.commit('hideModal', 'thread_editor--link');
-				this.linkText = '';
-				this.linkURL = '';
+			setModalState (modal, state) {
+				if(modal === 'link') {
+					this.linkModalVisible = state
+
+					if(state) {
+						this.linkText = this.getSelectionData().val;
+					} else {
+						this.linkText = '';
+						this.linkURL = '';
+					}
+				} else if(modal === 'image') {
+					this.imageModalVisible = state
+				}
 			},
 			closeEditor () {
 				this.$store.commit({
@@ -185,7 +186,7 @@
 					el.selectionEnd = selectionData.start + 1 + linkTextLength;
 				}, 1);
 
-				this.hideLinkModal();
+				this.setModalState('link', false);
 			},
 			formatCode () {
 				var selectionData = this.getSelectionData();
