@@ -21,18 +21,18 @@
 				<textarea
 					class='input_editor__input'
 					ref='textarea'
-					:value='editor'
+					:value='value'
 					@input='setEditor($event.target.value)'
 					@focus='focusEditor(true)'
 					@blur='focusEditor(false)'
-					placeuholder='Type here - you can format using Markdown'
+					placeholder='Type here - you can format using Markdown'
 				>
 				</textarea>
 			</template>
 
 			<div slot='Preview' class='input_editor__markdownHTML'>
 				<div v-html='markdownHTML' style='margin-top: -0.5rem;'></div>
-				<div v-if='!editor.trim().length' class='input_editor__markdownHTML--empty'>
+				<div v-if='!value.trim().length' class='input_editor__markdownHTML--empty'>
 					Nothing to preview
 				</div>
 			</div>
@@ -72,7 +72,7 @@
 
 	export default {
 		name: 'InputEditor',
-		props: ['name', 'float', 'replyUsername', 'hideClose'],
+		props: ['value', 'float', 'replyUsername', 'hideClose', 'visible'],
 		components: {
 			ModalWindow,
 			FancyInput,
@@ -89,19 +89,13 @@
 			}
 		},
 		computed: {
-			editor () {
-				return this.$store.state.editors[this.name].value;
-			},
-			visible () {
-				return this.$store.state.editors[this.name].visible;
-			},
 			markdownHTML () {
-				return Marked(this.editor);
+				return Marked(this.value);
 			}
 		},
 		methods: {
 			submit () {
-				if(this.editor.trim().length) {
+				if(this.value.trim().length) {
 					this.$emit('submit');
 				}
 			},
@@ -123,24 +117,11 @@
 				}
 			},
 			closeEditor () {
-				this.$store.commit({
-					type: 'showEditor',
-					name: this.name,
-					value: false
-				});
-				this.$store.commit({
-					type: 'setEditor',
-					name: this.name,
-					value: ''
-				});
+				this.setEditor('')
 				this.$emit('close')
 			},
 			setEditor (value) {
-				this.$store.commit({
-					type: 'setEditor',
-					name: this.name,
-					value: value
-				});
+				this.$emit('input', value)
 			},
 			getSelectionData () {
 				var el = this.$refs.textarea,
@@ -159,9 +140,9 @@
 				var el = this.$refs.textarea;
 
 				this.setEditor(
-					this.editor.slice(0, selectionData.start) +
+					this.value.slice(0, selectionData.start) +
 					before + selectionData.val + after +
-					this.editor.slice(selectionData.end)
+					this.value.slice(selectionData.end)
 				);
 				el.focus();
 
@@ -176,9 +157,9 @@
 				var el = this.$refs.textarea;
 
 				this.setEditor(
-					this.editor.slice(0, selectionData.start) +
+					this.value.slice(0, selectionData.start) +
 					'[' + this.linkText + '](' + this.linkURL + ')' +
-					this.editor.slice(selectionData.end)
+					this.value.slice(selectionData.end)
 				);
 				el.focus();
 
@@ -192,7 +173,7 @@
 			formatCode () {
 				var selectionData = this.getSelectionData();
 
-				if(this.editor[selectionData.start-1] === '\n' || selectionData.start === 0) {
+				if(this.value[selectionData.start-1] === '\n' || selectionData.start === 0) {
 					this.replaceSelectedText('    ', '');
 				} else {
 					this.replaceSelectedText('`', '`');

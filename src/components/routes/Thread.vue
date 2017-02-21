@@ -14,7 +14,15 @@
 			</div>
 			<button class='button thread_header__reply_button' @click='replyThread'>Reply to thread</button>
 		</header>
-		<input-editor name='thread' float='true' :replyUsername='replyUsername' v-on:close='clearReply' v-on:submit='addPost'></input-editor>
+		<input-editor
+			v-model='editor'
+			:float='true'
+			:visible='editorVisible'
+			:replyUsername='replyUsername'
+			v-on:close='hideEditor'
+			v-on:submit='addPost'
+		>
+		</input-editor>
 		<div class='posts'>
 			<div class='post' v-for='post in posts'>
 				<div class='post__meta_data'>
@@ -55,7 +63,18 @@
 			},
 			replyUsername () {
 				return this.$store.state.thread.reply.username
-			}
+			},
+			editor: {
+				get () { return this.$store.state.editors.thread.value },
+				set (val) {
+					this.$store.commit({
+						type: 'setEditor',
+						name: 'thread',
+						value: val
+					})
+				}
+			},
+			editorVisible () { return this.$store.state.editors.thread.visible }
 		},
 		methods: {
 			showEditor () {
@@ -64,6 +83,14 @@
 					name: 'thread',
 					value: true
 				});
+			},
+			hideEditor () {
+				this.$store.commit({
+					type: 'showEditor',
+					name: 'thread',
+					value: false
+				});
+				this.clearReply()
 			},
 			clearReply () {
 				this.$store.commit({

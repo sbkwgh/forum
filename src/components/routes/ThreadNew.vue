@@ -3,7 +3,7 @@
 		<div class='h1'>Post new thread</div>
 		<span class='select_button_text'>Post in category:</span>
 		<select-button v-model='selectedCategory' :options='categories'></select-button>
-		<input-editor name='new-thread' :hide-close='true' style='margin-top: 1rem'></input-editor>
+		<input-editor v-model='editor' :visible='true' :hide-close='true' style='margin-top: 1rem'></input-editor>
 		<button class='button button--green submit'>Post thread</button>
 	</div>
 </template>
@@ -27,6 +27,16 @@
 		computed: {
 			categories () {
 				return this.$store.getters.categoriesWithoutAll
+			},
+			editor: {
+				get () { return this.$store.state.editors['new-thread'].value },
+				set (val) {
+					this.$store.commit({
+						type: 'setEditor',
+						name: 'new-thread',
+						value: val
+					})
+				}
 			}
 		},
 		methods: {}
