@@ -1,6 +1,6 @@
 <template>
 	<div id='app'>
-		<modal-window name='account'>
+		<modal-window :show='showAccountModal'>
 			<tab-view :tabs='["Sign up", "Login"]' name="account" padding='true'>
 				<template slot='Sign up'>
 					<p style='margin-top: 0;'>
@@ -65,10 +65,10 @@
 				<div class='logo' @click='$router.push("/")'>{{name}}</div>
 			</div>
 			<div class='header__group'>
-				<div class='button button--green' @click='showAccountModal(0)'>
+				<div class='button button--green' @click='setShowAccountModal(0)'>
 					Sign up
 				</div>
-				<div class='button' @click='showAccountModal(1)'>
+				<div class='button' @click='setShowAccountModal(1)'>
 					Login
 				</div>
 				<div class='search' tabindex='0'>
@@ -111,10 +111,13 @@
 		computed: {
 			name () {
 				return this.$store.state.meta.name
+			},
+			showAccountModal () {
+				return this.$store.state.modals.account
 			}
 		},
 		methods: {
-			showAccountModal (index) {
+			setShowAccountModal (index) {
 				this.$store.commit('showModal', 'account');
 				this.$store.commit({
 					type: 'setTab',

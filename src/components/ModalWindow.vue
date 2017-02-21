@@ -1,6 +1,6 @@
 <template>
-	<div class='modal_window__overlay' :class='{"modal_window--show": showModal}' @click.self='hideModal'>
-		<div class='modal_window' :class='{"modal_window--show": showModal}' v-on:hideModal='hideModal'>
+	<div class='modal_window__overlay' :class='{"modal_window--show": show}'>
+		<div class='modal_window' :class='{"modal_window--show": show}'>
 			<slot></slot>
 		</div>
 	</div>
@@ -9,17 +9,7 @@
 <script>
 	export default {
 		name: 'ModalWindow',
-		props: ['name'],
-		methods: {
-			hideModal () {
-				this.$store.commit('hideModal', this.name);
-			}
-		},
-		computed: {
-			showModal () {
-				return this.$store.state.modals[this.name];
-			}
-		}
+		props: ['show']
 	}
 </script>
 
