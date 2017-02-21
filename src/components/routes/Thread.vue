@@ -17,7 +17,7 @@
 		<input-editor
 			v-model='editor'
 			:float='true'
-			:visible='editorVisible'
+			:show='editorVisible'
 			:replyUsername='replyUsername'
 			v-on:close='hideEditor'
 			v-on:submit='addPost'

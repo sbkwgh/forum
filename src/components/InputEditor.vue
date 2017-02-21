@@ -4,7 +4,7 @@
 		:class='{
 			"input_editor--focus": focused,
 			"input_editor--float": float,
-			"input_editor--hidden": !visible
+			"input_editor--hidden": !show
 		}'
 	>
 		<div class='input_editor__reply_username' v-if='replyUsername'>Replying to <strong>{{replyUsername}}</strong></div>
@@ -72,7 +72,7 @@
 
 	export default {
 		name: 'InputEditor',
-		props: ['value', 'float', 'replyUsername', 'hideClose', 'visible'],
+		props: ['value', 'float', 'replyUsername', 'hideClose', 'show'],
 		components: {
 			ModalWindow,
 			FancyInput,
