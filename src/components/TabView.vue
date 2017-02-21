@@ -26,23 +26,17 @@
 </template>
 
 <script>
-	import mapGetters from 'vuex';
-
 	export default {
 		name: 'TabView',
-		props: ['tabs', 'name', 'padding', 'small-tabs'],
+		props: ['tabs', 'value', 'padding', 'small-tabs'],
 		methods: {
 			changeTab (index) {
-				this.$store.commit({
-					type: 'setTab',
-					tab: this.name,
-					index: index
-				});
+				this.$emit('input', index)
 			}
 		},
 		computed: {
 			tabIndex () {
-				return this.$store.state.tabs[this.name];
+				return this.value
 			}
 		}
 	}

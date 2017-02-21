@@ -1,7 +1,7 @@
 <template>
 	<div id='app'>
 		<modal-window v-model='showAccountModal'>
-			<tab-view :tabs='["Sign up", "Login"]' name="account" padding='true'>
+			<tab-view :tabs='["Sign up", "Login"]' v-model="showAccountTab" padding='true'>
 				<template slot='Sign up'>
 					<p style='margin-top: 0;'>
 						Sign up to create and post in threads.
@@ -117,16 +117,22 @@
 				set (val) {
 					this.$store.commit('hideModal', 'account');
 				}
+			},
+			showAccountTab : {
+				get (val) { return this.$store.state.tabs.account },
+				set (index) {
+					this.$store.commit({
+						type: 'setTab',
+						tab: 'account',
+						index: index
+					});
+				}
 			}
 		},
 		methods: {
 			setShowAccountModal (index) {
 				this.$store.commit('showModal', 'account');
-				this.$store.commit({
-					type: 'setTab',
-					tab: 'account',
-					index: index
-				});
+				this.showAccountTab = index
 			},
 			cancel () {
 				this.$store.commit('hideModal', 'account');

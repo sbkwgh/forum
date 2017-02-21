@@ -9,7 +9,7 @@
 	>
 		<div class='input_editor__reply_username' v-if='replyUsername'>Replying to <strong>{{replyUsername}}</strong></div>
 		<div class='input_editor__close input_editor__format_button' @click='closeEditor' v-if='!hideClose'>&times;</div>
-		<tab-view :tabs='["Editor", "Preview"]' :name='name' small-tabs='true'>
+		<tab-view :tabs='["Editor", "Preview"]' v-model='showTab' small-tabs='true'>
 			<template slot='Editor'>
 				<div class='input_editor__format_bar'>
 					<div class='input_editor__format_button' @click='replaceSelectedText("**", "**")'>B</div>
@@ -84,7 +84,8 @@
 				linkURL: '',
 				focused: false,
 				linkModalVisible: false,
-				imageModalVisible: false
+				imageModalVisible: false,
+				showTab: 0
 			}
 		},
 		computed: {
