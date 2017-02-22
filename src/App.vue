@@ -65,12 +65,19 @@
 				<div class='logo' @click='$router.push("/")'>{{name}}</div>
 			</div>
 			<div class='header__group'>
-				<div class='button button--green' @click='showAccountModalTab(0)'>
-					Sign up
-				</div>
-				<div class='button' @click='showAccountModalTab(1)'>
-					Login
-				</div>
+				<template v-if='$store.state.username'>
+					<div class='button' @click='logout'>
+						Log out
+					</div>
+				</template>
+				<template v-else>
+					<div class='button button--green' @click='showAccountModalTab(0)'>
+						Sign up
+					</div>
+					<div class='button' @click='showAccountModalTab(1)'>
+						Login
+					</div>
+				</template>
 				<div class='search' tabindex='0'>
 					<input class='search__field' placeholder='Search this forum'>
 					<button class='button button--borderless'><span class='fa fa-search'></span></button>
@@ -127,6 +134,17 @@
 			showAccountModalTab (index) {
 				this.showAccountModal = true
 				this.showAccountTab = index
+			},
+			logout () {
+				this.axios.post(
+					'/api/v1/user/' +
+					this.$store.state.username +
+					'/logout'
+				).then(res => {
+					this.$store.commit('setUsername', '')
+				}).catch(err => {
+					console.log(err)
+				})
 			},
 			cancel () {
 				this.showAccountModal = false
