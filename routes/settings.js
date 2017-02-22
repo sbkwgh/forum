@@ -52,7 +52,11 @@ router.put('/', async (req, res) => {
 		if(validationErrors.length) throw Errors.VALIDAITON_ERROR
 
 		let updatedSettings = await Settings.set(params)
-		res.json(updatedSettings.toJSON())
+
+		res.json({
+			forumName: req.body.forumName,
+			forumDescription: req.body.forumDescription
+		})
 		
 	} catch (e) {
 		if(e === Errors.VALIDAITON_ERROR) {
@@ -61,6 +65,7 @@ router.put('/', async (req, res) => {
 				errors: [validationErrors]
 			})
 		} else {
+			console.log(e)
 			res.status(500)
 			res.json({
 				errors: [Errors.unknown]
