@@ -21,22 +21,13 @@
 		},
 		data () {
 			return {
-				selectedCategory: this.$store.state.category.selectedCategory
+				selectedCategory: this.$store.state.category.selectedCategory,
+				editor: ''
 			}
 		},
 		computed: {
 			categories () {
 				return this.$store.getters.categoriesWithoutAll
-			},
-			editor: {
-				get () { return this.$store.state.editors['new-thread'].value },
-				set (val) {
-					this.$store.commit({
-						type: 'setEditor',
-						name: 'new-thread',
-						value: val
-					})
-				}
 			}
 		},
 		methods: {}

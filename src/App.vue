@@ -65,10 +65,10 @@
 				<div class='logo' @click='$router.push("/")'>{{name}}</div>
 			</div>
 			<div class='header__group'>
-				<div class='button button--green' @click='setShowAccountModal(0)'>
+				<div class='button button--green' @click='showAccountModalTab(0)'>
 					Sign up
 				</div>
-				<div class='button' @click='setShowAccountModal(1)'>
+				<div class='button' @click='showAccountModalTab(1)'>
 					Login
 				</div>
 				<div class='search' tabindex='0'>
@@ -113,33 +113,25 @@
 				return this.$store.state.meta.name
 			},
 			showAccountModal: {
-				get () { return this.$store.state.modals.account },
+				get () { return this.$store.state.accountModal },
 				set (val) {
-					this.$store.commit('hideModal', 'account');
+					this.$store.commit('setAccountModalState', val);
 				}
 			},
 			showAccountTab : {
-				get (val) { return this.$store.state.tabs.account },
-				set (index) {
-					this.$store.commit({
-						type: 'setTab',
-						tab: 'account',
-						index: index
-					});
-				}
+				get (val) { return this.$store.state.accountTabs },
+				set (index) { this.$store.commit('setAccountTabs', index) }
 			}
 		},
 		methods: {
-			setShowAccountModal (index) {
-				this.$store.commit('showModal', 'account');
+			showAccountModalTab (index) {
+				this.showAccountModal = true
 				this.showAccountTab = index
 			},
 			cancel () {
-				this.$store.commit('hideModal', 'account');
+				this.showAccountModal = false
 			},
-			signup () {
-				this.$store.commit('hideModal', 'account');
-			}
+			signup () {}
 		}
 	}
 </script>

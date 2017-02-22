@@ -3,7 +3,7 @@
 		<button
 			v-for='option in options'
 			class='button'
-			:class='{"button--orange": option.value === selected}'
+			:class='{"button--orange": option.value === value}'
 			@click='select(option.value)'
 		>
 			{{option.name}}
@@ -14,24 +14,10 @@
 <script>
 	export default {
 		name: 'SelectOptions',
-		props: ['name', 'options'],
-		computed: {
-			selected: {
-				get () {
-					return this.$store.state.selectOptions[this.name];
-				},
-				set (val) {
-					this.$store.commit({
-						type: 'setSelectOptions',
-						name: this.name,
-						value: val
-					});
-				}
-			}
-		},
+		props: ['value', 'options'],
 		methods: {
 			select (index) {
-				this.selected = index;
+				this.$emit('input', index)
 			}
 		}
 	}

@@ -17,7 +17,7 @@
 		<input-editor
 			v-model='editor'
 			:float='true'
-			:show='editorVisible'
+			:show='editorState'
 			:replyUsername='replyUsername'
 			v-on:close='hideEditor'
 			v-on:submit='addPost'
@@ -65,31 +65,19 @@
 				return this.$store.state.thread.reply.username
 			},
 			editor: {
-				get () { return this.$store.state.editors.thread.value },
+				get () { return this.$store.state.thread.editor.value },
 				set (val) {
-					this.$store.commit({
-						type: 'setEditor',
-						name: 'thread',
-						value: val
-					})
+					this.$store.commit('setThreadEditorValue', val)
 				}
 			},
-			editorVisible () { return this.$store.state.editors.thread.visible }
+			editorState () { return this.$store.state.thread.editor.show }
 		},
 		methods: {
 			showEditor () {
-				this.$store.commit({
-					type: 'showEditor',
-					name: 'thread',
-					value: true
-				});
+				this.$store.commit('setThreadEditorState', true);
 			},
 			hideEditor () {
-				this.$store.commit({
-					type: 'showEditor',
-					name: 'thread',
-					value: false
-				});
+				this.$store.commit('setThreadEditorState', false);
 				this.clearReply()
 			},
 			clearReply () {

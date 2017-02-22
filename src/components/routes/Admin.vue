@@ -19,21 +19,36 @@
 <script>
 	export default {
 		name: 'index',
-		components: {},
-		computed: {
-			menuItems () {
-				return this.$store.state.admin.menuItems
-			},
-			selected () {
-				return this.$store.state.admin.selected
+		data () {
+			return {
+				menuItems: [
+					{ name: 'Dashboard', route: 'dashboard' }, 
+					{ name: 'Settings', route: 'settings' },
+					{ name: 'Users', route: 'users' }
+				],
+				selected: 0
 			}
-		},
-		mounted () {
-			this.$store.commit('setMenuItem', this.$route.path.split('/')[2])
 		},
 		watch: {
 			$route (to, from) {
-				this.$store.commit('setMenuItem', to.path.split('/')[2])
+				this.selected = this.getIndexFromRoute(to.path)
+			}
+		},
+		mounted () {
+			this.selected = this.getIndexFromRoute(this.$route.path)
+		},
+		methods: {
+			getIndexFromRoute (path) {
+				let selectedIndex
+				let route = path.split('/')[2]
+
+				this.menuItems.forEach((item, index) => {
+					if(item.route === route) {
+						selectedIndex = index
+					}
+				})
+
+				return selectedIndex
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 const state = {
 	thread: 'Thread title',
-	username: 'John Doe',
 	posts: [
 		{username: 'User', date: new Date(), content: 'Consectetur rhoncus a massa interdum quisque habitasse turpis est parturient arcu cum fusce id a eu odio ligula a praesent. Aliquam dis enim netus malesuada ridiculus convallis imperdiet nisi eu vestibulum imperdiet nibh a quam orci dignissim maecenas pretium lorem hac suspendisse hendrerit donec lacinia. Eu suspendisse sem diam nullam taciti dapibus lorem non euismod iaculis ante eros turpis parturient per. A diam auctor cras condimentum a aliquet odio egestas parturient condimentum ut tempus a massa a condimentum a a ullamcorper turpis a facilisi cubilia justo hendrerit adipiscing. Nascetur eu parturient purus dis rutrum placerat egestas adipiscing scelerisque odio penatibus a leo tristique risus eu mi a accumsan. <BR/><br/>,Consectetur sagittis vulputate sit eget senectus mi nam curabitur cubilia sapien a habitant vestibulum suspendisse himenaeos ut a cubilia. Fames at a metus porttitor mi proin mollis lobortis proin id vulputate id vel libero malesuada nam id mattis justo sit tristique luctus taciti suspendisse.'},
 		{username: 'Abc', date: new Date(), content: 'Consectetur rhoncus a massa interdum quisque habitasse turpis est parturient arcu cum fusce id a eu odio ligula a praesent. Aliquam dis enim netus malesuada ridiculus convallis imperdiet nisi eu vestibulum imperdiet nibh a quam orci dignissim maecenas pretium lorem hac suspendisse hendrerit donec lacinia. Eu suspendisse sem diam nullam taciti dapibus lorem non euismod iaculis ante eros turpis parturient per. A diam auctor cras condimentum a aliquet odio egestas parturient condimentum ut tempus a massa a condimentum a a ullamcorper turpis a facilisi cubilia justo hendrerit adipiscing. Nascetur eu parturient purus dis rutrum placerat egestas adipiscing scelerisque odio penatibus a leo tristique risus eu mi a accumsan. <BR/><br/>,Consectetur sagittis vulputate sit eget senectus mi nam curabitur cubilia sapien a habitant vestibulum suspendisse himenaeos ut a cubilia. Fames at a metus porttitor mi proin mollis lobortis proin id vulputate id vel libero malesuada nam id mattis justo sit tristique luctus taciti suspendisse.'},
@@ -19,6 +18,10 @@ const state = {
 	reply: {
 		username: '',
 		id: ''
+	},
+	editor: {
+		show: false,
+		value: ''
 	}
 }
 
@@ -27,8 +30,8 @@ const getters = {}
 const actions = {
 	addPostAsync ({ state, commit, rootState }) {
 		var post = {
-			content: rootState.editors.thread.value,
-			username: state.username,
+			content: state.editor.value,
+			username: rootState.username,
 			date: new Date()
 		};
 
@@ -40,16 +43,8 @@ const actions = {
 		//Post to server
 		setTimeout(function() {
 			commit('addPost', post);
-			commit({
-				type: 'setEditor',
-				name: 'thread',
-				value: ''
-			});
-			commit({
-				type: 'showEditor',
-				name: 'thread',
-				value: false
-			});
+			commit('setThreadEditorValue', '');
+			commit('setThreadEditorState', false);
 			commit({
 				type: 'setReply',
 				username: '',
@@ -66,6 +61,12 @@ const mutations = {
 	},
 	addPost (state, post) {
 		state.posts.push(post);
+	},
+	setThreadEditorValue (state, value) {
+		state.editor.value = value
+	},
+	setThreadEditorState (state, value) {
+		state.editor.show = value
 	}
 }
 
