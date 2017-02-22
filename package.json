@@ -9,9 +9,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.15.3",
     "lodash.throttle": "^4.1.1",
     "marked": "^0.3.6",
     "vue": "^2.1.0",
+    "vue-axios": "^1.2.2",
     "vue-router": "^2.1.1",
     "vuex": "^2.1.1"
   },
