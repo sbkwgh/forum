@@ -14,6 +14,9 @@
 				</div>
 			</div>
 		</div>
+		<div v-if='!$store.state.meta.categories.length'>
+			There are no categories to show, but you can add them on the admin page
+		</div>
 	</div>
 </template>
 
