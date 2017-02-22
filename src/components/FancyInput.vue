@@ -2,9 +2,9 @@
 	<div class='fancy_input'>
 		<div
 			class='fancy_input__error'
-			:class='{"fancy_input__error--show": error && error.message.length}'
+			:class='{"fancy_input__error--show": error }'
 		>
-			{{(error || {}).message}}
+			{{error}}
 		</div>
 		<div
 			class='fancy_input__placeholder'

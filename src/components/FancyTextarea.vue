@@ -2,9 +2,9 @@
 	<div class='fancy_textarea'>
 		<div
 			class='fancy_textarea__error'
-			:class='{"fancy_textarea__error--show": error && error.message.length}'
+			:class='{"fancy_textarea__error--show": error}'
 		>
-			{{(error || {}).message}}
+			{{error}}
 		</div>
 		<div
 			class='fancy_textarea__placeholder'
