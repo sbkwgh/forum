@@ -84,6 +84,8 @@
 			padding: 0.1rem 0.25rem;
 			top: -1.75rem;
 			right: 0;
+			
+			&:first-letter{ text-transform: capitalize; }
 
 			opacity: 0;
 			pointer-events: 0;

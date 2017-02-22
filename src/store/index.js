@@ -36,6 +36,19 @@ export default new Vuex.Store({
 		},
 		setAccountModalState (state, value) {
 			state.accountModal = value;
+		},
+		setUsername (state, value) {
+			state.username = value
+		},
+		setForumName (state, value) {
+			state.meta.name = value
+		},
+		addCategories (state, value) {
+			if(Array.isArray(value)) {
+				state.meta.categories = value
+			} else {
+				state.meta.categories.push(value)
+			}
 		}
 	},
 	modules: { thread }
