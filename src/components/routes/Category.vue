@@ -61,40 +61,7 @@
 				],
 				selectedFilterOption: 'NEW',
 				selectedCategory: this.$route.params.category.toUpperCase(),
-				threads: [
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 30, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 10, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'FOOD', replies: 5, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 23,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'PROGRAMMING', replies: 40,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 0,  id: 1, slug: 'test'},{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 30, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 10, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'FOOD', replies: 5, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 23,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'PROGRAMMING', replies: 40,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 0,  id: 1, slug: 'test'},{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 30, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 10, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'FOOD', replies: 5, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 23,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'PROGRAMMING', replies: 40,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 0,  id: 1, slug: 'test'},{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 30, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 10, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'FOOD', replies: 5, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 23,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'PROGRAMMING', replies: 40,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 0,  id: 1, slug: 'test'},{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 30, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 10, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'FOOD', replies: 5, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 23,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'PROGRAMMING', replies: 40,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 0,  id: 1, slug: 'test'},{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 30, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'TECHNOLOGY', replies: 10, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'FOOD', replies: 5, id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 23,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'PROGRAMMING', replies: 40,  id: 1, slug: 'test'},
-					{title: 'example title', latestPostUser: 'user', latestPostDate: new Date(), category: 'BOOKS', replies: 0,  id: 1, slug: 'test'}
-					
-				]
+				threads: []
 			}
 		},
 		computed: {

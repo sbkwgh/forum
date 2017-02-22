@@ -8,18 +8,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		meta: {
-			name: 'Forum',
-			categories: [
-				{name: 'All categories', value: 'ALL'},
-				{name: 'Technology', value: 'TECHNOLOGY'},
-				{name: 'Food', value: 'FOOD'},
-				{name: 'Programming', value: 'PROGRAMMING'},
-				{name: 'Books', value: 'BOOKS'}
-			]
+			name: '',
+			categories: []
 		},
 		accountTabs: 0,
 		accountModal: false,
-		username: 'John Doe'
+		username: ''
 	},
 	getters: {
 		categoriesWithoutAll (state) {
