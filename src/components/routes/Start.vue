@@ -6,7 +6,7 @@
 				First create your admin account for the forum.
 			</p>
 			<div>
-				<fancy-input v-model='username' width='100%' placeholder='Username'></fancy-input>
+				<fancy-input v-model='username' :error='errors.username' width='100%' placeholder='Username'></fancy-input>
 				<fancy-input v-model='password' width='100%' placeholder='Password' type='password'></fancy-input>
 				<fancy-input v-model='confirmPassword' width='100%' placeholder='Confirm password' type='password'></fancy-input>
 				<button style='width: 100%;' class='button button--green' @click='createAccount'>Create account</button>
@@ -43,7 +43,13 @@
 				forumName: '',
 				forumDescription: '',
 				categories: '',
-				panel: 1
+				panel: 1,
+
+				errors: {
+					username: {
+						message: 'Error message here!'
+					}
+				}
 			}
 		},
 		components: {
