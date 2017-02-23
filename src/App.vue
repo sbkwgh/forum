@@ -1,5 +1,11 @@
 <template>
 	<div id='app'>
+		<modal-window v-model='showAjaxErrorsModal'>
+			<div style='padding: 0rem 1rem 1rem 1rem;'>
+				<p v-for='error in this.$store.state.ajaxErrors'>{{error}}</p>
+				<button class='button' @click='showAjaxErrorsModal = false'>OK</button>
+			</div>
+		</modal-window>
 		<modal-window v-model='showAccountModal'>
 			<tab-view :tabs='["Sign up", "Login"]' v-model="showAccountTab" padding='true'>
 				<template slot='Sign up'>
@@ -124,6 +130,10 @@
 				set (val) {
 					this.$store.commit('setAccountModalState', val);
 				}
+			},
+			showAjaxErrorsModal: {
+				get () { return this.$store.state.ajaxErrorsModal },
+				set (val) { this.$store.commit('setAjaxErrorsModalState', val) }
 			},
 			showAccountTab : {
 				get (val) { return this.$store.state.accountTabs },

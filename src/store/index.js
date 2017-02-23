@@ -13,7 +13,10 @@ export default new Vuex.Store({
 		},
 		accountTabs: 0,
 		accountModal: false,
-		username: ''
+		username: '',
+
+		ajaxErrors: [],
+		ajaxErrorsModal: false
 	},
 	getters: {
 		categoriesWithoutAll (state) {
@@ -36,6 +39,9 @@ export default new Vuex.Store({
 		},
 		setAccountModalState (state, value) {
 			state.accountModal = value;
+		},
+		setAjaxErrorsModalState (state, value) {
+			state.ajaxErrorsModal = value;
 		},
 		setUsername (state, value) {
 			state.username = value
