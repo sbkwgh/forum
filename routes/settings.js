@@ -8,12 +8,21 @@ router.get('/', async (req, res) => {
 	try {
 		let settings = await Settings.get()
 
+		if(!settings) throw Errors.noSettings
+
 		res.json(settings.toJSON())
 	} catch (e) {
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
+		if(e === Errors.noSettings) {
+			res.status(500)
+			res.json({
+				errors: [e]
+			})
+		} else {
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
 	}
 	
 })
