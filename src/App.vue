@@ -169,7 +169,13 @@
 			this.axios.get('/api/v1/settings')
 				.then(res => {
 					this.$store.commit('setForumName', res.data.forumName)
-				}).catch(ajaxErrorHandler)
+				}).catch(err => {
+					if(err.response.data.errors[0].name === 'noSettings') {
+						this.$router.push('/start')
+					} else {
+						ajaxErrorHandler(err)
+					}
+				})
 
 			this.axios.get('/api/v1/category')
 				.then(res => {
