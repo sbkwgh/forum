@@ -150,6 +150,17 @@
 				this.showAccountModal = false
 			},
 			signup () {}
+		},
+		created () {
+			this.axios.get('/api/v1/settings')
+				.then(res => {
+					this.$store.commit('setForumName', res.data.forumName)
+				})
+
+			this.axios.get('/api/v1/category')
+				.then(res => {
+					this.$store.commit('addCategories', res.data)
+				})
 		}
 	}
 </script>
