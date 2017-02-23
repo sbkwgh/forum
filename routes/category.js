@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 		} else if(typeof req.body.name !== 'string') {
 			validationErrors.push(Errors.invalidParameterType('name', 'string'))
 		} else if(!req.body.name.length) {
-			validationErrors.push(Errors.parameterLengthTooSmall('name', 'string'))
+			validationErrors.push(Errors.parameterLengthTooSmall('name', '0'))
 		}
 
 		if(validationErrors.length) throw Errors.VALIDAITON_ERROR
@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
 		if(e === Errors.VALIDAITON_ERROR) {
 			res.status(400)
 			res.json({
-				errors: [validationErrors]
+				errors: validationErrors
 			})
 		} else if(e.name === 'SequelizeUniqueConstraintError') {
 			res.status(400)
