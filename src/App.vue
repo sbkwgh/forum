@@ -36,9 +36,9 @@
 						width='100%'
 					>
 					</fancy-input>
-					<button class='button button--green' @click='createAccount'>
+					<loading-button class='button--green' :loading='signup.loading' @click='createAccount'>
 						Sign up
-					</button>
+					</loading-button>
 					<button class='button' @click='closeAccountModal'>
 						Cancel
 					</button>
@@ -62,9 +62,9 @@
 						width='100%'
 					>
 					</fancy-input>
-					<button class='button button--green' @click='doLogin'>
+					<loading-button class='button button--green' :loading='login.loading' @click='doLogin'>
 						Log in
-					</button>
+					</loading-button>
 					<button class='button' @click='closeAccountModal'>
 						Cancel
 					</button>
@@ -103,6 +103,7 @@
 	import ModalWindow from './components/ModalWindow'
 	import TabView from './components/TabView'
 	import FancyInput from './components/FancyInput'
+	import LoadingButton from './components/LoadingButton'
 
 	import mapGetters from 'vuex'
 
@@ -113,7 +114,8 @@
 		components: {
 			ModalWindow,
 			TabView,
-			FancyInput
+			FancyInput,
+			LoadingButton
 		},
 		data () {
 			return {
@@ -121,6 +123,8 @@
 					username: '',
 					password: '',
 					confirmPassword: '',
+
+					loading: false,
 
 					errors: {
 						username: '',
@@ -131,6 +135,8 @@
 				login: {
 					username: '',
 					password: '',
+
+					loading: false,
 
 					errors: {
 						username: '',
@@ -206,13 +212,18 @@
 				if(this.signup.password !== this.signup.confirmPassword) {
 					this.signup.errors.confirmPassword = 'Passwords must match'
 				} else {
+					this.signup.loading = true
+
 					this.axios.post('/api/v1/user', {
 						username: this.signup.username,
 						password: this.signup.password
 					}).then(res => {
+						this.signup.loading = false
 						this.$store.commit('setUsername', res.data.username)
 						this.closeAccountModal()
 					}).catch(e => {
+						this.signup.loading = false
+
 						this.ajaxErrorHandler(e, (error) => {
 							let param = error.parameter
 
@@ -231,12 +242,16 @@
 					return
 				}
 
+				this.login.loading = true
+
 				this.axios.post(`/api/v1/user/${this.login.username}/login`, {
 					password: this.login.password
 				}).then(res => {
+					this.login.loading = false
 					this.$store.commit('setUsername', res.data.username)
 					this.closeAccountModal()
 				}).catch(e => {
+					this.login.loading = false
 					this.ajaxErrorHandler(e, (error) => {
 						let param = error.parameter
 
