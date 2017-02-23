@@ -16,7 +16,10 @@ module.exports = function(vuex) {
 			})
 		}
 
-		vuex.commit('setAjaxErrors', errors)
-		vuex.commit('setAjaxErrorsModalState', true)
+		if(errors.length) {
+			vuex.commit('setAjaxErrors', errors)
+			vuex.commit('setAjaxErrorsModalState', true)
+		}
+
 	}
 }
