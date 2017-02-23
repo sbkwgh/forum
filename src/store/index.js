@@ -43,6 +43,9 @@ export default new Vuex.Store({
 		setAjaxErrorsModalState (state, value) {
 			state.ajaxErrorsModal = value;
 		},
+		setAjaxErrors (state, value) {
+			state.ajaxErrors = value
+		},
 		setUsername (state, value) {
 			state.username = value
 		},
