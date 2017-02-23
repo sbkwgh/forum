@@ -1,11 +1,5 @@
 <template>
 	<div class='route_container route_container--fullscreen'>
-		<modal-window v-model='modal.show'>
-			<div style='padding: 0rem 1rem 1rem 1rem;'>
-				<p v-for='error in modal.errors'>{{error}}</p>
-				<button class='button' @click='modal.show = false'>OK</button>
-			</div>
-		</modal-window>
 		<div v-show='panel === 1'>
 			<div class='h1'>Hi.</div>
 			<p class='explanation'>
@@ -87,7 +81,8 @@
 <script>
 	import FancyInput from '../FancyInput'
 	import FancyTextarea from '../FancyTextarea'
-	import ModalWindow from '../ModalWindow'
+
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 	export default {
 		name: 'start',
@@ -122,8 +117,7 @@
 		},
 		components: {
 			FancyInput,
-			FancyTextarea,
-			ModalWindow
+			FancyTextarea
 		},
 		computed: {},
 		methods: {
@@ -136,23 +130,13 @@
 				this.errors.name = ''
 			},
 			errorCallback (err) {
-				let errors = err.response.data.errors
-				let nonParamErrors = []
-
-				errors.forEach(error => {
-					let param = error.parameter
-
-					if(param && this.errors[param] !== undefined) {
-						this.errors[param] = error.message
+				AjaxErrorHandler(this.$store)(err, (error, modalErrors) => {
+					if(this.errors[error.parameter] !== undefined) {
+						this.errors[error.parameter] = error.message
 					} else {
-						nonParamErrors.push(error.message)
+						modalErrors.push(error.message)
 					}
 				})
-
-				if(nonParamErrors.length) {
-					this.modal.show = true
-					this.modal.errors = nonParamErrors
-				}
 			},
 			createAccount () {
 				this.clearErrors()
