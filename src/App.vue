@@ -1,6 +1,6 @@
 <template>
 	<div id='app'>
-		<modal-window v-model='showAjaxErrorsModal'>
+		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100'>
 			<div style='padding: 0rem 1rem 1rem 1rem;'>
 				<p v-for='error in this.$store.state.ajaxErrors'>{{error}}</p>
 				<button class='button' @click='showAjaxErrorsModal = false'>OK</button>
@@ -101,6 +101,8 @@
 
 	import mapGetters from 'vuex'
 
+	import AjaxErrorHandler from './assets/js/errorHandler'
+
 	export default {
 		name: 'app',
 		components: {
@@ -162,15 +164,17 @@
 			signup () {}
 		},
 		created () {
+			let ajaxErrorHandler = AjaxErrorHandler(this.$store)
+
 			this.axios.get('/api/v1/settings')
 				.then(res => {
 					this.$store.commit('setForumName', res.data.forumName)
-				})
+				}).catch(ajaxErrorHandler)
 
 			this.axios.get('/api/v1/category')
 				.then(res => {
 					this.$store.commit('addCategories', res.data)
-				})
+				}).catch(ajaxErrorHandler)
 		}
 	}
 </script>
