@@ -1,6 +1,6 @@
 <template>
 	<div id='app'>
-		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100'>
+		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100' width='auto'>
 			<div style='padding: 0rem 1rem 1rem 1rem;'>
 				<p v-for='error in this.$store.state.ajaxErrors'>{{error}}</p>
 				<button class='button' @click='showAjaxErrorsModal = false'>OK</button>
@@ -15,12 +15,14 @@
 					</p>
 					<fancy-input
 						v-model='signup.username'
+						:error='signup.errors.username'
 						placeholder='Username'
 						width='100%'
 					>
 					</fancy-input>
 					<fancy-input
 						v-model='signup.password'
+						:error='signup.errors.password'
 						placeholder='Password'
 						type='password'
 						width='100%'
@@ -28,15 +30,16 @@
 					</fancy-input>
 					<fancy-input
 						v-model='signup.confirmPassword'
+						:error='signup.errors.confirmPassword'
 						placeholder='Confirm password'
 						type='password'
 						width='100%'
 					>
 					</fancy-input>
-					<button class='button button--green' @click='signup'>
+					<button class='button button--green' @click='createAccount'>
 						Sign up
 					</button>
-					<button class='button' @click='cancel'>
+					<button class='button' @click='closeAccountModal'>
 						Cancel
 					</button>
 				</template>
@@ -46,21 +49,23 @@
 					</p>
 					<fancy-input
 						v-model='login.username'
+						:error='login.errors.username'
 						placeholder='Username'
 						width='100%'
 					>
 					</fancy-input>
 					<fancy-input
 						v-model='login.password'
+						:error='login.errors.password'
 						placeholder='Password'
 						type='password'
 						width='100%'
 					>
 					</fancy-input>
-					<button class='button button--green' @click='signup'>
+					<button class='button button--green' @click='doLogin'>
 						Log in
 					</button>
-					<button class='button' @click='cancel'>
+					<button class='button' @click='closeAccountModal'>
 						Cancel
 					</button>
 				</template>
@@ -115,12 +120,24 @@
 				signup: {
 					username: '',
 					password: '',
-					confirmPassword: ''
+					confirmPassword: '',
+
+					errors: {
+						username: '',
+						password: '',
+						confirmPassword: ''
+					}
 				},
 				login: {
 					username: '',
-					password: ''
-				}
+					password: '',
+
+					errors: {
+						username: '',
+						password: ''
+					}
+				},
+				ajaxErrorHandler: AjaxErrorHandler(this.$store)
 			}
 		},
 		computed: {
@@ -158,14 +175,79 @@
 					console.log(err)
 				})
 			},
-			cancel () {
-				this.showAccountModal = false
+			clearSignup () {
+				this.signup.username = ''
+				this.signup.password = ''
+				this.signup.confirmPassword = ''
 			},
-			signup () {}
+			clearSignupErrors () {
+				this.signup.errors.username = ''
+				this.signup.errors.password = ''
+				this.signup.errors.confirmPassword = ''
+			},
+			clearLogin () {
+				this.login.username = ''
+				this.login.password = ''
+			},
+			clearLoginErrors () {
+				this.login.errors.username = ''
+				this.login.errors.password = ''
+			},
+			closeAccountModal () {
+				this.showAccountModal = false
+				this.clearLogin()
+				this.clearSignup()
+				this.clearLoginErrors()
+				this.clearSignupErrors()
+			},
+			createAccount () {
+				this.clearSignupErrors()
+
+				if(this.signup.password !== this.signup.confirmPassword) {
+					this.signup.errors.confirmPassword = 'Passwords must match'
+				} else {
+					this.axios.post('/api/v1/user', {
+						username: this.signup.username,
+						password: this.signup.password
+					}).then(res => {
+						this.$store.commit('setUsername', res.data.username)
+						this.closeAccountModal()
+					}).catch(e => {
+						this.ajaxErrorHandler(e, (error) => {
+							let param = error.parameter
+
+							if(this.signup.errors[param] !== undefined) {
+								this.signup.errors[param] = error.message
+							}
+						})
+					})
+				}
+			},
+			doLogin () {
+				this.clearSignupErrors()
+
+				if(!this.login.username.trim().length) {
+					this.login.errors.username = 'Username must not be blank'
+					return
+				}
+
+				this.axios.post(`/api/v1/user/${this.login.username}/login`, {
+					password: this.login.password
+				}).then(res => {
+					this.$store.commit('setUsername', res.data.username)
+					this.closeAccountModal()
+				}).catch(e => {
+					this.ajaxErrorHandler(e, (error) => {
+						let param = error.parameter
+
+						if(this.login.errors[param] !== undefined) {
+							this.login.errors[param] = error.message
+						}
+					})
+				})
+			}
 		},
 		created () {
-			let ajaxErrorHandler = AjaxErrorHandler(this.$store)
-
 			this.axios.get('/api/v1/settings')
 				.then(res => {
 					this.$store.commit('setForumName', res.data.forumName)
@@ -173,14 +255,14 @@
 					if(err.response.data.errors[0].name === 'noSettings') {
 						this.$router.push('/start')
 					} else {
-						ajaxErrorHandler(err)
+						this.ajaxErrorHandler(err)
 					}
 				})
 
 			this.axios.get('/api/v1/category')
 				.then(res => {
 					this.$store.commit('addCategories', res.data)
-				}).catch(ajaxErrorHandler)
+				}).catch(this.ajaxErrorHandler)
 		}
 	}
 </script>
