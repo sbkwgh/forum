@@ -77,9 +77,9 @@
 			</div>
 			<div class='header__group'>
 				<template v-if='$store.state.username'>
-					<div class='button' @click='logout'>
+					<loading-button @click='logout' :loading='loadingLogout'>
 						Log out
-					</div>
+					</loading-button>
 				</template>
 				<template v-else>
 					<div class='button button--green' @click='showAccountModalTab(0)'>
@@ -143,6 +143,7 @@
 						password: ''
 					}
 				},
+				loadingLogout: false,
 				ajaxErrorHandler: AjaxErrorHandler(this.$store)
 			}
 		},
@@ -171,14 +172,18 @@
 				this.showAccountTab = index
 			},
 			logout () {
+				this.loadingLogout = true
+
 				this.axios.post(
 					'/api/v1/user/' +
 					this.$store.state.username +
 					'/logout'
 				).then(res => {
+					this.loadingLogout = false
 					this.$store.commit('setUsername', '')
 				}).catch(err => {
-					console.log(err)
+					this.loadingLogout = false
+					this.ajaxErrorHandler(err)
 				})
 			},
 			clearSignup () {
