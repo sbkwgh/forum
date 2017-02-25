@@ -32,17 +32,19 @@
 
 <style lang='scss'>
 	.loading_button {
-		height: 2.25rem;
 		position: relative;
-		top: 0.76rem;
-		height: 2.4rem;
-		overflow: hidden;
-	}
 
-	.loading_button__icon {
-		margin-top: -2.25rem;
-		padding-bottom: 1rem;
-		transition: all 0.2s;
+		@at-root #{&}__icon {
+			transition: all 0.2s;
+			position: absolute;
+			width: calc(100% - 1rem);
+			opacity: 0;
+			pointer-events: none;
+		}
+		@at-root #{&}__slot {
+			transition: all 0.2s;
+			opacity: 1;
+		}
 	}
 
 	.loading_button--loading {
@@ -50,7 +52,11 @@
 		cursor: not-allowed;
 
 		.loading_button__icon {
-			margin-top: 0rem;
+			opacity: 1;
+			transition: all 0.2s;
+		}
+		.loading_button__slot {
+			opacity: 0;
 			transition: all 0.2s;
 		}
 	}
