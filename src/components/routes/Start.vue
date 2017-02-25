@@ -222,7 +222,7 @@
 					name: this.category.trim()
 				}).then(res => {
 					this.loading = false
-					this.$store.commit('addCategories', res.data.name)
+					this.$store.commit('addCategories', res.data)
 					this.categories.push(res.data.name)
 				}).catch(this.errorCallback)
 
@@ -273,9 +273,9 @@
 			margin: 0;
 			margin-right: 0.5rem;
 		}
-		button {
-			height: 1.9rem;
-			padding: 0 0.5rem;
+		div.button {
+			height: 2rem;
+			padding: 0.25rem 0.5rem;
 		}
 	}
 
