@@ -1,9 +1,9 @@
 <template>
 	<div id='app'>
-		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100' width='auto'>
+		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100' width='25rem'>
 			<div style='padding: 0rem 1rem 1rem 1rem;'>
 				<p v-for='error in this.$store.state.ajaxErrors'>{{error}}</p>
-				<button class='button' @click='showAjaxErrorsModal = false'>OK</button>
+				<button class='button button--modal' @click='showAjaxErrorsModal = false'>OK</button>
 			</div>
 		</modal-window>
 		<modal-window v-model='showAccountModal'>
@@ -369,6 +369,17 @@
 
 		@at-root #{&}--borderless {
 			border: 0;
+		}
+
+		@at-root #{&}--modal {
+			padding: 0.25rem 0.5rem;
+			font-size: 0.8rem;
+			float: right;
+			margin-bottom: 1rem;
+
+			&:last-child {
+				margin-right: 0.5rem;
+			}
 		}
 
 		@at-root #{&}--orange {
