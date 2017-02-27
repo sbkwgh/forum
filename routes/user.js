@@ -7,6 +7,13 @@ let Models = require('../models')
 let User = Models.User
 let AdminToken = Models.AdminToken
 
+function setUserSession(req, res, username, admin) {
+	req.session.loggedIn = true
+	req.session.username = username
+	res.cookie('username', username)
+	if(admin) req.session.admin = true
+}
+
 router.post('/', async (req, res) => {
 	let user, adminUser, hash, token
 	let validationErrors = []
@@ -81,9 +88,7 @@ router.post('/', async (req, res) => {
 			await token.destroy()
 		}
 
-		req.session.loggedIn = true
-		req.session.username = user.username
-		if(userParams.admin) req.session.admin = true
+		setUserSession(req, res, user.username, userParams.admin)
 
 		res.json(user.toJSON())
 	} catch (err) {
@@ -103,6 +108,7 @@ router.post('/', async (req, res) => {
 				errors: [Errors.invalidToken]
 			})
 		} else {
+			console.log(e)
 			res.status(500)
 			res.json({
 				errors: [Errors.unknown]
@@ -166,10 +172,7 @@ router.post('/:username/login', async (req, res) => {
 			bcryptRes = await bcrypt.compare(req.body.password, user.hash)
 
 			if(bcryptRes) {
-				req.session.loggedIn = true
-				req.session.username = user.username
-
-				if(user.admin) req.session.admin = true
+				setUserSession(req, res, user.username, user.admin)
 
 				res.json({
 					username: user.username,
@@ -206,6 +209,7 @@ router.post('/:username/login', async (req, res) => {
 
 router.post('/:username/logout', async (req, res) => {
 	req.session = null
+	res.clearCookie('username')
 	
 	res.json({
 		success: true
