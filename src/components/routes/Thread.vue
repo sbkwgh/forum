@@ -12,7 +12,7 @@
 			<div class='thread_header__thread_title' ref='title'>
 				{{thread}}
 			</div>
-			<button class='button thread_header__reply_button' @click='replyThread'>Reply to thread</button>
+			<button class='button thread_header__reply_button' @click='replyThread' v-if='$store.state.username'>Reply to thread</button>
 		</header>
 		<input-editor
 			v-model='editor'
@@ -35,7 +35,13 @@
 				<div class='post__content' v-html='post.content'></div>
 				<div class='post__actions'>
 					<div class='post__action post__share'>Share</div>
-					<div class='post__action post__reply' @click='replyUser(post.id, post.User.username)'>Reply</div>
+					<div
+						class='post__action post__reply'
+						v-if='$store.state.username'
+						@click='replyUser(post.id, post.User.username)'
+					>
+						Reply
+					</div>
 				</div>
 			</div>
 		</div>
