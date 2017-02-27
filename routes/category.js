@@ -7,7 +7,8 @@ let { Category } = require('../models')
 router.get('/', async (req, res) => {
 	try {
 		let categories = await Category.findAll({
-			attributes: { exclude: ['id'] }
+			attributes: { exclude: ['id'] },
+			include: Category.includeOptions(1)
 		})
 
 		res.json(categories)
@@ -23,10 +24,16 @@ router.get('/', async (req, res) => {
 
 router.get('/:category', async (req, res) => {
 	try {
-		let threads = await Category.findOne({
-			where: { name: req.params.category },
-			include: Category.includeOptions()
-		})
+		let threads
+
+		if(req.params.category === 'ALL') {
+			threads = await Category.findAll({ include: Category.includeOptions() })
+		} else {
+			threads = await Category.findOne({
+				where: { name: req.params.category },
+				include: Category.includeOptions()
+			})
+		}
 
 		if(!threads) throw Errors.invalidParameter('id', 'thread does not exist')
 			
