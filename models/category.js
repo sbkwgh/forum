@@ -18,19 +18,23 @@ module.exports = (sequelize, DataTypes) => {
 			associate (models) {
 				Category.hasMany(models.Thread)
 			},
-			includeOptions () {
+			includeOptions (threadLimit) {
 				let models = sequelize.models
-
-				return [{
+				let options = {
 					model: models.Thread, 
 					include: [
+						models.Category,
 						{ model: models.User, attributes: ['username', 'createdAt', 'id'] }, 
 						{
 							model: models.Post, limit: 1, include:
 							[{ model: models.User, attributes: ['username', 'id'] }]
 						}
 					]
-				}]
+				}
+
+				if(threadLimit) options.limit = threadLimit
+
+				return [options]
 			}
 		}
 	})
