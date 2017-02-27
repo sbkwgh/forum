@@ -5,7 +5,7 @@
 				<select-button style='margin-right: 1rem' v-model='selectedCategory' :options='categories'></select-button>
 				<select-options :options='filterOptions' v-model='selectedFilterOption'></select-options>
 			</div>
-			<button class='button' @click='$router.push("/thread/new")'>Post new thread</button>
+			<button class='button' v-if='this.$store.state.username' @click='$router.push("/thread/new")'>Post new thread</button>
 		</div>
 		<table class='threads'>
 			<colgroup>
@@ -24,12 +24,12 @@
 			</thead>
 			<tbody>
 				<tr class='thread' v-for='thread in filteredThreads' @click='navigateToThread(thread.slug, thread.id)'>
-					<td>{{thread.title}}</td>
+					<td>{{thread.name}}</td>
 					<td>
-						<div>{{thread.latestPostUser}}</div>
-						<div>{{thread.latestPostDate | formatDate('time|date', ' - ') }}</div>
+						<div>{{thread.Posts[0].content | stripTags | truncate(100)}}</div>
+						<div>{{thread.Posts[0].createdAt | formatDate('time|date', ' - ') }}</div>
 					</td>
-					<td>{{thread.category}}</td>
+					<td>{{thread.Category.name}}</td>
 					<td>{{thread.replies}}</td>
 				</tr>
 				<tr class='thread' v-if='!filteredThreads.length' colspan='4'>
@@ -44,6 +44,8 @@
 	import SelectButton from '../SelectButton'
 	import TabView from '../TabView'
 	import SelectOptions from '../SelectOptions'
+
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 	export default {
 		name: 'index',
@@ -60,7 +62,6 @@
 					{name: 'No replies', value: 'NO_REPLIES'}
 				],
 				selectedFilterOption: 'NEW',
-				selectedCategory: this.$route.params.category.toUpperCase(),
 				threads: []
 			}
 		},
@@ -74,21 +75,24 @@
 				});
 
 				return this.threads.filter(thread => {
-					return (thread.category === this.selectedCategory) || (this.selectedCategory === 'ALL');
+					return (thread.Category.value === this.selectedCategory) || (this.selectedCategory === 'ALL');
 				}).map(thread => {
 					var _thread = Object.assign({}, thread);
-					_thread.category = categories[thread.category];
+					_thread.category = categories[thread.Category.value];
 
 					return _thread;
 				}).sort((a, b) => {
 					if(filter === 'NEW') {
-						return a.latestPostDate - b.latestPostDate;
+						let aDate = new Date(a.Posts[0].createdAt)
+						let bDate = new Date(b.Posts[0].createdAt)
+
+						return aDate - bDate;
 					} else if(filter === 'MOST_ACTIVE') {
-						return b.replies - a.replies;
+						return 0 //b.replies - a.replies;
 					}
 				}).filter(thread => {
 					if(filter === 'NO_REPLIES') {
-						return !thread.replies;
+						return 0//!thread.replies;
 					} else {
 						return true;
 					}
@@ -96,6 +100,14 @@
 			},
 			categories () {
 				return this.$store.state.meta.categories
+			},
+			selectedCategory: {
+				set (val) {
+					this.$store.commit('setSelectedCategory', val)
+				},
+				get () {
+					return this.$store.state.category.selectedCategory
+				}
 			}
 		},
 		methods: {
@@ -106,7 +118,20 @@
 		watch: {
 			selectedCategory (newValue) {
 				this.$router.push('/category/' + newValue.toLowerCase());
+			},
+			$route () {
+				this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
 			}
+		},
+		created () {
+			this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
+
+			this.axios
+				.get('/api/v1/category/' + this.selectedCategory)
+				.then(res => {
+					this.threads = res.data.Threads
+				})
+				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>

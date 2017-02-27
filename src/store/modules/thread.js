@@ -53,6 +53,12 @@ const mutations = {
 	},
 	setThreadEditorState (state, value) {
 		state.editor.show = value
+	},
+	setPosts (state, value) {
+		state.posts = value
+	},
+	setThreadName (state, value) {
+		state.thread = value
 	}
 }
 

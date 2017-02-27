@@ -9,8 +9,17 @@
 			>
 				<div class='index_category__name'>{{category.name}}</div>
 				<div>
-					<div class='index_category__latest_post'>Latest post here</div>
-					<div class='index_category__latest_post_date'>19:53</div>
+					<div class='index_category__latest_post'>
+						<template v-if='category.Threads && category.Threads.length'>
+							{{category.Threads[0].Posts[0].content | stripTags | truncate(100) }}
+						</template>
+						<template v-else>
+							No threads yet
+						</template>
+					</div>
+					<div class='index_category__latest_post_date' v-if='category.Threads && category.Threads.length'>
+						{{category.Threads[0].Posts[0].createdAt | formatDate('time|date', ' - ')}}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -21,16 +30,8 @@
 </template>
 
 <script>
-	import addFlexBoxChildren from '../../assets/js/flexBoxGridCorrect'
-
 	export default {
-		name: 'index',
-		components: {},
-		computed: {},
-		methods: {},
-		mounted () {
-			addFlexBoxChildren('.index_categories', 'index_category');
-		}
+		name: 'index'
 	}
 </script>
 

@@ -108,6 +108,7 @@
 	import mapGetters from 'vuex'
 
 	import AjaxErrorHandler from './assets/js/errorHandler'
+	let { addFlexBoxChildren } = require('./assets/js/flexBoxGridCorrect')
 
 	export default {
 		name: 'app',
@@ -164,6 +165,23 @@
 			showAccountTab : {
 				get (val) { return this.$store.state.accountTabs },
 				set (index) { this.$store.commit('setAccountTabs', index) }
+			},
+			categories() {
+				return this.$store.state.meta.categories
+			}
+		},
+		watch: {
+			$route (to) {
+				if(to.path === '/') {
+					setTimeout(() => {
+						addFlexBoxChildren('.index_categories', 'index_category');
+					}, 50);
+				}
+			},
+			categories () {
+				setTimeout(() => {
+					addFlexBoxChildren('.index_categories', 'index_category');
+				}, 50);
 			}
 		},
 		methods: {
@@ -270,6 +288,14 @@
 		created () {
 			this.axios.get('/api/v1/settings')
 				.then(res => {
+					let usernameCookie = document.cookie
+						.split(';')
+						.map(c => c.split('='))
+						.filter(pair => pair[0].trim() === 'username')
+						.map(pair => pair[1])[0]
+
+					if(usernameCookie) this.$store.commit('setUsername', usernameCookie)
+
 					this.$store.commit('setForumName', res.data.forumName)
 				}).catch(err => {
 					if(err.response.data.errors[0].name === 'noSettings') {

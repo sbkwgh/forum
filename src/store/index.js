@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import thread from './modules/thread'
+import category from './modules/category'
 
 Vue.use(Vuex)
 
@@ -20,14 +21,16 @@ export default new Vuex.Store({
 	},
 	getters: {
 		categoriesWithoutAll (state) {
-			var categories = JSON.parse(JSON.stringify(state.meta.categories));
-			categories.shift();
+			let categories =
+				state.meta.categories
+				.filter(category => category.value !== 'ALL' )
+
 			categories.unshift({
 				name: 'Select a category',
 				disabled: true
-			});
+			})
 
-			return categories;
+			return categories.filter(category => category.value !== 'ALL' )
 		}
 	},
 	mutations: {
@@ -60,5 +63,5 @@ export default new Vuex.Store({
 			}
 		}
 	},
-	modules: { thread }
+	modules: { thread, category }
 })

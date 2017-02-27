@@ -78,7 +78,7 @@ var onResize = function(parentString, childClass) {
 	});
 }
 
-export {
-	onResize as default,
+module.exports = {
+	onResize,
 	addFlexBoxChildren
 }

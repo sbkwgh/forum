@@ -3,7 +3,7 @@ module.exports = function(vuex) {
 		let errors = []
 
 		if(res.response === undefined) {
-			errors.push('It looks like you\'re offline')
+			errors.push('An error occured. Try again later')
 		} else {
 			res.response.data.errors.forEach(error => {
 				let param = error.parameter

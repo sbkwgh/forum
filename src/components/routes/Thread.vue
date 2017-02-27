@@ -26,16 +26,16 @@
 		<div class='posts'>
 			<div class='post' v-for='post in posts'>
 				<div class='post__meta_data'>
-					<div class='post__avatar'>{{post.username[0]}}</div>
-					<div class='post__user'>{{post.username}}</div>
-					<span class='fa fa-long-arrow-right fa-fw' v-if='post.replyUsername'></span>
-					<div class='post__reply' v-if='post.replyUsername'>{{post.replyUsername}}</div>
-					<div class='post__date'>{{post.date | formatDate('time|date', ', ')}}</div>
+					<div class='post__avatar'>{{post.User.username[0]}}</div>
+					<div class='post__user'>{{post.User.username}}</div>
+					<span class='fa fa-long-arrow-right fa-fw' v-if='post.ReplyingTo'></span>
+					<div class='post__reply' v-if='post.ReplyingTo'>{{post.ReplyingTo.User.username}}</div>
+					<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 				</div>
 				<div class='post__content' v-html='post.content'></div>
 				<div class='post__actions'>
 					<div class='post__action post__share'>Share</div>
-					<div class='post__action post__reply' @click='replyUser("id", post.username)'>Reply</div>
+					<div class='post__action post__reply' @click='replyUser(post.id, post.User.username)'>Reply</div>
 				</div>
 			</div>
 		</div>
@@ -45,6 +45,8 @@
 <script>
 	import InputEditor from '../InputEditor'
 	import throttle from 'lodash.throttle'
+
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 	export default {
 		name: 'Thread',
@@ -103,7 +105,7 @@
 				this.$store.dispatch('addPostAsync');
 			}
 		},
-		mounted () {
+		created () {
 			var self = this;
 			var setHeader = function() {
 				if(!self.$refs.title) return;
@@ -117,6 +119,13 @@
 
 			setHeader();
 			document.addEventListener('scroll', throttle(setHeader, 200));
+
+			this.axios
+				.get('/api/v1/thread/' + this.$route.params.id)
+				.then(res => {
+					this.$store.commit('setThreadName', res.data.name)
+					this.$store.commit('setPosts', res.data.Posts)
+				}).catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>

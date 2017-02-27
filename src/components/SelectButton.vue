@@ -1,8 +1,11 @@
 <template>
 	<div class='select_button'>
-		<div class='button' @click='toggleMenu'>
+		<div class='button' @click='toggleMenu' v-if='options.length'>
 			{{options[selectedIndex].name}}
 			<span class='button__icon fa fa-fw' :class='[hideMenu ? "fa-caret-down" : "fa-caret-up"]'></span>
+		</div>
+		<div class='button' v-else>
+			No options
 		</div>
 		<div class='select_button__options' :class='{"select_button__options--hidden": hideMenu}'>
 			<div
@@ -76,6 +79,7 @@
 			border: 0.125rem solid $color__gray--primary;
 			margin-top: -0.125rem;
 			max-height: 20rem;
+			box-shadow: 0 0.12rem 0.125rem rgba(0,0,0,0.125);
 
 			transition: max-height 0.4s ease-out;
 
@@ -83,9 +87,10 @@
 
 			@at-root #{&}--hidden {
 				max-height: 0;
+				box-shadow: none;
 				border-color: transparent;
 				background-color: transparent;
-				transition: max-height 0.2s ease-out, border-color 0s ease-in 0.19s, background-color 0s ease-in 0.19s;
+				transition: max-height 0.2s ease-out, box-shadow 0.2s, border-color 0s ease-in 0.19s, background-color 0s ease-in 0.19s;
 			}
 		}
 
