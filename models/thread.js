@@ -1,6 +1,15 @@
+let slug = require('slug')
+
 module.exports = (sequelize, DataTypes) => {
 	let Thread = sequelize.define('Thread', {
-		name: DataTypes.STRING
+		name: {
+			type: DataTypes.STRING,
+			set (val) {
+				this.setDataValue('name', val)
+				this.setDataValue('slug', slug(val).toLowerCase())
+			}
+		},
+		slug: DataTypes.STRING
 	}, {
 		classMethods: {
 			associate (models) {

@@ -66,6 +66,23 @@ describe('Thread and post', () => {
 			res.should.have.status(200)
 			res.should.be.json
 			res.body.should.have.property('name', 'thread')
+			res.body.should.have.property('slug', 'thread')
+			res.body.should.have.deep.property('User.username', 'username')
+			res.body.should.have.deep.property('Category.name', 'category_name')
+		})
+		it('should add a slug from the thread name', async () => {
+			let res = await userAgent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({
+					name: ' à long thrËad, with lØts of àccents!!!	',
+					category: 'category_name'
+				})
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.should.have.property('name', ' à long thrËad, with lØts of àccents!!!	')
+			res.body.should.have.property('slug', 'a-long-thread-with-lots-of-accents')
 			res.body.should.have.deep.property('User.username', 'username')
 			res.body.should.have.deep.property('Category.name', 'category_name')
 		})

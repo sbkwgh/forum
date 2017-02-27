@@ -18,7 +18,8 @@
     "marked": "^0.3.6",
     "mysql": "^2.13.0",
     "sequelize": "^3.30.0",
-    "sequelize-cli": "^2.5.1"
+    "sequelize-cli": "^2.5.1",
+    "slug": "^0.9.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
