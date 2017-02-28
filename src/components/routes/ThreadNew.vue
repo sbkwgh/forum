@@ -54,7 +54,7 @@
 						content: this.editor
 					})
 				}).then(res => {
-					this.$router.push('/thread/' + res.data.Thread.id)
+					this.$router.push(`/thread/${res.data.Thread.slug}/${res.data.Thread.id}`)
 				}).catch(e => {
 					AjaxErrorHandler(this.$store)(e, (error, errors) => {
 						let param = error.parameter
