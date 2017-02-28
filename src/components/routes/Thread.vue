@@ -67,7 +67,7 @@
 				return this.$store.state.thread.thread;
 			},
 			posts () {
-				return this.$store.state.thread.posts;
+				return this.$store.getters.sortedPosts;
 			},
 			replyUsername () {
 				return this.$store.state.thread.reply.username

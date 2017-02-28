@@ -13,7 +13,13 @@ const state = {
 	}
 }
 
-const getters = {}
+const getters = {
+	sortedPosts (state) {
+		return state.posts.sort((a, b) => {
+			return new Date(a.createdAt) - new Date(b.createdAt)
+		})
+	}
+}
 
 const actions = {
 	addPostAsync ({ state, commit, rootState }, vue) {
