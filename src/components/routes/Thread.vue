@@ -108,7 +108,7 @@
 				this.showEditor();
 			},
 			addPost () {
-				this.$store.dispatch('addPostAsync');
+				this.$store.dispatch('addPostAsync', this);
 			}
 		},
 		created () {

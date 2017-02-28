@@ -1,9 +1,11 @@
+import AjaxErrorHandler from '../../assets/js/errorHandler'
+
 const state = {
 	thread: '',
 	posts: [],
 	reply: {
 		username: '',
-		id: ''
+		id: null
 	},
 	editor: {
 		show: false,
@@ -14,29 +16,29 @@ const state = {
 const getters = {}
 
 const actions = {
-	addPostAsync ({ state, commit, rootState }) {
+	addPostAsync ({ state, commit, rootState }, vue) {
 		var post = {
 			content: state.editor.value,
-			username: rootState.username,
-			date: new Date()
+			threadId: +vue.$route.params.id
 		};
 
-		if(state.reply.id.length) {
-			post.replyUsername = state.reply.username;
-			post.replyId = state.reply.id;
+		if(state.reply.id) {
+			post.replyingToId = state.reply.id;
 		}
 
-		//Post to server
-		setTimeout(function() {
-			commit('addPost', post);
-			commit('setThreadEditorValue', '');
-			commit('setThreadEditorState', false);
-			commit({
-				type: 'setReply',
-				username: '',
-				id: ''
-			});
-		}, 1);
+		vue.axios
+			.post('/api/v1/post', post)
+			.then(res => {
+				commit('addPost', res.data);
+				commit('setThreadEditorValue', '');
+				commit('setThreadEditorState', false);
+				commit({
+					type: 'setReply',
+					username: '',
+					id: ''
+				});
+			})
+			.catch(AjaxErrorHandler(vue.$store))
 	}
 }
 
