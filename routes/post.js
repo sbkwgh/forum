@@ -65,9 +65,10 @@ router.post('/', async (req, res) => {
 		if(!thread) throw Errors.invalidParameter('threadId', 'thread does not exist')
 
 		if(req.body.replyingToId) {
-			replyingToPost = await Post.findOne({ where: {
-				id: req.body.replyingToId
-			}, include: [Thread] })
+			replyingToPost = await Post.findById(
+				req.body.replyingToId,
+				{ include: [Thread] }
+			)
 
 			if(!replyingToPost) {
 				throw Errors.invalidParameter('replyingToId', 'post does not exist')
