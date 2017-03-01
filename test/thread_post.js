@@ -279,7 +279,7 @@ describe('Thread and post', () => {
 			res.body.should.have.deep.property('User.username', 'username1')
 			res.body.should.have.deep.property('Thread.name', 'thread')
 			res.body.should.have.deep.property('ReplyingTo.User.username', 'username')
-			res.body.should.have.property('Replies', null)
+			res.body.should.have.property('Replies').that.deep.equals([])
 		})
 		it('should return any replies to a post', async () => {
 			let res = await replyAgent.get('/api/v1/post/1')

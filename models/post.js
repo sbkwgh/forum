@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 				Post.belongsTo(models.User)
 				Post.belongsTo(models.Thread)
 				Post.hasMany(models.Post, { as: 'Replies' })
-				Post.hasOne(models.Post, { as: 'ReplyingTo' })
+				Post.hasOne(models.Post, { as: 'ReplyingTo', foreignKey: 'ReplyId' })
 			},
 			includeOptions () {
 				let models = sequelize.models
