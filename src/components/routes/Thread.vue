@@ -34,13 +34,20 @@
 				</div>
 				<div class='post__content' v-html='post.content'></div>
 				<div class='post__actions'>
-					<div class='post__action post__share'>Share</div>
-					<div
-						class='post__action post__reply'
-						v-if='$store.state.username'
-						@click='replyUser(post.id, post.User.username)'
-					>
-						Reply
+					<div class='post__action_group'>
+						Replies:
+						<post-reply v-for='reply in post.Replies' :post='reply'></post-reply>
+						</div>
+					</div>
+					<div class='post__action_group'>
+						<div class='post__action post__share'>Share</div>
+						<div
+							class='post__action post__reply'
+							v-if='$store.state.username'
+							@click='replyUser(post.id, post.User.username)'
+						>
+							Reply
+						</div>
 					</div>
 				</div>
 			</div>
@@ -50,6 +57,7 @@
 
 <script>
 	import InputEditor from '../InputEditor'
+	import PostReply from '../PostReply'
 	import throttle from 'lodash.throttle'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
@@ -57,7 +65,8 @@
 	export default {
 		name: 'Thread',
 		components: {
-			InputEditor
+			InputEditor,
+			PostReply
 		},
 		data () {
 			return { headerTitle: false }
@@ -220,7 +229,7 @@
 		@at-root #{&}__actions {
 			padding: 0.5rem 0 0.75rem 4rem;
 			display: flex;
-			justify-content: flex-end;
+			justify-content: space-between;
 		}
 		@at-root #{&}__action {
 			color: $color__gray--darkest;
@@ -234,6 +243,10 @@
 			}
 			&:active {
 				color: $color__darkgray--darkest;
+			}
+
+			@at-root #{&}_group {
+				display: inline-flex;
 			}
 		}
 	}
