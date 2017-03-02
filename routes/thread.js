@@ -17,6 +17,7 @@ router.get('/:thread_id', async (req, res) => {
 				errors: [e]
 			})
 		} else {
+			console.log(e)
 			res.status(500)
 			res.json({
 				errors: [Errors.unknown]

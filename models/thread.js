@@ -28,9 +28,6 @@ module.exports = (sequelize, DataTypes) => {
 						include: [
 							{ model: models.User, attributes: ['username', 'createdAt', 'id'] }, 
 							{
-								model: models.Post, as: 'ReplyingTo', include:
-								[{ model: models.User, attributes: ['username', 'id'] }]
-							}, {
 								model: models.Post, as: 'Replies', include:
 								[{ model: models.User, attributes: ['username', 'id'] }]	
 							}
