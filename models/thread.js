@@ -21,15 +21,15 @@ module.exports = (sequelize, DataTypes) => {
 				let models = sequelize.models
 
 				return [
-					{ model: models.User, attributes: ['username', 'createdAt', 'updatedAt', 'id'] }, 
+					{ model: models.User, attributes: ['username', 'createdAt', 'color', 'updatedAt', 'id'] }, 
 					models.Category,
 					{ 
 						model: models.Post, 
 						include: [
-							{ model: models.User, attributes: ['username', 'createdAt', 'id'] }, 
+							{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
 							{
 								model: models.Post, as: 'Replies', include:
-								[{ model: models.User, attributes: ['username', 'id'] }]	
+								[{ model: models.User, attributes: ['username', 'id', 'color'] }]	
 							}
 						]
 					}

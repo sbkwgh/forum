@@ -39,6 +39,8 @@ describe('User', () => {
 					res.should.be.json
 					res.body.should.have.property('username', 'username')
 					res.body.should.have.property('hash')
+					res.body.should.have.property('color')
+					res.body.color.should.not.be.null
 					
 					done()
 				})
