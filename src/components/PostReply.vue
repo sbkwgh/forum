@@ -11,7 +11,7 @@
 			<div class='post_reply__content' v-html='post.content'></div>
 		</div>
 		<div class='post_reply__display'>
-			<div class='post_reply__letter'>{{post.User.username[0]}}</div>
+			<div class='post_reply__letter' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 			<div class='post_reply__username'>{{post.User.username}}</div>
 		</div>
 	</div>

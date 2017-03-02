@@ -26,7 +26,7 @@
 		<div class='posts'>
 			<div class='post' v-for='post in posts'>
 				<div class='post__meta_data'>
-					<div class='post__avatar'>{{post.User.username[0]}}</div>
+					<div class='post__avatar' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 					<div class='post__user'>{{post.User.username}}</div>
 					<span class='fa fa-long-arrow-right fa-fw' v-if='post.replyingToUsername'></span>
 					<div class='post__reply' v-if='post.replyingToUsername'>{{post.replyingToUsername}}</div>
@@ -228,6 +228,7 @@
 		@at-root #{&}__footer {
 			padding: 0.5rem 0 0.75rem 4rem;
 			display: flex;
+			align-items: baseline;
 			justify-content: space-between;
 
 			@at-root #{&}_group {
