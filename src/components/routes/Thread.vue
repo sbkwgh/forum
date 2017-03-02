@@ -28,8 +28,8 @@
 				<div class='post__meta_data'>
 					<div class='post__avatar'>{{post.User.username[0]}}</div>
 					<div class='post__user'>{{post.User.username}}</div>
-					<span class='fa fa-long-arrow-right fa-fw' v-if='post.ReplyingTo'></span>
-					<div class='post__reply' v-if='post.ReplyingTo'>{{post.ReplyingTo.User.username}}</div>
+					<span class='fa fa-long-arrow-right fa-fw' v-if='post.replyingToUsername'></span>
+					<div class='post__reply' v-if='post.replyingToUsername'>{{post.replyingToUsername}}</div>
 					<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 				</div>
 				<div class='post__content' v-html='post.content'></div>
@@ -231,6 +231,7 @@
 			justify-content: space-between;
 
 			@at-root #{&}_group {
+				align-items: baseline;
 				display: inline-flex;
 			}
 		}
