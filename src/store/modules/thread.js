@@ -36,6 +36,7 @@ const actions = {
 			.post('/api/v1/post', post)
 			.then(res => {
 				commit('addPost', res.data);
+				commit('addReplyBubble', res.data)
 				commit('setThreadEditorValue', '');
 				commit('setThreadEditorState', false);
 				commit({
@@ -55,6 +56,22 @@ const mutations = {
 	},
 	addPost (state, post) {
 		state.posts.push(post);
+	},
+	addReplyBubble (state, post) {
+		let repliedToPost = {}, index
+
+		if(post.replyId) {
+			state.posts.forEach((p, i) => {
+				if(p.id === post.replyId) {
+					index = i
+					repliedToPost = p
+				}
+			})
+
+			repliedToPost.Replies.push(post)
+
+			state.posts.splice(index, 1, repliedToPost)
+		}
 	},
 	setThreadEditorValue (state, value) {
 		state.editor.value = value
