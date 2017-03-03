@@ -10,7 +10,12 @@
 			<div class='post_reply__date'>{{post.createdAt | formatDate('date|time', ' - ')}}</div>
 			<div class='post_reply__content' v-html='post.content'></div>
 		</div>
-		<div class='post_reply__display'>
+		<div
+			class='post_reply__display'
+			:class="{
+				'post_reply__display--hover': show,
+			}"
+		>
 			<div class='post_reply__letter' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 			<div class='post_reply__username'>{{post.User.username}}</div>
 		</div>
@@ -105,6 +110,11 @@
 
 			cursor: pointer;
 			transition: background-color 0.2s;
+			transition-delay: 0.1s;
+
+			@at-root #{&}--hover {
+				background-color: $color__lightgray--primary;
+			}
 
 			&:hover {
 				background-color: $color__lightgray--primary;
