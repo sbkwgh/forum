@@ -20,6 +20,7 @@
 		</div>
 		<div
 			class='post_reply__display'
+			@click='$emit("click")'
 			:class="{
 				'post_reply__display--hover': show
 			}"
