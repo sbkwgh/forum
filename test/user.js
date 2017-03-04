@@ -267,6 +267,33 @@ describe('User', () => {
 
 	})
 
+	describe('/:username GET user', () => {
+		it('should return the user', async () => {
+			let res = await chai.request(server)
+				.get('/api/v1/user/username')
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.should.have.property('username', 'username')
+			res.body.should.have.property('color')
+			res.body.should.not.have.property('hash')
+		})
+
+		it('should return an error if username invalid', async () => {
+			try {
+				let res = await chai.request(server)
+					.get('/api/v1/user/not_a_user')
+
+				res.should.have.status(400)
+				res.body.errors.should.contain.something.that.deep.equals(Errors.accountDoesNotExist)
+			} catch(res) {
+				let body = JSON.parse(res.response.text)
+				res.should.have.status(400)
+				body.errors.should.contain.something.that.deep.equals(Errors.accountDoesNotExist)
+			}
+		})
+	})
+
 	describe('/:username/login POST user', () => {
 		let agent = chai.request.agent(server)
 
