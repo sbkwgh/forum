@@ -2,7 +2,21 @@
 	<info-tooltip class='avatar_icon' @hover='loadUser'>
 		<template slot='content'>
 			<template v-if='ajaxUser'>
-				{{ajaxUser.username}}
+				<div class='avatar_icon__header'>
+					<div
+						class='avatar_icon__icon avatar_icon__icon--small'
+						:style='{ "background-color": user.color }'
+					>
+						{{user.username[0]}}
+					</div>
+					<div class='avatar_icon__header_info'>
+						<span class='avatar_icon__username'>{{ajaxUser.username}}</span>
+						<span class='avatar_icon__date'>Created: {{ajaxUser.createdAt | formatDate('date') }}</span>
+					</div>
+				</div>
+				<div class='avatar_icon__description'>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				</div>
 			</template>
 			<template v-else>Loading...</template>
 		</template>
@@ -55,24 +69,9 @@
 			color: rgba(0, 0, 0, 0.87);
 		}
 
-		@at-root #{&}__date  {
-			display: inline-block;
-			color: $color__gray--darkest;
-			font-size: 0.8rem;
-		}
-		@at-root #{&}__username {
-			display: inline-block;
-			font-size: 0.9rem;
-			color: #000;
-		}
-
-		@at-root #{&}__content {
-			*:first-child, *:last-child {
-				margin: 0;
-			}
-			p {
-				margin: 0.25rem 0;
-			}
+		@at-root #{&}__header {
+			display: flex;
+			align-items: center;
 		}
 
 		@at-root #{&}__icon {
@@ -84,6 +83,26 @@
 			border-radius: 100%;
 			background-color: $color__gray--darkest;
 			color: #fff;
+
+			@at-root #{&}--small {
+				height: 2.5rem;
+				width: 2.5rem;
+				font-size: 2rem;
+				line-height: 2.25rem;
+			}
+		}
+		@at-root #{&}__header_info {
+			display: flex;
+			flex-direction: column;
+			height: 2.5rem;
+		}
+		@at-root #{&}__date {
+			color: $color__gray--darkest;
+			font-size: 0.9rem;
+		}
+		@at-root #{&}__description {
+			margin-top: 0.25rem;
+			font-size: 0.9rem;
 		}
 	}
 </style>
