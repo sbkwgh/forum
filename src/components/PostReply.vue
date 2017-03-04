@@ -1,5 +1,10 @@
 <template>
-	<div class='post_reply' @mouseenter='setState(true)' @mouseleave='setState(false)'>
+	<div
+		class='post_reply'
+		@mouseenter='setState(true)'
+		@mouseleave='setState(false)'
+		:class="{ 'post_reply--expanded': expanded }"
+	>
 		<div
 			class='post_reply__post'
 			:class="{
@@ -7,17 +12,24 @@
 				'post_reply__post--pointer_events': pointerEvents,
 			}"
 		>
-			<div class='post_reply__date'>{{post.createdAt | formatDate('date|time', ' - ')}}</div>
+			<div style='margin-top: -0.25rem;'>
+				<div class='post_reply__username'>{{post.User.username}}</div>
+				<div class='post_reply__date'>{{post.createdAt | formatDate('date|time', ' - ')}}</div>
+			</div>
 			<div class='post_reply__content' v-html='post.content'></div>
 		</div>
 		<div
 			class='post_reply__display'
 			:class="{
-				'post_reply__display--hover': show,
+				'post_reply__display--hover': show
 			}"
 		>
-			<div class='post_reply__letter' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
-			<div class='post_reply__username'>{{post.User.username}}</div>
+			<div
+				class='post_reply__letter'
+				:style='{"background-color": post.User.color}'
+			>
+				{{post.User.username[0]}}
+			</div>
 		</div>
 	</div>
 </template>
@@ -25,7 +37,7 @@
 <script>
 	export default {
 		name: 'PostReply',
-		props: ['post'],
+		props: ['post', 'expanded'],
 		data () {
 			return {
 				show: false,
@@ -55,10 +67,31 @@
 
 	.post_reply {
 		position: relative;
+		transition: all 0.2s;
+		margin-left: -0.4rem;
 
-		@at-root #{&}__date {
+		&:first-child {
+			margin-left: 0rem;
+		}
+
+		@at-root #{&}--expanded {
+			margin: 0 0.125rem;
+
+			&:first-child {
+				margin-left: 0rem;
+			}
+		}
+
+
+		@at-root #{&}__date  {
+			display: inline-block;
 			color: $color__gray--darkest;
 			font-size: 0.8rem;
+		}
+		@at-root #{&}__username {
+			display: inline-block;
+			font-size: 0.9rem;
+			color: #000;
 		}
 
 		@at-root #{&}__post {
@@ -101,16 +134,11 @@
 		@at-root #{&}__display {
 			display: inline-flex;
 			align-items: baseline;
-			border: thin solid $color__darkgray--primary;
-			padding: 0.25rem 0.375rem;
+			border: 0.125rem solid $color__gray--darkest;
 			justify-content: center;
-			margin: 0 0.25rem;
 			position: relative;
 			border-radius: 1rem;
-
 			cursor: pointer;
-			transition: background-color 0.2s;
-			transition-delay: 0.1s;
 
 			@at-root #{&}--hover {
 				background-color: $color__lightgray--primary;
@@ -127,15 +155,11 @@
 			height: 1.25rem;
 			width: 1.25rem;
 			line-height: 1.25rem;
-			@include text($font--role-emphasis, 0.85rem)
+			@include text($font--role-emphasis, 0.9rem)
 			text-align: center;
 			border-radius: 100%;
 			background-color: $color__gray--darkest;
 			color: #fff;
-			margin-right: 0.25rem;
-		}
-		@at-root #{&}__username {
-			font-size: 0.85rem;
 		}
 	}
 </style>

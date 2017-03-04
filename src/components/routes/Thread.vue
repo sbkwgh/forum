@@ -24,7 +24,12 @@
 		>
 		</input-editor>
 		<div class='posts'>
-			<div class='post' v-for='post in posts'>
+			<div
+				class='post'
+				v-for='(post, index) in posts'
+				@mouseenter='setPostFooterState(index, true)'
+				@mouseleave='setPostFooterState(index, false)'
+			>
 				<div class='post__meta_data'>
 					<div class='post__avatar' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 					<div class='post__user'>{{post.User.username}}</div>
@@ -33,12 +38,19 @@
 					<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 				</div>
 				<div class='post__content' v-html='post.content'></div>
-				<div class='post__footer'>
-					<div class='post__footer_group'>
-						Replies:
-						<post-reply v-for='reply in post.Replies' :post='reply'></post-reply>
+				<div class='post__footer' :class='{ "post__footer--show": postIndexHover === index }'>
+					<div
+						class='post__footer_group'
+						:class='{ "post__footer_group--replies": post.Replies.length }'
+					>
+						<post-reply
+							v-for='reply in post.Replies'
+							:post='reply'
+							:expanded='postIndexHover === index'
+						></post-reply>
 					</div>
-					<div class='post__footer_group'>
+					<div
+						class='post__footer_group'>
 						<div class='post__action post__share'>Share</div>
 						<div
 							class='post__action post__reply'
@@ -68,7 +80,10 @@
 			PostReply
 		},
 		data () {
-			return { headerTitle: false }
+			return {
+				headerTitle: false,
+				postIndexHover: null
+			}
 		},
 		computed: {
 			thread () {
@@ -117,6 +132,13 @@
 			},
 			addPost () {
 				this.$store.dispatch('addPostAsync', this);
+			},
+			setPostFooterState (index, state) {
+				if(state) {
+					this.postIndexHover = index
+				} else {
+					this.postIndexHover = null
+				}
 			}
 		},
 		created () {
@@ -230,23 +252,41 @@
 			display: flex;
 			align-items: baseline;
 			justify-content: space-between;
+			opacity: 0.75;
+			transition: opacity 0.2s;
+
+			@at-root #{&}--show {
+				opacity: 1;
+				transition: opacity 0.2s;
+			}
 
 			@at-root #{&}_group {
 				align-items: baseline;
 				display: inline-flex;
+				position: relative;
+
+
+				@at-root #{&}--replies {
+					&::before {
+						content: 'Replies:';
+						bottom: 0.25rem;
+						left: -3.75rem;
+						font-size: 0.9rem;
+						position: absolute;	
+						color: $color__darkgray--primary;
+						transition: opacity 0.2s, bottom 0.2s;
+					}
+				}
 			}
 		}
 		@at-root #{&}__action {
-			color: $color__gray--darkest;
+			color: $color__darkgray--primary;
 			cursor: pointer;
 			margin-right: 0.75rem;
 
 			transition: all 0.2s;
 
 			&:hover {
-				color: $color__darkgray--primary;
-			}
-			&:active {
 				color: $color__darkgray--darkest;
 			}
 		}
