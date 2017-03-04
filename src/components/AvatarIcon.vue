@@ -35,7 +35,7 @@
 				if(this.ajaxUser) return
 
 				this.axios
-					.get('/api/v1/user/' + this.user.id)
+					.get('/api/v1/user/' + this.user.username)
 					.then((res) => {
 						this.ajaxUser = res.data
 					})
