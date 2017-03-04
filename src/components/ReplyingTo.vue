@@ -1,5 +1,5 @@
 <template>
-	<info-tooltip class='replying_to'>
+	<info-tooltip class='replying_to' @hover='loadPost'>
 		<template slot='content'>
 			<div style='margin-top: -0.25rem;'>
 				<div class='replying_to__username' v-if='post'>{{post.User.username}}</div>
@@ -25,12 +25,23 @@
 	export default {
 		name: 'ReplyingTo',
 		props: ['replyId', 'username'],
+		components: { InfoTooltip },
 		data () {
 			return {
 				post: null
 			}
 		},
-		components: { InfoTooltip }
+		methods: {
+			loadPost () {
+				if(this.post) return
+
+				this.axios
+					.get('/api/v1/post/' + this.replyId)
+					.then((res) => {
+						this.post = res.data
+					})
+			}
+		}
 	}
 </script>
 

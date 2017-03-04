@@ -38,6 +38,7 @@
 				if(val) {
 					this.pointerEvents = true
 					this.show = true
+					this.$emit('hover')
 				} else {
 					this.show = false;
 					setTimeout(() => {
