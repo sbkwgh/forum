@@ -13,6 +13,7 @@
 			class='replying_to__display'
 			@click='$emit("click")'
 		>
+			<span class='fa fa-reply replying_to__icon'></span>
 			{{username}}
 		</div>
 	</info-tooltip>
@@ -37,6 +38,12 @@
 	@import '../assets/scss/variables.scss';
 
 	.replying_to {
+		@at-root #{&}__icon {
+			font-size: 0.7rem;
+			margin-right: 0.25rem;
+			color: rgba(0, 0, 0, 0.87);
+		}
+
 		@at-root #{&}__date  {
 			display: inline-block;
 			color: $color__gray--darkest;
@@ -58,8 +65,9 @@
 		}
 
 		@at-root #{&}__display {
-			display: inline-block;
+			display: inline-flex;
 			cursor: pointer;
+			align-items: baseline;
 		}
 	}
 </style>

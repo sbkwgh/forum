@@ -35,8 +35,8 @@
 				<div class='post__meta_data'>
 					<div class='post__avatar' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 					<div class='post__user'>{{post.User.username}}</div>
-					<span class='fa fa-reply post__reply_icon' v-if='post.replyingToUsername'></span>
 					<replying-to
+						style='margin-right: 0.5rem;'
 						v-if='post.replyingToUsername'
 						:replyId='post.replyId'
 						:username='post.replyingToUsername'
@@ -272,16 +272,6 @@
 		@at-root #{&}__user {
 			@include text($font--role-default, 1rem, 600);
 			margin-right: 0.5rem;
-		}
-		@at-root #{&}__reply {
-			margin: 0 0.5rem;
-			cursor: pointer;
-		}
-		@at-root #{&}__reply_icon {
-			font-size: 0.75rem;
-			line-height: 1.5rem;
-			margin-right: -0.25rem;
-			color: rgba(0, 0, 0, 0.87);
 		}
 		@at-root #{&}__date {
 			color: $color__gray--darkest;
