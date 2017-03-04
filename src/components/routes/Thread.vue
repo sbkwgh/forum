@@ -36,6 +36,7 @@
 					<div class='post__avatar' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 					<div class='post__user'>{{post.User.username}}</div>
 					<span class='fa fa-reply post__reply_icon' v-if='post.replyingToUsername'></span>
+
 					<div class='post__reply' v-if='post.replyingToUsername' @click='goToPost(post.replyId)'>{{post.replyingToUsername}}</div>
 					<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 				</div>
@@ -48,7 +49,7 @@
 						<post-reply
 							v-for='reply in post.Replies'
 							:post='reply'
-							:expanded='postIndexHover === index'
+							:hover='postIndexHover === index'
 							@click='goToPost(reply.id)'
 						></post-reply>
 					</div>
