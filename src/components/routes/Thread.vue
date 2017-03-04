@@ -25,16 +25,18 @@
 		</input-editor>
 		<div class='posts'>
 			<div
-				class='post'
 				v-for='(post, index) in posts'
+				class='post'
+				:class='{"post--highlighted": highlightedPostIndex == index}'
+				ref='posts'
 				@mouseenter='setPostFooterState(index, true)'
 				@mouseleave='setPostFooterState(index, false)'
 			>
 				<div class='post__meta_data'>
 					<div class='post__avatar' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 					<div class='post__user'>{{post.User.username}}</div>
-					<span class='fa fa-long-arrow-right fa-fw' v-if='post.replyingToUsername'></span>
-					<div class='post__reply' v-if='post.replyingToUsername'>{{post.replyingToUsername}}</div>
+					<span class='fa fa-reply post__reply_icon' v-if='post.replyingToUsername'></span>
+					<div class='post__reply' v-if='post.replyingToUsername' @click='goToPost(post.replyId)'>{{post.replyingToUsername}}</div>
 					<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 				</div>
 				<div class='post__content' v-html='post.content'></div>
@@ -47,6 +49,7 @@
 							v-for='reply in post.Replies'
 							:post='reply'
 							:expanded='postIndexHover === index'
+							@click='goToPost(reply.id)'
 						></post-reply>
 					</div>
 					<div
@@ -82,7 +85,8 @@
 		data () {
 			return {
 				headerTitle: false,
-				postIndexHover: null
+				postIndexHover: null,
+				highlightedPostIndex: null
 			}
 		},
 		computed: {
@@ -138,6 +142,26 @@
 					this.postIndexHover = index
 				} else {
 					this.postIndexHover = null
+				}
+			},
+			goToPost (postId) {
+				for(var i = 0; i < this.posts.length; i++) {
+					let post = this.posts[i]
+
+					if(post.id === postId) {				
+						let postTop = this.$refs.posts[i].getBoundingClientRect().top
+						let header = this.$refs.title.getBoundingClientRect().height
+						window.scrollTo(0, postTop - header - 32)
+
+						this.highlightedPostIndex = i
+						setTimeout(() => {
+							if(this.highlightedPostIndex === i) {
+								this.highlightedPostIndex = null
+							}
+						}, 3000)
+
+						break;
+					}
 				}
 			}
 		},
@@ -213,7 +237,12 @@
 
 	.post {
 		border-top: thin solid $color__gray--primary;
+		transition: background-color 0.5s;
 		margin: 0.5rem 0;
+
+		@at-root #{&}--highlighted {
+			background-color: $color__lightgray--darkest;
+		}
 
 		@at-root #{&}__meta_data {
 			display: flex;
@@ -239,6 +268,13 @@
 		}
 		@at-root #{&}__reply {
 			margin: 0 0.5rem;
+			cursor: pointer;
+		}
+		@at-root #{&}__reply_icon {
+			font-size: 0.75rem;
+			line-height: 1.5rem;
+			margin-right: -0.25rem;
+			color: rgba(0, 0, 0, 0.87);
 		}
 		@at-root #{&}__date {
 			color: $color__gray--darkest;
