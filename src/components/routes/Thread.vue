@@ -36,8 +36,12 @@
 					<div class='post__avatar' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
 					<div class='post__user'>{{post.User.username}}</div>
 					<span class='fa fa-reply post__reply_icon' v-if='post.replyingToUsername'></span>
-
-					<div class='post__reply' v-if='post.replyingToUsername' @click='goToPost(post.replyId)'>{{post.replyingToUsername}}</div>
+					<replying-to
+						v-if='post.replyingToUsername'
+						:replyId='post.replyId'
+						:username='post.replyingToUsername'
+						@click='goToPost(post.replyId)'
+					></replying-to>
 					<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 				</div>
 				<div class='post__content' v-html='post.content'></div>
@@ -73,15 +77,17 @@
 <script>
 	import InputEditor from '../InputEditor'
 	import PostReply from '../PostReply'
-	import throttle from 'lodash.throttle'
+	import ReplyingTo from '../ReplyingTo'
 
+	import throttle from 'lodash.throttle'
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 	export default {
 		name: 'Thread',
 		components: {
 			InputEditor,
-			PostReply
+			PostReply,
+			ReplyingTo
 		},
 		data () {
 			return {
