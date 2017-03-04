@@ -21,6 +21,7 @@
 
 <script>
 	import InfoTooltip from './InfoTooltip'
+	import AjaxErrorHandler from '../assets/js/errorHandler'
 
 	export default {
 		name: 'ReplyingTo',
@@ -40,6 +41,7 @@
 					.then((res) => {
 						this.post = res.data
 					})
+					.catch(AjaxErrorHandler(this.$store))
 			}
 		}
 	}
