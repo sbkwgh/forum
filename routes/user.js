@@ -124,12 +124,19 @@ router.get('/:username', async (req, res) => {
 			where: { username: req.params.username }
 		})
 
+		if(!user) throw Errors.accountDoesNotExist
+
 		res.json(user.toJSON())
 	} catch (err) {
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
+		if(err === Errors.accountDoesNotExist) {
+			res.status(400)
+			res.json({ errors: [err] })
+		} else {
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
 	}
 })
 
