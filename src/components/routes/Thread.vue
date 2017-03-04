@@ -33,7 +33,7 @@
 				@mouseleave='setPostFooterState(index, false)'
 			>
 				<div class='post__meta_data'>
-					<div class='post__avatar' :style='{"background-color": post.User.color}'>{{post.User.username[0]}}</div>
+					<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
 					<div class='post__user'>{{post.User.username}}</div>
 					<replying-to
 						style='margin-right: 0.5rem;'
@@ -78,6 +78,7 @@
 	import InputEditor from '../InputEditor'
 	import PostReply from '../PostReply'
 	import ReplyingTo from '../ReplyingTo'
+	import AvatarIcon from '../AvatarIcon'
 
 	import throttle from 'lodash.throttle'
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
@@ -87,7 +88,8 @@
 		components: {
 			InputEditor,
 			PostReply,
-			ReplyingTo
+			ReplyingTo,
+			AvatarIcon
 		},
 		data () {
 			return {
@@ -259,14 +261,6 @@
 		}
 		@at-root #{&}__avatar {
 			position: absolute;
-			height: 3rem;
-			width: 3rem;
-			line-height: 3rem;
-			@include text($font--role-emphasis, 2rem)
-			text-align: center;
-			border-radius: 100%;
-			background-color: $color__gray--darkest;
-			color: #fff;
 			left: -4rem;
 		}
 		@at-root #{&}__user {
