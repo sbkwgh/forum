@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 		color: {
 			type: DataTypes.STRING,
 			defaultValue () {
-				return randomColor({ luminosity: 'bright' })
+				return randomColor()
 			}
 		},
 		hash: DataTypes.STRING,
