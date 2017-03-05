@@ -7,12 +7,7 @@
 			"input_editor--hidden": !show
 		}'
 	>
-		<div
-			class='input_editor__error'
-			:class='{"input_editor__error--show": error }'
-		>
-			{{error}}
-		</div>
+		<error-tooltip :error='error'></error-tooltip>
 		<div class='input_editor__reply_username' v-if='replyUsername'>Replying to <strong>{{replyUsername}}</strong></div>
 		<div class='input_editor__close input_editor__format_button' @click='closeEditor' v-if='!hideClose'>&times;</div>
 		<tab-view :tabs='["Editor", "Preview"]' v-model='showTab' small-tabs='true'>
@@ -73,6 +68,7 @@
 	import ModalWindow from './ModalWindow'
 	import FancyInput from './FancyInput'
 	import TabView from './TabView'
+	import ErrorTooltip from './ErrorTooltip'
 
 	import Marked from 'marked'
 
@@ -82,7 +78,8 @@
 		components: {
 			ModalWindow,
 			FancyInput,
-			TabView
+			TabView,
+			ErrorTooltip
 		},
 		data () {
 			return {

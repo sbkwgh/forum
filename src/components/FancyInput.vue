@@ -1,11 +1,6 @@
 <template>
 	<div class='fancy_input'>
-		<div
-			class='fancy_input__error'
-			:class='{"fancy_input__error--show": error }'
-		>
-			{{error}}
-		</div>
+		<error-tooltip :error='error'></error-tooltip>
 		<div
 			class='fancy_input__placeholder'
 			:class='{"fancy_input__placeholder--active": active || value.length}'
@@ -25,9 +20,14 @@
 </template>
 
 <script>
+	import ErrorTooltip from './ErrorTooltip'
+
 	export default {
 		name: 'FancyInput',
 		props: ['value', 'placeholder', 'width', 'type', 'error'],
+		components: {
+			ErrorTooltip
+		},
 		data () {
 			return {
 				active: false
@@ -68,44 +68,6 @@
 				top: -0.5rem;
 				font-size: 0.75rem;
 				transition: top 0.2s, font-size 0.2s;
-			}
-		}
-
-		@at-root #{&}__error {
-			position: absolute;
-			background-color: #ffeff1;
-			border: 0.125rem solid #D32F2F;
-			font-size: 0.9rem;
-			padding: 0.1rem 0.25rem;
-			top: 0.2125rem;
-			left: calc(100% + 0.25rem);
-			white-space: nowrap;
-			
-
-			&:first-letter{ text-transform: capitalize; }
-
-			opacity: 0;
-			pointer-events: none;
-			margin-top: -1rem;
-			transition: opacity 0.2s, margin-top 0.2s;
-
-			@at-root #{&}--show {
-				opacity: 1;
-				pointer-events: all;
-				margin-top: 0;
-				transition: opacity 0.2s, margin-top 0.2s;
-			}
-
-			&::after {
-				content: '';
-				position: relative;
-				width: 0;
-				height: 0;
-				display: inline-block;
-				right: calc(100% + 0.3rem);
-				border-top: 0.3rem solid transparent;
-				border-bottom: 0.3rem solid transparent;
-				border-right: 0.3rem solid #D32F2F;
 			}
 		}
 	}

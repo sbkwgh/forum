@@ -1,11 +1,6 @@
 <template>
 	<div class='fancy_textarea'>
-		<div
-			class='fancy_textarea__error'
-			:class='{"fancy_textarea__error--show": error}'
-		>
-			{{error}}
-		</div>
+		<error-tooltip :error='error'></error-tooltip>
 		<div
 			class='fancy_textarea__placeholder'
 			:class='{"fancy_textarea__placeholder--active": active || value.length}'
@@ -25,9 +20,14 @@
 </template>
 
 <script>
+	import ErrorTooltip from './ErrorTooltip'
+
 	export default {
 		name: 'FancyTextarea',
 		props: ['value', 'placeholder', 'width', 'error'],
+		components: {
+			ErrorTooltip
+		},
 		data () {
 			return {
 				active: false
