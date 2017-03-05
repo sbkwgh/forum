@@ -307,6 +307,8 @@
 
 			this.axios.get('/api/v1/category')
 				.then(res => {
+					res.data.push({ name: 'All', value: 'ALL' })
+
 					this.$store.commit('addCategories', res.data)
 				}).catch(this.ajaxErrorHandler)
 		}
