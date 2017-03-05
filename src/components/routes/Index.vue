@@ -6,19 +6,20 @@
 				class='index_category'
 				@click='$router.push("/category/" + category.value.toLowerCase())'
 				v-for='category in $store.state.meta.categories'
+				v-if='category.value !== "ALL"'
 			>
 				<div class='index_category__name'>{{category.name}}</div>
 				<div>
 					<div class='index_category__latest_post'>
 						<template v-if='category.Threads && category.Threads.length'>
-							{{category.Threads[0].Posts[0].content | stripTags | truncate(100) }}
+							{{category.Threads[0].name | truncate(100) }}
 						</template>
 						<template v-else>
 							No threads yet
 						</template>
 					</div>
 					<div class='index_category__latest_post_date' v-if='category.Threads && category.Threads.length'>
-						{{category.Threads[0].Posts[0].createdAt | formatDate('time|date', ' - ')}}
+						{{category.Threads[0].createdAt | formatDate('time|date', ' - ')}}
 					</div>
 				</div>
 			</div>
