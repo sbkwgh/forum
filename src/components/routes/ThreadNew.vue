@@ -83,6 +83,14 @@
 					})
 				})
 			}
+		},
+		beforeRouteEnter (to, from, next) {
+			next(vm => {
+				if(!vm.$store.state.username) {
+					vm.$store.commit('setAccountModalState', true);
+					next('/')
+				}
+			})
 		}
 	}
 </script>
