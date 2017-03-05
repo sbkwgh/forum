@@ -3,41 +3,52 @@
 		<div class='user_header'>
 			<div
 				class='user_header__icon'
-				:style='{ "background-color": null }'
+				:style='{ "background-color": ({} || user).color }'
 			>
-				U
+				{{username[0]}}
 			</div>
 			<div class='user_header__info'>
-				<span class='user_header__username'>Username</span>
-				<span class='user_header__date'>Created: {{new Date() | formatDate('date') }}</span>
+				<span class='user_header__username'>{{username}}</span>
+				<span class='user_header__date' v-if='user'>Created: {{user.createdAt | formatDate('date') }}</span>
 			</div>
 			<div></div>
 		</div>
-		<div class='user_description'> 
-			<p>
-			Lorem ipsum dolor sit amet, vis ei nostrud numquam, mutat debet mediocritatem nam an. Mazim partem ea nam, id vitae docendi blandit vim. Cum in errem gloriatur moderatius, in elitr choro solet vel. Ex sit errem saepe, apeirian tractatos et pri.
-			Minim accusamus ad nam.
-			</p>
-			<p>
-			Quo ludus mucius feugiat no, et ubique meliore nominavi pro. Eos et dicat luptatum, at constituam voluptatibus pro. Pro eu iudicabit consulatu, nam ad ubique epicuri, vidit suavitate pri no. Duo ne erat deserunt, sea id argumentum persequeris.
-			</p>
+		<div class='user_description' v-if='user' v-html='user.description'>
 		</div>
-		<div class='user_posts'>
+		<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
 			<div class='user_posts__title'>Posts by username</div>
-			<div class='user_posts__post'>
-				<div class='user_posts__post__header'>
-					<div class='user_posts__post__thread'>Thread name</div>
-					<div class='user_posts__post__date'>{{new Date() | formatDate('date')}}</div>
-				</div>
-				<div class='user_posts__post__content'>ContentContentContentContentContentContentContent<br/> ContentContentContentContentContentContentContent<br/> ContentContentContentContentContentContentContent<br/> ContentContentContentContentContentContentContent<br/> ContentContentContentContentContentContentContent<br/> </div>
-			</div>
+			<thread-post v-for='post in posts' :post='post'></thread-post>
+			<template v-if='!posts.length'>This user hasn't posted anything yet</template>
 		</div>
 	</div>
 </template>
 
 <script>
+	import ThreadPost from '../ThreadPost'
+
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
+
 	export default {
-		name: 'user'
+		name: 'user',
+		components: {
+			ThreadPost
+		},
+		data () {
+			return {
+				username: this.$route.params.username,
+				user: null,
+				posts: []
+			}
+		},
+		created () {
+			this.axios
+				.get(`/api/v1/user/${this.$route.params.username}?posts=true`)
+				.then(res => {
+					this.user = res.data
+					this.posts = res.data.Posts
+				})
+				.catch(AjaxErrorHandler(this.$store))
+		}
 	}
 </script>
 
@@ -47,11 +58,12 @@
 	.user_header {
 		display: flex;
 		align-items: center;
+		margin-bottom: 1.5rem;
 
 		@at-root #{&}__icon {
 			height: 4rem;
 			width: 4rem;
-			line-height: 4.25rem;
+			line-height: 4rem;
 			@include text($font--role-emphasis, 3rem)
 			text-align: center;
 			border-radius: 100%;
@@ -85,26 +97,15 @@
 			border-bottom: thin solid $color__gray--primary;
 		}
 
+		@at-root #{&}--no_border_bottom {
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+
 		@at-root #{&}__title {
 			font-size: 1.5rem;
-			margin-bottom: 0.5rem;
-		}
-		@at-root #{&}__post {
-			border-top: thin solid $color__gray--primary;
-			padding: 1rem 0.5rem;
-			margin: 0.5rem 0;
-
-			@at-root #{&}__header {
-				display: flex;
-				justify-content: space-between;
-				margin-bottom: 1rem;
-			}
-			@at-root #{&}__thread {
-				cursor: pointer;
-			}
-			@at-root #{&}__date {
-				color: $color__gray--darkest;
-			}
+			margin-bottom: 1rem;
 		}
 	}
 </style>
