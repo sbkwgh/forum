@@ -36,8 +36,22 @@ router.get('/:category', async (req, res) => {
 		}
 
 		if(!threads) throw Errors.invalidParameter('id', 'thread does not exist')
-			
-		res.json(threads.toJSON())
+		
+		if(Array.isArray(threads)) {
+			let processedThreads = []
+			threads.forEach(category => {
+				let jsonCategory = category.toJSON()
+				processedThreads.push(...jsonCategory.Threads)
+			})
+
+			res.json({
+				name: 'All',
+				value: 'ALL',
+				Threads: processedThreads
+			})
+		} else {
+			res.json(threads.toJSON())
+		}
 	} catch (e) {
 		if(e.name === 'invalidParameter') {
 			res.status(400)
