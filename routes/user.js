@@ -119,10 +119,19 @@ router.post('/', async (req, res) => {
 
 router.get('/:username', async (req, res) => {
 	try {
-		let user = await User.findOne({
+		let queryObj = {
 			attributes: { exclude: ['hash', 'id'] },
 			where: { username: req.params.username }
-		})
+		}
+
+		if(req.query.posts) {
+			queryObj.include = [{
+				model: Models.Post,
+				include: Models.Post.includeOptions()
+			}]
+		}
+
+		let user = await User.findOne(queryObj)
 
 		if(!user) throw Errors.accountDoesNotExist
 

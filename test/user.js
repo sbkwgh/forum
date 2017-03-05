@@ -292,6 +292,44 @@ describe('User', () => {
 				body.errors.should.contain.something.that.deep.equals(Errors.accountDoesNotExist)
 			}
 		})
+
+		it('should get posts as well if posts query is appended', async () => {
+			let agent = chai.request.agent(server)
+
+			await agent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({ password: 'password' })
+
+			await agent
+				.post('/api/v1/category')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({ name: 'categorynamehere' })
+
+			await agent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({ name: 'a thread name', category: 'categorynamehere' })
+
+			await agent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ threadId: 1, content: 'content for post' })
+
+			await agent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ threadId: 1, content: 'content for another post' })
+
+			let res = await agent
+				.get('/api/v1/user/adminaccount?posts=true')
+
+			res.should.be.json
+			res.should.have.status(200)
+			res.body.should.have.property('username', 'adminaccount')
+			res.body.should.have.property('Posts')
+			res.body.Posts.should.have.property('length', 2)
+		})
 	})
 
 	describe('/:username/login POST user', () => {

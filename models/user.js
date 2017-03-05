@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
 		}
+	}, {
+		classMethods: {
+			associate (models) {
+				User.hasMany(models.Post)
+			}
+		}
 	})
 
 	return User
