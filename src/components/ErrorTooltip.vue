@@ -3,7 +3,7 @@
 		class='error_tooltip'
 		:class='{"error_tooltip--show": error }'
 	>
-		{{error}}
+		{{delayed_error}}
 	</div>
 </template>
 
@@ -13,7 +13,18 @@
 		props: ['error'],
 		data () {
 			return {
-				active: false
+				delayed_error: this.error
+			}
+		},
+		watch: {
+			error (val) {
+				if(!val) {
+					setTimeout(() => {
+						this.delayed_error = ''
+					}, 205)
+				} else {
+					this.delayed_error = val
+				}
 			}
 		}
 	}
