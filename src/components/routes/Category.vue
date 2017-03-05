@@ -113,6 +113,14 @@
 		methods: {
 			navigateToThread (slug, id) {
 				this.$router.push('/thread/' + slug + '/' + id);
+			},
+			getThreads () {
+				this.axios
+					.get('/api/v1/category/' + this.selectedCategory)
+					.then(res => {
+						this.threads = res.data.Threads
+					})
+					.catch(AjaxErrorHandler(this.$store))
 			}
 		},
 		watch: {
@@ -121,17 +129,12 @@
 			},
 			$route () {
 				this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
+				this.getThreads()
 			}
 		},
 		created () {
 			this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
-
-			this.axios
-				.get('/api/v1/category/' + this.selectedCategory)
-				.then(res => {
-					this.threads = res.data.Threads
-				})
-				.catch(AjaxErrorHandler(this.$store))
+			this.getThreads()
 		}
 	}
 </script>
