@@ -6,11 +6,12 @@
 					<div
 						class='avatar_icon__icon avatar_icon__icon--small'
 						:style='{ "background-color": user.color }'
+						@click='goToUser'
 					>
 						{{user.username[0]}}
 					</div>
 					<div class='avatar_icon__header_info'>
-						<span class='avatar_icon__username'>{{ajaxUser.username}}</span>
+						<span class='avatar_icon__username' @click='goToUser'>{{ajaxUser.username}}</span>
 						<span class='avatar_icon__date'>Created: {{ajaxUser.createdAt | formatDate('date') }}</span>
 					</div>
 				</div>
@@ -24,7 +25,7 @@
 			slot='display'
 			class='avatar_icon__icon'
 			:style='{ "background-color": user.color }'
-			@click='$emit("click")'
+			@click='goToUser'
 		>
 			{{user.username[0]}}
 		</div>
@@ -54,6 +55,9 @@
 						this.ajaxUser = res.data
 					})
 					.catch(AjaxErrorHandler(this.$store))
+			},
+			goToUser () {
+				this.$router.push('/user/' + this.user.username)
 			}
 		}
 	}
@@ -78,6 +82,7 @@
 			height: 3rem;
 			width: 3rem;
 			line-height: 3rem;
+			cursor: pointer;
 			@include text($font--role-emphasis, 2rem)
 			text-align: center;
 			border-radius: 100%;
@@ -95,6 +100,9 @@
 			display: flex;
 			flex-direction: column;
 			height: 2.5rem;
+		}
+		@at-root #{&}__username {
+			cursor: pointer;
 		}
 		@at-root #{&}__date {
 			color: $color__gray--darkest;

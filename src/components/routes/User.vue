@@ -3,7 +3,7 @@
 		<div class='user_header'>
 			<div
 				class='user_header__icon'
-				:style='{ "background-color": ({} || user).color }'
+				:style='{ "background-color": (user || {}).color }'
 			>
 				{{username[0]}}
 			</div>
