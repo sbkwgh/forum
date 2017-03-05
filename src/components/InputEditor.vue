@@ -7,6 +7,12 @@
 			"input_editor--hidden": !show
 		}'
 	>
+		<div
+			class='input_editor__error'
+			:class='{"input_editor__error--show": error }'
+		>
+			{{error}}
+		</div>
 		<div class='input_editor__reply_username' v-if='replyUsername'>Replying to <strong>{{replyUsername}}</strong></div>
 		<div class='input_editor__close input_editor__format_button' @click='closeEditor' v-if='!hideClose'>&times;</div>
 		<tab-view :tabs='["Editor", "Preview"]' v-model='showTab' small-tabs='true'>
@@ -72,7 +78,7 @@
 
 	export default {
 		name: 'InputEditor',
-		props: ['value', 'float', 'replyUsername', 'hideClose', 'show'],
+		props: ['value', 'float', 'replyUsername', 'hideClose', 'show', 'error'],
 		components: {
 			ModalWindow,
 			FancyInput,
@@ -315,6 +321,44 @@
 				height: 1.5rem;
 				padding: 0 0.25rem;
 				border-color: $color__gray--darkest;
+			}
+		}
+
+		@at-root #{&}__error {
+			position: absolute;
+			background-color: #ffeff1;
+			border: 0.125rem solid #D32F2F;
+			font-size: 0.9rem;
+			padding: 0.1rem 0.25rem;
+			top: 0.2125rem;
+			left: calc(100% + 0.25rem);
+			white-space: nowrap;
+			
+
+			&:first-letter{ text-transform: capitalize; }
+
+			opacity: 0;
+			pointer-events: none;
+			margin-top: -1rem;
+			transition: opacity 0.2s, margin-top 0.2s;
+
+			@at-root #{&}--show {
+				opacity: 1;
+				pointer-events: all;
+				margin-top: 0;
+				transition: opacity 0.2s, margin-top 0.2s;
+			}
+
+			&::after {
+				content: '';
+				position: relative;
+				width: 0;
+				height: 0;
+				display: inline-block;
+				right: calc(100% + 0.3rem);
+				border-top: 0.3rem solid transparent;
+				border-bottom: 0.3rem solid transparent;
+				border-right: 0.3rem solid #D32F2F;
 			}
 		}
 	}
