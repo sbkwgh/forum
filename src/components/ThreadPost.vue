@@ -7,7 +7,8 @@
 	>
 		<div class='post__meta_data'>
 			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
-			<div class='post__user'>{{post.User.username}}</div>
+			<div class='post__thread' v-if='showThread' @click='goToThread'>{{post.Thread.name}}</div>
+			<div class='post__user' v-else>{{post.User.username}}</div>
 			<replying-to
 				style='margin-right: 0.5rem;'
 				v-if='post.replyingToUsername'
@@ -54,7 +55,7 @@
 
 	export default {
 		name: 'Post',
-		props: ['post', 'highlight', 'showReply'],
+		props: ['post', 'highlight', 'showReply', 'showThread'],
 		components: {
 			PostReply,
 			ReplyingTo,
@@ -68,6 +69,9 @@
 		methods: {
 			setPostFooterState (state) {
 				this.hover = state
+			},
+			goToThread () {
+				this.$router.push(`/thread/${this.post.Thread.slug}/${this.post.Thread.id}`)
 			}
 		}
 	}
@@ -99,6 +103,15 @@
 		@at-root #{&}__user {
 			@include text($font--role-default, 1rem, 600);
 			margin-right: 0.5rem;
+		}
+		@at-root #{&}__thread {
+			@include text($font--role-default, 1rem, 400);
+			margin-right: 0.5rem;
+			cursor: pointer;
+
+			&:hover {
+				color: $color__darkgray--primary;
+			}
 		}
 		@at-root #{&}__date {
 			color: $color__gray--darkest;

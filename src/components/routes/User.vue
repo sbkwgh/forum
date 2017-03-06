@@ -17,7 +17,7 @@
 		</div>
 		<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
 			<div class='user_posts__title'>Posts by username</div>
-			<thread-post v-for='post in posts' :post='post'></thread-post>
+			<thread-post v-for='post in posts' :post='post' :show-thread='true'></thread-post>
 			<template v-if='!posts.length'>This user hasn't posted anything yet</template>
 		</div>
 	</div>
