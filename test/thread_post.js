@@ -345,18 +345,18 @@ describe('Thread and post', () => {
 
 			res.should.have.status(200)
 			res.should.be.json
-			res.body.should.have.property('name', 'thread')
-			res.body.should.have.deep.property('Category.name', 'category_name')
-			res.body.should.have.deep.property('User.username', 'username')
-			res.body.should.have.property('Posts')
+			res.body.thread.should.have.property('name', 'thread')
+			res.body.thread.should.have.deep.property('Category.name', 'category_name')
+			res.body.thread.should.have.deep.property('User.username', 'username')
+			res.body.thread.should.have.property('Posts')
 			
-			res.body.Posts.should.have.property('length', 2)
+			res.body.thread.Posts.should.have.property('length', 2)
 
-			res.body.Posts.should.contain.something.that.has.property('content', '<p>content</p>\n')
-			res.body.Posts.should.contain.something.that.has.deep.property('User.username', 'username')
+			res.body.thread.Posts.should.contain.something.that.has.property('content', '<p>content</p>\n')
+			res.body.thread.Posts.should.contain.something.that.has.deep.property('User.username', 'username')
 			
-			res.body.Posts.should.contain.something.that.has.property('content', '<p>another post</p>\n')
-			res.body.Posts.should.contain.something.that.has.deep.property('User.username', 'username1')
+			res.body.thread.Posts.should.contain.something.that.has.property('content', '<p>another post</p>\n')
+			res.body.thread.Posts.should.contain.something.that.has.deep.property('User.username', 'username1')
 		})
 		it('should return an error if :id is invalid', async () => {
 			try {

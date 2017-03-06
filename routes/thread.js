@@ -6,25 +6,18 @@ let { User, Thread, Category } = require('../models')
 
 router.get('/:thread_id', async (req, res) => {
 	try {
+		let start = req.query.start || new Date()
 		let limit = +req.query.limit || 10
-		let whereObj = { id: req.params.thread_id }
 
-		if(req.query.start) {
-			whereObj.createdAt = { $lt: req.query.start }
-		}
-
-		let thread = await Thread.findAll({
-			where: whereObj,
-			limit: limit,
-			order: [['createdAt', 'DESC']],
-			include: Thread.includeOptions()
+		let thread = await Thread.findById(req.params.thread_id, {
+			include: Thread.includeOptions(start, limit)
 		})
 
 		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
 
 		let meta = { limit: limit, next: null }
 
-		if(thread.Posts.length) {
+		if(thread.Posts && thread.Posts.length) {
 			let lastPost = thread.Posts.slice(-1)[0]
 			meta.next = lastPost.createdAt
 		}
@@ -33,6 +26,7 @@ router.get('/:thread_id', async (req, res) => {
 			meta: meta,
 			thread: thread.toJSON()
 		})
+		
 	} catch (e) {
 		if(e.name === 'invalidParameter') {
 			res.status(400)
