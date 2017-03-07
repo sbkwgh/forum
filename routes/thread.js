@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Thread, Category } = require('../models')
+let { User, Thread, Category, Post } = require('../models')
 
 router.get('/:thread_id', async (req, res) => {
 	try {
@@ -18,17 +18,20 @@ router.get('/:thread_id', async (req, res) => {
 
 		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
 
-		let meta = { limit: limit }
+		let maxId = await Post.max('id', { where: { threadId: +req.params.thread_id } })
 
-		if(thread.Posts && thread.Posts.length) {
-			let lastPost = thread.Posts.slice(-1)[0]
-			meta.lastId = lastPost.id
+		let resThread = thread.toJSON()
+		let lastPost = thread.Posts.slice(-1)[0]
+		resThread.meta = {}
+
+		if(!lastPost || maxId === lastPost.id) {
+			resThread.meta.nextURL = null
+		} else {
+			resThread.meta.nextURL =
+				`/api/v1/thread/${thread.id}?limit=${limit}&lastId=${lastPost.id}`
 		}
 
-		res.json({
-			meta: meta,
-			thread: thread.toJSON()
-		})
+		res.json(resThread)
 		
 	} catch (e) {
 		if(e.name === 'invalidParameter') {

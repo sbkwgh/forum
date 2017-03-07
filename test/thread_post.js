@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test'
 let chai = require('chai')
 let server = require('../server')
 let should = chai.should()
+let expect = chai.expect
 
 let { sequelize } = require('../models')
 
@@ -345,18 +346,18 @@ describe('Thread and post', () => {
 
 			res.should.have.status(200)
 			res.should.be.json
-			res.body.thread.should.have.property('name', 'thread')
-			res.body.thread.should.have.deep.property('Category.name', 'category_name')
-			res.body.thread.should.have.deep.property('User.username', 'username')
-			res.body.thread.should.have.property('Posts')
+			res.body.should.have.property('name', 'thread')
+			res.body.should.have.deep.property('Category.name', 'category_name')
+			res.body.should.have.deep.property('User.username', 'username')
+			res.body.should.have.property('Posts')
 			
-			res.body.thread.Posts.should.have.property('length', 2)
+			res.body.Posts.should.have.property('length', 2)
 
-			res.body.thread.Posts.should.contain.something.that.has.property('content', '<p>content</p>\n')
-			res.body.thread.Posts.should.contain.something.that.has.deep.property('User.username', 'username')
+			res.body.Posts.should.contain.something.that.has.property('content', '<p>content</p>\n')
+			res.body.Posts.should.contain.something.that.has.deep.property('User.username', 'username')
 			
-			res.body.thread.Posts.should.contain.something.that.has.property('content', '<p>another post</p>\n')
-			res.body.thread.Posts.should.contain.something.that.has.deep.property('User.username', 'username1')
+			res.body.Posts.should.contain.something.that.has.property('content', '<p>another post</p>\n')
+			res.body.Posts.should.contain.something.that.has.deep.property('User.username', 'username1')
 		})
 		it('should allow pagination', async () => {
 			let thread = await userAgent
@@ -372,21 +373,22 @@ describe('Thread and post', () => {
 			}
 
 			let pageOne = await userAgent.get('/api/v1/thread/' + thread.body.id)
-			let pageTwo = await userAgent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + pageOne.body.meta.lastId)
-			let pageThree = await userAgent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + pageTwo.body.meta.lastId)
+			let pageTwo = await userAgent.get(pageOne.body.meta.nextURL)
+			let pageThree = await userAgent.get(pageTwo.body.meta.nextURL)
 			let pageInvalid = await userAgent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + 100)
 
-			pageOne.body.thread.Posts.should.have.length(10)
-			pageOne.body.thread.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
+			pageOne.body.Posts.should.have.length(10)
+			pageOne.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
 
-			pageTwo.body.thread.Posts.should.have.length(10)
-			pageTwo.body.thread.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
+			pageTwo.body.Posts.should.have.length(10)
+			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
 
-			pageThree.body.thread.Posts.should.have.length(10)
-			pageThree.body.thread.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
-			pageThree.body.thread.Posts[9].should.have.property('content', '<p>POST 29</p>\n')
+			pageThree.body.Posts.should.have.length(10)
+			pageThree.body.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
+			pageThree.body.Posts[9].should.have.property('content', '<p>POST 29</p>\n')
+			expect(pageThree.body.meta.nextURL).to.be.null
 
-			pageInvalid.body.thread.Posts.should.have.length(0)
+			pageInvalid.body.Posts.should.have.length(0)
 
 		})
 		it('should return an error if :id is invalid', async () => {
