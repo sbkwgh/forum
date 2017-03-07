@@ -6,20 +6,23 @@ let { User, Thread, Category } = require('../models')
 
 router.get('/:thread_id', async (req, res) => {
 	try {
-		let start = req.query.start || new Date()
-		let limit = +req.query.limit || 10
+		let lastId = 0
+		let limit = 10
+
+		if(+req.query.lastId > 0) lastId = +req.query.lastId
+		if(+req.query.limit > 0) limit = +req.query.limit
 
 		let thread = await Thread.findById(req.params.thread_id, {
-			include: Thread.includeOptions(start, limit)
+			include: Thread.includeOptions(lastId, limit)
 		})
 
 		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
 
-		let meta = { limit: limit, next: null }
+		let meta = { limit: limit }
 
 		if(thread.Posts && thread.Posts.length) {
 			let lastPost = thread.Posts.slice(-1)[0]
-			meta.next = lastPost.createdAt
+			meta.lastId = lastPost.id
 		}
 
 		res.json({

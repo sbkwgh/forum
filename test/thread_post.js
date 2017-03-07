@@ -358,6 +358,37 @@ describe('Thread and post', () => {
 			res.body.thread.Posts.should.contain.something.that.has.property('content', '<p>another post</p>\n')
 			res.body.thread.Posts.should.contain.something.that.has.deep.property('User.username', 'username1')
 		})
+		it('should allow pagination', async () => {
+			let thread = await userAgent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({ category: 'category_name', name: 'pagination' })
+
+			for(var i = 0; i < 30; i++) {
+				await userAgent
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ threadId: thread.body.id, content: `POST ${i}` })
+			}
+
+			let pageOne = await userAgent.get('/api/v1/thread/' + thread.body.id)
+			let pageTwo = await userAgent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + pageOne.body.meta.lastId)
+			let pageThree = await userAgent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + pageTwo.body.meta.lastId)
+			let pageInvalid = await userAgent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + 100)
+
+			pageOne.body.thread.Posts.should.have.length(10)
+			pageOne.body.thread.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
+
+			pageTwo.body.thread.Posts.should.have.length(10)
+			pageTwo.body.thread.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
+
+			pageThree.body.thread.Posts.should.have.length(10)
+			pageThree.body.thread.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
+			pageThree.body.thread.Posts[9].should.have.property('content', '<p>POST 29</p>\n')
+
+			pageInvalid.body.thread.Posts.should.have.length(0)
+
+		})
 		it('should return an error if :id is invalid', async () => {
 			try {
 				let res = await chai.request(server).get('/api/v1/thread/invalid')
