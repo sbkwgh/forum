@@ -52,13 +52,13 @@
 		@at-root #{&}__button {
 			max-height: 4rem;
 			overflow: hidden;
-			margin-bottom: 2rem;
+			margin-top: 2rem;
 			text-align: center;
 			transition: all 0.2s;
 
 			@at-root #{&}--hidden {
 				max-height: 0;
-				margin-bottom: 0;
+				margin-top: 0;
 				transition: all 0.2s;
 			}
 		}
