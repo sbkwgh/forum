@@ -2,6 +2,7 @@ import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 const state = {
 	thread: '',
+	threadId: undefined,
 	posts: [],
 	reply: {
 		username: '',
@@ -10,7 +11,9 @@ const state = {
 	editor: {
 		show: false,
 		value: ''
-	}
+	},
+	loadingPosts: false,
+	nextURL: ''
 }
 
 const getters = {
@@ -46,6 +49,28 @@ const actions = {
 				});
 			})
 			.catch(AjaxErrorHandler(vue.$store))
+	},
+	loadNewPostsAsync ({ state, commit, rootState }, vue) {
+		commit('setLoadingPostsState', true)
+
+		let nextURL = state.nextURL
+
+		if(nextURL === null) {
+			commit('setLoadingPostsState', false)
+		} else {
+			vue.axios
+				.get(nextURL)
+				.then(res => {
+					let currentPostsIds = state.posts.map(p => p.id)
+					let filteredPosts =
+						res.data.Posts.filter(p => !currentPostsIds.includes(p.id))
+
+					commit('addPost', filteredPosts)
+					commit('setNextURL', res.data.meta.nextURL)
+					commit('setLoadingPostsState', false)
+				})
+				.catch(AjaxErrorHandler(vue.$store))
+		}
 	}
 }
 
@@ -55,7 +80,11 @@ const mutations = {
 		state.reply.id = payload.id;
 	},
 	addPost (state, post) {
-		state.posts.push(post);
+		if(Array.isArray(post)) {
+			state.posts.push(...post)
+		} else {
+			state.posts.push(post)
+		}
 	},
 	addReplyBubble (state, post) {
 		let repliedToPost = {}, index
@@ -79,11 +108,18 @@ const mutations = {
 	setThreadEditorState (state, value) {
 		state.editor.show = value
 	},
+	setLoadingPostsState (state, value) {
+		state.loadingPosts = value
+	},
 	setPosts (state, value) {
 		state.posts = value
 	},
-	setThreadName (state, value) {
-		state.thread = value
+	setThread (state, obj) {
+		state.thread = obj.name
+		state.threadId = obj.id
+	},
+	setNextURL (state, URL) {
+		state.nextURL = URL
 	}
 }
 

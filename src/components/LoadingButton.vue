@@ -5,7 +5,7 @@
 		@click='event("click")'
 		@keydown='event("keydown")'
 	>
-		<div class='loading_button__icon'>
+		<div class='loading_button__icon' :class='{"loading_button__icon--dark": dark}'>
 			<span></span>
 			<span></span>
 			<span></span>
@@ -19,7 +19,7 @@
 <script>
 	export default {
 		name: 'LoadingButton',
-		props: ['loading'],
+		props: ['loading', 'dark'],
 		methods: {
 			event (name) {
 				if(this.loading) {
@@ -61,6 +61,12 @@
 			align-items: center;
 
 			pointer-events: none;
+
+			@at-root #{&}--dark {
+				span {
+					background-color: $color__darkgray--primary !important;
+				}
+			}
 
 			span {
 				height: 0.5rem;

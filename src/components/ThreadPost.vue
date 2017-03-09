@@ -90,6 +90,11 @@
 			background-color: $color__lightgray--darkest;
 		}
 
+		@at-root #{&}--last {
+			padding-bottom: 0.5rem;
+			border-bottom: thin solid $color__gray--primary;
+		}
+
 		@at-root #{&}__meta_data {
 			display: flex;
 			padding-top: 0.75rem;

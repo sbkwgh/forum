@@ -24,21 +24,29 @@
 		>
 		</input-editor>
 		<div class='posts'>
-			<thread-post
-				v-for='(post, index) in posts'
-				@reply='replyUser'
-				@goToPost='goToPost'
-				:post='post'
-				:show-reply='true'
-				:highlight='highlightedPostIndex === index'
-				ref='posts'
-			></thread-post>
+			<scroll-load
+				:loading='loadingPosts'
+				:show='$store.state.thread.nextURL !== null'
+				@load='loadNewPosts'
+			>
+				<thread-post
+					v-for='(post, index) in posts'
+					@reply='replyUser'
+					@goToPost='goToPost'
+					:post='post'
+					:show-reply='true'
+					:highlight='highlightedPostIndex === index'
+					:class='{"post--last": index === posts.length-1}'
+					ref='posts'
+				></thread-post>
+			</scroll-load>
 		</div>
 	</div>
 </template>
 
 <script>
 	import InputEditor from '../InputEditor'
+	import ScrollLoad from '../ScrollLoad'
 	import ThreadPost from '../ThreadPost'
 
 	import throttle from 'lodash.throttle'
@@ -48,6 +56,7 @@
 		name: 'Thread',
 		components: {
 			InputEditor,
+			ScrollLoad,
 			ThreadPost
 		},
 		data () {
@@ -72,7 +81,8 @@
 					this.$store.commit('setThreadEditorValue', val)
 				}
 			},
-			editorState () { return this.$store.state.thread.editor.show }
+			editorState () { return this.$store.state.thread.editor.show },
+			loadingPosts () { return this.$store.state.thread.loadingPosts },
 		},
 		methods: {
 			showEditor () {
@@ -103,6 +113,9 @@
 			},
 			addPost () {
 				this.$store.dispatch('addPostAsync', this);
+			},
+			loadNewPosts () {
+				this.$store.dispatch('loadNewPostsAsync', this);
 			},
 			goToPost (postId) {
 				for(var i = 0; i < this.posts.length; i++) {
@@ -143,7 +156,8 @@
 			this.axios
 				.get('/api/v1/thread/' + this.$route.params.id)
 				.then(res => {
-					this.$store.commit('setThreadName', res.data.name)
+					this.$store.commit('setThread', res.data)
+					this.$store.commit('setNextURL', res.data.meta.nextURL)
 					this.$store.commit('setPosts', res.data.Posts)
 				}).catch(AjaxErrorHandler(this.$store))
 		}
@@ -189,9 +203,5 @@
 
 	.posts {
 		width: 80%;
-
-		&:last-child {
-			border-bottom: thin solid $color__gray--primary;
-		}
 	}
 </style>
