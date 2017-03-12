@@ -4,6 +4,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 let chai = require('chai')
 let server = require('../server')
 let should = chai.should()
+let expect = chai.expect
 
 let { sequelize } = require('../models')
 const Errors = require('../lib/errors.js')
@@ -329,6 +330,46 @@ describe('User', () => {
 			res.body.should.have.property('username', 'adminaccount')
 			res.body.should.have.property('Posts')
 			res.body.Posts.should.have.property('length', 2)
+		})
+
+		it('should allow pagination', async () => {
+			let agent = chai.request.agent(server)
+
+			await agent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({ password: 'password' })
+
+			let thread = await agent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({ category: 'categorynamehere', name: 'pagination' })
+
+			for(var i = 0; i < 30; i++) {
+				await agent
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ threadId: thread.body.id, content: `POST ${i}` })
+			}
+
+			let pageOne = await agent.get('/api/v1/thread/' + thread.body.id)
+			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
+			let pageThree = await agent.get(pageTwo.body.meta.nextURL)
+			let pageInvalid = await agent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + 100)
+
+			pageOne.body.Posts.should.have.length(10)
+			pageOne.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
+
+			pageTwo.body.Posts.should.have.length(10)
+			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
+
+			pageThree.body.Posts.should.have.length(10)
+			pageThree.body.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
+			pageThree.body.Posts[9].should.have.property('content', '<p>POST 29</p>\n')
+			expect(pageThree.body.meta.nextURL).to.be.null
+
+			pageInvalid.body.Posts.should.have.length(0)
+
 		})
 	})
 

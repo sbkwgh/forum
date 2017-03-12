@@ -21,6 +21,16 @@ module.exports = (sequelize, DataTypes) => {
 		classMethods: {
 			associate (models) {
 				User.hasMany(models.Post)
+			},
+			includeOptions (lastId, limit) {
+				let models = sequelize.models
+				let options = models.Post.includeOptions()[0]
+
+				options.where = { id: { $gt: lastId } }
+				options.limit = limit
+				options.order = [['id', 'ASC']]
+
+				return [options]
 			}
 		}
 	})

@@ -3,9 +3,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let Models = require('../models')
-let User = Models.User
-let AdminToken = Models.AdminToken
+let { User, Post, AdminToken } = require('../models')
 
 function setUserSession(req, res, username, admin) {
 	req.session.loggedIn = true
@@ -125,22 +123,48 @@ router.get('/:username', async (req, res) => {
 		}
 
 		if(req.query.posts) {
+			let lastId = 0
+			let limit = 10
+
+			if(+req.query.lastId > 0) lastId = +req.query.lastId
+			if(+req.query.limit > 0) limit = +req.query.limit
+
 			queryObj.include = [{
-				model: Models.Post,
-				include: Models.Post.includeOptions()
+				model: Post,
+				include: Post.includeOptions()
 			}]
+
+			let user = await User.findOne(queryObj)
+			if(!user) throw Errors.accountDoesNotExist
+
+			let maxId = await Post.max('id', { where: { userId: user.id } })
+
+			let resUser = user.toJSON()
+			let lastPost = user.Posts.slice(-1)[0]
+			resUser.meta = {}
+
+			if(!lastPost || maxId === lastPost.id) {
+				resUser.meta.nextURL = null
+			} else {
+				resUser.meta.nextURL =
+					`/api/v1/user/${user.id}?posts?=true&limit=${limit}&lastId=${lastPost.id}`
+			}
+
+			res.json(user)
+		} else {
+			let user = await User.findOne(queryObj)
+			if(!user) throw Errors.accountDoesNotExist
+
+			res.json(user.toJSON())
 		}
 
-		let user = await User.findOne(queryObj)
-
-		if(!user) throw Errors.accountDoesNotExist
-
-		res.json(user.toJSON())
+		
 	} catch (err) {
 		if(err === Errors.accountDoesNotExist) {
 			res.status(400)
 			res.json({ errors: [err] })
 		} else {
+			console.log(err)
 			res.status(500)
 			res.json({
 				errors: [Errors.unknown]
