@@ -129,10 +129,7 @@ router.get('/:username', async (req, res) => {
 			if(+req.query.lastId > 0) lastId = +req.query.lastId
 			if(+req.query.limit > 0) limit = +req.query.limit
 
-			queryObj.include = [{
-				model: Post,
-				include: Post.includeOptions()
-			}]
+			queryObj.include = User.includeOptions(lastId, limit)
 
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist
@@ -147,10 +144,10 @@ router.get('/:username', async (req, res) => {
 				resUser.meta.nextURL = null
 			} else {
 				resUser.meta.nextURL =
-					`/api/v1/user/${user.id}?posts?=true&limit=${limit}&lastId=${lastPost.id}`
+					`/api/v1/user/${user.username}?posts=true&limit=${limit}&lastId=${lastPost.id}`
 			}
 
-			res.json(user)
+			res.json(resUser)
 		} else {
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist

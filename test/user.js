@@ -336,9 +336,9 @@ describe('User', () => {
 			let agent = chai.request.agent(server)
 
 			await agent
-				.post('/api/v1/user/adminaccount/login')
+				.post('/api/v1/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
-				.send({ password: 'password' })
+				.send({ username: 'paginationaccount', password: 'password' })
 
 			let thread = await agent
 				.post('/api/v1/thread')
@@ -352,7 +352,7 @@ describe('User', () => {
 					.send({ threadId: thread.body.id, content: `POST ${i}` })
 			}
 
-			let pageOne = await agent.get('/api/v1/thread/' + thread.body.id)
+			let pageOne = await agent.get('/api/v1/user/paginationaccount?posts=true')
 			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
 			let pageThree = await agent.get(pageTwo.body.meta.nextURL)
 			let pageInvalid = await agent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + 100)

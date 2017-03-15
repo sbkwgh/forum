@@ -26,11 +26,13 @@ module.exports = (sequelize, DataTypes) => {
 				let models = sequelize.models
 				let options = models.Post.includeOptions()[0]
 
-				options.where = { id: { $gt: lastId } }
-				options.limit = limit
-				options.order = [['id', 'ASC']]
-
-				return [options]
+				return [{
+					model: models.Post,
+					include: options,
+					limit,
+					where: { id: { $gt: lastId } },
+					order: [['id', 'ASC']]
+				}]
 			}
 		}
 	})
