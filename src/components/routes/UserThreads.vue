@@ -1,5 +1,5 @@
 <template>
-	<div class='route_container'>
+	<div>
 		Threads
 	</div>
 </template>

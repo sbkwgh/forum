@@ -26,7 +26,7 @@
 					{{item.name}}
 				</div>
 			</div>
-			<div class='user__view'><router-view></router-view></div>
+			<router-view class='user__view'></router-view>
 		</div>
 	</div>
 </template>

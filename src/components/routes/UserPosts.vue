@@ -1,5 +1,5 @@
 <template>
-	<div class='route_container'>
+	<div>
 		<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
 			<div class='user_posts__title'>Posts by username</div>
 			<scroll-load
