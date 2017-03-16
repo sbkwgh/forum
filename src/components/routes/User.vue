@@ -17,13 +17,26 @@
 		</div>
 		<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
 			<div class='user_posts__title'>Posts by username</div>
-			<thread-post v-for='post in posts' :post='post' :show-thread='true'></thread-post>
-			<template v-if='!posts.length'>This user hasn't posted anything yet</template>
+			<scroll-load
+				:loading='loadingPosts'
+				:show='nextURL !== null'
+				@load='loadNewPosts'
+				v-if='sortedPosts.length'
+			>
+				<thread-post
+					v-for='(post, index) in sortedPosts'
+					:post='post'
+					:show-thread='true'
+					:class='{"post--last": index === posts.length-1}'
+				></thread-post>
+			</scroll-load>
+			<template v-else>This user hasn't posted anything yet</template>
 		</div>
 	</div>
 </template>
 
 <script>
+	import ScrollLoad from '../ScrollLoad'
 	import ThreadPost from '../ThreadPost'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
@@ -31,13 +44,48 @@
 	export default {
 		name: 'user',
 		components: {
-			ThreadPost
+			ThreadPost,
+			ScrollLoad
 		},
 		data () {
 			return {
 				username: this.$route.params.username,
 				user: null,
-				posts: []
+				posts: [],
+				loadingPosts: false,
+				nextURL: ''
+			}
+		},
+		computed: {
+			sortedPosts () {
+				return this.posts.sort((a, b) => {
+					return new Date(a.createdAt) - new Date(b.createdAt)
+				})
+			}
+		},
+		methods: {
+			loadNewPosts () {
+				if(this.nextURL === null) return
+
+				this.loadingPosts = true
+
+				this.axios
+					.get(this.nextURL)
+					.then(res => {
+						this.loadingPosts = false
+
+						let currentPostsIds = this.posts.map(p => p.id)
+						let filteredPosts =
+							res.data.Posts.filter(p => !currentPostsIds.includes(p.id))
+
+						this.posts.push(...filteredPosts)
+						this.nextURL = res.data.meta.nextURL
+					})
+					.catch((e) => {
+						this.loadingPosts = false
+
+						AjaxErrorHandler(this.$store)(e)
+					})
 			}
 		},
 		created () {
@@ -46,6 +94,7 @@
 				.then(res => {
 					this.user = res.data
 					this.posts = res.data.Posts
+					this.nextURL = res.data.meta.nextURL
 				})
 				.catch(AjaxErrorHandler(this.$store))
 		}
@@ -92,16 +141,6 @@
 	}
 	.user_posts {
 		width: calc(75% + 5rem);
-
-		&:last-child {
-			border-bottom: thin solid $color__gray--primary;
-		}
-
-		@at-root #{&}--no_border_bottom {
-			&:last-child {
-				border-bottom: none;
-			}
-		}
 
 		@at-root #{&}__title {
 			font-size: 1.5rem;

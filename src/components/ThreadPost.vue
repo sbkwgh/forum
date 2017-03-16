@@ -54,7 +54,7 @@
 	import AjaxErrorHandler from '../assets/js/errorHandler'
 
 	export default {
-		name: 'Post',
+		name: 'ThreadPost',
 		props: ['post', 'highlight', 'showReply', 'showThread'],
 		components: {
 			PostReply,
