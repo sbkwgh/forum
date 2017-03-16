@@ -330,6 +330,8 @@ describe('User', () => {
 			res.body.should.have.property('username', 'adminaccount')
 			res.body.should.have.property('Posts')
 			res.body.Posts.should.have.property('length', 2)
+			res.body.Posts[0].should.have.deep.property('Thread.id', 1)
+			res.body.Posts[0].should.have.deep.property('User.username', 'adminaccount')
 		})
 
 		it('should allow pagination', async () => {
