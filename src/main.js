@@ -82,7 +82,7 @@ Vue.filter('stripTags', function (value) {
 });
 
 Vue.filter('truncate', function (value, length) {
-	if(value <= length) {
+	if(value.length <= length) {
 		return value
 	} else {
 		return value.slice(0, length) + '...'
