@@ -13,7 +13,11 @@ import Start from './components/routes/Start'
 import Category from './components/routes/Category'
 import Thread from './components/routes/Thread'
 import ThreadNew from './components/routes/ThreadNew'
+
 import User from './components/routes/User'
+import UserPosts from './components/routes/UserPosts'
+import UserThreads from './components/routes/UserThreads'
+
 import Admin from './components/routes/Admin'
 import AdminDashboard from './components/routes/AdminDashboard'
 import AdminUsers from './components/routes/AdminUsers'
@@ -34,7 +38,10 @@ const router = new VueRouter({
 		{ path: '/category/:category', component: Category },
 		{ path: '/thread/:slug/:id', component: Thread },
 		{ path: '/thread/new', component: ThreadNew },
-		{ path: '/user/:username', component: User },
+		{ path: '/user/:username', component: User, children: [
+			{ path: 'posts', component: UserPosts },
+			{ path: 'threads', component: UserThreads }
+		] },
 		{ path: '/admin', redirect: '/admin/dashboard', component: Admin, children: [
 			{ path: 'dashboard', component: AdminDashboard },
 			{ path: 'settings', component: AdminSettings },

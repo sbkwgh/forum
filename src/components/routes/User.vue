@@ -15,87 +15,33 @@
 		</div>
 		<div class='user_description' v-if='user' v-html='user.description'>
 		</div>
-		<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
-			<div class='user_posts__title'>Posts by username</div>
-			<scroll-load
-				:loading='loadingPosts'
-				:show='nextURL !== null'
-				@load='loadNewPosts'
-				v-if='sortedPosts.length'
-			>
-				<thread-post
-					v-for='(post, index) in sortedPosts'
-					:post='post'
-					:show-thread='true'
-					:class='{"post--last": index === posts.length-1}'
-				></thread-post>
-			</scroll-load>
-			<template v-else>This user hasn't posted anything yet</template>
+		<div class='user__view_holder'>
+			<div class='user__links'></div>
+			<div class='user__view'><router-view></router-view></div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import ScrollLoad from '../ScrollLoad'
-	import ThreadPost from '../ThreadPost'
-
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 	export default {
 		name: 'user',
-		components: {
-			ThreadPost,
-			ScrollLoad
-		},
 		data () {
 			return {
 				username: this.$route.params.username,
-				user: null,
-				posts: [],
-				loadingPosts: false,
-				nextURL: ''
+				user: null
 			}
 		},
 		computed: {
-			sortedPosts () {
-				return this.posts.sort((a, b) => {
-					return new Date(a.createdAt) - new Date(b.createdAt)
-				})
-			}
 		},
 		methods: {
-			loadNewPosts () {
-				if(this.nextURL === null) return
-
-				this.loadingPosts = true
-
-				this.axios
-					.get(this.nextURL)
-					.then(res => {
-						this.loadingPosts = false
-
-						let currentPostsIds = this.posts.map(p => p.id)
-						let filteredPosts =
-							res.data.Posts.filter(p => !currentPostsIds.includes(p.id))
-
-						this.posts.push(...filteredPosts)
-						this.nextURL = res.data.meta.nextURL
-					})
-					.catch((e) => {
-						this.loadingPosts = false
-
-						AjaxErrorHandler(this.$store)(e)
-					})
-			}
+			
 		},
 		created () {
 			this.axios
-				.get(`/api/v1/user/${this.$route.params.username}?posts=true`)
-				.then(res => {
-					this.user = res.data
-					this.posts = res.data.Posts
-					this.nextURL = res.data.meta.nextURL
-				})
+				.get(`/api/v1/user/${this.$route.params.username}`)
+				.then(res => this.user = res.data)
 				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
