@@ -85,4 +85,13 @@
 
 <style lang='scss' scoped>
 	@import '../../assets/scss/variables.scss';
+
+	.user_posts {
+		width: calc(75% + 5rem);
+
+		@at-root #{&}__title {
+			font-size: 1.5rem;
+			margin-bottom: 1rem;
+		}
+	}
 </style>
