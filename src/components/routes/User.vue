@@ -16,7 +16,16 @@
 		<div class='user_description' v-if='user' v-html='user.description'>
 		</div>
 		<div class='user__view_holder'>
-			<div class='user__links'></div>
+			<div class='user__links'>
+				<div
+					class='user__links__menu_item'
+					v-for='(item, index) in menuItems'
+					:class="{'user__links__menu_item--selected': index === selected}"
+					@click='$router.push(`/user/${username}/${item.route}`)'
+				>
+					{{item.name}}
+				</div>
+			</div>
 			<div class='user__view'><router-view></router-view></div>
 		</div>
 	</div>
@@ -29,16 +38,38 @@
 		name: 'user',
 		data () {
 			return {
+				menuItems: [
+					{ name: 'Posts', route: 'posts' }, 
+					{ name: 'Threads started', route: 'threads' }
+				],
+				selected: 0,
+
 				username: this.$route.params.username,
 				user: null
 			}
 		},
-		computed: {
+		watch: {
+			$route (to, from) {
+				this.selected = this.getIndexFromRoute(to.path)
+			}
 		},
 		methods: {
-			
+			getIndexFromRoute (path) {
+				let selectedIndex
+				let route = path.split('/')[2]
+
+				this.menuItems.forEach((item, index) => {
+					if(item.route === route) {
+						selectedIndex = index
+					}
+				})
+
+				return selectedIndex
+			}
 		},
 		created () {
+			this.selected = this.getIndexFromRoute(this.$route.path)
+
 			this.axios
 				.get(`/api/v1/user/${this.$route.params.username}`)
 				.then(res => this.user = res.data)
