@@ -1,22 +1,20 @@
 <template>
-	<div>
-		<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
-			<div class='user_posts__title'>Posts by username</div>
-			<scroll-load
-				:loading='loadingPosts'
-				:show='nextURL !== null'
-				@load='loadNewPosts'
-				v-if='sortedPosts.length'
-			>
-				<thread-post
-					v-for='(post, index) in sortedPosts'
-					:post='post'
-					:show-thread='true'
-					:class='{"post--last": index === posts.length-1}'
-				></thread-post>
-			</scroll-load>
-			<template v-else>This user hasn't posted anything yet</template>
-		</div>
+	<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
+		<div class='user_posts__title'>Posts by username</div>
+		<scroll-load
+			:loading='loadingPosts'
+			:show='nextURL !== null'
+			@load='loadNewPosts'
+			v-if='sortedPosts.length'
+		>
+			<thread-post
+				v-for='(post, index) in sortedPosts'
+				:post='post'
+				:show-thread='true'
+				:class='{"post--last": index === posts.length-1}'
+			></thread-post>
+		</scroll-load>
+		<template v-else>This user hasn't posted anything yet</template>
 	</div>
 </template>
 
@@ -87,8 +85,6 @@
 	@import '../../assets/scss/variables.scss';
 
 	.user_posts {
-		width: calc(75% + 5rem);
-
 		@at-root #{&}__title {
 			font-size: 1.5rem;
 			margin-bottom: 1rem;

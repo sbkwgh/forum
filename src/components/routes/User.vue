@@ -9,7 +9,7 @@
 			</div>
 			<div class='user_header__info'>
 				<span class='user_header__username'>{{username}}</span>
-				<span class='user_header__date' v-if='user'>Created: {{user.createdAt | formatDate('date') }}</span>
+				<span class='user_header__date' v-if='user'>Account created {{user.createdAt | formatDate('date') }}</span>
 			</div>
 			<div></div>
 		</div>
@@ -56,7 +56,7 @@
 		methods: {
 			getIndexFromRoute (path) {
 				let selectedIndex
-				let route = path.split('/')[2]
+				let route = path.split('/')[3]
 
 				this.menuItems.forEach((item, index) => {
 					if(item.route === route) {
@@ -115,5 +115,39 @@
 	.user_description {
 		margin-left: 5rem;
 		width: 75%;
+	}
+	.user__view_holder {
+		display: flex;
+		width: calc(75% + 5rem);
+	}
+	.user__links {
+		width: 10rem;
+
+		@at-root #{&}__menu_item {
+			cursor: pointer;
+			margin-bottom: 0.5rem;
+			position: relative;
+
+			&:hover { color: $color__darkgray--primary; }
+
+			@at-root #{&}--selected {
+				font-weight: 500;
+
+				&::before {
+					content: '';
+					display: inline-block;
+					width: 0.2rem;
+					z-index: 1;
+					height: 100%;
+					position: absolute;
+					left: -0.5rem;
+					top: 0.0625rem;
+					background-color: $color__gray--darkest;
+				}
+			}
+		}
+	}
+	.user__view {
+		flex-grow: 1;
 	}
 </style>
