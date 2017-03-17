@@ -332,7 +332,7 @@ describe('User', () => {
 			res.body.Posts.should.have.property('length', 2)
 			res.body.Posts[0].should.have.deep.property('Thread.id', 1)
 			res.body.Posts[0].should.have.deep.property('User.username', 'adminaccount')
-		})
+		})	
 
 		it('should allow pagination', async () => {
 			let agent = chai.request.agent(server)
@@ -372,6 +372,40 @@ describe('User', () => {
 
 			pageInvalid.body.Posts.should.have.length(0)
 
+		})
+
+		it('should get threads as well if threads query is appended', async () => {
+			let agent = chai.request.agent(server)
+
+			await agent
+				.post('/api/v1/user')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({ username: 'threadaccount', password: 'password' })
+
+			for(var i = 0; i < 20; i++) {
+				let thread = await agent
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ category: 'categorynamehere', name: 'THREAD ' + i })
+
+				await agent
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ threadId: thread.body.id, content: `POST ${i}` })
+			}
+
+			let pageOne = await agent.get('/api/v1/user/threadaccount?threads=true')
+			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
+			let pageInvalid = await agent.get('/api/v1/user/threadaccount?threads=true&lastId=100')
+
+			pageOne.body.Threads.should.have.length(10)
+			pageOne.body.Threads[0].should.have.property('name', 'THREAD 0')
+
+			pageTwo.body.Threads.should.have.length(10)
+			pageTwo.body.Threads[0].should.have.property('name', 'THREAD 10')
+			expect(pageTwo.body.meta.nextURL).to.be.null
+
+			pageInvalid.body.Threads.should.have.length(0)
 		})
 	})
 

@@ -3,7 +3,8 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Post, AdminToken } = require('../models')
+let { User, Post, AdminToken, Thread, Category } = require('../models')
+let pagination = require('../lib/pagination.js')
 
 function setUserSession(req, res, username, admin) {
 	req.session.loggedIn = true
@@ -11,7 +12,6 @@ function setUserSession(req, res, username, admin) {
 	res.cookie('username', username)
 	if(admin) req.session.admin = true
 }
-
 router.post('/', async (req, res) => {
 	let user, adminUser, hash, token
 	let validationErrors = []
@@ -123,28 +123,51 @@ router.get('/:username', async (req, res) => {
 		}
 
 		if(req.query.posts) {
-			let lastId = 0
-			let limit = 10
-
-			if(+req.query.lastId > 0) lastId = +req.query.lastId
-			if(+req.query.limit > 0) limit = +req.query.limit
+			
+			let { lastId, limit } = pagination.getPaginationProps(req.query)
 
 			queryObj.include = User.includeOptions(lastId, limit)
 
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist
 
-			let maxId = await Post.max('id', { where: { userId: user.id } })
-
 			let resUser = user.toJSON()
-			let lastPost = user.Posts.slice(-1)[0]
 			resUser.meta = {}
 
-			if(!lastPost || maxId === lastPost.id) {
-				resUser.meta.nextURL = null
-			} else {
+			let nextId = await pagination.getNextId(Post, { userId: user.id }, resUser.Posts)
+
+			if(nextId) {
 				resUser.meta.nextURL =
-					`/api/v1/user/${user.username}?posts=true&limit=${limit}&lastId=${lastPost.id}`
+					`/api/v1/user/${user.username}?posts=true&limit=${limit}&lastId=${nextId}`
+			} else {
+				resUser.meta.nextURL = null
+			}
+
+			res.json(resUser)
+		} else if(req.query.threads) {
+			let { lastId, limit } = pagination.getPaginationProps(req.query)
+
+			queryObj.include = [{
+				model: Thread,
+				include: [Category],
+				limit,
+				where: { id: { $gt: lastId } },
+				order: [['id', 'ASC']]
+			}]
+
+			let user = await User.findOne(queryObj)
+			if(!user) throw Errors.accountDoesNotExist
+
+			let resUser = user.toJSON()
+			resUser.meta = {}
+
+			let nextId = await pagination.getNextId(Thread, { userId: user.id }, resUser.Threads)
+
+			if(nextId) {
+				resUser.meta.nextURL =
+					`/api/v1/user/${user.username}?threads=true&limit=${limit}&lastId=${nextId}`
+			} else {
+				resUser.meta.nextURL = null
 			}
 
 			res.json(resUser)
