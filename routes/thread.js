@@ -3,14 +3,11 @@ let router = express.Router()
 
 const Errors = require('../lib/errors.js')
 let { User, Thread, Category, Post } = require('../models')
+let pagination = require('../lib/pagination.js')
 
 router.get('/:thread_id', async (req, res) => {
 	try {
-		let lastId = 0
-		let limit = 10
-
-		if(+req.query.lastId > 0) lastId = +req.query.lastId
-		if(+req.query.limit > 0) limit = +req.query.limit
+		let { lastId, limit } = pagination.getPaginationProps(req.query)
 
 		let thread = await Thread.findById(req.params.thread_id, {
 			include: Thread.includeOptions(lastId, limit)
@@ -18,17 +15,20 @@ router.get('/:thread_id', async (req, res) => {
 
 		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
 
-		let maxId = await Post.max('id', { where: { threadId: +req.params.thread_id } })
-
 		let resThread = thread.toJSON()
-		let lastPost = thread.Posts.slice(-1)[0]
 		resThread.meta = {}
 
-		if(!lastPost || maxId === lastPost.id) {
-			resThread.meta.nextURL = null
-		} else {
+		let nextId = await pagination.getNextId(
+			Post,
+			{ threadId: +req.params.thread_id },
+			resThread.Posts
+		)
+
+		if(nextId) {
 			resThread.meta.nextURL =
-				`/api/v1/thread/${thread.id}?limit=${limit}&lastId=${lastPost.id}`
+				`/api/v1/thread/${thread.id}?limit=${limit}&lastId=${nextId}`
+		} else {
+			resThread.meta.nextURL = null
 		}
 
 		res.json(resThread)
