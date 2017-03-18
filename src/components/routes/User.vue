@@ -26,7 +26,7 @@
 					{{item.name}}
 				</div>
 			</div>
-			<router-view class='user__view'></router-view>
+			<router-view class='user__view' :username='username'></router-view>
 		</div>
 	</div>
 </template>
@@ -40,7 +40,7 @@
 			return {
 				menuItems: [
 					{ name: 'Posts', route: 'posts' }, 
-					{ name: 'Threads started', route: 'threads' }
+					{ name: 'Threads', route: 'threads' }
 				],
 				selected: 0,
 

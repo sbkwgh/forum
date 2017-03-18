@@ -1,6 +1,6 @@
 <template>
 	<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
-		<div class='user_posts__title'>Posts by username</div>
+		<div class='user_posts__title'>Posts by {{username}}</div>
 		<scroll-load
 			:loading='loadingPosts'
 			:show='nextURL !== null'
@@ -26,6 +26,7 @@
 
 	export default {
 		name: 'user',
+		props: ['username'],
 		components: {
 			ThreadPost,
 			ScrollLoad
