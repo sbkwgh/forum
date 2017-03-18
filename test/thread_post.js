@@ -400,14 +400,13 @@ describe('Thread and post', () => {
 			expect(pageThree.body.meta.nextURL).to.be.null
 
 			pageInvalid.body.Posts.should.have.length(0)
-
 		})
 		it('should allow you to get an individual and surrounding posts', async () => {
 			let http = chai.request(server)
 			
-			let pageOne = http.get(`/api/v1/thread/${PAGINATION_THREAD_ID}?postId=${MID_PAGINATION_POST_ID}`)
-			let pageZero = http.get(pageOne.body.meta.previousURL)
-			let pageTwo = http.get(pageOne.body.meta.nextURL)
+			let pageOne = await http.get(`/api/v1/thread/${PAGINATION_THREAD_ID}?postId=${MID_PAGINATION_POST_ID}`)
+			let pageZero = await http.get(pageOne.body.meta.previousURL)
+			let pageTwo = await http.get(pageOne.body.meta.nextURL)
 
 			pageOne.body.Posts.should.have.length(11)
 			pageOne.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
