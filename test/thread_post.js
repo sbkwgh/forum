@@ -389,6 +389,10 @@ describe('Thread and post', () => {
 
 			pageTwo.body.Posts.should.have.length(10)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
+			pageTwo.body.meta.should.have.property(
+				'previousURL',
+				`/api/v1/thread/${thread.body.id}?limit=10&lastId=${pageOne.body.Posts[0].id}`
+			)
 
 			pageThree.body.Posts.should.have.length(10)
 			pageThree.body.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
