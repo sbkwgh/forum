@@ -24,11 +24,25 @@ router.get('/:thread_id', async (req, res) => {
 			resThread.Posts
 		)
 
+		let previousId = await pagination.getPreviousId(
+			Post,
+			{ threadId: +req.params.thread_id },
+			resThread.Posts,
+			limit
+		)
+
 		if(nextId) {
 			resThread.meta.nextURL =
 				`/api/v1/thread/${thread.id}?limit=${limit}&lastId=${nextId}`
 		} else {
 			resThread.meta.nextURL = null
+		}
+
+		if(previousId) {
+			resThread.meta.previousURL =
+				`/api/v1/thread/${thread.id}?limit=${limit}&lastId=${previousId}`
+		} else {
+			resThread.meta.previousURL = null
 		}
 
 		res.json(resThread)
