@@ -51,6 +51,27 @@ const actions = {
 			})
 			.catch(AjaxErrorHandler(vue.$store))
 	},
+	loadInitialPostsAsync ({ state, commit, rootState }, vue) {
+		let postId = vue.$route.params.post_id
+		let apiURL = '/api/v1/thread/' + vue.$route.params.id
+
+		if(postId) {
+			apiURL += '?postId=' + postId
+		}
+
+		vue.axios
+			.get(apiURL)
+			.then(res => {
+				commit('setThread', res.data)
+				commit('setNextURL', res.data.meta.nextURL)
+				commit('setPreviousURL', res.data.meta.previousURL)
+				commit('setPosts', res.data.Posts)
+
+				if(postId) {
+					vue.highlightPost(+postId)
+				}
+			}).catch(AjaxErrorHandler(vue.$store))
+	},
 	loadPostsAsync ({ state, commit, rootState }, { vue, previous }) {
 		let URL
 
