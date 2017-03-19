@@ -1,5 +1,13 @@
 let marked = require('marked')
 
+marked.setOptions({
+	highlight: function (code) {
+		return require('highlight.js').highlightAuto(code).value;
+	},
+	sanitize: true
+});
+
+
 module.exports = (sequelize, DataTypes) => {
 	let Post = sequelize.define('Post', {
 		content: {

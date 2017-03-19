@@ -15,6 +15,7 @@
     "cross-env": "^3.1.4",
     "express": "^4.14.1",
     "express-session": "^1.15.1",
+    "highlight.js": "^9.10.0",
     "marked": "^0.3.6",
     "mysql": "^2.13.0",
     "randomcolor": "^0.4.4",
