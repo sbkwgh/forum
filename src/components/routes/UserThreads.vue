@@ -3,8 +3,8 @@
 		<div class='user_threads__title'>Threads by {{username}}</div>
 		<scroll-load
 			:loading='loadingThreads'
-			:show='nextURL !== null'
-			@load='loadNewThreads'
+			:showNext='nextURL !== null'
+			@loadNext='loadNewThreads'
 			v-if='threads.length'
 		>
 			<div

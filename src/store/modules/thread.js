@@ -51,23 +51,35 @@ const actions = {
 			})
 			.catch(AjaxErrorHandler(vue.$store))
 	},
-	loadNewPostsAsync ({ state, commit, rootState }, vue) {
+	loadPostsAsync ({ state, commit, rootState }, { vue, previous }) {
+		let URL
+
 		commit('setLoadingPostsState', true)
 
-		let nextURL = state.nextURL
+		if(previous) {
+			URL = state.previousURL
+		} else {
+			URL = state.nextURL
+		}
 
-		if(nextURL === null) {
+		if(URL === null) {
 			commit('setLoadingPostsState', false)
 		} else {
 			vue.axios
-				.get(nextURL)
+				.get(URL)
 				.then(res => {
 					let currentPostsIds = state.posts.map(p => p.id)
 					let filteredPosts =
 						res.data.Posts.filter(p => !currentPostsIds.includes(p.id))
 
-					commit('addPost', filteredPosts)
-					commit('setNextURL', res.data.meta.nextURL)
+					if(previous) {
+						commit('prependPosts', filteredPosts)
+						commit('setPreviousURL', res.data.meta.previousURL)
+					} else {
+						commit('addPost', filteredPosts)
+						commit('setNextURL', res.data.meta.nextURL)
+					}
+
 					commit('setLoadingPostsState', false)
 				})
 				.catch(AjaxErrorHandler(vue.$store))
@@ -86,6 +98,9 @@ const mutations = {
 		} else {
 			state.posts.push(post)
 		}
+	},
+	prependPosts (state, posts) {
+		state.posts.unshift(...posts)
 	},
 	addReplyBubble (state, post) {
 		let repliedToPost = {}, index

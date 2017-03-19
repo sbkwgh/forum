@@ -26,13 +26,15 @@
 		<div class='posts'>
 			<scroll-load
 				:loading='loadingPosts'
-				:show='$store.state.thread.nextURL !== null'
-				@load='loadNewPosts'
+				:showNext='$store.state.thread.nextURL !== null'
+				:showPrevious='$store.state.thread.previousURL !== null'
+				@loadNext='loadNextPosts'
+				@loadPrevious='loadPreviousPosts'
 			>
 				<thread-post
 					v-for='(post, index) in posts'
 					@reply='replyUser'
-					@goToPost='goToPost'
+					@goToPost='$router.push({ params: { post_id: post.id } })'
 					:post='post'
 					:show-reply='true'
 					:highlight='highlightedPostIndex === index'
@@ -114,33 +116,71 @@
 			addPost () {
 				this.$store.dispatch('addPostAsync', this);
 			},
-			loadNewPosts () {
-				this.$store.dispatch('loadNewPostsAsync', this);
+			loadNextPosts () {
+				let vue = this
+				this.$store.dispatch('loadPostsAsync', { vue, previous: false });
 			},
-			goToPost (postId) {
+			loadPreviousPosts () {
+				let vue = this
+				this.$store.dispatch('loadPostsAsync', { vue, previous: true });
+			},
+			loadInitialPosts () {
+				let postId = this.$route.params.post_id
+				let apiURL = '/api/v1/thread/' + this.$route.params.id
+				if(postId) {
+					apiURL += '?postId=' + postId
+				}
+
+				console.log('here')
+
+				this.axios
+					.get(apiURL)
+					.then(res => {
+						this.$store.commit('setThread', res.data)
+						this.$store.commit('setNextURL', res.data.meta.nextURL)
+						this.$store.commit('setPreviousURL', res.data.meta.previousURL)
+						this.$store.commit('setPosts', res.data.Posts)
+
+						if(postId) {
+							this.highlightPost(+postId)
+						}
+					}).catch(AjaxErrorHandler(this.$store))
+
+			},	
+			goToPost (id) {
+				this.$router.push({ params: { post_id: id } })
+				this.loadInitialPosts()
+			},
+			highlightPost (postId) {
 				for(var i = 0; i < this.posts.length; i++) {
 					let post = this.posts[i]
 
 					if(post.id === postId) {
-						let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
-						let header = this.$refs.title.getBoundingClientRect().height
-						window.scrollTo(0, postTop - header - 32)
+						this.$nextTick(() => {
+							let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
+							let header = this.$refs.title.getBoundingClientRect().height
+							window.scrollTo(0, postTop - header - 32)
 
-						this.highlightedPostIndex = i
-						setTimeout(() => {
-							if(this.highlightedPostIndex === i) {
-								this.highlightedPostIndex = null
-							}
-						}, 3000)
+							this.highlightedPostIndex = i
+
+							setTimeout(() => {
+								if(this.highlightedPostIndex === i) {
+									this.highlightedPostIndex = null
+								}
+							}, 3000)
+						})
 
 						break;
 					}
 				}
 			}
 		},
+		watch: {
+			'$route': 'loadInitialPosts'
+		},
 		created () {
-			var self = this;
-			var setHeader = function() {
+			let self = this;
+			let setHeader = function() {
 				if(!self.$refs.title) return;
 
 				if(self.$refs.title.getBoundingClientRect().top <= 32) {
@@ -153,20 +193,7 @@
 			setHeader();
 			document.addEventListener('scroll', throttle(setHeader, 200));
 
-			let apiURL = '/api/v1/thread/' + this.$route.params.id
-
-			if(this.$route.params.post_id) {
-				apiURL += '?postId=' + this.$route.params.post_id 
-			}
-
-			this.axios
-				.get(apiURL)
-				.then(res => {
-					this.$store.commit('setThread', res.data)
-					this.$store.commit('setNextURL', res.data.meta.nextURL)
-					this.$store.commit('setPreviousURL', res.data.meta.previousURL)
-					this.$store.commit('setPosts', res.data.Posts)
-				}).catch(AjaxErrorHandler(this.$store))
+			this.loadInitialPosts()
 		}
 	}
 </script>

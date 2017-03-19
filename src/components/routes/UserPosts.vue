@@ -3,8 +3,8 @@
 		<div class='user_posts__title'>Posts by {{username}}</div>
 		<scroll-load
 			:loading='loadingPosts'
-			:show='nextURL !== null'
-			@load='loadNewPosts'
+			:showNext='nextURL !== null'
+			@loadNext='loadNewPosts'
 			v-if='sortedPosts.length'
 		>
 			<thread-post
