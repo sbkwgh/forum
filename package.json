@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "highlight.js": "^9.10.0",
     "lodash.throttle": "^4.1.1",
     "marked": "^0.3.6",
     "vue": "^2.1.0",

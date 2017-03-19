@@ -72,6 +72,13 @@
 
 	import Marked from 'marked'
 
+	Marked.setOptions({
+		highlight: function (code) {
+			return require('highlight.js').highlightAuto(code).value;
+		},
+		sanitize: true
+	});
+
 	export default {
 		name: 'InputEditor',
 		props: ['value', 'float', 'replyUsername', 'hideClose', 'show', 'error'],
