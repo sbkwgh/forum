@@ -51,7 +51,7 @@ describe('Thread and post', () => {
 	})
 
 	//Delete all rows in table after
-	//tests completed
+	//tess completed
 	after(() => {
 		sequelize.sync({ force: true })
 	})
@@ -367,6 +367,11 @@ describe('Thread and post', () => {
 				.set('content-type', 'application/json')
 				.send({ category: 'category_name', name: 'pagination' })
 
+			let threadOther = await userAgent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({ category: 'category_name', name: 'pagination_other' })
+
 			PAGINATION_THREAD_ID = thread.body.id
 
 			for(var i = 0; i < 30; i++) {
@@ -374,6 +379,13 @@ describe('Thread and post', () => {
 					.post('/api/v1/post')
 					.set('content-type', 'application/json')
 					.send({ threadId: thread.body.id, content: `POST ${i}` })
+
+				if(i === 3) {
+					await userAgent
+						.post('/api/v1/post')
+						.set('content-type', 'application/json')
+						.send({ threadId: threadOther.body.id, content: `POST OTHER ${i}` })
+				}
 
 				if(i === 15) MID_PAGINATION_POST_ID = post.body.id
 			}
@@ -389,10 +401,7 @@ describe('Thread and post', () => {
 
 			pageTwo.body.Posts.should.have.length(10)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
-			pageTwo.body.meta.should.have.property(
-				'previousURL',
-				`/api/v1/thread/${thread.body.id}?limit=10&lastId=${pageOne.body.Posts[0].id}`
-			)
+			pageTwo.body.meta.should.have.property('previousURL')
 
 			pageThree.body.Posts.should.have.length(10)
 			pageThree.body.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
@@ -408,20 +417,23 @@ describe('Thread and post', () => {
 			let pageZero = await http.get(pageOne.body.meta.previousURL)
 			let pageTwo = await http.get(pageOne.body.meta.nextURL)
 
-			pageOne.body.Posts.should.have.length(11)
-			pageOne.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
-			pageOne.body.Posts[5].should.have.property('content', '<p>POST 15</p>\n')
-			pageOne.body.Posts[10].should.have.property('content', '<p>POST 20</p>\n')
+			pageOne.body.Posts.should.have.length(10)
+			pageOne.body.Posts[0].should.have.property('content', '<p>POST 11</p>\n')
+			pageOne.body.Posts[4].should.have.property('content', '<p>POST 15</p>\n')
+			pageOne.body.Posts[9].should.have.property('content', '<p>POST 20</p>\n')
 
-			pageTwo.body.Posts.should.have.length(10)
+			pageTwo.body.Posts.should.have.length(9)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 21</p>\n')
-			pageTwo.body.Posts[9].should.have.property('content', '<p>POST 30</p>\n')
+			pageTwo.body.Posts[8].should.have.property('content', '<p>POST 29</p>\n')
 			pageTwo.body.meta.should.have.property('nextURL', null)
-
+			
 			pageZero.body.Posts.should.have.length(10)
-			pageZero.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
-			pageZero.body.Posts[9].should.have.property('content', '<p>POST 9</p>\n')
-			pageZero.body.meta.should.have.property('previousURL', null)
+			pageZero.body.Posts[0].should.have.property('content', '<p>POST 1</p>\n')
+			pageZero.body.Posts[9].should.have.property('content', '<p>POST 10</p>\n')
+
+			let pageFirst = await http.get(pageZero.body.meta.previousURL)
+			pageFirst.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
+			pageFirst.body.meta.should.have.property('previousURL', null)
 
 		})
 		it('should return an error if :id is invalid', async () => {

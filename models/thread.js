@@ -17,17 +17,27 @@ module.exports = (sequelize, DataTypes) => {
 				Thread.belongsTo(models.Category)
 				Thread.hasMany(models.Post)
 			},
-			includeOptions (lastId, limit) {
+			includeOptions (lastId, limit, previousId) {
 				let models = sequelize.models
+
+				let where = {}
+				let order = [['id', 'ASC']]
+
+				if(lastId !== null) {
+					where.id = { $gt: lastId }
+				} else {
+					where.id = { $lt: previousId }
+					order = [['id', 'DESC']]
+				}
 
 				return [
 					{ model: models.User, attributes: ['username', 'createdAt', 'color', 'updatedAt', 'id'] }, 
 					models.Category,
 					{ 
 						model: models.Post, 
-						where: { id: { $gt: lastId } },
+						where,
+						order,
 						limit: limit,
-						order: [['id', 'ASC']],
 						include: [
 							{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
 							{
