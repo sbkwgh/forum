@@ -57,6 +57,8 @@ Vue.filter('formatDate', function (value, format = '', join = ' ') {
 		value = new Date(value)
 	}
 
+	let sinceNow = new Date(new Date() - value)
+
 	//Add leading zero if under 10
 	function lz(num) {
 		if(num < 10) {
@@ -66,20 +68,32 @@ Vue.filter('formatDate', function (value, format = '', join = ' ') {
 		}
 	}
 
-	function formatSegment(segment) {
-		if(segment === 'time') {
-			return value.toTimeString().slice(0, 5);
-		}
-		if(segment === 'date') {
-			return (
-				lz(value.getDate()) + '/' +
-				lz(value.getMonth() + 1) + '/' +
-				value.getUTCFullYear()
-			);
+	function p(word, num) {
+		if(num === 1) {
+			return word
+		} else {
+			return word + 's'
 		}
 	}
 
-	return format.split('|').map(formatSegment).join(join);
+	//2 minutes
+	if(sinceNow <= 1000*60*2) {
+		return 'Just now'
+	} else if(sinceNow <= 1000*60*60) {
+		return sinceNow.getMinutes()  + ' minutes ago'
+	} else if(sinceNow <= 1000*60*60*24) {
+		let hours = sinceNow.getHours()
+		return hours + ' ' + p('hour', hours) + ' ago'
+	} else if(sinceNow <= 1000*60*60*24*2) {
+		let days = Math.floor(sinceNow.getHours() / 24)
+		return days + ' ' + p('day', days) + ' ago'
+	} else {
+		return (
+			lz(value.getDate()) + '/' +
+			lz(value.getMonth() + 1) + '/' +
+			value.getUTCFullYear()
+		); 
+	}
 });
 
 Vue.filter('stripTags', function (value) {
