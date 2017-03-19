@@ -1,0 +1,39 @@
+@import './variables.scss';
+
+pre {
+	background-color: $color__gray--primary;
+	padding: 0.5rem;
+}
+
+a {
+	text-decoration: none;
+	font-weight: 500;
+	color: $color__orange--darkest;
+	position: relative;
+
+	&::after {
+		content: '';
+		height: 0.0625rem;
+		background-color: $color__orange--darkest;
+		bottom: -0.125rem;
+		width: 100%;
+		left: 0;
+		position: absolute;
+	}
+
+ 	&:hover, &:visited {
+ 		color: $color__orange--darker;
+ 		&::after {
+ 			background-color: $color__orange--darker;
+ 		}
+ 	}
+}
+
+blockquote {
+	background-color: $color__gray--primary;
+	border-left: thick solid $color__gray--darkest;
+
+	& * {
+		padding: 0.5rem;
+	}
+}
