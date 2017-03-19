@@ -11,7 +11,7 @@ marked.setOptions({
 module.exports = (sequelize, DataTypes) => {
 	let Post = sequelize.define('Post', {
 		content: {
-			type: DataTypes.STRING,
+			type: DataTypes.TEXT,
 			set (val) {
 				this.setDataValue('content', marked(val))
 			}
