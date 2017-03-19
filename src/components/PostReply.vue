@@ -5,7 +5,7 @@
 				<div class='post_reply__username'>{{post.User.username}}</div>
 				<div class='post_reply__date'>{{post.createdAt | formatDate('date|time', ' - ')}}</div>
 			</div>
-			<div class='post_reply__content' v-html='post.content'></div>
+			<div class='post_reply__content'>{{post.content | stripTags | truncate(100)}}</div>
 		</template>
 		<div
 			slot='display'

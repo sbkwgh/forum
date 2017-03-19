@@ -5,7 +5,7 @@
 				<div class='replying_to__username' v-if='post'>{{post.User.username}}</div>
 				<div class='replying_to__date' v-if='post'>{{post.createdAt | formatDate('date|time', ' - ')}}</div>
 			</div>
-			<div class='replying_to__content' v-if='post' v-html='post.content'></div>
+			<div class='replying_to__content' v-if='post'>{{post.content | stripTags | truncate(100)}}</div>
 			<template v-else>Loading...</template>
 		</template>
 		<div
