@@ -142,12 +142,10 @@
 							window.scrollTo(0, postTop - header - 32)
 
 							this.highlightedPostIndex = i
-
-							setTimeout(() => {
-								if(this.highlightedPostIndex === i) {
-									this.highlightedPostIndex = null
-								}
-							}, 3000)
+							
+							if(this.highlightedPostIndex === i) {
+								setTimeout(() => this.highlightedPostIndex = null, 3000)
+							}
 						})
 
 						break;
