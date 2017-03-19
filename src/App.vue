@@ -318,6 +318,7 @@
 <style lang='scss'>
 	@import url('https://fonts.googleapis.com/css?family=Lato:300,300i,400|Montserrat');
 	@import './assets/scss/variables.scss';
+	@import './assets/scss/elementStyles.scss';
 
 	html, body {
 		width: 100%;
