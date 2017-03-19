@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 						order,
 						limit: limit,
 						include: [
+							{ model: models.Thread, attributes: ['slug'] }, 
 							{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
 							{
 								model: models.Post, as: 'Replies', include:
