@@ -131,8 +131,6 @@
 					apiURL += '?postId=' + postId
 				}
 
-				console.log('here')
-
 				this.axios
 					.get(apiURL)
 					.then(res => {

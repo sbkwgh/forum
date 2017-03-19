@@ -5,6 +5,13 @@
 		@mouseenter='setPostFooterState(true)'
 		@mouseleave='setPostFooterState(false)'
 	>
+		<modal-window v-model='showShareModal'>
+			<div style='padding: 0rem 1rem 1rem 1rem;'>
+				<p>Copy this URL to share the post</p>
+				<fancy-input placeholder='Post URL' :value='postURL' width='100%'></fancy-input>
+				<button class='button button--modal' @click='setShareModalState(false)'>OK</button>
+			</div>
+		</modal-window>
 		<div class='post__meta_data'>
 			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
 			<div class='post__thread' v-if='showThread' @click='goToThread'>{{post.Thread.name}}</div>
@@ -33,7 +40,7 @@
 			</div>
 			<div
 				class='post__footer_group'>
-				<div class='post__action post__share'>Share</div>
+				<div class='post__action post__share' @click='setShareModalState(true)'>Share</div>
 				<div
 					class='post__action post__reply'
 					v-if='$store.state.username && showReply'
@@ -48,6 +55,8 @@
 
 <script>
 	import PostReply from './PostReply'
+	import ModalWindow from './ModalWindow'
+	import FancyInput from './FancyInput'
 	import ReplyingTo from './ReplyingTo'
 	import AvatarIcon from './AvatarIcon'
 
@@ -58,17 +67,26 @@
 		props: ['post', 'highlight', 'showReply', 'showThread'],
 		components: {
 			PostReply,
+			ModalWindow,
+			FancyInput,
 			ReplyingTo,
 			AvatarIcon
 		},
 		data () {
+			let post = this.post
+
 			return {
-				hover: false
+				hover: false,
+				showShareModal: false,
+				postURL: `${location.origin}/thread/${post.Thread.name}/${post.ThreadId}/${post.id}`
 			}
 		},
 		methods: {
 			setPostFooterState (state) {
 				this.hover = state
+			},
+			setShareModalState (val) {
+				this.showShareModal = val
 			},
 			goToThread () {
 				this.$router.push(`/thread/${this.post.Thread.slug}/${this.post.Thread.id}`)
