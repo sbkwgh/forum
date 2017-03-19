@@ -5,6 +5,7 @@
 			:loading='loadingPosts'
 			:showNext='nextURL !== null'
 			@loadNext='loadNewPosts'
+			message='posts'
 			v-if='sortedPosts.length'
 		>
 			<thread-post

@@ -5,6 +5,7 @@
 			:loading='loadingThreads'
 			:showNext='nextURL !== null'
 			@loadNext='loadNewThreads'
+			message='threads'
 			v-if='threads.length'
 		>
 			<div

@@ -28,6 +28,7 @@
 				:loading='loadingPosts'
 				:showNext='$store.state.thread.nextURL !== null'
 				:showPrevious='$store.state.thread.previousURL !== null'
+				message='posts'
 				@loadNext='loadNextPosts'
 				@loadPrevious='loadPreviousPosts'
 			>

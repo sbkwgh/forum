@@ -7,7 +7,7 @@
 				:dark='true'
 				@click='$emit("loadPrevious")'
 			>
-				Load previous posts...
+				Load previous {{message}}
 			</loading-button>
 		</div>
 		<slot></slot>
@@ -18,7 +18,7 @@
 				:dark='true'
 				@click='$emit("loadNext")'
 			>
-				Load more posts...
+				Load more {{message}}
 			</loading-button>
 		</div>
 	</div>
@@ -30,7 +30,7 @@
 
 	export default {
 		name: 'ScrollLoad',
-		props: ['loading', 'showNext', 'showPrevious'],
+		props: ['loading', 'showNext', 'showPrevious', 'message'],
 		components: {
 			LoadingButton
 		},
