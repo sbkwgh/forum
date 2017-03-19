@@ -125,8 +125,7 @@
 				this.$store.dispatch('loadPostsAsync', { vue, previous: true });
 			},
 			loadInitialPosts () {
-				let vue = this
-				this.$store.dispatch('loadInitialPostsAsync', vue)
+				this.$store.dispatch('loadInitialPostsAsync', this)
 			},	
 			goToPost (id) {
 				this.$router.push({ params: { post_id: id } })
