@@ -153,11 +153,18 @@
 			setHeader();
 			document.addEventListener('scroll', throttle(setHeader, 200));
 
+			let apiURL = '/api/v1/thread/' + this.$route.params.id
+
+			if(this.$route.params.post_id) {
+				apiURL += '?postId=' + this.$route.params.post_id 
+			}
+
 			this.axios
-				.get('/api/v1/thread/' + this.$route.params.id)
+				.get(apiURL)
 				.then(res => {
 					this.$store.commit('setThread', res.data)
 					this.$store.commit('setNextURL', res.data.meta.nextURL)
+					this.$store.commit('setPreviousURL', res.data.meta.previousURL)
 					this.$store.commit('setPosts', res.data.Posts)
 				}).catch(AjaxErrorHandler(this.$store))
 		}

@@ -13,7 +13,8 @@ const state = {
 		value: ''
 	},
 	loadingPosts: false,
-	nextURL: ''
+	nextURL: '',
+	previousURL: ''
 }
 
 const getters = {
@@ -120,6 +121,9 @@ const mutations = {
 	},
 	setNextURL (state, URL) {
 		state.nextURL = URL
+	},
+	setPreviousURL (state, URL) {
+		state.previousURL = URL
 	}
 }
 
