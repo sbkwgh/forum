@@ -98,14 +98,33 @@
 <style lang='scss' scoped>
 	@import '../assets/scss/variables.scss';
 
-	.post {
+	@keyframes shake {
+		0% {
+			left: 0rem;
+		}
+		25% {
+			left: -0.5rem;
+		}
+		75% {
+			left: 0.5rem;
+		}
+		100% {
+			left: 0rem;
+		}
+	}
 
+	.post {
+		position: relative;
 		border-top: thin solid $color__gray--primary;
 		transition: background-color 0.5s;
 		margin: 0.5rem 0;
 
 		@at-root #{&}--highlighted {
 			background-color: $color__lightgray--darkest;
+			animation-name: shake;
+			animation-iteration-count: 5;
+			animation-timing-function: linear;
+			animation-duration: 0.25s;
 		}
 
 		@at-root #{&}--last {
