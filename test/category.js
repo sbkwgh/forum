@@ -54,6 +54,7 @@ describe('Category', () => {
 			res.should.be.json
 			res.should.have.status(200)
 			res.body.should.have.property('name', 'category')
+			res.body.should.have.property('color')
 		})
 		it('should have an "underscored" value field', async () => {
 			let res = await agent
