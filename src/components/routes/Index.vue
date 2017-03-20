@@ -113,7 +113,7 @@
 						let aDate = new Date(a.Posts[0].createdAt)
 						let bDate = new Date(b.Posts[0].createdAt)
 
-						return aDate - bDate;
+						return bDate - aDate;
 					} else if(filter === 'MOST_ACTIVE') {
 						return b.postsCount - a.postsCount;
 					}
