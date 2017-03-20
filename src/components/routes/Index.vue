@@ -115,7 +115,7 @@
 
 						return aDate - bDate;
 					} else if(filter === 'MOST_ACTIVE') {
-						return b.postsCount-1 - a.postsCount-1;
+						return b.postsCount - a.postsCount;
 					}
 				}).filter(thread => {
 					if(filter === 'NO_REPLIES' && thread.postsCount-1) {
