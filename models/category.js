@@ -1,3 +1,5 @@
+let randomColor = require('randomcolor')
+
 module.exports = (sequelize, DataTypes) => {
 	let Category = sequelize.define('Category', {
 		name: {
@@ -12,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
 		value: {
 			type: DataTypes.STRING,
 			unique: true
+		},
+		color: {
+			type: DataTypes.STRING,
+			defaultValue () {
+				return randomColor()
+			}
 		}
 	}, {
 		classMethods: {
