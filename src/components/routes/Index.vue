@@ -243,7 +243,8 @@
 	.threads_main__threads {
 		border-collapse: collapse;
 		margin-top: 0.25rem;
-		width: calc(100% - 10rem);
+		margin-left: 1rem;
+		width: calc(100% - 11rem);
 	}
 
 	.thread {
