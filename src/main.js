@@ -36,7 +36,6 @@ const router = new VueRouter({
 		{ path: '/', redirect: '/all' },
 		{ path: '/:category', component: Index },
 		{ path: '/start', component: Start },
-		//{ path: '/category/:category', component: Category },
 		{ path: '/thread/:slug/:id', component: Thread },
 		{ path: '/thread/:slug/:id/:post_id', component: Thread },
 		{ path: '/thread/new', component: ThreadNew },
