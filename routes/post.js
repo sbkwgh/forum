@@ -87,6 +87,8 @@ router.post('/', async (req, res) => {
 		await post.setUser(user)
 		await post.setThread(thread)
 
+		await thread.increment('postsCount')
+
 		res.json(await post.reload({
 			include: Post.includeOptions()
 		}))

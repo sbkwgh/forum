@@ -9,7 +9,11 @@ module.exports = (sequelize, DataTypes) => {
 				this.setDataValue('slug', slug(val).toLowerCase())
 			}
 		},
-		slug: DataTypes.TEXT
+		slug: DataTypes.TEXT,
+		postsCount: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
+		}
 	}, {
 		classMethods: {
 			associate (models) {
