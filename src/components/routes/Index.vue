@@ -118,8 +118,8 @@
 						return b.postsCount-1 - a.postsCount-1;
 					}
 				}).filter(thread => {
-					if(filter === 'NO_REPLIES') {
-						return thread.postsCount - 1;
+					if(filter === 'NO_REPLIES' && thread.postsCount-1) {
+						return false
 					} else {
 						return true;
 					}
