@@ -181,7 +181,7 @@
 		@at-root #{&}__display {
 			padding-right: 0.5rem;
 			border-right: thin solid $color__gray--primary;
-			margin-right: 0.5rem;
+			margin-right: 1.25rem;
 			width: 10rem;
 		}
 	}
