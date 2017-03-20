@@ -53,7 +53,7 @@
 							<div>{{thread.Posts[0].createdAt | formatDate('time|date', ' - ') }}</div>
 						</td>
 						<td>{{thread.Category.name}}</td>
-						<td>{{thread.replies}}</td>
+						<td>{{thread.postsCount-1}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -115,11 +115,11 @@
 
 						return aDate - bDate;
 					} else if(filter === 'MOST_ACTIVE') {
-						return 0 //b.replies - a.replies;
+						return b.postsCount-1 - a.postsCount-1;
 					}
 				}).filter(thread => {
 					if(filter === 'NO_REPLIES') {
-						return 0//!thread.replies;
+						return thread.postsCount - 1;
 					} else {
 						return true;
 					}
