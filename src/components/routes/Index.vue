@@ -152,15 +152,15 @@
 		},
 		watch: {
 			selectedCategory (newValue) {
-				this.$router.push('/' + newValue.toLowerCase());
+				this.$router.push('/category/' + newValue.toLowerCase());
 			},
 			$route () {
-				this.selectedCategory = this.$route.path.split('/')[1].toUpperCase()
+				this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
 				this.getThreads()
 			}
 		},
 		created () {
-			this.selectedCategory = this.$route.path.split('/')[1].toUpperCase()
+			this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
 			this.getThreads()
 		}
 	}

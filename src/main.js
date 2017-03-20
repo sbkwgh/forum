@@ -32,8 +32,8 @@ Vue.use(VueAxios, axios)
 
 const router = new VueRouter({
 	routes: [
-		{ path: '/', redirect: '/all' },
-		{ path: '/:category', component: Index },
+		{ path: '/', redirect: '/category/all' },
+		{ path: '/category/:category', component: Index },
 		{ path: '/start', component: Start },
 		{ path: '/thread/:slug/:id', component: Thread },
 		{ path: '/thread/:slug/:id/:post_id', component: Thread },
