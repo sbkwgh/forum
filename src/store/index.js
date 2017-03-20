@@ -10,7 +10,9 @@ export default new Vuex.Store({
 	state: {
 		meta: {
 			name: '',
-			categories: []
+			categories: [
+				{ name: 'All', value: 'ALL' }
+			]
 		},
 		accountTabs: 0,
 		accountModal: false,
@@ -57,7 +59,7 @@ export default new Vuex.Store({
 		},
 		addCategories (state, value) {
 			if(Array.isArray(value)) {
-				state.meta.categories = value
+				state.meta.categories.push(...value)
 			} else {
 				state.meta.categories.push(value)
 			}
