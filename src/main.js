@@ -10,7 +10,6 @@ import store from './store/index'
 
 import Index from './components/routes/Index'
 import Start from './components/routes/Start'
-import Category from './components/routes/Category'
 import Thread from './components/routes/Thread'
 import ThreadNew from './components/routes/ThreadNew'
 
