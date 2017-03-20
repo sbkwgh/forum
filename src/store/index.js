@@ -11,7 +11,7 @@ export default new Vuex.Store({
 		meta: {
 			name: '',
 			categories: [
-				{ name: 'All', value: 'ALL' }
+				{ name: 'All', value: 'ALL', color: '#1565C0' }
 			]
 		},
 		accountTabs: 0,

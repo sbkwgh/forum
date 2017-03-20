@@ -26,7 +26,10 @@
 					:class='{"threads_main__side_bar__menu_item--selected": category.value === selectedCategory}'
 					@click='selectedCategory = category.value'
 				>
-					<span class='threads_main__side_bar__menu_item__border'></span>
+					<span
+						class='threads_main__side_bar__menu_item__border'
+						:style='{"background-color": category.color}'
+					></span>
 					{{category.name}}
 				</div>
 			</div>
