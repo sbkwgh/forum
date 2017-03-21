@@ -398,14 +398,16 @@ describe('Thread and post', () => {
 			let pageInvalid = await userAgent.get('/api/v1/thread/' + thread.body.id + '?from=' + 100)
 
 			pageOne.body.Posts.should.have.length(10)
-			pageOne.body.meta.should.have.property('previousURL', null)
+			pageOne.body.meta.should.have.property('postsRemaining', 20)
 			pageOne.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
 
 			pageTwo.body.Posts.should.have.length(10)
+			pageOne.body.meta.should.have.property('postsRemaining', 10)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
 			pageTwo.body.meta.should.have.property('previousURL')
 
 			pageThree.body.Posts.should.have.length(10)
+			pageOne.body.meta.should.have.property('postsRemaining', 0)
 			pageThree.body.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
 			pageThree.body.Posts[9].should.have.property('content', '<p>POST 29</p>\n')
 			expect(pageThree.body.meta.nextURL).to.be.null
@@ -424,19 +426,24 @@ describe('Thread and post', () => {
 			pageOne.body.Posts[0].should.have.property('content', '<p>POST 11</p>\n')
 			pageOne.body.Posts[4].should.have.property('content', '<p>POST 15</p>\n')
 			pageOne.body.Posts[9].should.have.property('content', '<p>POST 20</p>\n')
+			pageOne.body.meta.should.have.property('postsRemaining', 9)
 
 			pageTwo.body.Posts.should.have.length(9)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 21</p>\n')
 			pageTwo.body.Posts[8].should.have.property('content', '<p>POST 29</p>\n')
 			pageTwo.body.meta.should.have.property('nextURL', null)
+			pageTwo.body.meta.should.have.property('postsRemaining', 0)
 			
 			pageZero.body.Posts.should.have.length(10)
 			pageZero.body.Posts[0].should.have.property('content', '<p>POST 1</p>\n')
 			pageZero.body.Posts[9].should.have.property('content', '<p>POST 10</p>\n')
+			pageTwo.body.meta.should.have.property('postsRemaining', 19)
+
 
 			let pageFirst = await http.get(pageZero.body.meta.previousURL)
 			pageFirst.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
 			pageFirst.body.meta.should.have.property('previousURL', null)
+			pageFirst.body.meta.should.have.property('postsRemaining', 20)
 
 		})
 		it('should return an error if :id is invalid', async () => {
