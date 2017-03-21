@@ -52,11 +52,11 @@ const actions = {
 			.catch(AjaxErrorHandler(vue.$store))
 	},
 	loadInitialPostsAsync ({ state, commit, rootState }, vue) {
-		let postId = vue.$route.params.post_id
+		let postNumber = vue.$route.params.post_number
 		let apiURL = '/api/v1/thread/' + vue.$route.params.id
 
-		if(postId) {
-			apiURL += '?postId=' + postId
+		if(postNumber) {
+			apiURL += '?postNumber=' + postNumber
 		}
 
 		vue.axios
@@ -67,8 +67,8 @@ const actions = {
 				commit('setPreviousURL', res.data.meta.previousURL)
 				commit('setPosts', res.data.Posts)
 
-				if(postId) {
-					vue.highlightPost(+postId)
+				if(postNumber) {
+					vue.highlightPost(+postNumber)
 				}
 			}).catch(AjaxErrorHandler(vue.$store))
 	},

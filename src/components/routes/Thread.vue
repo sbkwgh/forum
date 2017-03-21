@@ -35,7 +35,7 @@
 				<thread-post
 					v-for='(post, index) in posts'
 					@reply='replyUser'
-					@goToPost='$router.push({ params: { post_id: post.id } })'
+					@goToPost='$router.push({ params: { post_number: post.postNumber } })'
 					:post='post'
 					:show-reply='true'
 					:highlight='highlightedPostIndex === index'
@@ -128,15 +128,15 @@
 			loadInitialPosts () {
 				this.$store.dispatch('loadInitialPostsAsync', this)
 			},	
-			goToPost (id) {
-				this.$router.push({ params: { post_id: id } })
+			goToPost (number) {
+				this.$router.push({ params: { post_number: number } })
 				this.loadInitialPosts()
 			},
-			highlightPost (postId) {
+			highlightPost (postNumber) {
 				for(var i = 0; i < this.posts.length; i++) {
 					let post = this.posts[i]
 
-					if(post.id === postId) {
+					if(post.postNumber === postNumber) {
 						this.$nextTick(() => {
 							let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
 							let header = this.$refs.title.getBoundingClientRect().height
