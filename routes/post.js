@@ -75,13 +75,13 @@ router.post('/', async (req, res) => {
 			} else if(replyingToPost.Thread.id !== thread.id) {
 				throw Errors.invalidParameter('replyingToId', 'replies must be in same thread')
 			} else {
-				post = await Post.create({ content: req.body.content, postNumber: thread.postsCount+1 })
+				post = await Post.create({ content: req.body.content, postNumber: thread.postsCount })
 
 				await post.setReplyingTo(replyingToPost)
 				await replyingToPost.addReplies(post)
 			}
 		} else {
-			post = await Post.create({ content: req.body.content, postNumber: thread.postsCount+1 })
+			post = await Post.create({ content: req.body.content, postNumber: thread.postsCount })
 		}
 
 		await post.setUser(user)

@@ -7,85 +7,36 @@ let pagination = require('../lib/pagination.js')
 
 router.get('/:thread_id', async (req, res) => {
 	try {
-		let { lastId, limit, previousId } = pagination.getPaginationProps(req.query)
+		let { from, limit } = pagination.getPaginationProps(req.query)
 		let thread, resThread
+	
+		thread = await Thread.findById(req.params.thread_id, {
+			include: Thread.includeOptions(from, limit)
+		})
 
-		if(+req.query.postId) {
-			let findObj = {
-				limit: Math.floor(limit / 2),
-				order: [['id', 'ASC']],
-				include: Post.includeOptions()
-			}
-
-			thread = await Thread.findById(req.params.thread_id, {
-				include: [
-					{ model: User, attributes: ['username', 'createdAt', 'color', 'updatedAt', 'id'] }, 
-					Category,
-				]
-			})
-			if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
-			resThread = thread.toJSON()
-
-			let postsAfter = await Post.findAll(Object.assign({}, findObj, {
-				where: {
-					id: { $gt: +req.query.postId },
-					threadId: req.params.thread_id,
-				},
-			}))
-
-			let postsBefore = await Post.findAll(Object.assign({}, findObj, {
-				where: {
-					id: { $lte: +req.query.postId },
-					threadId: req.params.thread_id,
-				},
-				order: [['id', 'DESC']],
-			}))
-
-			resThread.Posts = postsBefore
-				.concat(postsAfter)
-				.map(p => p.toJSON())
-				.sort((a, b) => a.id - b.id)
-
-		} else {
-			thread = await Thread.findById(req.params.thread_id, {
-				include: Thread.includeOptions(lastId, limit, previousId)
-			})
-
-			if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
-			resThread = thread.toJSON()
-
-			if(previousId) {
-				resThread.Posts = resThread.Posts.sort((a, b) => a.id - b.id)
-			}
-		}
+		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
+		resThread = thread.toJSON()
 
 		resThread.meta = {}
 	
-		let nextId = await pagination.getNextId(
-			Post,
-			{ threadId: +req.params.thread_id },
-			resThread.Posts
-		)
+		let lastPost = thread.Posts.slice(-1)[0]
+		let firstPost = thread.Posts[0]
 
-		let beforeId = await pagination.getPreviousId(
-			Post,
-			{ threadId: +req.params.thread_id },
-			resThread.Posts,
-			limit
-		)
-
-		if(nextId) {
-			resThread.meta.nextURL =
-				`/api/v1/thread/${thread.id}?limit=${limit}&lastId=${nextId}`
-		} else {
+		if(!lastPost || lastPost.postNumber+1 === thread.postsCount) {
 			resThread.meta.nextURL = null
+		} else {
+			resThread.meta.nextURL =
+				`/api/v1/thread/${thread.id}?limit=${limit}&from=${lastPost.postNumber + 1}`
 		}
 
-		if(beforeId) {
-			resThread.meta.previousURL =
-				`/api/v1/thread/${thread.id}?limit=${limit}&previousId=${beforeId}`
-		} else {
+		if(!firstPost || firstPost.postNumber === 0) {
 			resThread.meta.previousURL = null
+		} else if(firstPost.postNumber - limit < 0) {
+			resThread.meta.previousURL =
+				`/api/v1/thread/${thread.id}?limit=${firstPost.postNumber}&from=0`
+		} else {
+			resThread.meta.previousURL =
+				`/api/v1/thread/${thread.id}?limit=${limit}&from=${firstPost.postNumber - limit}`
 		}
 
 		res.json(resThread)
