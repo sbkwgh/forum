@@ -39,6 +39,13 @@ router.get('/:thread_id', async (req, res) => {
 				`/api/v1/thread/${thread.id}?limit=${limit}&from=${firstPost.postNumber - limit}`
 		}
 
+		if(lastPost === undefined) {
+			resThread.meta.postsRemaining = 0
+		} else {
+			resThread.meta.postsRemaining =
+				thread.postsCount - lastPost.postNumber - 1
+		}
+
 		res.json(resThread)
 		
 	} catch (e) {
