@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 				User.hasMany(models.Post)
 				User.hasMany(models.Thread)
 			},
-			includeOptions (lastId, limit) {
+			includeOptions (from, limit) {
 				let models = sequelize.models
 				let options = models.Post.includeOptions()
 
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
 					model: models.Post,
 					include: options,
 					limit,
-					where: { id: { $gt: lastId } },
+					where: { postNumber: { $gte: from } },
 					order: [['id', 'ASC']]
 				}]
 			}

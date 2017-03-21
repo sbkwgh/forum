@@ -124,9 +124,9 @@ router.get('/:username', async (req, res) => {
 
 		if(req.query.posts) {
 			
-			let { lastId, limit } = pagination.getPaginationProps(req.query)
+			let { from, limit } = pagination.getPaginationProps(req.query)
 
-			queryObj.include = User.includeOptions(lastId, limit)
+			queryObj.include = User.includeOptions(from, limit)
 
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist
@@ -134,24 +134,23 @@ router.get('/:username', async (req, res) => {
 			let resUser = user.toJSON()
 			resUser.meta = {}
 
-			let nextId = await pagination.getNextId(Post, { userId: user.id }, resUser.Posts)
-
-			if(nextId) {
-				resUser.meta.nextURL =
-					`/api/v1/user/${user.username}?posts=true&limit=${limit}&lastId=${nextId}`
-			} else {
+			let lastPost = user.Posts.slice(-1)[0]
+			if(!lastPost || lastPost.postNumber+1 === lastPost.Thread.postsCount) {
 				resUser.meta.nextURL = null
+			} else {
+				resUser.meta.nextURL =
+					`/api/v1/user/${user.username}?posts=true&limit=${limit}&from=${lastPost.postNumber + 1}`
 			}
 
 			res.json(resUser)
 		} else if(req.query.threads) {
-			let { lastId, limit } = pagination.getPaginationProps(req.query)
+			let { from, limit } = pagination.getPaginationProps(req.query)
 
 			queryObj.include = [{
 				model: Thread,
 				include: [Category],
 				limit,
-				where: { id: { $gt: lastId } },
+				where: { id: { $gt: from } },
 				order: [['id', 'ASC']]
 			}]
 
@@ -165,7 +164,7 @@ router.get('/:username', async (req, res) => {
 
 			if(nextId) {
 				resUser.meta.nextURL =
-					`/api/v1/user/${user.username}?threads=true&limit=${limit}&lastId=${nextId}`
+					`/api/v1/user/${user.username}?threads=true&limit=${limit}&from=${nextId}`
 			} else {
 				resUser.meta.nextURL = null
 			}

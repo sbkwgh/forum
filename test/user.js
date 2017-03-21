@@ -357,7 +357,7 @@ describe('User', () => {
 			let pageOne = await agent.get('/api/v1/user/paginationaccount?posts=true')
 			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
 			let pageThree = await agent.get(pageTwo.body.meta.nextURL)
-			let pageInvalid = await agent.get('/api/v1/thread/' + thread.body.id + '?lastId=' + 100)
+			let pageInvalid = await agent.get('/api/v1/user/paginationaccount?posts=true&from=100')
 
 			pageOne.body.Posts.should.have.length(10)
 			pageOne.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
@@ -396,7 +396,7 @@ describe('User', () => {
 
 			let pageOne = await agent.get('/api/v1/user/threadaccount?threads=true')
 			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
-			let pageInvalid = await agent.get('/api/v1/user/threadaccount?threads=true&lastId=100')
+			let pageInvalid = await agent.get('/api/v1/user/threadaccount?threads=true&from=100')
 
 			pageOne.body.Threads.should.have.length(10)
 			pageOne.body.Threads[0].should.have.property('name', 'THREAD 0')
