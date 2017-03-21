@@ -178,6 +178,7 @@ describe('Thread and post', () => {
 			res.should.be.json
 			res.should.have.status(200)
 			res.body.should.have.property('content', '<p>content</p>\n')
+			res.body.should.have.property('postNumber', 1)
 			res.body.should.have.deep.property('User.username', 'username')
 			res.body.should.have.deep.property('Thread.name', 'thread')
 			res.body.should.have.deep.property('Thread.postsCount', 1)
@@ -280,6 +281,7 @@ describe('Thread and post', () => {
 
 			res.should.be.json
 			res.should.have.status(200)
+			res.body.should.have.property('postNumber', 2)
 			res.body.should.have.property('content', '<p>another post</p>\n')
 			res.body.should.have.deep.property('User.username', 'username1')
 			res.body.should.have.deep.property('Thread.name', 'thread')

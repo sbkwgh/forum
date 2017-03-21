@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 				this.setDataValue('content', marked(val))
 			}
 		},
+		postNumber: DataTypes.INTEGER,
 		replyingToUsername: DataTypes.STRING
 	}, {
 		instanceMethods: {
