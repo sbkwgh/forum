@@ -25,13 +25,14 @@
 		</input-editor>
 		<div class='posts'>
 			<scroll-load
-				:loading='loadingPosts'
-				:showNext='$store.state.thread.nextURL !== null'
-				:showPrevious='$store.state.thread.previousURL !== null'
-				message='posts'
 				@loadNext='loadNextPosts'
 				@loadPrevious='loadPreviousPosts'
 			>
+				<thread-post-placeholder
+					v-if='$store.state.thread.loadingPosts === "previous"'
+					v-for='n in $store.state.thread.previousPostsCount'
+				>
+				</thread-post-placeholder>
 				<thread-post
 					v-for='(post, index) in posts'
 					@reply='replyUser'
@@ -42,6 +43,11 @@
 					:class='{"post--last": index === posts.length-1}'
 					ref='posts'
 				></thread-post>
+				<thread-post-placeholder
+					v-if='$store.state.thread.loadingPosts === "next"'
+					v-for='n in $store.state.thread.nextPostsCount'
+				>
+				</thread-post-placeholder>
 			</scroll-load>
 		</div>
 	</div>
@@ -51,6 +57,7 @@
 	import InputEditor from '../InputEditor'
 	import ScrollLoad from '../ScrollLoad'
 	import ThreadPost from '../ThreadPost'
+	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 
 	import throttle from 'lodash.throttle'
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
@@ -60,7 +67,8 @@
 		components: {
 			InputEditor,
 			ScrollLoad,
-			ThreadPost
+			ThreadPost,
+			ThreadPostPlaceholder
 		},
 		data () {
 			return {
@@ -84,8 +92,7 @@
 					this.$store.commit('setThreadEditorValue', val)
 				}
 			},
-			editorState () { return this.$store.state.thread.editor.show },
-			loadingPosts () { return this.$store.state.thread.loadingPosts },
+			editorState () { return this.$store.state.thread.editor.show }
 		},
 		methods: {
 			showEditor () {
@@ -132,7 +139,7 @@
 				this.$router.push({ params: { post_number: number } })
 				this.loadInitialPosts()
 			},
-			highlightPost (postNumber) {
+			scrollTo (postNumber, cb) {
 				for(var i = 0; i < this.posts.length; i++) {
 					let post = this.posts[i]
 
@@ -142,16 +149,21 @@
 							let header = this.$refs.title.getBoundingClientRect().height
 							window.scrollTo(0, postTop - header - 32)
 
-							this.highlightedPostIndex = i
-							
-							if(this.highlightedPostIndex === i) {
-								setTimeout(() => this.highlightedPostIndex = null, 3000)
-							}
+							if(cb) cb(i, post)
 						})
 
 						break;
 					}
 				}
+			},
+			highlightPost (postNumber) {
+				this.scrollTo(postNumber, (i) => {
+					this.highlightedPostIndex = i
+					
+					if(this.highlightedPostIndex === i) {
+						setTimeout(() => this.highlightedPostIndex = null, 3000)
+					}
+				})
 			}
 		},
 		watch: {

@@ -3,9 +3,7 @@
 		<div class='user_posts__title'>Posts by {{username}}</div>
 		<scroll-load
 			:loading='loadingPosts'
-			:showNext='nextURL !== null'
 			@loadNext='loadNewPosts'
-			message='posts'
 			v-if='sortedPosts.length'
 		>
 			<thread-post
@@ -14,6 +12,10 @@
 				:show-thread='true'
 				:class='{"post--last": index === posts.length-1}'
 			></thread-post>
+			<thread-post-placeholder
+				v-if='loadingPosts'
+				v-for='n in nextPostsCount'
+			>
 		</scroll-load>
 		<template v-else>This user hasn't posted anything yet</template>
 	</div>
@@ -22,6 +24,7 @@
 <script>
 	import ScrollLoad from '../ScrollLoad'
 	import ThreadPost from '../ThreadPost'
+	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -30,12 +33,14 @@
 		props: ['username'],
 		components: {
 			ThreadPost,
-			ScrollLoad
+			ScrollLoad,
+			ThreadPostPlaceholder
 		},
 		data () {
 			return {
 				posts: [],
 				loadingPosts: false,
+				nextPostsCount: 0,
 				nextURL: ''
 			}
 		},
@@ -63,6 +68,7 @@
 
 						this.posts.push(...filteredPosts)
 						this.nextURL = res.data.meta.nextURL
+						this.nextPostsCount = res.data.meta.nextPostsCount
 					})
 					.catch((e) => {
 						this.loadingPosts = false
@@ -77,6 +83,7 @@
 				.then(res => {
 					this.posts = res.data.Posts
 					this.nextURL = res.data.meta.nextURL
+					this.nextPostsCount = res.data.meta.nextPostsCount
 				})
 				.catch(AjaxErrorHandler(this.$store))
 		}

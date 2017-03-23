@@ -14,7 +14,9 @@ const state = {
 	},
 	loadingPosts: false,
 	nextURL: '',
-	previousURL: ''
+	previousURL: '',
+	nextPostsCount: 10,
+	previousPostsCount: 0
 }
 
 const getters = {
@@ -65,6 +67,9 @@ const actions = {
 				commit('setThread', res.data)
 				commit('setNextURL', res.data.meta.nextURL)
 				commit('setPreviousURL', res.data.meta.previousURL)
+				commit('setNextURL', res.data.meta.nextURL)
+				commit('setPreviousURL', res.data.meta.previousURL)
+				commit('setPostCounts', res.data.meta)
 				commit('setPosts', res.data.Posts)
 
 				if(postNumber) {
@@ -75,11 +80,11 @@ const actions = {
 	loadPostsAsync ({ state, commit, rootState }, { vue, previous }) {
 		let URL
 
-		commit('setLoadingPostsState', true)
-
 		if(previous) {
+			commit('setLoadingPostsState', 'previous')
 			URL = state.previousURL
 		} else {
+			commit('setLoadingPostsState', 'next')
 			URL = state.nextURL
 		}
 
@@ -93,17 +98,28 @@ const actions = {
 					let filteredPosts =
 						res.data.Posts.filter(p => !currentPostsIds.includes(p.id))
 
+					commit('setLoadingPostsState', false)
+
 					if(previous) {
+						let last = filteredPosts.slice(-1)[0]
+
 						commit('prependPosts', filteredPosts)
 						commit('setPreviousURL', res.data.meta.previousURL)
+						
+						if(last) {
+							vue.scrollTo(last.postNumber)
+						}
 					} else {
 						commit('addPost', filteredPosts)
 						commit('setNextURL', res.data.meta.nextURL)
 					}
 
-					commit('setLoadingPostsState', false)
+					commit('setPostCounts', res.data.meta)
 				})
-				.catch(AjaxErrorHandler(vue.$store))
+				.catch((e) => {
+					console.log(e)
+					AjaxErrorHandler(vue.$store)
+				})
 		}
 	}
 }
@@ -160,6 +176,10 @@ const mutations = {
 	},
 	setPreviousURL (state, URL) {
 		state.previousURL = URL
+	},
+	setPostCounts (state, meta) {
+		state.previousPostsCount = meta.previousPostsCount
+		state.nextPostsCount = meta.nextPostsCount
 	}
 }
 
