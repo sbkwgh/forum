@@ -399,15 +399,21 @@ describe('Thread and post', () => {
 
 			pageOne.body.Posts.should.have.length(10)
 			pageOne.body.meta.should.have.property('postsRemaining', 20)
+			pageOne.body.meta.should.have.property('previousPostsCount', 0)
+			pageOne.body.meta.should.have.property('nextPostsCount', 10)
 			pageOne.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
 
 			pageTwo.body.Posts.should.have.length(10)
 			pageTwo.body.meta.should.have.property('postsRemaining', 10)
+			pageTwo.body.meta.should.have.property('previousPostsCount', 10)
+			pageTwo.body.meta.should.have.property('nextPostsCount', 10)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
 			pageTwo.body.meta.should.have.property('previousURL')
 
 			pageThree.body.Posts.should.have.length(10)
 			pageThree.body.meta.should.have.property('postsRemaining', 0)
+			pageThree.body.meta.should.have.property('previousPostsCount', 10)
+			pageThree.body.meta.should.have.property('nextPostsCount', 0)
 			pageThree.body.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
 			pageThree.body.Posts[9].should.have.property('content', '<p>POST 29</p>\n')
 			expect(pageThree.body.meta.nextURL).to.be.null
@@ -427,23 +433,30 @@ describe('Thread and post', () => {
 			pageOne.body.Posts[4].should.have.property('content', '<p>POST 15</p>\n')
 			pageOne.body.Posts[9].should.have.property('content', '<p>POST 20</p>\n')
 			pageOne.body.meta.should.have.property('postsRemaining', 9)
+			pageOne.body.meta.should.have.property('previousPostsCount', 10)
+			pageOne.body.meta.should.have.property('nextPostsCount', 10)
 
 			pageTwo.body.Posts.should.have.length(9)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 21</p>\n')
 			pageTwo.body.Posts[8].should.have.property('content', '<p>POST 29</p>\n')
 			pageTwo.body.meta.should.have.property('nextURL', null)
 			pageTwo.body.meta.should.have.property('postsRemaining', 0)
+			pageTwo.body.meta.should.have.property('previousPostsCount', 10)
+			pageTwo.body.meta.should.have.property('nextPostsCount', 0)
 			
 			pageZero.body.Posts.should.have.length(10)
 			pageZero.body.Posts[0].should.have.property('content', '<p>POST 1</p>\n')
 			pageZero.body.Posts[9].should.have.property('content', '<p>POST 10</p>\n')
 			pageZero.body.meta.should.have.property('postsRemaining', 19)
-
+			pageZero.body.meta.should.have.property('previousPostsCount', 1)
+			pageZero.body.meta.should.have.property('nextPostsCount', 10)
 
 			let pageFirst = await http.get(pageZero.body.meta.previousURL)
 			pageFirst.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
 			pageFirst.body.meta.should.have.property('previousURL', null)
 			pageFirst.body.meta.should.have.property('postsRemaining', 29)
+			pageFirst.body.meta.should.have.property('previousPostsCount', 0)
+			pageFirst.body.meta.should.have.property('nextPostsCount', 10)
 
 		})
 		it('should return an error if :id is invalid', async () => {
