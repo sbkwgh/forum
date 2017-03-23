@@ -434,7 +434,7 @@ describe('Thread and post', () => {
 			pageOne.body.Posts[9].should.have.property('content', '<p>POST 20</p>\n')
 			pageOne.body.meta.should.have.property('postsRemaining', 9)
 			pageOne.body.meta.should.have.property('previousPostsCount', 10)
-			pageOne.body.meta.should.have.property('nextPostsCount', 10)
+			pageOne.body.meta.should.have.property('nextPostsCount', 9)
 
 			pageTwo.body.Posts.should.have.length(9)
 			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 21</p>\n')
@@ -456,7 +456,6 @@ describe('Thread and post', () => {
 			pageFirst.body.meta.should.have.property('previousURL', null)
 			pageFirst.body.meta.should.have.property('postsRemaining', 29)
 			pageFirst.body.meta.should.have.property('previousPostsCount', 0)
-			pageFirst.body.meta.should.have.property('nextPostsCount', 10)
 
 		})
 		it('should return an error if :id is invalid', async () => {

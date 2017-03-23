@@ -41,9 +41,25 @@ router.get('/:thread_id', async (req, res) => {
 
 		if(lastPost === undefined) {
 			resThread.meta.postsRemaining = 0
+			resThread.meta.nextPostsCount = 0
+			resThread.meta.previousPostsCount = 0
 		} else {
 			resThread.meta.postsRemaining =
-				thread.postsCount - lastPost.postNumber - 1
+				resThread.postsCount - lastPost.postNumber - 1
+
+			if(resThread.meta.postsRemaining < limit) {
+				resThread.meta.nextPostsCount = resThread.meta.postsRemaining
+			} else {
+				resThread.meta.nextPostsCount = limit
+			}
+
+			if(firstPost.postNumber === 0) {
+				resThread.meta.previousPostsCount = 0
+			} else if(firstPost.postNumber - limit < 0) {
+				resThread.meta.previousPostsCount = firstPost.postNumber
+			} else {
+				resThread.meta.previousPostsCount = limit
+			}
 		}
 
 		res.json(resThread)
