@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
 	try {
 		let categories = await Category.findAll({
 			attributes: { exclude: ['id'] },
-			include: Category.includeOptions(1)
+			include: Category.includeOptions('ASC', 1)
 		})
 
 		res.json(categories)
