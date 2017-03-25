@@ -33,33 +33,9 @@
 					{{category.name}}
 				</div>
 			</div>
-			<table class='threads_main__threads' v-if='filteredThreads.length'>
-				<colgroup>
-					<col span="1" style="width: 50%;">
-					<col span="1" style="width: 22.5%;">
-					<col span="1" style="width: 22.5%;">
-					<col span="1" style="width: 5%;">
-				</colgroup>
-				<thead>
-					<tr class='thread thread--header'>
-						<th>Title</th>
-						<th>Latest post</th>
-						<th>Category</th>
-						<th>Replies</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class='thread' v-for='thread in filteredThreads' @click='navigateToThread(thread.slug, thread.id)'>
-						<td>{{thread.name}}</td>
-						<td>
-							<div>{{thread.Posts[0].content | stripTags | truncate(100)}}</div>
-							<div>{{thread.Posts[0].createdAt | formatDate('time|date', ' - ') }}</div>
-						</td>
-						<td>{{thread.Category.name}}</td>
-						<td>{{thread.postsCount-1}}</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class='threads_main__threads' v-if='filteredThreads.length'>
+				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
+			</div>
 			<div v-else class='threads_main__threads thread--empty'>No threads or posts.</div>
 		</div>
 	</div>
@@ -67,6 +43,7 @@
 
 <script>
 	import TabView from '../TabView'
+	import ThreadDisplay from '../ThreadDisplay'
 	import SelectOptions from '../SelectOptions'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
@@ -75,6 +52,7 @@
 		name: 'index',
 		components: {
 			TabView,
+			ThreadDisplay,
 			SelectOptions
 		},
 		data () {
