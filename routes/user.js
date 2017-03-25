@@ -137,9 +137,15 @@ router.get('/:username', async (req, res) => {
 			let lastPost = user.Posts.slice(-1)[0]
 			if(!lastPost || lastPost.postNumber+1 === lastPost.Thread.postsCount) {
 				resUser.meta.nextURL = null
+				resUser.meta.nextPostsCount = 0
 			} else {
 				resUser.meta.nextURL =
 					`/api/v1/user/${user.username}?posts=true&limit=${limit}&from=${lastPost.postNumber + 1}`
+
+				resUser.meta.nextPostsCount = await pagination.getNextCount(
+					Post, lastPost, limit,
+					{ UserId: user.id }
+				)
 			}
 
 			res.json(resUser)
@@ -165,8 +171,14 @@ router.get('/:username', async (req, res) => {
 			if(nextId) {
 				resUser.meta.nextURL =
 					`/api/v1/user/${user.username}?threads=true&limit=${limit}&from=${nextId}`
+
+				resUser.meta.nextThreadsCount = await pagination.getNextCount(
+					Thread, resUser.Threads, limit,
+					{ UserId: user.id }
+				)
 			} else {
 				resUser.meta.nextURL = null
+				resUser.meta.nextThreadsCount = 0
 			}
 
 			res.json(resUser)
