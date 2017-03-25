@@ -1,18 +1,11 @@
 <template>
 	<div class='route_container'>
 		<div class='thread_sorting'>
-			<div>
-				<select-options
-					:options='displayOptions'
-					class='thread_sorting__display'
-					v-model='selectedDisplayOption'
-				></select-options>
-				<select-options
-					:options='filterOptions'
-					v-model='selectedFilterOption'
-					class='thread_sorting__filter'
-				></select-options>
-			</div>
+			<select-options
+				:options='filterOptions'
+				v-model='selectedFilterOption'
+				class='thread_sorting__filter'
+			></select-options>
 			<button class='button' v-if='this.$store.state.username' @click='$router.push("/thread/new")'>Post new thread</button>
 		</div>
 		<div class='threads_main'>
@@ -63,12 +56,6 @@
 					{name: 'No replies', value: 'NO_REPLIES'}
 				],
 				selectedFilterOption: 'NEW',
-
-				displayOptions: [
-					{ name: 'Threads', value: 'THREADS' },
-					{ name: 'Posts', value: 'POSTS' }
-				],
-				selectedDisplayOption: 'THREADS',
 
 				threads: []
 			}
