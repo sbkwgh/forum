@@ -33,6 +33,19 @@ export default new Vuex.Store({
 			})
 
 			return categories.filter(category => category.value !== 'ALL' )
+		},
+		alphabetizedCategories (state) {
+			return state.meta.categories.sort((a, b) => {
+				if(a.name === 'All') return -1
+
+				if(a.name < b.name) {
+					return -1
+				} else if (a.name > b.name) {
+					return 1
+				}
+
+				return 0
+			})
 		}
 	},
 	mutations: {

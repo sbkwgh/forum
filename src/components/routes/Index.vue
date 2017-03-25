@@ -94,7 +94,8 @@
 				});
 			},
 			categories () {
-				return this.$store.state.meta.categories
+				console.log(this.$store.getters.alphabetizedCategories)
+				return this.$store.getters.alphabetizedCategories
 			},
 			selectedCategory: {
 				set (val) {
