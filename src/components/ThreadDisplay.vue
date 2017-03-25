@@ -22,13 +22,18 @@
 				</div>
 			</div>
 			<div class='thread_display__replies_bar' @click.self='goToThread'>
-				<div class='thread_display__latest_reply'>
+				<div
+					class='thread_display__latest_reply'
+					v-if='thread.Posts.length === 2'
+					@click='goToPost'
+				>
 					<span class='fa fa-reply fa-fw'></span>
 					Latest reply by
-					<span class='thread_display__username'>username</span>
+					<span class='thread_display__username'>{{thread.Posts[1].User.username}}</span>
 					&middot;
-					<span class='thread_display__date'>just now</span>
+					<span class='thread_display__date'>{{thread.Posts[1].createdAt | formatDate}}</span>
 				</div>
+				<span style='cursor: default;' v-else>No replies</span>
 				<div class='thread_display__replies' title='Replies to thread' @click='goToThread'>
 					<span class='fa fa-comment-o fa-fw'></span>
 					{{thread.postsCount - 1}}
@@ -54,11 +59,19 @@
 			goToUser () {
 				this.$router.push('/user/' + this.thread.User.username)
 			},
-			goToThread (e) {
+			goToThread () {
 				this.$router.push('/thread/' + this.thread.slug + '/' + this.thread.id)
 			},
-			goToCategory (e) {
+			goToCategory () {
 				this.$router.push('/category/' + this.thread.Category.value.toLowerCase())
+			},
+			goToPost () {
+				this.$router.push(
+					'/thread/' +
+					this.thread.slug + '/' +
+					this.thread.id + '/' +
+					this.thread.Posts[1].postNumber
+				)
 			}
 		}
 	}
