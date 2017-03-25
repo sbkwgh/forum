@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 		color: {
 			type: DataTypes.STRING,
 			defaultValue () {
-				return randomColor()
+				return randomColor({ luminosity: 'bright' })
 			}
 		}
 	}, {
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 					model: models.Thread, 
 					include: [
 						models.Category,
-						{ model: models.User, attributes: ['username', 'createdAt', 'id'] }, 
+						{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
 						{
 							model: models.Post, limit: 1, order: [['id', order]], include:
 							[{ model: models.User, attributes: ['username', 'id'] }]
