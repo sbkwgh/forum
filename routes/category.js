@@ -2,14 +2,13 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors')
-let { Category } = require('../models')
+let { Category, Post } = require('../models')
 
 router.get('/', async (req, res) => {
 	try {
 		let categories = await Category.findAll({
 			attributes: { exclude: ['id'] },
-			include: Category.includeOptions(1)/*,
-			order: ['updatedAt', 'DESC']*/
+			include: Category.includeOptions(1)
 		})
 
 		res.json(categories)
@@ -25,34 +24,60 @@ router.get('/', async (req, res) => {
 
 router.get('/:category', async (req, res) => {
 	try {
-		let threads
+		let threads, threadsLatestPost, resThreads
+
+		function concatenateThreads(threads) {
+			let processedThreads = []
+			
+			threads.forEach(category => {
+				let jsonCategory = category.toJSON()
+				processedThreads.push(...jsonCategory.Threads)
+			})
+
+			return processedThreads
+		}
 
 		if(req.params.category === 'ALL') {
-			threads = await Category.findAll({ include: Category.includeOptions() })
+			threads = await Category.findAll({ include: Category.includeOptions('ASC') })
+			threadsLatestPost = await Category.findAll({ include: Category.includeOptions('DESC') })
+
 		} else {
 			threads = await Category.findOne({
 				where: { name: req.params.category },
-				include: Category.includeOptions()
+				include: Category.includeOptions('ASC')
+			})
+
+			threadsLatestPost = await Category.findOne({
+				where: { name: req.params.category },
+				include: Category.includeOptions('DESC')
 			})
 		}
 
 		if(!threads) throw Errors.invalidParameter('id', 'thread does not exist')
 		
 		if(Array.isArray(threads)) {
-			let processedThreads = []
-			threads.forEach(category => {
-				let jsonCategory = category.toJSON()
-				processedThreads.push(...jsonCategory.Threads)
-			})
-
-			res.json({
+			resThreads = {
 				name: 'All',
 				value: 'ALL',
-				Threads: processedThreads
-			})
+				Threads: concatenateThreads(threads)
+			}
+
+			threadsLatestPost = { Threads: concatenateThreads(threadsLatestPost) }
 		} else {
-			res.json(threads.toJSON())
+			resThreads = threads.toJSON()
 		}
+
+		threadsLatestPost.Threads.forEach((thread, i) => {
+			let first = resThreads.Threads[i].Posts[0]
+			let latest = thread.Posts[0]
+
+			if(first.id === latest.id) return
+
+			resThreads.Threads[i].Posts.push(latest)
+		})
+
+		res.json(resThreads)
+
 	} catch (e) {
 		if(e.name === 'invalidParameter') {
 			res.status(400)

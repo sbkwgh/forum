@@ -177,20 +177,56 @@ describe('Category', () => {
 			await agent
 				.post('/api/v1/post')
 				.set('content-type', 'application/json')
+				.send({ content: 'content here 2', threadId: 1 })
+
+			await agent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ content: 'content here 3', threadId: 1 })
+
+			await agent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
 				.send({ content: 'content here', threadId: 2 })
+
+			await agent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ content: 'content here 2', threadId: 2 })
+
+			await agent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ content: 'content here 3', threadId: 2 })
 		})
 
 		it('should return all threads in a category', async () => {
 			let res = await chai.request(server)
 				.get('/api/v1/category/category')
-			
+
 			res.should.be.json
 			res.should.have.status(200)
 			res.body.should.have.property('name', 'category')
 			res.body.Threads.should.have.property('length', 2)
 			res.body.Threads.should.contain.an.item.with.deep.property('User.username', 'adminaccount')
 			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.content', '<p>content here</p>\n')
+			res.body.Threads.should.contain.an.item.with.deep.property('Posts.1.content', '<p>content here 3</p>\n')
 			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.User.username', 'adminaccount')
+
+		})
+		it('should return all threads in all categories', async () => {
+			let res = await chai.request(server)
+				.get('/api/v1/category/ALL')
+
+			res.should.be.json
+			res.should.have.status(200)
+			res.body.should.have.property('name', 'All')
+			res.body.Threads.should.have.property('length', 2)
+			res.body.Threads.should.contain.an.item.with.deep.property('User.username', 'adminaccount')
+			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.content', '<p>content here</p>\n')
+			res.body.Threads.should.contain.an.item.with.deep.property('Posts.1.content', '<p>content here 3</p>\n')
+			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.User.username', 'adminaccount')
+
 		})
 		it('should return an error if category does not exist', async () => {
 			try {
