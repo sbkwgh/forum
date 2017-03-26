@@ -150,7 +150,13 @@ router.get('/:username', async (req, res) => {
 
 			res.json(resUser)
 		} else if(req.query.threads) {
-			res.redirect('/api/v1/category/ALL?username=' + req.params.username)
+			let queryString = ''
+
+			Object.keys(req.query).forEach(query => {
+				queryString += `&${query}=${req.query[query]}`
+			})
+
+			res.redirect('/api/v1/category/ALL?username=' + req.params.username + queryString)
 		} else {
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist

@@ -7,10 +7,7 @@ let { Category, Post, Thread, User } = require('../models')
 
 router.get('/', async (req, res) => {
 	try {
-		let categories = await Category.findAll({
-			attributes: { exclude: ['id'] },
-			include: Category.includeOptions('ASC', 1)
-		})
+		let categories = await Category.findAll()
 
 		res.json(categories)
 	} catch (e) {
@@ -24,38 +21,62 @@ router.get('/', async (req, res) => {
 
 
 router.get('/:category', async (req, res) => {
-	try {
-		let threads, threadsLatestPost, resThreads
-		let { from, limit } = pagination.getPaginationProps(req.query)
-		let where = {}
+	function concatenateThreads(threads) {
+		let processedThreads = []
 		
+		threads.forEach(category => {
+			let jsonCategory = category.toJSON()
+			processedThreads.push(...jsonCategory.Threads)
+		})
+
+		return processedThreads
+	}
+
+	try {
+		let threads, threadsLatestPost, resThreads, user
+		let { from, limit } = pagination.getPaginationProps(req.query)
+
 		if(req.query.username) {
-			where.userId = await User.findOne({ where: { 'username': req.query.username } }).userId
+			user = await User.findOne({ where: { username: req.query.username }})
 		}
 
-		function concatenateThreads(threads) {
-			let processedThreads = []
-			
-			threads.forEach(category => {
-				let jsonCategory = category.toJSON()
-				processedThreads.push(...jsonCategory.Threads)
-			})
+		function threadInclude(order) {
+			let options = {
+				model: Thread,
+				limit,
+				where: {
+					id: { $gte: from }
+					
+				},
+				include: [
+					Category,
+					{ model: User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
+					{
+						model: Post, limit: 1, order: [['id', order]], include:
+						[{ model: User, attributes: ['username', 'id'] }]
+					}
+				]
+			}
 
-			return processedThreads
+			if(user) {
+				options.where.userId = user.id
+			}
+
+			return [options]
 		}
 
 		if(req.params.category === 'ALL') {
-			threads = await Category.findAll({ include: Category.includeOptions('ASC', limit, where, from) })
-			threadsLatestPost = await Category.findAll({ include: Category.includeOptions('DESC', limit, where, from) })
+			threads = await Category.findAll({ include: threadInclude('ASC') })
+			threadsLatestPost = await Category.findAll({ include: threadInclude('DESC') })
 		} else {
 			threads = await Category.findOne({
 				where: { name: req.params.category },
-				include: Category.includeOptions('ASC', limit, where, from)
+				include: threadInclude('ASC')
 			})
 
 			threadsLatestPost = await Category.findOne({
 				where: { name: req.params.category },
-				include: Category.includeOptions('DESC', limit, where, from)
+				include: threadInclude('DESC')
 			})
 		}
 
@@ -85,18 +106,19 @@ router.get('/:category', async (req, res) => {
 		})
 
 
-		let nextId = await pagination.getNextId(Thread, where, resThreads.Threads)
+		let nextId = await pagination.getNextId(Thread, user ? { userId: user.id } : {}, resThreads.Threads)
 
 		if(nextId) {
 			resThreads.meta.nextURL =
-				`/api/v1/category/${req.params.category}?&limit=${limit}&from=${nextId}`
+				`/api/v1/category/${req.params.category}?&limit=${limit}&from=${nextId + 1}`
 
-			if(req.query.username) {
-				resThreads.meta.nextURL += '&username=' + req.query.username
+			if(user) {
+				resThreads.meta.nextURL += '&username=' + user.username
 			}
 
 			resThreads.meta.nextThreadsCount = await pagination.getNextCount(
-				Thread, resThreads.Threads, limit, where
+				Thread, resThreads.Threads, limit,
+				{ userId: user.id }
 			)
 		} else {
 			resThreads.meta.nextURL = null

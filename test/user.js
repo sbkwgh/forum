@@ -398,8 +398,6 @@ describe('User', () => {
 			}
 
 			let pageOne = await agent.get('/api/v1/user/threadaccount?threads=true')
-			console.log(pageOne.body)
-
 			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
 			let pageInvalid = await agent.get('/api/v1/user/threadaccount?threads=true&from=100')
 
