@@ -2,7 +2,8 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors')
-let { Category, Post } = require('../models')
+let pagination = require('../lib/pagination')
+let { Category, Post, Thread } = require('../models')
 
 router.get('/', async (req, res) => {
 	try {
@@ -25,6 +26,10 @@ router.get('/', async (req, res) => {
 router.get('/:category', async (req, res) => {
 	try {
 		let threads, threadsLatestPost, resThreads
+		let { from, limit } = pagination.getPaginationProps(req.query)
+		let where = {}
+		
+		if(req.query.username) where.username = req.query.username
 
 		function concatenateThreads(threads) {
 			let processedThreads = []
@@ -38,8 +43,8 @@ router.get('/:category', async (req, res) => {
 		}
 
 		if(req.params.category === 'ALL') {
-			threads = await Category.findAll({ include: Category.includeOptions('ASC') })
-			threadsLatestPost = await Category.findAll({ include: Category.includeOptions('DESC') })
+			threads = await Category.findAll({ where, include: Category.includeOptions('ASC') })
+			threadsLatestPost = await Category.findAll({ where, include: Category.includeOptions('DESC') })
 
 		} else {
 			threads = await Category.findOne({
@@ -59,12 +64,14 @@ router.get('/:category', async (req, res) => {
 			resThreads = {
 				name: 'All',
 				value: 'ALL',
-				Threads: concatenateThreads(threads)
+				Threads: concatenateThreads(threads),
+				meta: {}
 			}
 
 			threadsLatestPost = { Threads: concatenateThreads(threadsLatestPost) }
 		} else {
 			resThreads = threads.toJSON()
+			resThreads.meta = {}
 		}
 
 		threadsLatestPost.Threads.forEach((thread, i) => {
@@ -75,6 +82,25 @@ router.get('/:category', async (req, res) => {
 
 			resThreads.Threads[i].Posts.push(latest)
 		})
+
+
+		let nextId = await pagination.getNextId(Thread, where, resThreads.Threads)
+
+		if(nextId) {
+			resThreads.meta.nextURL =
+				`/api/v1/category/${req.params.category}?&limit=${limit}&from=${nextId}`
+
+			if(req.query.username) {
+				resThreads.meta.nextURL += '&username=' + req.query.username
+			}
+
+			resThreads.meta.nextThreadsCount = await pagination.getNextCount(
+				Thread, resThreads.Threads, limit, where
+			)
+		} else {
+			resThreads.meta.nextURL = null
+			resThreads.meta.nextThreadsCount = 0
+		}
 
 		res.json(resThreads)
 
