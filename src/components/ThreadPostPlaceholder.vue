@@ -21,28 +21,6 @@
 <style lang='scss' scoped>
 	@import '../assets/scss/variables.scss';
 
-	@keyframes flash {
-		0% {
-			background-color: $color__gray--darker;
-		}
-		50% {
-			background-color: $color__lightgray--darkest;
-		}
-		75% {
-			background-color: $color__gray--primary;
-		}
-		to {
-			background-color: $color__gray--darker;
-		}
-	}
-
-	@mixin flash {
-		animation-name: flash;
-		animation-duration: 1s;
-		animation-iteration-count: infinite;
-		animation-timing-function: linear;
-	}
-
 	.post_placeholder {
 		position: relative;
 		border-bottom: thin solid $color__gray--primary;
