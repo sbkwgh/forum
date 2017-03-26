@@ -3,7 +3,7 @@ let router = express.Router()
 
 const Errors = require('../lib/errors')
 let pagination = require('../lib/pagination')
-let { Category, Post, Thread } = require('../models')
+let { Category, Post, Thread, User } = require('../models')
 
 router.get('/', async (req, res) => {
 	try {
@@ -29,7 +29,9 @@ router.get('/:category', async (req, res) => {
 		let { from, limit } = pagination.getPaginationProps(req.query)
 		let where = {}
 		
-		if(req.query.username) where.username = req.query.username
+		if(req.query.username) {
+			where.userId = await User.findOne({ where: { 'username': req.query.username } }).userId
+		}
 
 		function concatenateThreads(threads) {
 			let processedThreads = []
@@ -43,18 +45,17 @@ router.get('/:category', async (req, res) => {
 		}
 
 		if(req.params.category === 'ALL') {
-			threads = await Category.findAll({ where, include: Category.includeOptions('ASC') })
-			threadsLatestPost = await Category.findAll({ where, include: Category.includeOptions('DESC') })
-
+			threads = await Category.findAll({ include: Category.includeOptions('ASC', limit, where, from) })
+			threadsLatestPost = await Category.findAll({ include: Category.includeOptions('DESC', limit, where, from) })
 		} else {
 			threads = await Category.findOne({
 				where: { name: req.params.category },
-				include: Category.includeOptions('ASC')
+				include: Category.includeOptions('ASC', limit, where, from)
 			})
 
 			threadsLatestPost = await Category.findOne({
 				where: { name: req.params.category },
-				include: Category.includeOptions('DESC')
+				include: Category.includeOptions('DESC', limit, where, from)
 			})
 		}
 

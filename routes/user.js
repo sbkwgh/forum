@@ -150,38 +150,7 @@ router.get('/:username', async (req, res) => {
 
 			res.json(resUser)
 		} else if(req.query.threads) {
-			let { from, limit } = pagination.getPaginationProps(req.query)
-
-			queryObj.include = [{
-				model: Thread,
-				include: [Category],
-				limit,
-				where: { id: { $gt: from } },
-				order: [['id', 'ASC']]
-			}]
-
-			let user = await User.findOne(queryObj)
-			if(!user) throw Errors.accountDoesNotExist
-
-			let resUser = user.toJSON()
-			resUser.meta = {}
-
-			let nextId = await pagination.getNextId(Thread, { userId: user.id }, resUser.Threads)
-
-			if(nextId) {
-				resUser.meta.nextURL =
-					`/api/v1/user/${user.username}?threads=true&limit=${limit}&from=${nextId}`
-
-				resUser.meta.nextThreadsCount = await pagination.getNextCount(
-					Thread, resUser.Threads, limit,
-					{ UserId: user.id }
-				)
-			} else {
-				resUser.meta.nextURL = null
-				resUser.meta.nextThreadsCount = 0
-			}
-
-			res.json(resUser)
+			res.redirect('/api/v1/category/ALL?username=' + req.params.username)
 		} else {
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist

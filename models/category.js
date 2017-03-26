@@ -26,10 +26,14 @@ module.exports = (sequelize, DataTypes) => {
 			associate (models) {
 				Category.hasMany(models.Thread)
 			},
-			includeOptions (order, threadLimit) {
+			includeOptions (order, threadLimit, where, from) {
 				let models = sequelize.models
 				let options = {
-					model: models.Thread, 
+					model: models.Thread,
+					where: {
+						id: { $gt: from || -1 },
+						userId: where.userId
+					},
 					include: [
 						models.Category,
 						{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
