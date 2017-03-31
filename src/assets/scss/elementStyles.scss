@@ -29,3 +29,100 @@ blockquote {
 		padding: 0.5rem;
 	}
 }
+
+.button {
+	border: 0.125rem solid $color__gray--primary;
+	display: inline-block;
+	text-align: center;
+	@include text($font--role-default, 1rem, 400);
+	padding: 0.5rem;
+	cursor: pointer;
+	background-color: #fff;
+	color: $color__text--primary;
+	transition: background-color 0.2s, border-color 0.2s;
+	outline: none;
+
+	&:hover {
+		background-color: $color__lightgray--primary;
+		border-color: $color__gray--darker;
+	}
+	&:active {
+		background-color: $color__lightgray--darker;
+		border-color: $color__gray--darkest;
+	}
+
+	@at-root #{&}__icon {
+	}
+
+	@at-root #{&}--borderless {
+		border: 0;
+	}
+
+	@at-root #{&}--modal {
+		padding: 0.25rem 0.5rem;
+		font-size: 0.8rem;
+		float: right;
+		margin-bottom: 1rem;
+
+		&:last-child {
+			margin-right: 0.5rem;
+		}
+	}
+
+	@at-root #{&}--orange {
+		border-color: $color__orange--primary;
+		&:hover { border-color: $color__orange--darker; }
+		&:active { border-color: $color__orange--darkest; }
+	}
+	@at-root #{&}--lightblue {
+		border-color: $color__lightblue--primary;
+		&:hover { border-color: $color__blue--primary; }
+		&:active { border-color: $color__blue--darker; }
+	}
+	@at-root #{&}--blue {
+		border-color: $color__blue--darkest;
+		background-color: $color__blue--darker;
+		color: $color__lightgray--primary;
+
+		&:hover {
+			border-color: $color__blue--darkest;
+			background-color: $color__blue--darker;
+			filter: brightness(0.9);
+			color: #fff;
+		}
+		&:active {
+			border-color: $color__blue--darkest;
+			background-color: $color__blue--darker;
+			filter: brightness(0.8);
+			color: #fff;
+		}
+	}
+	@at-root #{&}--green {
+		background-color: $color__green--primary;
+		color: #fff;
+		border-color: $color__green--darker;
+
+		&:hover { 
+			border-color: $color__green--darker;
+			background-color: rgba(75, 171, 79, 0.86);
+		}
+		&:active {
+			border-color: $color__green--darker;
+			background-color: $color__green--darkester;
+		}
+	}
+}
+
+.input {
+	border: 0.125rem solid $color__gray--primary;
+	@include text;
+	padding: 0.25rem;
+	outline: none;
+
+	&:hover {
+		border-color: $color__gray--darker;
+	}
+	&:focus {
+		border-color: $color__gray--darkest;
+	}
+}
