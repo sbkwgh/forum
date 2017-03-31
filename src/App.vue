@@ -77,7 +77,7 @@
 			</div>
 			<div class='header__group'>
 				<template v-if='$store.state.username'>
-					<loading-button @click='logout' :loading='loadingLogout'>
+					<loading-button @click='logout' class='button--blue' :loading='loadingLogout'>
 						Log out
 					</loading-button>
 				</template>
@@ -85,13 +85,13 @@
 					<div class='button button--green' @click='showAccountModalTab(0)'>
 						Sign up
 					</div>
-					<div class='button' @click='showAccountModalTab(1)'>
+					<div class='button button--blue' @click='showAccountModalTab(1)'>
 						Login
 					</div>
 				</template>
 				<div class='search' tabindex='0'>
 					<input class='search__field' placeholder='Search this forum'>
-					<button class='button button--borderless'><span class='fa fa-search'></span></button>
+					<button class='button button--borderless search__button'><span class='fa fa-search'></span></button>
 				</div>
 			</div>
 		</header>
@@ -345,16 +345,17 @@
 
 	.header {
 		width: 100%;
-		padding: 1rem 2rem;
+		padding: 0.5rem 2rem;
 		position: fixed;
 		top: 0;
 		z-index: 2;
-		background-color: #fff;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 
-		border-bottom: 0.125rem solid $color__gray--primary;
+		border-bottom: 0.125rem solid $color__blue--darker;
+		background-color: $color__blue--primary;
+		color: #fff;
 
 		@at-root #{&}__group {
 			display: flex;
@@ -378,6 +379,7 @@
 		padding: 0.5rem;
 		cursor: pointer;
 		background-color: #fff;
+		color: $color__text--primary;
 		transition: background-color 0.2s, border-color 0.2s;
 		outline: none;
 
@@ -413,6 +415,29 @@
 			&:hover { border-color: $color__orange--darker; }
 			&:active { border-color: $color__orange--darkest; }
 		}
+		@at-root #{&}--lightblue {
+			border-color: $color__lightblue--primary;
+			&:hover { border-color: $color__blue--primary; }
+			&:active { border-color: $color__blue--darker; }
+		}
+		@at-root #{&}--blue {
+			border-color: $color__blue--darkest;
+			background-color: $color__blue--darker;
+			color: $color__lightgray--primary;
+
+			&:hover {
+				border-color: $color__blue--darkest;
+				background-color: $color__blue--darker;
+				filter: brightness(0.9);
+				color: #fff;
+			}
+			&:active {
+				border-color: $color__blue--darkest;
+				background-color: $color__blue--darker;
+				filter: brightness(0.8);
+				color: #fff;
+			}
+		}
 		@at-root #{&}--green {
 			background-color: $color__green--primary;
 			color: #fff;
@@ -444,24 +469,30 @@
 	}
 
 	.search {
-		border: 0.125rem solid $color__gray--primary;
-
-		&:hover {
-			border-color: $color__gray--darker;
-		}
-		&:focus {
-			border-color: $color__gray--darkest;
-		}
+		background-color: $color__blue--darker;
+		border: 0.125rem solid $color__blue--darkest;
 
 		@at-root #{&}__field {
 			outline: none;
 			height: 100%;
 			padding: 0 0.5rem;
 			border: 0;
+			background-color: $color__blue--darker;
+
 			@include text;
+			color: #fff;
 
 			@include placeholder {
 				@include text;
+				color: $color__lightgray--darker;
+			}
+		}
+		@at-root #{&}__button {
+			background-color: $color__blue--darker;
+			color: #fff;
+
+			&:hover {
+				background-color: $color__blue--primary;
 			}
 		}
 	}

@@ -3,7 +3,7 @@
 		<button
 			v-for='option in options'
 			class='button'
-			:class='{"button--orange": option.value === value}'
+			:class='{"button--lightblue": option.value === value}'
 			@click='select(option.value)'
 		>
 			{{option.name}}

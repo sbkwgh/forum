@@ -26,6 +26,12 @@ $color__green--darker: #43A047;
 $color__green--darkest: #1B5E20;
 $color__green--darkester: rgba(79, 152, 82, 0.84);
 
+$color__blue--primary: #0288D1;
+$color__blue--darker: #01579B;
+$color__blue--darkest: #0b3f8e;
+
+$color__lightblue--primary: #03A9F4;
+
 @keyframes flash {
 	0% {
 		background-color: $color__gray--darker;
