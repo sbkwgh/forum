@@ -26,9 +26,15 @@
 					{{category.name}}
 				</div>
 			</div>
-			<div class='threads_main__threads' v-if='filteredThreads.length'>
+			<scroll-load
+				class='threads_main__threads'
+				v-if='filteredThreads.length'
+				:loading='loading'
+				@loadNext='getThreads'
+			>
 				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
-			</div>
+				<thread-display-placeholder v-for='n in nextThreadsCount'></thread-display-placholder>
+			</scroll-load>
 			<div v-else class='threads_main__threads thread--empty'>No threads or posts.</div>
 		</div>
 	</div>
@@ -36,7 +42,9 @@
 
 <script>
 	import TabView from '../TabView'
+	import ScrollLoad from '../ScrollLoad'
 	import ThreadDisplay from '../ThreadDisplay'
+	import ThreadDisplayPlaceholder from '../ThreadDisplayPlaceholder'
 	import SelectOptions from '../SelectOptions'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
@@ -45,7 +53,9 @@
 		name: 'index',
 		components: {
 			TabView,
+			ScrollLoad,
 			ThreadDisplay,
+			ThreadDisplayPlaceholder,
 			SelectOptions
 		},
 		data () {
@@ -56,6 +66,10 @@
 					{name: 'No replies', value: 'NO_REPLIES'}
 				],
 				selectedFilterOption: 'NEW',
+
+				nextURL: '',
+				nextThreadsCount: 0,
+				loading: false,
 
 				threads: []
 			}
@@ -94,7 +108,6 @@
 				});
 			},
 			categories () {
-				console.log(this.$store.getters.alphabetizedCategories)
 				return this.$store.getters.alphabetizedCategories
 			},
 			selectedCategory: {
@@ -111,12 +124,24 @@
 				this.$router.push('/thread/' + slug + '/' + id);
 			},
 			getThreads () {
+				if(this.nextURL === null) return
+
+				this.loading = true
+
 				this.axios
-					.get('/api/v1/category/' + this.selectedCategory)
+					.get(this.nextURL || '/api/v1/category/' + this.selectedCategory)
 					.then(res => {
-						this.threads = res.data.Threads
+						this.loading = false
+
+						this.threads.push(...res.data.Threads)
+						this.nextURL = res.data.meta.nextURL
+						this.nextThreadsCount = res.data.meta.nextThreadsCount
 					})
-					.catch(AjaxErrorHandler(this.$store))
+					.catch((e) => {
+						this.loading = false
+
+						AjaxErrorHandler(this.$store)(e)
+					})
 			}
 		},
 		watch: {
