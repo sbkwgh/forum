@@ -120,7 +120,8 @@ router.get('/:category', async (req, res) => {
 
 			resThreads.meta.nextThreadsCount = await pagination.getNextCount(
 				Thread, resThreads.Threads, limit,
-				user ? { userId: user.id } : {}
+				user ? { userId: user.id } : {},
+				true
 			)
 		} else {
 			resThreads.meta.nextURL = null
