@@ -342,12 +342,13 @@ describe('User', () => {
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({ username: 'paginationaccount', password: 'password' })
 
-			let thread = await agent
-				.post('/api/v1/thread')
-				.set('content-type', 'application/json')
-				.send({ category: 'categorynamehere', name: 'pagination' })
-
 			for(var i = 0; i < 30; i++) {
+				let thread = await agent
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ category: 'categorynamehere', name: `THREAD ${i}` })
+
+
 				await agent
 					.post('/api/v1/post')
 					.set('content-type', 'application/json')
@@ -357,24 +358,20 @@ describe('User', () => {
 			let pageOne = await agent.get('/api/v1/user/paginationaccount?posts=true')
 			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
 			let pageThree = await agent.get(pageTwo.body.meta.nextURL)
-			let pageInvalid = await agent.get('/api/v1/user/paginationaccount?posts=true&from=100')
 
 			pageOne.body.Posts.should.have.length(10)
 			pageOne.body.meta.should.have.property('nextPostsCount', 10)
-			pageOne.body.Posts[0].should.have.property('content', '<p>POST 0</p>\n')
+			pageOne.body.Posts[0].should.have.property('content', '<p>POST 29</p>\n')
 
 			pageTwo.body.Posts.should.have.length(10)
 			pageTwo.body.meta.should.have.property('nextPostsCount', 10)
-			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 10</p>\n')
+			pageTwo.body.Posts[0].should.have.property('content', '<p>POST 19</p>\n')
 
 			pageThree.body.Posts.should.have.length(10)
 			pageThree.body.meta.should.have.property('nextPostsCount', 0)
-			pageThree.body.Posts[0].should.have.property('content', '<p>POST 20</p>\n')
-			pageThree.body.Posts[9].should.have.property('content', '<p>POST 29</p>\n')
+			pageThree.body.Posts[0].should.have.property('content', '<p>POST 9</p>\n')
+			pageThree.body.Posts[9].should.have.property('content', '<p>POST 0</p>\n')
 			expect(pageThree.body.meta.nextURL).to.be.null
-
-			pageInvalid.body.Posts.should.have.length(0)
-
 		})
 
 		it('should get threads as well if threads query is appended', async () => {
