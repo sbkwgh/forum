@@ -198,6 +198,7 @@
 
 		@at-root #{&}__thread_title {
 			@include text($font--role-default, 3rem, 400);
+			width: calc(100% - 8rem);
 			margin-bottom: 1rem;
 
 			@at-root #{&}--app_header {
@@ -207,7 +208,8 @@
 				text-align: center;
 				left: 0;
 				font-size: 2rem;
-				top: 1rem;
+				color: #fff;
+				top: 0.5rem;
 				opacity: 0;
 				pointer-events: none;
 				transition: opacity 0.2s;
