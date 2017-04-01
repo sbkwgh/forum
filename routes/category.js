@@ -34,7 +34,7 @@ router.get('/:category', async (req, res) => {
 
 	try {
 		let threads, threadsLatestPost, resThreads, user
-		let { from, limit } = pagination.getPaginationProps(req.query)
+		let { from, limit } = pagination.getPaginationProps(req.query, true)
 
 		if(req.query.username) {
 			user = await User.findOne({ where: { username: req.query.username }})
@@ -43,11 +43,9 @@ router.get('/:category', async (req, res) => {
 		function threadInclude(order) {
 			let options = {
 				model: Thread,
+				order: [['id', 'DESC']],
 				limit,
-				where: {
-					id: { $gte: from }
-					
-				},
+				where: {},
 				include: [
 					Category,
 					{ model: User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
@@ -60,6 +58,10 @@ router.get('/:category', async (req, res) => {
 
 			if(user) {
 				options.where.userId = user.id
+			}
+
+			if(from !== null) {
+				options.where.id = { $lte: from }
 			}
 
 			return [options]
@@ -106,11 +108,11 @@ router.get('/:category', async (req, res) => {
 		})
 
 
-		let nextId = await pagination.getNextId(Thread, user ? { userId: user.id } : {}, resThreads.Threads)
+		let nextId = await pagination.getNextIdDesc(Thread, user ? { userId: user.id } : {}, resThreads.Threads)
 
 		if(nextId) {
 			resThreads.meta.nextURL =
-				`/api/v1/category/${req.params.category}?&limit=${limit}&from=${nextId + 1}`
+				`/api/v1/category/${req.params.category}?&limit=${limit}&from=${nextId - 1}`
 
 			if(user) {
 				resThreads.meta.nextURL += '&username=' + user.username
@@ -118,7 +120,7 @@ router.get('/:category', async (req, res) => {
 
 			resThreads.meta.nextThreadsCount = await pagination.getNextCount(
 				Thread, resThreads.Threads, limit,
-				{ userId: user.id }
+				user ? { userId: user.id } : {}
 			)
 		} else {
 			resThreads.meta.nextURL = null
