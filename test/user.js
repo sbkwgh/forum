@@ -399,18 +399,15 @@ describe('User', () => {
 
 			let pageOne = await agent.get('/api/v1/user/threadaccount?threads=true')
 			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
-			let pageInvalid = await agent.get('/api/v1/user/threadaccount?threads=true&from=100')
 
 			pageOne.body.Threads.should.have.length(10)
-			pageOne.body.Threads[0].should.have.property('name', 'THREAD 0')
+			pageOne.body.Threads[0].should.have.property('name', 'THREAD 19')
 			pageOne.body.meta.should.have.property('nextThreadsCount', 10)
 
 			pageTwo.body.Threads.should.have.length(10)
-			pageTwo.body.Threads[0].should.have.property('name', 'THREAD 10')
+			pageTwo.body.Threads[0].should.have.property('name', 'THREAD 9')
 			pageTwo.body.meta.should.have.property('nextThreadsCount', 0)
 			expect(pageTwo.body.meta.nextURL).to.be.null
-
-			pageInvalid.body.Threads.should.have.length(0)
 		})
 	})
 
