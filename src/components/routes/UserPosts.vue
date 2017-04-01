@@ -4,10 +4,10 @@
 		<scroll-load
 			:loading='loadingPosts'
 			@loadNext='loadNewPosts'
-			v-if='sortedPosts.length'
+			v-if='posts.length'
 		>
 			<thread-post
-				v-for='(post, index) in sortedPosts'
+				v-for='(post, index) in posts'
 				:post='post'
 				:show-thread='true'
 				:class='{"post--last": index === posts.length-1}'
@@ -42,13 +42,6 @@
 				loadingPosts: false,
 				nextPostsCount: 0,
 				nextURL: ''
-			}
-		},
-		computed: {
-			sortedPosts () {
-				return this.posts.sort((a, b) => {
-					return new Date(a.createdAt) - new Date(b.createdAt)
-				})
 			}
 		},
 		methods: {
