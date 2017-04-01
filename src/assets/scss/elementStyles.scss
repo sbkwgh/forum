@@ -79,41 +79,34 @@ blockquote {
 		&:hover { border-color: $color__blue--primary; }
 		&:active { border-color: $color__blue--darker; }
 	}
-	@at-root #{&}--blue {
-		border-color: $color__blue--darkest;
-		background-color: $color__blue--darker;
-		color: $color__lightgray--primary;
 
+	@mixin filled_button($background, $border, $text: #fff) {
+		background-color: $background;
+		border-color: $border;
+		color: $text;
+		
 		&:hover {
-			border-color: $color__blue--darkest;
-			background-color: $color__blue--darker;
-			filter: brightness(0.9);
+			background-color: $background;
+			border-color: $border;
 			color: #fff;
+			filter: brightness(0.9);
 		}
 		&:active {
-			border-color: $color__blue--darkest;
-			background-color: $color__blue--darker;
-			filter: brightness(0.8);
+			background-color: $background;
+			border-color: $border;
 			color: #fff;
+			filter: brightness(0.8);
 		}
 	}
+	@at-root #{&}--blue {
+		@include filled_button(
+			$color__blue--darker,
+			$color__blue--darkest,
+			$color__lightgray--primary
+		);
+	}
 	@at-root #{&}--green {
-		background-color: $color__green--primary;
-		color: #fff;
-		border-color: $color__green--darker;
-
-		&:hover {
-			background-color: $color__green--primary;
-			border-color: $color__green--darker;
-			filter: brightness(0.9);
-			color: #fff;
-		}
-		&:active {
-			background-color: $color__green--primary;
-			border-color: $color__green--darker;
-			filter: brightness(0.8);
-			color: #fff;
-		}
+		@include filled_button($color__green--primary, $color__green--darker);
 	}
 }
 
