@@ -39,7 +39,7 @@ blockquote {
 	cursor: pointer;
 	background-color: #fff;
 	color: $color__text--primary;
-	transition: background-color 0.2s, border-color 0.2s;
+	transition: background-color 0.2s, border-color 0.2s, filter 0.2s;
 	outline: none;
 
 	&:hover {
@@ -102,13 +102,17 @@ blockquote {
 		color: #fff;
 		border-color: $color__green--darker;
 
-		&:hover { 
+		&:hover {
+			background-color: $color__green--primary;
 			border-color: $color__green--darker;
-			background-color: rgba(75, 171, 79, 0.86);
+			filter: brightness(0.9);
+			color: #fff;
 		}
 		&:active {
+			background-color: $color__green--primary;
 			border-color: $color__green--darker;
-			background-color: $color__green--darkester;
+			filter: brightness(0.8);
+			color: #fff;
 		}
 	}
 }
