@@ -124,9 +124,18 @@ router.get('/:username', async (req, res) => {
 
 		if(req.query.posts) {
 			
-			let { from, limit } = pagination.getPaginationProps(req.query)
+			let { from, limit } = pagination.getPaginationProps(req.query, true)
 
-			queryObj.include = User.includeOptions(from, limit)
+			let postInclude = {
+				model: Post,
+				include: Post.includeOptions(),
+				limit,
+				order: [['id', 'DESC']]
+			}
+			if(from !== null) {
+				postInclude.where = { id: { $lte: from } }
+			}
+			queryObj.include = [postInclude]
 
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist
@@ -134,17 +143,19 @@ router.get('/:username', async (req, res) => {
 			let resUser = user.toJSON()
 			resUser.meta = {}
 
-			let lastPost = user.Posts.slice(-1)[0]
-			if(!lastPost || lastPost.postNumber+1 === lastPost.Thread.postsCount) {
+			let nextId = await pagination.getNextIdDesc(Post, { userId: user.id }, resUser.Posts)
+
+			if(nextId === null) {
 				resUser.meta.nextURL = null
 				resUser.meta.nextPostsCount = 0
 			} else {
 				resUser.meta.nextURL =
-					`/api/v1/user/${user.username}?posts=true&limit=${limit}&from=${lastPost.postNumber + 1}`
+					`/api/v1/user/${user.username}?posts=true&limit=${limit}&from=${nextId - 1}`
 
 				resUser.meta.nextPostsCount = await pagination.getNextCount(
-					Post, lastPost, limit,
-					{ UserId: user.id }
+					Post, resUser.Posts, limit,
+					{ UserId: user.id },
+					true
 				)
 			}
 
