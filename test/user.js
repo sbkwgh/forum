@@ -398,6 +398,19 @@ describe('User', () => {
 			}
 
 			let pageOne = await agent.get('/api/v1/user/threadaccount?threads=true')
+
+			//Add another newer thread
+			//This should not affect other tests
+			let thread = await agent
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ category: 'categorynamehere', name: 'THREAD 20'})
+
+				await agent
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ threadId: thread.body.id, content: `POST 20` })
+
 			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
 
 			pageOne.body.Threads.should.have.length(10)
