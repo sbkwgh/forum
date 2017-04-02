@@ -131,8 +131,8 @@
 			navigateToThread (slug, id) {
 				this.$router.push('/thread/' + slug + '/' + id);
 			},
-			getThreads () {
-				if(this.nextURL === null) return
+			getThreads (initial) {
+				if(this.nextURL === null && !initial) return
 
 				this.loading = true
 
@@ -141,7 +141,12 @@
 					.then(res => {
 						this.loading = false
 
-						this.threads.push(...res.data.Threads)
+						if(initial) {
+							this.threads = res.data.Threads
+						} else {
+							this.threads.push(...res.data.Threads)
+						}
+
 						this.nextURL = res.data.meta.nextURL
 						this.nextThreadsCount = res.data.meta.nextThreadsCount
 					})
@@ -174,12 +179,13 @@
 			},
 			$route () {
 				this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
-				this.getThreads()
+				this.newThreads = 0
+				this.getThreads(true)
 			}
 		},
 		created () {
 			this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
-			this.getThreads()
+			this.getThreads(true)
 
 			socket.on('new thread', data => {
 				if(data.value === this.selectedCategory || this.selectedCategory == 'ALL') {
