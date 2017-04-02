@@ -110,6 +110,15 @@ Vue.filter('truncate', function (value, length) {
 	}
 });
 
+Vue.filter('pluralize', function(number, value) {
+	console.log(number, value)
+	if(number === 1) {
+		return value
+	} else {
+		return value + 's'
+	}
+})
+
 new Vue({
 	el: '#app',
 	template: '<App/>',
