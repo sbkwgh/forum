@@ -32,6 +32,9 @@
 				:loading='loading'
 				@loadNext='getThreads'
 			>
+				<div class='threads_main__load_new'>
+					Load 5 new threads</span>
+				</div>
 				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
 				<thread-display-placeholder v-for='n in nextThreadsCount'></thread-display-placholder>
 			</scroll-load>
@@ -161,6 +164,7 @@
 </script>
 
 <style lang='scss' scoped>
+	@import '../../assets/scss/elementStyles.scss';
 	@import '../../assets/scss/variables.scss';
 
 	.threads_main {
@@ -239,6 +243,17 @@
 		margin-top: 0.25rem;
 		margin-left: 1rem;
 		width: calc(100% - 11rem);
+	}
+
+	.threads_main__load_new {
+		@extend .button;
+
+		font-size: 1.25rem;
+		margin: 0 0 1rem 0;
+		background-color: $color__lightgray--primary;
+		border-color: $color__gray--darker;
+		width: 100%;
+		font-weight: 300;
 	}
 
 	.thread {
