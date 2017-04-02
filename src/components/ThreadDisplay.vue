@@ -1,9 +1,9 @@
 <template>
 	<div
 		class='thread_display'
-		:style='{"border-left-color" : thread.Category.color}'
 		@click.self='goToThread'
 	>
+		<div class='thread_display__border' :style='{"background-color" : thread.Category.color}'></div>
 		<avatar-icon ref='avatar' :user='thread.User' size='small' class='thread_display__icon'></avatar-icon>
 		<div style='width: 100%;'>
 			<div class='thread_display__header' @click.self='goToThread'>
@@ -84,7 +84,6 @@
 		display: flex;
 		padding: 0.5rem;
 		margin-bottom: 1rem;
-		border-left: 0.25rem solid;
 		transition: background-color 0.2s;
 		position: relative;
 
@@ -103,6 +102,17 @@
 		&:active {
 			background-color: $color--lightgray__darker;
 		}
+
+		.thread_display__border {
+			position: absolute;
+			left: -0.25rem;
+			width: 0.25rem;
+			height: 100%;
+			top: 0;
+			opacity: 0.35;
+			transition: 0.2s opacity;
+		}
+		&:hover .thread_display__border { opacity: 1; }
 
 		@at-root #{&}__icon {
 			margin-right: 0.5rem;
