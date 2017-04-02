@@ -32,8 +32,8 @@
 				:loading='loading'
 				@loadNext='getThreads'
 			>
-				<div class='threads_main__load_new'>
-					Load 5 new threads</span>
+				<div class='threads_main__load_new' v-if='newThreads' @click='getNewerThreads'>
+					Load {{newThreads}} new {{newThreads | pluralize('thread')}}</span>
 				</div>
 				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
 				<thread-display-placeholder v-for='n in nextThreadsCount'></thread-display-placholder>
@@ -51,6 +51,8 @@
 	import SelectOptions from '../SelectOptions'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+
+	let socket = require('socket.io-client')()
 
 	export default {
 		name: 'index',
@@ -74,7 +76,8 @@
 				nextThreadsCount: 0,
 				loading: false,
 
-				threads: []
+				threads: [],
+				newThreads: 0
 			}
 		},
 		computed: {
@@ -145,6 +148,18 @@
 
 						AjaxErrorHandler(this.$store)(e)
 					})
+			},
+			getNewerThreads () {
+				this.axios
+					.get('/api/v1/category/' + this.selectedCategory + '?limit=' + this.newThreads)
+					.then(res => {
+						this.threads.unshift(...res.data.Threads)
+					})
+					.catch((e) => {
+						AjaxErrorHandler(this.$store)(e)
+					})
+
+				this.newThreads = 0
 			}
 		},
 		watch: {
@@ -159,6 +174,15 @@
 		created () {
 			this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
 			this.getThreads()
+
+			socket.on('new thread', data => {
+				if(data.value === this.selectedCategory || this.selectedCategory == 'ALL') {
+					this.newThreads++
+				}
+			})
+		},
+		destroyed () {
+			socket.off('new thread')
 		}
 	}
 </script>
