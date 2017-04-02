@@ -22,7 +22,9 @@ describe('Socket-io', () => {
 
 	//Delete all rows in table after
 	//tests completed
-	after(() => sequelize.sync({ force: true }))
+	after(() => {
+		sequelize.sync({ force: true })
+	})
 
 	describe('new thread notifications', async () => {
 		let agent = chai.request.agent(server)
@@ -57,8 +59,13 @@ describe('Socket-io', () => {
 		})
 
 		it('should emit a notification when a thread is created	', (done) => {
-			let client = io.connect('http://localhost:8080')
-			
+			let client = io.connect('http://localhost:3000')
+			client.on('new thread', data => {
+				data.should.have.property('category', 'category_name')
+
+				done()
+			})
+
 			//Post new thread
 			agent
 				.post('/api/v1/thread')
@@ -72,11 +79,7 @@ describe('Socket-io', () => {
 				})
 				.catch(done)
 
-			client.on('new thread', data => {
-				data.should.have.property('category', 'category_name')
-
-				done()
-			})
+			
 		})
 	})
 })
