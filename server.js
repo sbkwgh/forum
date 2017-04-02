@@ -1,6 +1,8 @@
 let express = require('express')
 let app = express()
 
+let sockets = require('./lib/sockets')
+
 let sequelize = require('./models').sequelize
 
 let config = require('./config/server.js')
@@ -37,12 +39,14 @@ app.use('/api/v1/settings', require('./routes/settings'))
 sequelize
 	.sync({ force: true })
 	.then(() => {
-		app.listen(config.port, () => {
+		let server = app.listen(config.port, () => {
 			console.log('Listening on ' + config.port)
 
 			app.locals.appStarted = true
 			app.emit('appStarted')
 		})
+
+		sockets.init(app, server)
 	})
 	.catch((err) => {
 		console.log(err)
