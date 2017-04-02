@@ -32,11 +32,12 @@
 				:loading='loading'
 				@loadNext='getThreads'
 			>
+				<thread-display-placeholder v-for='n in newThreads' v-if='loadingNewer'></thread-display-placeholder>
 				<div class='threads_main__load_new' v-if='newThreads' @click='getNewerThreads'>
 					Load {{newThreads}} new {{newThreads | pluralize('thread')}}</span>
 				</div>
 				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
-				<thread-display-placeholder v-for='n in nextThreadsCount'></thread-display-placholder>
+				<thread-display-placeholder v-for='n in nextThreadsCount' v-if='loading'></thread-display-placeholder>
 			</scroll-load>
 			<div v-else class='threads_main__threads thread--empty'>No threads or posts.</div>
 		</div>
@@ -77,7 +78,8 @@
 				loading: false,
 
 				threads: [],
-				newThreads: 0
+				newThreads: 0,
+				loadingNewer: false
 			}
 		},
 		computed: {
@@ -150,16 +152,20 @@
 					})
 			},
 			getNewerThreads () {
+				this.loadingNewer = true
+
 				this.axios
 					.get('/api/v1/category/' + this.selectedCategory + '?limit=' + this.newThreads)
 					.then(res => {
+						this.loadingNewer = false
+						this.newThreads = 0
+
 						this.threads.unshift(...res.data.Threads)
 					})
 					.catch((e) => {
+						this.loadingNewer = false
 						AjaxErrorHandler(this.$store)(e)
 					})
-
-				this.newThreads = 0
 			}
 		},
 		watch: {
