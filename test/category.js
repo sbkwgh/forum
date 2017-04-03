@@ -3,8 +3,9 @@ process.env.NODE_ENV = 'test'
 let chai = require('chai')
 let server = require('../server')
 let should = chai.should()
+let expect = chai.expect
 
-let { sequelize } = require('../models')
+let { sequelize, Thread } = require('../models')
 
 const Errors = require('../lib/errors.js')
 
@@ -151,7 +152,63 @@ describe('Category', () => {
 	})
 
 	describe('GET /category/:category', () => {
-		before(async () => {
+
+		it('should return allow pagination for category ALL', async () => {
+			let agent = chai.request.agent(server)
+			
+			await agent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({ password: 'password' })
+
+		 	await agent
+		 		.post('/api/v1/category')
+				.set('content-type', 'application/json')
+				.send({ name: 'pagination1' })
+
+			await agent
+		 		.post('/api/v1/category')
+				.set('content-type', 'application/json')
+				.send({ name: 'pagination2' })
+
+			for(var i = 0; i < 30; i++) {
+				let category = 'pagination1'
+
+				if(i % 2) category = 'pagination2'
+
+				let thread = await agent
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ name: `THREAD ${i}`, category })
+
+				await agent
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ content: `POST ${i}`, threadId: thread.body.id })
+			}
+
+			let pageOne = await agent.get('/api/v1/category/ALL')
+			let pageTwo = await agent.get(pageOne.body.meta.nextURL)
+			let pageThree = await agent.get(pageTwo.body.meta.nextURL)
+
+			pageOne.body.Threads.should.have.length(10)
+			pageOne.body.meta.should.have.property('nextThreadsCount', 10)
+			pageOne.body.Threads[0].Posts[0].should.have.property('content', '<p>POST 29</p>\n')
+
+			pageTwo.body.Threads.should.have.length(10)
+			pageTwo.body.meta.should.have.property('nextThreadsCount', 10)
+			pageTwo.body.Threads[0].Posts[0].should.have.property('content', '<p>POST 19</p>\n')
+
+			pageThree.body.Threads.should.have.length(10)
+			pageThree.body.meta.should.have.property('nextThreadsCount', 0)
+			pageThree.body.Threads[0].Posts[0].should.have.property('content', '<p>POST 9</p>\n')
+			pageThree.body.Threads[9].Posts[0].should.have.property('content', '<p>POST 0</p>\n')
+			expect(pageThree.body.meta.nextURL).to.be.null
+
+
+		})
+
+		it('should return all threads in a category', async () => {
 			let agent = chai.request.agent(server)
 
 			await agent
@@ -159,72 +216,31 @@ describe('Category', () => {
 				.set('content-type', 'application/json')
 				.send({ password: 'password' })
 
-			await agent
-				.post('/api/v1/thread')
-				.set('content-type', 'application/json')
-				.send({ name: 'thread', category: 'category' })
 
-			await agent
-				.post('/api/v1/thread')
-				.set('content-type', 'application/json')
-				.send({ name: 'another_thread', category: 'category' })
+			for(var i = 0; i < 3; i++) {
+				let thread = await agent
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ name: 'thread ' + i, category: 'category' })
 
-			await agent
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ content: 'content here', threadId: 1 })
+				await agent
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ content: 'content here ' + i, threadId: thread.body.id })
+			}
 
-			await agent
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ content: 'content here 2', threadId: 1 })
 
-			await agent
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ content: 'content here 3', threadId: 1 })
-
-			await agent
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ content: 'content here', threadId: 2 })
-
-			await agent
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ content: 'content here 2', threadId: 2 })
-
-			await agent
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ content: 'content here 3', threadId: 2 })
-		})
-
-		it('should return all threads in a category', async () => {
 			let res = await chai.request(server)
-				.get('/api/v1/category/category')
+				.get('/api/v1/category/CATEGORY')
 
 			res.should.be.json
 			res.should.have.status(200)
 			res.body.should.have.property('name', 'category')
-			res.body.Threads.should.have.property('length', 2)
+			res.body.Threads.should.have.property('length', 3)
 			res.body.Threads.should.contain.an.item.with.deep.property('User.username', 'adminaccount')
-			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.content', '<p>content here</p>\n')
-			res.body.Threads.should.contain.an.item.with.deep.property('Posts.1.content', '<p>content here 3</p>\n')
-			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.User.username', 'adminaccount')
-
-		})
-		it('should return all threads in all categories', async () => {
-			let res = await chai.request(server)
-				.get('/api/v1/category/ALL')
-
-			res.should.be.json
-			res.should.have.status(200)
-			res.body.should.have.property('name', 'All')
-			res.body.Threads.should.have.property('length', 2)
-			res.body.Threads.should.contain.an.item.with.deep.property('User.username', 'adminaccount')
-			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.content', '<p>content here</p>\n')
-			res.body.Threads.should.contain.an.item.with.deep.property('Posts.1.content', '<p>content here 3</p>\n')
+			res.body.Threads[0].Posts[0].should.have.property('content', '<p>content here 2</p>\n')
+			res.body.Threads[1].Posts[0].should.have.property('content', '<p>content here 1</p>\n')
+			res.body.Threads[2].Posts[0].should.have.property('content', '<p>content here 0</p>\n')
 			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.User.username', 'adminaccount')
 
 		})
