@@ -30,6 +30,11 @@ blockquote {
 	}
 }
 
+b, strong {
+	font-weight: 500;
+	color: #000;
+}
+
 .button {
 	border: 0.125rem solid $color__gray--primary;
 	display: inline-block;
@@ -108,6 +113,9 @@ blockquote {
 	@at-root #{&}--green {
 		@include filled_button($color__green--primary, $color__green--darker);
 	}
+	@at-root #{&}--red {
+		@include filled_button($color__red--primary, $color__red--darker);
+	}
 }
 
 .input {
@@ -122,4 +130,20 @@ blockquote {
 	&:focus {
 		border-color: $color__gray--darkest;
 	}
+}
+
+.h1 {
+	@include text($font--role-default, 3rem);
+}
+.h3 {
+	@include text($font--role-default, 1.5rem);
+	font-weight: 500;
+
+	@at-root #{&}--margin_top {
+		margin-top: 1.5rem;
+	}
+}
+
+.p--condensed {
+	margin-top: 0.25rem;
 }

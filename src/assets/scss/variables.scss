@@ -29,6 +29,9 @@ $color__blue--primary: #0288D1;
 $color__blue--darker: #01579B;
 $color__blue--darkest: #0b3f8e;
 
+$color__red--primary: #E53935;
+$color__red--darker: #B71C1C;
+
 $color__lightblue--primary: #03A9F4;
 
 @keyframes flash {
@@ -88,8 +91,4 @@ $color__lightblue--primary: #03A9F4;
 		#{$pre + user-select}: #{$select};
 	}
 	#{user-select}: #{$select};
-}
-
-.h1 {
-	@include text($font--role-default, 3rem);
 }

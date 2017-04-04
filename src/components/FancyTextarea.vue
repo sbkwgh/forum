@@ -10,7 +10,7 @@
 		<textarea
 			class='input fancy_textarea__textarea'
 			v-bind:value='value'
-			v-bind:style='{width: width || "10rem"}'
+			v-bind:style='{width: width || "20rem"}'
 			v-on:input='updateValue($event.target.value)'
 			@focus='addActive'
 			@blur='removeActive'
