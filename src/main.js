@@ -17,10 +17,9 @@ import User from './components/routes/User'
 import UserPosts from './components/routes/UserPosts'
 import UserThreads from './components/routes/UserThreads'
 
-import Admin from './components/routes/Admin'
-import AdminDashboard from './components/routes/AdminDashboard'
-import AdminUsers from './components/routes/AdminUsers'
-import AdminSettings from './components/routes/AdminSettings'
+import Settings from './components/routes/Settings'
+import SettingsGeneral from './components/routes/SettingsGeneral'
+import SettingsAccount from './components/routes/SettingsAccount'
 
 let { onResize } = require('./assets/js/flexBoxGridCorrect.js')
 
@@ -42,10 +41,9 @@ const router = new VueRouter({
 			{ path: 'posts', component: UserPosts },
 			{ path: 'threads', component: UserThreads }
 		] },
-		{ path: '/admin', redirect: '/admin/dashboard', component: Admin, children: [
-			{ path: 'dashboard', component: AdminDashboard },
-			{ path: 'settings', component: AdminSettings },
-			{ path: 'users', component: AdminUsers }
+		{ path: '/settings', redirect: '/settings/general', component: Settings, children: [
+			{ path: 'general', component: SettingsGeneral },
+			{ path: 'account', component: SettingsAccount }
 		] }
 	],
 	mode: 'history'

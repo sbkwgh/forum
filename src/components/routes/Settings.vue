@@ -1,16 +1,16 @@
 <template>
-	<div class='route_container route_container--admin'>
-		<div class='admin_menu'>
+	<div class='route_container route_container--settings'>
+		<div class='settings_menu'>
 			<div
-				class='admin_menu__item'
+				class='settings_menu__item'
 				v-for='(item, index) in menuItems'
-				:class="{'admin_menu__item--selected': index === selected}"
-				@click='$router.push("/admin/" + item.route)'
+				:class="{'settings_menu__item--selected': index === selected}"
+				@click='$router.push("/settings/" + item.route)'
 			>
 				{{item.name}}
 			</div>
 		</div>
-		<div class='admin_page'>
+		<div class='settings_page'>
 			<router-view></router-view>
 		</div>
 	</div>
@@ -18,13 +18,12 @@
 
 <script>
 	export default {
-		name: 'index',
+		name: 'settings',
 		data () {
 			return {
 				menuItems: [
-					{ name: 'Dashboard', route: 'dashboard' }, 
-					{ name: 'Settings', route: 'settings' },
-					{ name: 'Users', route: 'users' }
+					{ name: 'General', route: 'general' }, 
+					{ name: 'Account', route: 'account' },
 				],
 				selected: 0
 			}
@@ -57,19 +56,21 @@
 <style lang='scss' scoped>
 	@import '../../assets/scss/variables.scss';
 
-	.route_container--admin {
+	.route_container--settings {
 		display: flex;
 		flex-direction: row;
 		width: 100%;
-		height: 100%;
+		height: calc(100% + 1rem);
 		padding: 0;
 		margin: 0;
+		margin-top: -1rem;
 	}
 
-	.admin_menu {
+	.settings_menu {
 		width: 15rem;
 		height: 100%;
 		border-right: 0.125rem solid $color__gray--primary;
+		padding-top: 1rem;
 
 		@at-root #{&}__item {
 			padding: 0.5rem 1.5rem;
@@ -102,7 +103,7 @@
 			}
 		}
 	}
-	.admin_page {
+	.settings_page {
 		width: calc(100% - 15rem);
 	}
 </style>
