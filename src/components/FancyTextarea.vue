@@ -1,21 +1,23 @@
 <template>
 	<div class='fancy_textarea'>
-		<error-tooltip :error='error'></error-tooltip>
-		<div
-			class='fancy_textarea__placeholder'
-			:class='{"fancy_textarea__placeholder--active": active || value.length}'
-		>
-			{{placeholder}}
+		<div style='position: relative; display: inline-block;'>
+			<error-tooltip :error='error'></error-tooltip>
+			<div
+				class='fancy_textarea__placeholder'
+				:class='{"fancy_textarea__placeholder--active": active || value.length}'
+			>
+				{{placeholder}}
+			</div>
+			<textarea
+				class='input fancy_textarea__textarea'
+				v-bind:value='value'
+				v-bind:style='{width: width || "20rem"}'
+				v-on:input='updateValue($event.target.value)'
+				@focus='addActive'
+				@blur='removeActive'
+			>
+			</textarea>
 		</div>
-		<textarea
-			class='input fancy_textarea__textarea'
-			v-bind:value='value'
-			v-bind:style='{width: width || "20rem"}'
-			v-on:input='updateValue($event.target.value)'
-			@focus='addActive'
-			@blur='removeActive'
-		>
-		</textarea>
 	</div>
 </template>
 
