@@ -268,6 +268,226 @@ describe('User', () => {
 
 	})
 
+	describe('/:username PUT user', () => {
+		let agent = chai.request.agent(server)
+
+		before(async () => {
+			await agent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({
+					password: 'password'
+				})
+		})
+
+		it('should add user description if it doesn\'t already exist', async () => {
+			let putRes = await agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					description: 'description here'
+				})
+
+			putRes.should.be.json
+			putRes.body.should.have.property('description', 'description here')
+
+			let getRes = await agent.get('/api/v1/user/adminaccount')
+
+			getRes.should.be.json
+			getRes.should.have.property('description', 'description here')
+		})
+		it('should update user description if it already exists', async () => {
+			let putRes = await agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					description: 'new description here'
+				})
+
+			putRes.should.be.json
+			putRes.body.should.have.property('description', 'new description here')
+
+			let getRes = await agent.get('/api/v1/user/adminaccount')
+
+			getRes.should.be.json
+			getRes.should.have.property('description', 'new description here')
+		})
+		it('should return an error if username is not logged in', done => {
+			agent
+				.put('/api/v1/user/notloggedin')
+				.set('content-type', 'application/json')
+				.send({
+					description: 'new description here'
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should return an error if description is not a string', done => {
+			agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					description: 123
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('description', 'string'))
+
+					done()
+				})
+		})
+		it('should return an error if description is too long', done => {
+			let str = []
+			for(var i = 0; i < 2000; i++) { str.push('') }
+
+			agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					description: str.join('')
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('description', '1024'))
+
+					done()
+				})
+		})
+
+		it('should update user password', async () => {
+			let passwordAgent = chai.request.agent(server)
+
+			passwordAgent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({
+					password: 'password'
+				})
+
+			let putRes = await passwordAgent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					currentPassowrd: 'password',
+					newPassword: 'qwertyuiop'
+				})
+
+			putRes.should.be.json
+			putRes.body.should.have.property('success', 'true')
+
+			await passwordAgent.post('/api/v1/user/adminaccount/logout')
+			let loginRes = await passwordAgent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({
+					password: 'qwertyuiop'
+				})
+
+			loginRes.should.have.status(200)
+			loginRes.should.be.json
+			loginRes.should.have.cookie('username', 'adminaccount')
+		})
+		it('should return an error if username is not logged in', done => {
+			agent
+				.put('/api/v1/user/notloggedin')
+				.set('content-type', 'application/json')
+				.send({
+					currentPassword: 'qwertyuiop',
+					newPassword: 'azertyuiop'
+				})
+				.end((err, res) => {
+					res.should.have.status(500)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should return an error if current password is incorrect', done => {
+			agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					currentPassword: 'nottheirpassword',
+					newPassword: 'azertyuiop'
+				})
+				.end((err, res) => {
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidLoginCredentials)
+
+					done()
+				})
+		})
+		it('should return an error if password is the same', done => {
+			agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					currentPassword: 'qwertyuiop',
+					newPassword: 'qwertyuiop'
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.passwordSame)
+
+					done()
+				})
+		})
+		it('should return an error if password is too short', done => {
+			agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					currentPassword: 'qwertyuiop',
+					newPassword: 'a'
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('password', '7'))
+
+					done()
+				})
+		})
+		it('should return an error if password is too long', done => {
+			let str = []
+			for(var i = 0; i < 2000; i++) { str.push('') }
+
+			agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					currentPassword: 'qwertyuiop',
+					newPassword: str.join('')
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('password', '1024'))
+
+					done()
+				})
+		})
+		it('should return an error if missing currentPassword', done => {
+			agent
+				.put('/api/v1/user/adminaccount')
+				.set('content-type', 'application/json')
+				.send({
+					newPassword: 'qwertyujkjnbgfdswazxcvbhytr'
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('password'))
+
+					done()
+				})
+		})
+	})
+
 	describe('/:username GET user', () => {
 		it('should return the user', async () => {
 			let res = await chai.request(server)
