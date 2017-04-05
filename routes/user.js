@@ -257,4 +257,56 @@ router.post('/:username/logout', async (req, res) => {
 	})
 })
 
+router.all('*', (req, res, next) => {
+	if(req.session.username) {
+		next()
+	} else {
+		res.status(401)
+		res.json({
+			errors: [Errors.requestNotAuthorized]
+		})
+	}
+})
+
+router.put('/:username', async (req, res) => {
+	let validationErrors = []
+
+	try {
+		if(req.session.username !== req.params.username) {
+			validationErrors.push(Errors.requestNotAuthorized)
+			throw validationErrors
+		}
+
+
+		if(req.body.description) {
+			if(typeof req.body.description !== 'string') {
+				validationErrors.push(Errors.invalidParameterType('description', 'string'))
+			} else if(req.body.description.length > 1024) {
+				validationErrors.push(Errors.parameterLengthTooLarge('description', 1024))
+			}
+
+			if(validationErrors.length) throw validationErrors
+
+			let user = await User.update({ description: req.body.description }, { where: {
+				username: req.session.username
+			}})
+
+			res.json({ success: true })
+
+		} else if(req.body.newPassword) {
+			res.json({})
+		}
+	} catch (e) {
+		if(validationErrors.length) {
+			res.status(400)
+			res.json({ errors: validationErrors })
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({errors: Errors.unknown })
+		}
+	}
+})
+
 module.exports = router

@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			unique: true
 		},
+		description: DataTypes.TEXT,
 		color: {
 			type: DataTypes.STRING,
 			defaultValue () {
