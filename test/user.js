@@ -289,12 +289,14 @@ describe('User', () => {
 				})
 
 			putRes.should.be.json
-			putRes.body.should.have.property('description', 'description here')
+			putRes.body.should.have.property('success', true)
 
 			let getRes = await agent.get('/api/v1/user/adminaccount')
 
 			getRes.should.be.json
-			getRes.should.have.property('description', 'description here')
+			getRes.body.should.have.property('description', 'description here')
+			getRes.body.should.have.property('username', 'adminaccount')
+			getRes.body.should.have.property('color')
 		})
 		it('should update user description if it already exists', async () => {
 			let putRes = await agent
@@ -305,12 +307,12 @@ describe('User', () => {
 				})
 
 			putRes.should.be.json
-			putRes.body.should.have.property('description', 'new description here')
+			putRes.body.should.have.property('success', true)
 
 			let getRes = await agent.get('/api/v1/user/adminaccount')
 
 			getRes.should.be.json
-			getRes.should.have.property('description', 'new description here')
+			getRes.body.should.have.property('description', 'new description here')
 		})
 		it('should return an error if username is not logged in', done => {
 			agent
@@ -344,7 +346,7 @@ describe('User', () => {
 		})
 		it('should return an error if description is too long', done => {
 			let str = []
-			for(var i = 0; i < 2000; i++) { str.push('') }
+			for(var i = 0; i < 1025; i++) { str.push('a') }
 
 			agent
 				.put('/api/v1/user/adminaccount')
