@@ -294,7 +294,44 @@ router.put('/:username', async (req, res) => {
 			res.json({ success: true })
 
 		} else if(req.body.newPassword) {
-			res.json({})
+			if(req.body.currentPassword === undefined) {
+				validationErrors.push(Errors.missingParameter('current password'))
+			} if(typeof req.body.currentPassword !== 'string') {
+				validationErrors.push(Errors.invalidParameterType('currentPassword', 'string'))
+			}
+
+			if(typeof req.body.newPassword !== 'string') {
+				validationErrors.push(Errors.invalidParameterType('newPassword', 'string'))
+			} else {
+				if(req.body.newPassword.length > 1024) {
+					validationErrors.push(Errors.parameterLengthTooLarge('new password', 1024))
+				} if(req.body.newPassword.length < 8) {
+					validationErrors.push(Errors.parameterLengthTooSmall('new password', 7))
+				} if(req.body.newPassword === req.body.currentPassword) {
+					validationErrors.push(Errors.passwordSame)
+				}
+			}
+
+			if(validationErrors.length) throw validationErrors
+
+			let user = await User.findOne({where: {
+				username: req.session.username
+			}})
+
+			let bcryptRes = await bcrypt.compare(req.body.currentPassword, user.hash)
+
+			if(bcryptRes) {
+				let newHash = await bcrypt.hash(req.body.newPassword, 12)
+
+				let user = await User.update({ hash: newHash }, { where: {
+					username: req.session.username
+				}})
+
+				res.json({ success: true })
+			} else {
+				validationErrors.push(Errors.invalidLoginCredentials)
+				throw validationErrors
+			}
 		}
 	} catch (e) {
 		if(validationErrors.length) {
