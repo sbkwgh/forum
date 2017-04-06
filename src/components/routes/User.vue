@@ -113,8 +113,9 @@
 		}
 	}
 	.user_description {
-		margin-left: 5rem;
 		width: 75%;
+		white-space: pre-line;
+		margin: -1rem 0 1.5rem 5rem;
 	}
 	.user__view_holder {
 		display: flex;
