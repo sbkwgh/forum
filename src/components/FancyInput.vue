@@ -1,21 +1,26 @@
 <template>
 	<div class='fancy_input'>
-		<error-tooltip :error='error'></error-tooltip>
-		<div
-			class='fancy_input__placeholder'
-			:class='{"fancy_input__placeholder--active": active || value.length}'
+		<div 
+			 style='position: relative; display: inline-block;'
+			 v-bind:style='{width: width || "10rem"}'
 		>
-			{{placeholder}}
+			<error-tooltip :error='error'></error-tooltip>
+			<div
+				class='fancy_input__placeholder'
+				:class='{"fancy_input__placeholder--active": active || value.length}'
+			>
+				{{placeholder}}
+			</div>
+			<input
+				v-bind:type='type || "text"'
+				class='input'
+				v-bind:value='value'
+				v-bind:style='{width: width || "10rem"}'
+				v-on:input='updateValue($event.target.value)'
+				@focus='addActive'
+				@blur='removeActive'
+			>
 		</div>
-		<input
-			v-bind:type='type || "text"'
-			class='input'
-			v-bind:value='value'
-			v-bind:style='{width: width || "10rem"}'
-			v-on:input='updateValue($event.target.value)'
-			@focus='addActive'
-			@blur='removeActive'
-		>
 	</div>
 </template>
 
