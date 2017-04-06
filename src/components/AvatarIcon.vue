@@ -1,5 +1,5 @@
 <template>
-	<info-tooltip class='avatar_icon' @hover='loadUser'>
+	<info-tooltip class='avatar_icon' @hover='loadUser' :noEvents='user === null'>
 		<template slot='content'>
 			<template v-if='ajaxUser'>
 				<div class='avatar_icon__header'>
@@ -25,10 +25,10 @@
 			slot='display'
 			class='avatar_icon__icon'
 			:class='{"avatar_icon__icon--small": size === "small"}'
-			:style='{ "background-color": user.color }'
+			:style='{ "background-color": userColor }'
 			@click='goToUser'
 		>
-			{{user.username[0]}}
+			{{userLetter}}
 		</div>
 	</info-tooltip>
 </template>
@@ -46,9 +46,25 @@
 				ajaxUser: null
 			}
 		},
+		computed: {
+			userLetter () {
+				if(this.user) {
+					return this.user.username[0]
+				} else {
+					return ''
+				}
+			},
+			userColor () {
+				if(this.user) {
+					return this.user.color
+				} else {
+					return null
+				}
+			}
+		},
 		methods: {
 			loadUser () {
-				if(this.ajaxUser) return
+				if(this.ajaxUser || this.user === null) return
 
 				this.axios
 					.get('/api/v1/user/' + this.user.username)
@@ -58,6 +74,8 @@
 					.catch(AjaxErrorHandler(this.$store))
 			},
 			goToUser () {
+				if(this.user === null) return
+
 				this.$router.push('/user/' + this.user.username)
 			}
 		}

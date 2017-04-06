@@ -27,6 +27,7 @@
 <script>
 	export default {
 		name: 'InfoTooltip',
+		props: ['noEvents'],
 		data () {
 			return {
 				show: false,
@@ -35,6 +36,8 @@
 		},
 		methods: {
 			setState (val) {
+				if(this.noEvents) return
+
 				if(val) {
 					this.pointerEvents = true
 					this.show = true

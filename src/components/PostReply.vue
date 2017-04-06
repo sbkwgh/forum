@@ -2,7 +2,7 @@
 	<info-tooltip class='post_reply' :class='{"post_reply--hover": hover}'>
 		<template slot='content'>
 			<div style='margin-top: -0.25rem;'>
-				<div class='post_reply__username'>{{post.User.username}}</div>
+				<div class='post_reply__username'>{{user.username}}</div>
 				<div class='post_reply__date'>{{post.createdAt | formatDate('date|time', ' - ')}}</div>
 			</div>
 			<div class='post_reply__content'>{{post.content | stripTags | truncate(100)}}</div>
@@ -14,9 +14,9 @@
 		>
 			<div
 				class='post_reply__letter'
-				:style='{"background-color": post.User.color}'
+				:style='{"background-color": user.color}'
 			>
-				{{post.User.username[0]}}
+				{{user.letter}}
 			</div>
 		</div>
 	</info-tooltip>
@@ -28,7 +28,22 @@
 	export default {
 		name: 'PostReply',
 		props: ['post', 'hover'],
-		components: { InfoTooltip }
+		components: { InfoTooltip },
+		computed: {
+			user () {
+				if(this.post.User) {
+					return Object.assign({
+						letter: this.post.User.username[0]
+					}, this.post.User)
+				} else {
+					return {
+						letter: '',
+						color: null,
+						username: '[deleted]'
+					}
+				}
+			}
+		}
 	}
 </script>
 
@@ -80,6 +95,10 @@
 			position: relative;
 			border-radius: 1rem;
 			cursor: pointer;
+
+			@at-root #{&}--no_hover {
+				pointer-events: none;
+			}
 		}
 		@at-root #{&}__letter {
 			height: 1.25rem;

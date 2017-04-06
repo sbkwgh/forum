@@ -2,7 +2,7 @@
 	<info-tooltip class='replying_to' @hover='loadPost'>
 		<template slot='content'>
 			<div style='margin-top: -0.25rem;'>
-				<div class='replying_to__username' v-if='post'>{{post.User.username}}</div>
+				<div class='replying_to__username' v-if='post'>{{postUsername}}</div>
 				<div class='replying_to__date' v-if='post'>{{post.createdAt | formatDate('date|time', ' - ')}}</div>
 			</div>
 			<div class='replying_to__content' v-if='post'>{{post.content | stripTags | truncate(100)}}</div>
@@ -14,7 +14,7 @@
 			@click='$emit("click")'
 		>
 			<span class='fa fa-reply replying_to__icon'></span>
-			{{username}}
+			{{username || '[deleted]'}}
 		</div>
 	</info-tooltip>
 </template>
@@ -30,6 +30,15 @@
 		data () {
 			return {
 				post: null
+			}
+		},
+		computed: {
+			postUsername () {
+				if(this.post.User) {
+					return this.post.User.username
+				} else {
+					return '[deleted]'
+				}
 			}
 		},
 		methods: {

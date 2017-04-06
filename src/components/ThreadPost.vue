@@ -15,7 +15,7 @@
 		<div class='post__meta_data'>
 			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
 			<div class='post__thread' v-if='showThread' @click='goToThread'>{{post.Thread.name}}</div>
-			<div class='post__user' v-else>{{post.User.username}}</div>
+			<div class='post__user' v-else>{{username}}</div>
 			<replying-to
 				style='margin-right: 0.5rem;'
 				v-if='post.replyingToUsername'
@@ -79,6 +79,15 @@
 				hover: false,
 				showShareModal: false,
 				postURL: `${location.origin}/thread/${post.Thread.slug}/${post.ThreadId}/${post.postNumber}`
+			}
+		},
+		computed: {
+			username () {
+				if(this.post.User) {
+					return this.post.User.username
+				} else {
+					return '[deleted]'
+				}
 			}
 		},
 		methods: {

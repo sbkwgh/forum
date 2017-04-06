@@ -13,7 +13,7 @@
 				<div class='thread_display__meta_bar' @click.self='goToThread'>
 					<div @click.self='goToThread'>
 						By
-						<span class='thread_display__username' ref='username' @click='goToUser'>{{thread.User.username}}</span>
+						<span class='thread_display__username' ref='username' @click='goToUser'>{{threadUsername}}</span>
 						in
 						<span class='thread_display__category' ref='category' @click='goToCategory'>{{thread.Category.name}}</span>
 						&middot;
@@ -29,7 +29,7 @@
 				>
 					<span class='fa fa-reply fa-fw'></span>
 					Latest reply by
-					<span class='thread_display__username'>{{thread.Posts[1].User.username}}</span>
+					<span class='thread_display__username'>{{replyUsername}}</span>
 					&middot;
 					<span class='thread_display__date'>{{thread.Posts[1].createdAt | formatDate}}</span>
 				</div>
@@ -54,6 +54,22 @@
 		props: ['thread'],
 		components: {
 			AvatarIcon
+		},
+		computed: {
+			threadUsername () {
+				if(this.thread.User) {
+					return this.thread.User.username
+				} else {
+					return '[deleted]'
+				}
+			},
+			replyUsername () {
+				if(this.thread.Posts[1].User) {
+					return this.thread.Posts[1].User.username
+				} else {
+					return '[deleted]'
+				}
+			}
 		},
 		methods: {
 			goToUser () {
