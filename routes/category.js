@@ -66,12 +66,12 @@ router.get('/:category', async (req, res) => {
 			})
 
 			threadsLatestPost = await Category.findOne({
-				where: { name: req.params.category },
+				where: { value: req.params.category },
 				include: threadInclude('DESC')
 			})
 		}
 
-		if(!threads) throw Errors.invalidParameter('id', 'thread does not exist')
+		if(!threads) throw Errors.invalidParameter('id', 'category does not exist')
 		
 		if(Array.isArray(threads)) {
 			resThreads = {

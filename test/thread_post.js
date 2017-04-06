@@ -41,6 +41,12 @@ describe('Thread and post', () => {
 						.post('/api/v1/category')
 						.set('content-type', 'application/json')
 						.send({ name: 'category_name' })
+						.then(() => { 
+							return userAgent
+								.post('/api/v1/category')
+								.set('content-type', 'application/json')
+								.send({ name: 'category with spaces' })
+						})
 						.then(() => { done() })
 						.catch(done)
 				})
@@ -62,7 +68,7 @@ describe('Thread and post', () => {
 				.set('content-type', 'application/json')
 				.send({
 					name: 'thread',
-					category: 'category_name'
+					category: 'CATEGORY_NAME'
 				})
 
 			res.should.have.status(200)
@@ -73,13 +79,30 @@ describe('Thread and post', () => {
 			res.body.should.have.deep.property('User.username', 'username')
 			res.body.should.have.deep.property('Category.name', 'category_name')
 		})
+		it('should create a thread for a category with spaces in', async () => {
+			let res = await userAgent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({
+					name: 'thread123',
+					category: 'CATEGORY_WITH_SPACES'
+				})
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.should.have.property('name', 'thread123')
+			res.body.should.have.property('postsCount', 0)
+			res.body.should.have.property('slug', 'thread123')
+			res.body.should.have.deep.property('User.username', 'username')
+			res.body.should.have.deep.property('Category.name', 'category with spaces')
+		})
 		it('should add a slug from the thread name', async () => {
 			let res = await userAgent
 				.post('/api/v1/thread')
 				.set('content-type', 'application/json')
 				.send({
 					name: ' à long thrËad, with lØts of àccents!!!	',
-					category: 'category_name'
+					category: 'CATEGORY_NAME'
 				})
 
 			res.should.have.status(200)
@@ -96,7 +119,7 @@ describe('Thread and post', () => {
 					.set('content-type', 'application/json')
 					.send({
 						name: 'thread',
-						category: 'category_name'
+						category: 'CATEGORY_NAME'
 					})
 
 				res.should.be.json
@@ -323,7 +346,7 @@ describe('Thread and post', () => {
 					.set('content-type', 'application/json')
 					.send({
 						name: 'another thread',
-						category: 'category_name'
+						category: 'CATEGORY_NAME'
 					})).body.id
 
 				let res = await replyAgent
@@ -369,12 +392,12 @@ describe('Thread and post', () => {
 			let thread = await userAgent
 				.post('/api/v1/thread')
 				.set('content-type', 'application/json')
-				.send({ category: 'category_name', name: 'pagination' })
+				.send({ category: 'CATEGORY_NAME', name: 'pagination' })
 
 			let threadOther = await userAgent
 				.post('/api/v1/thread')
 				.set('content-type', 'application/json')
-				.send({ category: 'category_name', name: 'pagination_other' })
+				.send({ category: 'CATEGORY_NAME', name: 'pagination_other' })
 
 			PAGINATION_THREAD_ID = thread.body.id
 

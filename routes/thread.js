@@ -111,7 +111,7 @@ router.post('/', async (req, res) => {
 		if(validationErrors.length) throw Errors.VALIDATION_ERROR
 
 		let category = await Category.findOne({ where: {
-			name: req.body.category
+			value: req.body.category
 		}})
 
 		if(!category) throw Errors.invalidCategory

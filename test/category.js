@@ -138,6 +138,11 @@ describe('Category', () => {
 				.post('/api/v1/category')
 				.set('content-type', 'application/json')
 				.send({ name: 'another_category' })
+
+			await agent
+				.post('/api/v1/category')
+				.set('content-type', 'application/json')
+				.send({ name: 'category with spaces' })
 		})
 
 		it('should return all categories', async () => {
@@ -148,6 +153,7 @@ describe('Category', () => {
 			res.should.have.status(200)
 			res.body.should.contain.an.item.with.property('name', 'category')
 			res.body.should.contain.an.item.with.property('name', 'another_category')
+			res.body.should.contain.an.item.with.property('name', 'category with spaces')
 		})
 	})
 
@@ -244,6 +250,38 @@ describe('Category', () => {
 			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.User.username', 'adminaccount')
 
 		})
+
+		it('should return all threads in a category with spaces', async () => {
+			let agent = chai.request.agent(server)
+
+			await agent
+				.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({ password: 'password' })
+
+			let thread = await agent
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ name: 'thread', category: 'CATEGORY_WITH_SPACES' })
+
+				await agent
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ content: 'content here', threadId: thread.body.id })
+
+			let res = await chai.request(server)
+				.get('/api/v1/category/CATEGORY_WITH_SPACES')
+
+			res.should.be.json
+			res.should.have.status(200)
+			res.body.should.have.property('name', 'category with spaces')
+			res.body.Threads.should.have.property('length', 1)
+			res.body.Threads.should.contain.an.item.with.deep.property('User.username', 'adminaccount')
+			res.body.Threads[0].Posts[0].should.have.property('content', '<p>content here</p>\n')
+			res.body.Threads.should.contain.an.item.with.deep.property('Posts.0.User.username', 'adminaccount')
+		})
+
+
 		it('should return an error if category does not exist', async () => {
 			try {
 				let res = await chai.request(server)
@@ -251,11 +289,11 @@ describe('Category', () => {
 
 				res.should.be.json
 				res.should.have.status(400)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'thread does not exist'))
+				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'category does not exist'))
 			} catch (res) {
 				let body = JSON.parse(res.response.text)
 				res.should.have.status(400)
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'thread does not exist'))
+				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'category does not exist'))
 			}
 		})
 	})
