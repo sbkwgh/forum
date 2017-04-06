@@ -507,7 +507,7 @@ describe('User', () => {
 		})
 	})
 
-		describe('/:username PUT user', () => {
+	describe('/:username PUT user', () => {
 		let agent = chai.request.agent(server)
 
 		before(async () => {
@@ -723,6 +723,53 @@ describe('User', () => {
 				.end((err, res) => {
 					res.should.have.status(400)
 					res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('current password'))
+
+					done()
+				})
+		})
+	})
+
+	describe('/:username DELETE', () => {
+		let agent = chai.request.agent(server)
+
+		before(async () => {
+			await agent.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({
+					password: 'qwertyuiop'
+				})
+		})
+
+		it('should delete the user', done => {
+			agent
+				.delete('/api/v1/user/adminaccount')
+				.then(res => {
+					deleteRes.should.be.json
+					deleteRes.body.should.have.property('success', true)
+					deleteRes.should.not.have.cookie('username')
+
+					return agent
+						.post('/api/v1/user/adminaccount/login')
+						.set('content-type', 'application/json')
+						.send({
+							password: 'qwertyuiop'
+						})
+				})
+				.catch(res => {
+					res.should.have.status(401)
+					res.body.should.have.property('errors')
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidLoginCredentials)
+
+					done()
+				})
+		})
+
+		it('should return an error if username is not logged in', done => {
+			agent
+				.delete('/api/v1/user/notloggedin')
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
 					done()
 				})
