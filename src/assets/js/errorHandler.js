@@ -2,7 +2,7 @@ module.exports = function(vuex) {
 	return function (res, ignoreParamErrorCb) {
 		let errors = []
 
-		if(res.response === undefined) {
+		if(res.response === undefined || res.response.data.errors === undefined) {
 			errors.push('An error occured. Try again later')
 		} else {
 			res.response.data.errors.forEach(error => {
