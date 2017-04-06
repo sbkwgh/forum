@@ -57,7 +57,6 @@
 		},
 		beforeRouteEnter (to, from, next) {
 			next(vm => {
-				console.log(vm.$store.state.username)
 				if(!vm.$store.state.username) {
 					vm.$store.commit('setAccountModalState', true);
 					next('/')
