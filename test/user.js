@@ -686,7 +686,7 @@ describe('User', () => {
 				.set('content-type', 'application/json')
 				.send({
 					currentPassword: 'qwertyuiop',
-					newPassword: 'a'
+					newPassword: ''
 				})
 				.end((err, res) => {
 					res.should.have.status(400)
