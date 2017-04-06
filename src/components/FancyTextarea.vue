@@ -1,6 +1,9 @@
 <template>
 	<div class='fancy_textarea'>
-		<div style='position: relative; display: inline-block;'>
+		<div 
+		 style='position: relative; display: inline-block;'
+		 v-bind:style='{width: width || "20rem"}'
+		>
 			<error-tooltip :error='error'></error-tooltip>
 			<div
 				class='fancy_textarea__placeholder'
