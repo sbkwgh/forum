@@ -744,22 +744,26 @@ describe('User', () => {
 			agent
 				.delete('/api/v1/user/adminaccount')
 				.then(res => {
-					deleteRes.should.be.json
-					deleteRes.body.should.have.property('success', true)
-					deleteRes.should.not.have.cookie('username')
+					res.should.be.json
+					res.body.should.have.property('success', true)
+					res.should.not.have.cookie('username')
 
-					return agent
+					agent
 						.post('/api/v1/user/adminaccount/login')
 						.set('content-type', 'application/json')
 						.send({
 							password: 'qwertyuiop'
 						})
-				})
-				.catch(res => {
-					res.should.have.status(401)
-					res.body.should.have.property('errors')
-					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidLoginCredentials)
+						.end((err, res) => {
+							res.should.have.status(401)
+							res.body.should.have.property('errors')
+							res.body.errors.should.contain.something.that.deep.equals(Errors.invalidLoginCredentials)
 
+							done()
+						})
+				})
+				.catch(err => {
+					console.log(err)
 					done()
 				})
 		})

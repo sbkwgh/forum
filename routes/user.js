@@ -350,4 +350,34 @@ router.put('/:username', async (req, res) => {
 	}
 })
 
+router.delete('/:username', async (req, res) => {
+	let validationErrors = []
+
+	try {
+		if(req.session.username !== req.params.username) {
+			validationErrors.push(Errors.requestNotAuthorized)
+			throw validationErrors
+		}
+
+		let user = await User.findOne({ where: {
+			username: req.session.username
+		}})
+
+		await user.destroy()
+
+		res.json({ success: true })
+
+	} catch (e) {
+		if(validationErrors.length) {
+			res.status(400)
+			res.json({ errors: validationErrors })
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({errors: Errors.unknown })
+		}
+	}
+})
+
 module.exports = router
