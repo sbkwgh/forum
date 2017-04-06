@@ -61,7 +61,7 @@ router.get('/:category', async (req, res) => {
 			threadsLatestPost = await Thread.findAll( threadInclude('DESC')[0] )
 		} else {
 			threads = await Category.findOne({
-				where: { name: req.params.category },
+				where: { value: req.params.category },
 				include: threadInclude('ASC')
 			})
 
