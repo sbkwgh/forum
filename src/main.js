@@ -116,10 +116,18 @@ Vue.filter('pluralize', function(number, value) {
 	}
 })
 
-new Vue({
+let Root = new Vue({
 	el: '#app',
 	template: '<App/>',
 	store,
 	components: { App },
 	router
 })
+
+let usernameCookie = document.cookie
+	.split(';')
+	.map(c => c.split('='))
+	.filter(pair => pair[0].trim() === 'username')
+	.map(pair => pair[1])[0]
+
+if(usernameCookie) Root.$store.commit('setUsername', usernameCookie)

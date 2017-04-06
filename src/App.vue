@@ -291,14 +291,6 @@
 		created () {
 			this.axios.get('/api/v1/settings')
 				.then(res => {
-					let usernameCookie = document.cookie
-						.split(';')
-						.map(c => c.split('='))
-						.filter(pair => pair[0].trim() === 'username')
-						.map(pair => pair[1])[0]
-
-					if(usernameCookie) this.$store.commit('setUsername', usernameCookie)
-
 					this.$store.commit('setForumName', res.data.forumName)
 				}).catch(err => {
 					if(err.response.data.errors[0].name === 'noSettings') {
