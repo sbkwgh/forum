@@ -8,17 +8,21 @@
 			</p>
 			<fancy-input
 				placeholder='Current password'
-				v-model='password.old.value'
-				:error='password.old.error'
+				v-model='password.current'
+				:error='password.errors["current password"]'
 				type='password'
 			></fancy-input>
 			<fancy-input
 				placeholder='New password'
-				v-model='password.new.value'
-				:error='password.new.error'
+				v-model='password.new'
+				:error='password.errors["new password"]'
 				type='password'
 			></fancy-input>
-			<button class='button button--green'>Change password</button>
+			<loading-button
+				class='button button--green'
+				@click='savePassword'
+				:loading='password.loading'
+			>Change password</loading-button>
 		</p>
 		<p>
 			<div class='h3 h3--margin_top'>Delete your account</div>
@@ -33,28 +37,70 @@
 
 <script>
 	import FancyInput from '../FancyInput'
+	import LoadingButton from '../LoadingButton'
+
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 	export default {
 		name: 'settingsAccount',
 		components: {
-			FancyInput
+			FancyInput,
+			LoadingButton
 		},
 		data () {
 			return {
 				password: {
-					old: {
-						value: '',
-						error: ''
-					},
-					new: {
-						value: '',
-						error: ''
+					loading: false,
+
+					current: '',
+					new: '',
+
+					errors: {
+						'new password': '',
+						'current password': ''
 					}
 				}
 			}
 		},
 		computed: {},
-		methods: {}
+		methods: {
+			savePassword () {
+				this.password.errors['current password'] = ''
+				this.password.errors['new password'] = ''
+
+				if(!this.password.current.length) {
+					this.password.errors['current password'] = 'Cannot be blank'
+					return
+				}
+				if(!this.password.new.length) {
+					this.password.errors['new password'] = 'Cannot be blank'
+					return
+				}
+
+				this.password.loading = true
+
+				this.axios
+					.put('/api/v1/user/' + this.$store.state.username, {
+						currentPassword: this.password.current,
+						newPassword: this.password.new
+					})
+					.then(_ => {
+						this.password.loading = false
+
+						this.password.current = ''
+						this.password.new = ''
+					})
+					.catch(e => {
+						this.password.loading = false
+
+						console.log(e)
+
+						AjaxErrorHandler(this.$store)(e, error => {
+							this.password.errors[error.parameter] = error.message
+						})
+					})
+			}
+		}
 	}
 </script>
 
