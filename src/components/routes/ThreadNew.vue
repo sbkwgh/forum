@@ -84,6 +84,13 @@
 				})
 			}
 		},
+		watch: {
+			'$store.state.username' (username) {
+				if(!username) {
+					this.$router.push('/')
+				}
+			}
+		},
 		beforeRouteEnter (to, from, next) {
 			next(vm => {
 				if(!vm.$store.state.username) {

@@ -31,6 +31,11 @@
 		watch: {
 			$route (to, from) {
 				this.selected = this.getIndexFromRoute(to.path)
+			},
+			'$store.state.username' (username) {
+				if(!username) {
+					this.$router.push('/')
+				}
 			}
 		},
 		mounted () {
@@ -49,6 +54,15 @@
 
 				return selectedIndex
 			}
+		},
+		beforeRouteEnter (to, from, next) {
+			next(vm => {
+				console.log(vm.$store.state.username)
+				if(!vm.$store.state.username) {
+					vm.$store.commit('setAccountModalState', true);
+					next('/')
+				}
+			})
 		}
 	}
 </script>
