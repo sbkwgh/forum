@@ -11,10 +11,8 @@
 				<span class='user_header__username'>{{username}}</span>
 				<span class='user_header__date' v-if='user'>Account created {{user.createdAt | formatDate('date') }}</span>
 			</div>
-			<div></div>
 		</div>
-		<div class='user_description' v-if='user' v-html='user.description'>
-		</div>
+		<div class='user_description' v-if='user && user.description.length' v-html='user.description'></div>
 		<div class='user__view_holder'>
 			<div class='user__links'>
 				<div
