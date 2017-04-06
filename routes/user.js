@@ -334,6 +334,8 @@ router.put('/:username', async (req, res) => {
 				validationErrors.push(Errors.invalidLoginCredentials)
 				throw validationErrors
 			}
+		} else {
+			res.json({})
 		}
 	} catch (e) {
 		if(validationErrors.length) {
