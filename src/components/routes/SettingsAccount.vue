@@ -30,7 +30,11 @@
 				Once this is done, your account <strong>cannot</strong> be restored <br/>
 				Your current posts however will be retained
 			</p>
-			<button class='button button--red'>Delete my account</button>
+			<loading-button 
+				class='button button--red'
+				:loading='deleteAccountLoading'
+				@click='deleteAccount'
+			>Delete my account</loading-button>
 		</p>
 	</div>
 </template>
@@ -59,7 +63,9 @@
 						'new password': '',
 						'current password': ''
 					}
-				}
+				},
+
+				deleteAccountLoading: false
 			}
 		},
 		computed: {},
@@ -98,6 +104,23 @@
 						AjaxErrorHandler(this.$store)(e, error => {
 							this.password.errors[error.parameter] = error.message
 						})
+					})
+			},
+
+			deleteAccount () {
+				this.deleteAccountLoading = true
+
+				this.axios
+					.delete('/api/v1/user/' + this.$store.state.username)
+					.then(_ => {
+						this.deleteAccountLoading = false
+
+						this.$store.commit('setUsername', null)
+						this.$router.push('/')
+					})
+					.catch(e => {
+						this.deleteAccountLoading = false
+						AjaxErrorHandler(this.$store)(e)
 					})
 			}
 		}
