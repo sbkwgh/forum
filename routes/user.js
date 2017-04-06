@@ -278,7 +278,7 @@ router.put('/:username', async (req, res) => {
 		}
 
 
-		if(req.body.description) {
+		if(req.body.description !== undefined) {
 			if(typeof req.body.description !== 'string') {
 				validationErrors.push(Errors.invalidParameterType('description', 'string'))
 			} else if(req.body.description.length > 1024) {
@@ -293,11 +293,13 @@ router.put('/:username', async (req, res) => {
 
 			res.json({ success: true })
 
-		} else if(req.body.newPassword) {
+		} else if(req.body.newPassword !== undefined) {
 			if(req.body.currentPassword === undefined) {
 				validationErrors.push(Errors.missingParameter('current password'))
 			} if(typeof req.body.currentPassword !== 'string') {
 				validationErrors.push(Errors.invalidParameterType('currentPassword', 'string'))
+			} else if(req.body.currentPassword.length < 8) {
+				validationErrors.push(Errors.parameterLengthTooSmall('current password', 7))
 			}
 
 			if(typeof req.body.newPassword !== 'string') {
