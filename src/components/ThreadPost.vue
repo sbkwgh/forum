@@ -124,7 +124,7 @@
 
 	.post {
 		position: relative;
-		border-top: thin solid $color__gray--primary;
+		border-bottom: thin solid $color__gray--primary;
 		transition: background-color 0.5s;
 		margin: 0.5rem 0;
 
