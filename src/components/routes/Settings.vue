@@ -1,6 +1,7 @@
 <template>
 	<div class='route_container route_container--settings'>
 		<div class='settings_menu'>
+			<div class='settings_menu__title'>settings</div>
 			<div
 				class='settings_menu__item'
 				v-for='(item, index) in menuItems'
@@ -11,7 +12,7 @@
 			</div>
 		</div>
 		<div class='settings_page'>
-			<router-view></router-view>
+			<router-view style='margin: 1rem 2rem;'></router-view>
 		</div>
 	</div>
 </template>
@@ -71,22 +72,27 @@
 
 	.route_container--settings {
 		display: flex;
-		flex-direction: row;
-		width: 100%;
-		height: calc(100% + 1rem);
-		padding: 0;
-		margin: 0;
-		margin-top: -1rem;
+		align-items: flex-start
 	}
 
 	.settings_menu {
 		width: 15rem;
-		height: 100%;
-		border-right: 0.125rem solid $color__gray--primary;
-		padding-top: 1rem;
+		@extend .shadow_border;
+		background-color: #fff;
+		padding: 1rem;
+		border-radius: 0.25rem;
+
+		@at-root #{&}__title {
+			cursor: default;
+			font-weight: 500;
+			font-variant: small-caps;
+			font-size: 1.125rem;
+			padding-left: 0.25rem;
+			margin-bottom: 0.5rem;
+		}
 
 		@at-root #{&}__item {
-			padding: 0.5rem 1.5rem;
+			padding: 0.5rem 1rem;
 			padding-right: 0;
 			transition: background-color 0.2s;
 			cursor: pointer;
@@ -118,5 +124,8 @@
 	}
 	.settings_page {
 		width: calc(100% - 15rem);
+		background-color: #fff;
+		border-radius: 0.25rem;
+		margin-left: 2rem;
 	}
 </style>
