@@ -44,7 +44,10 @@
 				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
 				<thread-display-placeholder v-for='n in nextThreadsCount' v-if='loading'></thread-display-placeholder>
 			</scroll-load>
-			<div v-else class='threads_main__threads thread--empty'>No threads or posts.</div>
+			<div v-else class='threads_main__threads thread--empty'>
+				<span class='fa fa-exclamation-circle'></span>
+				No threads or posts.
+			</div>
 		</div>
 	</div>
 </template>
@@ -227,12 +230,13 @@
 
 	.threads_main__side_bar {
 		width: 12rem;
+		height: 0%;
 		@extend .shadow_border;
 		background: #fff;
 		margin-top: 0.15rem;
 		margin-right: 1rem;
 		border-radius: 0.25rem;
-		padding: 0.5rem 0 0.5rem 1rem;
+		padding: 0.5rem 0 1rem 1rem;
 
 		@at-root #{&}__title {
 			cursor: default;
@@ -330,6 +334,7 @@
 
 		@at-root #{&}--empty {
 			display: flex;
+			flex-direction: column;
 			align-items: center;
 			justify-content: center;
 			padding-right: 5rem;
@@ -337,10 +342,11 @@
 			user-select: none;
 			cursor: default;
 			transition: none;
+			color: $color__gray--darkest;
 
-			&:hover {
-				transition: none;
-				background-color: #fff;
+			span {
+				font-size: 4rem;
+				color: $color__gray--darker;
 			}
 		}
 
