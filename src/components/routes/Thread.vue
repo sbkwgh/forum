@@ -208,7 +208,6 @@
 				text-align: center;
 				left: 0;
 				font-size: 2rem;
-				color: #fff;
 				top: 0.5rem;
 				opacity: 0;
 				pointer-events: none;
@@ -230,5 +229,8 @@
 
 	.posts {
 		width: 80%;
+		background-color: #fff;
+		padding: 1rem;
+		border-radius: 0.25rem;
 	}
 </style>
