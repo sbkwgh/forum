@@ -1,5 +1,9 @@
 @import './variables.scss';
 
+body {
+	background-color: rgba(245, 245, 245, 0.5);
+}
+
 pre {
 	background-color: $color__gray--primary;
 	padding: 0.5rem;
@@ -38,6 +42,7 @@ b, strong {
 .button {
 	border: 0.125rem solid $color__gray--primary;
 	display: inline-block;
+	border-radius: 0.25rem;
 	text-align: center;
 	@include text($font--role-default, 1rem, 400);
 	padding: 0.5rem;
@@ -105,9 +110,8 @@ b, strong {
 	}
 	@at-root #{&}--blue {
 		@include filled_button(
-			$color__blue--darker,
-			$color__blue--darkest,
-			$color__lightgray--primary
+			$color__blue--primary,
+			$color__blue--darker
 		);
 	}
 	@at-root #{&}--green {

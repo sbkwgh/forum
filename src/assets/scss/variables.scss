@@ -25,9 +25,9 @@ $color__green--primary: rgba(76, 175, 80, 0.86);
 $color__green--darker: #349238;
 $color__green--darkest: #1B5E20;
 
-$color__blue--primary: #0288D1;
-$color__blue--darker: #01579B;
-$color__blue--darkest: #0b3f8e;
+$color__blue--primary: #1E88E5;
+$color__blue--darker: #1565C0;
+$color__blue--darkest: #0D47A1;
 
 $color__red--primary: #E53935;
 $color__red--darker: #B71C1C;
@@ -91,4 +91,11 @@ $color__lightblue--primary: #03A9F4;
 		#{$pre + user-select}: #{$select};
 	}
 	#{user-select}: #{$select};
+}
+
+.shadow_border {
+	box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25);
+}
+.shadow_border--hover {
+	box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25), 0 0.2rem 0.35rem rgba(175, 175, 175, 0.25);
 }

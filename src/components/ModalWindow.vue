@@ -49,6 +49,7 @@
 		margin-top: -3rem;
 		opacity: 0;
 		border: 0.125rem solid $color__gray--darkest;
+		border-radius: 0.25rem;
 		pointer-events: none;
 
 		transition: margin-top 0.3s, opacity 0.3s;

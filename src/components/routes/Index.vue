@@ -6,7 +6,7 @@
 				v-model='selectedFilterOption'
 				class='thread_sorting__filter'
 			></select-options>
-			<button class='button' v-if='this.$store.state.username' @click='$router.push("/thread/new")'>Post new thread</button>
+			<button class='button button--blue' v-if='this.$store.state.username' @click='$router.push("/thread/new")'>Post new thread</button>
 		</div>
 		<div class='threads_main'>
 			<div class='threads_main__side_bar'>
@@ -23,7 +23,12 @@
 						class='threads_main__side_bar__menu_item__border'
 						:style='{"background-color": category.color}'
 					></span>
-					{{category.name}}
+					<span
+						class='threads_main__side_bar__menu_item__text'
+						:style='{
+							"color": category.value === selectedCategory ? category.color : undefined
+						}'
+					>{{category.name}}</span>
 				</div>
 			</div>
 			<scroll-load
@@ -221,9 +226,13 @@
 	}
 
 	.threads_main__side_bar {
-		width: 10rem;
-		border-right: thin solid $color__gray--primary;
-		margin-top: 0.5rem;
+		width: 12rem;
+		@extend .shadow_border;
+		background: #fff;
+		margin-top: 0.15rem;
+		margin-right: 1rem;
+		border-radius: 0.25rem;
+		padding: 0.5rem 0 0.5rem 1rem;
 
 		@at-root #{&}__title {
 			cursor: default;
@@ -239,34 +248,33 @@
 
 			#{&}__border {
 				display: inline-block;
-				width: 0.2rem;
-				z-index: 1;
-				height: 100%;
-				position: absolute;
-				left: -0.75rem;
-				opacity: 0;
-				top: 0.1rem;
+				height: 0.75rem;
+				width: 0.75rem;
+				border-radius: 0.25rem;
+				opacity: 0.5;
 				background-color: $color__gray--darkest;
-
+				position: relative;
+				top: 0.05rem;
 				transition: all 0.2s;
 			}
 
 			&:hover #{&}__border {
-				left: -0.5rem;
 				opacity: 1;
 			}
-
 			&:active #{&}__border {
 				filter: brightness(0.8);
 			}
+
+			#{&}__text {
+				filter: saturate(0.75), brightness(0.75);
+			}
+			
 
 			#{&}--selected {
 				font-weight: 500;
 
 				.threads_main__side_bar__menu_item__border {
 					opacity: 1;
-					left: -0.5rem;
-
 					&:active {
 						filter: brightness(1);
 					}

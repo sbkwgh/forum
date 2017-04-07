@@ -98,37 +98,17 @@
 
 	.thread_display {
 		display: flex;
-		padding: 0.5rem;
+		padding: 0.75rem;
 		margin-bottom: 1rem;
-		transition: background-color 0.2s;
+		background-color: #fff;
+		border-radius: 0.25rem;
+		transition: background-color 0.2s, box-shadow 0.2s;
 		position: relative;
-
-		&:after {
-			content: '';
-			position: absolute;
-			width: calc(100% + 0.25rem);
-			bottom: -0.5rem;
-			left: -0.25rem;
-			border-bottom: thin solid $color--lightgray__primary;
-		}
+		@extend .shadow_border;
 
 		&:hover {
-			background-color: $color--lightgray__primary;
+			@extend .shadow_border--hover;
 		}
-		&:active {
-			background-color: $color--lightgray__darker;
-		}
-
-		.thread_display__border {
-			position: absolute;
-			left: -0.25rem;
-			width: 0.25rem;
-			height: 100%;
-			top: 0;
-			opacity: 0.35;
-			transition: 0.2s opacity;
-		}
-		&:hover .thread_display__border { opacity: 1; }
 
 		@at-root #{&}__icon {
 			margin-right: 0.5rem;
