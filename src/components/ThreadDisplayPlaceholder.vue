@@ -27,32 +27,13 @@
 
 	.thread_display_placeholder {
 		display: flex;
-		padding: 0.5rem;
-		padding-bottom: 0;
+		padding: 0.75rem;
+		background-color: #fff;
+		border-radius: 0.25rem;
 		margin-bottom: 1rem;
 		transition: background-color 0.2s;
 		position: relative;
-
-		&:before {
-			@include flash;
-
-			content: '';
-			position: absolute;
-			left: 0rem;
-			top: 0;
-			width: 0.25rem;
-			height: 100%;
-
-		}
-
-		&:after {
-			content: '';
-			position: absolute;
-			width: calc(100% + 0.25rem);
-			bottom: -0.5rem;
-			left: -0.25rem;
-			border-bottom: thin solid $color--lightgray__primary;
-		}
+		@extend .shadow_border;
 
 		@at-root #{&}__bar {
 			@include flash;
