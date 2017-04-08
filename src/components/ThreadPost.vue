@@ -32,10 +32,10 @@
 			>
 				<div class='post__footer_sub_group'>
 					<heart-button
-						v-model='likeState'
+						:liked='liked'
 						:likes='post.Likes'
-						:likeable='$store.state.username !== post.User.username'
-						@input='emitLikeUpdate'
+						:likeable='$store.state.username && $store.state.username !== post.User.username'
+						@change='emitLikeUpdate'
 					></heart-button>
 				</div>
 				<div class='post__footer_sub_group' v-if='post.Replies.length'>
@@ -92,8 +92,7 @@
 			return {
 				hover: false,
 				showShareModal: false,
-				postURL: `${location.origin}/thread/${post.Thread.slug}/${post.ThreadId}/${post.postNumber}`,
-				likeState: false
+				postURL: `${location.origin}/thread/${post.Thread.slug}/${post.ThreadId}/${post.postNumber}`
 			}
 		},
 		computed: {
@@ -103,6 +102,9 @@
 				} else {
 					return '[deleted]'
 				}
+			},
+			liked () {
+				return this.post.Likes.some(u => u.username === this.$store.state.username)
 			}
 		},
 		methods: {
@@ -115,8 +117,8 @@
 			goToThread () {
 				this.$router.push(`/thread/${this.post.Thread.slug}/${this.post.Thread.id}`)
 			},
-			emitLikeUpdate () {
-				this.$emit('like', this.post.id, this.likeState)
+			emitLikeUpdate (state) {
+				this.$emit('like', this.post.id, state)
 			}
 		}
 	}

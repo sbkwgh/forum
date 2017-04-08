@@ -2,38 +2,36 @@
 	<label class='heart_button' :class='{"heart_button--unlikeable": !likeable}'>
 		<input
 			type='checkbox'
-			v-bind:checked='value'
-			v-bind:disabled='!likeable'
-			v-on:change="$emit('input', $event.target.checked)"
+			:checked='value'
+			:disabled='!likeable'
+			v-on:change="change"
 		>
 		<span class='fa'></span>
-		<span class='heart_button__count'>{{_likes}}</span>
+		<span class='heart_button__count'>{{likesCount}}</span>
 	</label>
 </template>
 
 <script>
 	export default {
 		name: 'HeartButton',
-		props: ['value', 'likes', 'likeable'],
+		props: ['liked', 'likes', 'likeable'],
 		data () {
 			return {
-				likedDuringSession: false
+				value: this.liked,
+				likesCount: this.likes.length
 			}
 		},
-		computed: {
-			_likes () {
-				let likes = this.likes.length
-
-				if(this.likedDuringSession) {
-					return likes + 1
+		methods: {
+			change (e) {
+				this.value = e.target.checked
+				
+				if(this.value) {
+					this.likesCount++
 				} else {
-					return likes
+					this.likesCount--
 				}
-			}
-		},
-		watch: {
-			value () {
-				this.likedDuringSession = this.value
+
+				this.$emit('change', this.value)
 			}
 		}
 	}

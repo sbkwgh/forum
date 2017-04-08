@@ -126,7 +126,15 @@
 				this.$store.dispatch('addPostAsync', this);
 			},
 			updatePostLike (id, state) {
-				console.log(arguments)
+				if(state) {
+					this.axios
+						.put('/api/v1/post/' + id + '/like')
+						.catch(AjaxErrorHandler(this.$store))
+				} else {
+					this.axios
+						.delete('/api/v1/post/' + id + '/like')
+						.catch(AjaxErrorHandler(this.$store))
+				}
 			},
 			loadNextPosts () {
 				let vue = this
