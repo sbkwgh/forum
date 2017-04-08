@@ -37,6 +37,7 @@
 					:hover='hover'
 					@click='$emit("goToPost", reply.postNumber)'
 				></post-reply>
+				<heart-button />
 			</div>
 			<div
 				class='post__footer_group'>
@@ -55,6 +56,7 @@
 
 <script>
 	import PostReply from './PostReply'
+	import HeartButton from './HeartButton'
 	import ModalWindow from './ModalWindow'
 	import FancyInput from './FancyInput'
 	import ReplyingTo from './ReplyingTo'
@@ -70,7 +72,8 @@
 			ModalWindow,
 			FancyInput,
 			ReplyingTo,
-			AvatarIcon
+			AvatarIcon,
+			HeartButton
 		},
 		data () {
 			let post = this.post
