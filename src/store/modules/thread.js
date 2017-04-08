@@ -57,7 +57,7 @@ const actions = {
 		let postNumber = vue.$route.params.post_number
 		let apiURL = '/api/v1/thread/' + vue.$route.params.id
 
-		if(postNumber) {
+		if(postNumber !== undefined) {
 			apiURL += '?postNumber=' + postNumber
 		}
 
@@ -72,7 +72,7 @@ const actions = {
 				commit('setPostCounts', res.data.meta)
 				commit('setPosts', res.data.Posts)
 
-				if(postNumber) {
+				if(postNumber !== undefined) {
 					vue.highlightPost(+postNumber)
 				}
 			}).catch(AjaxErrorHandler(vue.$store))

@@ -36,7 +36,7 @@
 				<thread-post
 					v-for='(post, index) in posts'
 					@reply='replyUser'
-					@goToPost='$router.push({ params: { post_number: post.postNumber } })'
+					@goToPost='goToPost'
 					:post='post'
 					:show-reply='true'
 					:highlight='highlightedPostIndex === index'
@@ -135,9 +135,22 @@
 			loadInitialPosts () {
 				this.$store.dispatch('loadInitialPostsAsync', this)
 			},	
-			goToPost (number) {
-				this.$router.push({ params: { post_number: number } })
-				this.loadInitialPosts()
+			goToPost (number, getPostNumber) {
+				let pushRoute = postNumber => {
+					if(this.$route.params.post_number === postNumber) {
+						this.highlightPost(postNumber)
+					} else {
+						this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+					}
+				}
+
+				if(getPostNumber) {
+					this.axios
+						.get('/api/v1/post/' + number)
+						.then(res => pushRoute(res.data.postNumber) )
+				} else {
+					pushRoute(number)
+				}
 			},
 			scrollTo (postNumber, cb) {
 				for(var i = 0; i < this.posts.length; i++) {
