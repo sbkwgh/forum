@@ -31,7 +31,7 @@
 				class='post__footer_group'
 			>
 				<div class='post__footer_sub_group'>
-					<heart-button></heart-button>
+					<heart-button v-model='liked' :likes='post.likes' :likeable='$store.state.username !== post.User.username'></heart-button>
 				</div>
 				<div class='post__footer_sub_group' v-if='post.Replies.length'>
 						<span class='post__footer_sub_group__text post__footer_sub_group__text--replies'>replies</span>
@@ -87,7 +87,8 @@
 			return {
 				hover: false,
 				showShareModal: false,
-				postURL: `${location.origin}/thread/${post.Thread.slug}/${post.ThreadId}/${post.postNumber}`
+				postURL: `${location.origin}/thread/${post.Thread.slug}/${post.ThreadId}/${post.postNumber}`,
+				liked: false
 			}
 		},
 		computed: {

@@ -1,15 +1,31 @@
 <template>
-	<label class='heart_button'>
-		<input type='checkbox'>
+	<label class='heart_button' :class='{"heart_button--unlikeable": !likeable}'>
+		<input
+			type='checkbox'
+			v-bind:checked='value'
+			v-bind:disabled='!likeable'
+			v-on:change="$emit('input', $event.target.checked)"
+		>
 		<span class='fa'></span>
-		<span class='heart_button__count'>0</span>
+		<span class='heart_button__count'>{{_likes}}</span>
 	</label>
 </template>
 
 <script>
 	export default {
 		name: 'HeartButton',
-		props: ['value']
+		props: ['value', 'likes', 'likeable'],
+		computed: {
+			_likes () {
+				let likes = this.likes || 0
+
+				if(this.value) {
+					return likes + 1
+				} else {
+					return likes
+				}
+			}
+		}
 	}
 </script>
 
@@ -18,6 +34,11 @@
 
 	.heart_button {
 		cursor: pointer;
+		@include user-select(none);
+
+		@at-root #{&}--unlikeable {
+			cursor: not-allowed;
+		}
 
 		input {
 			display: none;
