@@ -142,10 +142,15 @@
 			getThreads (initial) {
 				if(this.nextURL === null && !initial) return
 
+				let URL = '/api/v1/category/' + this.selectedCategory
+				if(!initial) {
+					URL = this.nextURL || URL
+				}
+
 				this.loading = true
 
 				this.axios
-					.get(this.nextURL || '/api/v1/category/' + this.selectedCategory)
+					.get(URL)
 					.then(res => {
 						this.loading = false
 
