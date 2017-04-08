@@ -243,7 +243,7 @@
 	.posts {
 		width: 80%;
 		background-color: #fff;
-		padding: 1rem;
+		padding: 0.5rem 1rem;
 		border-radius: 0.25rem;
 	}
 </style>

@@ -137,8 +137,8 @@
 		}
 
 		@at-root #{&}--last {
-			padding-bottom: 0.5rem;
-			border-bottom: thin solid $color__gray--primary;
+			border-bottom: none;
+			margin-bottom: 0;
 		}
 
 		@at-root #{&}__meta_data {
