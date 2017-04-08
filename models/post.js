@@ -34,12 +34,14 @@ module.exports = (sequelize, DataTypes) => {
 				Post.belongsTo(models.User)
 				Post.belongsTo(models.Thread)
 				Post.hasMany(models.Post, { as: 'Replies', foreignKey: 'replyId' })
+				Post.belongsToMany(models.User, { as: 'Likes', through: 'user_post' })
 			},
 			includeOptions () {
 				let models = sequelize.models
 
 				return [
-					{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
+					{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] },
+					{ model: models.User, as: 'Likes', attributes: ['username', 'createdAt', 'id', 'color'] },
 					{ model: models.Thread, include: [models.Category]} ,
 					{
 						model: models.Post, as: 'Replies', include:

@@ -36,6 +36,35 @@ router.all('*', (req, res, next) => {
 	}
 })
 
+router.put('/:post_id/like', async (req, res) => {
+	try {
+		let post = await Post.findById(req.params.post_id)
+		let user = await User.findOne({ where: { username: req.session.username }})
+		
+		if(!post) throw Errors.invalidParameter('id', 'post does not exist')
+		if(post.UserId === user.id) throw Errors.cannotLikeOwnPost
+
+		await post.addLikes(user)
+
+		res.json({ success: true })
+
+	} catch (e) {
+		if(['invalidParameter', 'cannotLikeOwnPost'].includes(e.name)) {
+			res.status(400)
+			res.json({
+				errors: [e]
+			})
+		} else{
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 router.post('/', async (req, res) => {
 	let validationErrors = []
 	let thread, replyingToPost, post
