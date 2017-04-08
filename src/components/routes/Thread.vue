@@ -37,6 +37,7 @@
 					v-for='(post, index) in posts'
 					@reply='replyUser'
 					@goToPost='goToPost'
+					@like='updatePostLike'
 					:post='post'
 					:show-reply='true'
 					:highlight='highlightedPostIndex === index'
@@ -123,6 +124,9 @@
 			},
 			addPost () {
 				this.$store.dispatch('addPostAsync', this);
+			},
+			updatePostLike (id, state) {
+				console.log(arguments)
 			},
 			loadNextPosts () {
 				let vue = this
