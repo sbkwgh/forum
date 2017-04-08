@@ -15,15 +15,25 @@
 	export default {
 		name: 'HeartButton',
 		props: ['value', 'likes', 'likeable'],
+		data () {
+			return {
+				likedDuringSession: false
+			}
+		},
 		computed: {
 			_likes () {
-				let likes = this.likes || 0
+				let likes = this.likes.length
 
-				if(this.value) {
+				if(this.likedDuringSession) {
 					return likes + 1
 				} else {
 					return likes
 				}
+			}
+		},
+		watch: {
+			value () {
+				this.likedDuringSession = this.value
 			}
 		}
 	}
