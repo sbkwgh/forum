@@ -249,11 +249,11 @@ router.post('/:username/login', async (req, res) => {
 })
 
 router.post('/:username/logout', async (req, res) => {
-	req.session = null
-	res.clearCookie('username')
-	
-	res.json({
-		success: true
+	req.session.destroy(() => {
+		res.clearCookie('username')
+		res.json({
+			success: true
+		})
 	})
 })
 
