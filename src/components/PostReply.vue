@@ -1,5 +1,5 @@
 <template>
-	<info-tooltip class='post_reply' :class='{"post_reply--hover": hover}'>
+	<info-tooltip class='post_reply' :class='{"post_reply--hover": hover, "post_reply--first": first}'>
 		<template slot='content'>
 			<div style='margin-top: -0.25rem;'>
 				<div class='post_reply__username'>{{user.username}}</div>
@@ -27,7 +27,7 @@
 
 	export default {
 		name: 'PostReply',
-		props: ['post', 'hover'],
+		props: ['post', 'hover', 'first'],
 		components: { InfoTooltip },
 		computed: {
 			user () {
@@ -60,10 +60,10 @@
 
 		@at-root #{&}--hover {
 			margin: 0 0.125rem;
+		}
 
-			&:first-child {
-				margin-left: 0rem;
-			}
+		@at-root #{&}--first {
+			margin-left: 0;
 		}
 
 
