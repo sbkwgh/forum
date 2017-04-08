@@ -149,4 +149,25 @@ describe('Like', () => {
 		thread.body.Posts[0].Likes.should.have.property('length', 1)
 		thread.body.Posts[2].Likes.should.have.property('length', 2)
 	})
+
+	it('should remove a like', async () => {
+		await admin.delete('/api/v1/post/3/like')
+
+		let postRes = admin.get('/api/v1/post/3')
+
+		postRes.should.have.status(200)
+		postRes.should.be.json
+		postRes.body.Likes.should.have.length(1)
+		postRes.body.Likes.should.not.contain.something.that.has.property('username', 'adminaccount')
+	})
+
+	it('should do nothing if removing a like on something never liked', async () => {
+		await admin.delete('/api/v1/post/2/like')
+
+		let postRes = admin.get('/api/v1/post/2')
+
+		postRes.should.have.status(200)
+		postRes.should.be.json
+		postRes.body.Likes.should.have.length(0)
+	})
 })
