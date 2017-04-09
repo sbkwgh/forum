@@ -31,12 +31,7 @@
 				class='post__footer_group'
 			>
 				<div class='post__footer_sub_group'>
-					<heart-button
-						:liked='liked'
-						:likes='post.Likes'
-						:likeable='$store.state.username && $store.state.username !== username'
-						@change='emitLikeUpdate'
-					></heart-button>
+					<heart-button :post='post'></heart-button>
 				</div>
 				<div class='post__footer_sub_group' v-if='post.Replies.length'>
 					<span class='post__footer_sub_group__text post__footer_sub_group__text--replies'>replies</span>
@@ -102,9 +97,6 @@
 				} else {
 					return '[deleted]'
 				}
-			},
-			liked () {
-				return this.post.Likes.some(u => u.username === this.$store.state.username)
 			}
 		},
 		methods: {
@@ -116,9 +108,6 @@
 			},
 			goToThread () {
 				this.$router.push(`/thread/${this.post.Thread.slug}/${this.post.Thread.id}`)
-			},
-			emitLikeUpdate (state) {
-				this.$emit('like', this.post.id, state)
 			}
 		}
 	}
