@@ -135,7 +135,21 @@
 				var selectionData = this.getSelectionData();
 
 				if(this.value[selectionData.start-1] === '\n' || selectionData.start === 0) {
-					this.replaceSelectedText('    ', '');
+					var el = this.$refs.textarea;
+					var matches = selectionData.val.match(/\n/g || [] ).length
+					var replacedText = '    ' + selectionData.val.replace(/\n/g, '\n    ')
+
+					this.setEditor(
+						this.value.slice(0, selectionData.start) +
+						replacedText +
+						this.value.slice(selectionData.end)
+					);
+					el.focus();
+
+					setTimeout(function() {
+						el.selectionStart = selectionData.start + 4;
+						el.selectionEnd = selectionData.end + matches*4;
+					}, 1);
 				} else {
 					this.replaceSelectedText('`', '`');
 				}
