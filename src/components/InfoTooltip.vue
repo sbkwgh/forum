@@ -64,6 +64,7 @@
 		@at-root #{&}__content {
 			opacity: 0;
 			max-height: 7.5rem;
+			border-radius: 0.25rem;
 			pointer-events: none;
 			width: 17.5rem;
 			z-index: 2;
