@@ -124,6 +124,7 @@ b, strong {
 
 .input {
 	border: 0.125rem solid $color__gray--primary;
+	border-radius: 0.25rem;
 	@include text;
 	padding: 0.25rem;
 	outline: none;
