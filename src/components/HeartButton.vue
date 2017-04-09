@@ -25,10 +25,13 @@
 		},
 		computed: {
 			likeable () {
+				let postUsername = this.post.User ?
+					this.post.User.username : 
+					null
+
 				return (
 					this.$store.state.username &&
-					this.post.User &&
-					this.post.User.username !== this.$store.state.username
+					postUsername !== this.$store.state.username
 				)
 			},
 			likes: {
@@ -80,6 +83,13 @@
 							AjaxErrorHandler(this.$store)(err)
 						})
 				}
+			}
+		},
+		watch: {
+			//TODO: fix this subtle bug
+			'$store.state.username': function() {
+				this._liked = false
+				this.$forceUpdate()
 			}
 		}
 	}
