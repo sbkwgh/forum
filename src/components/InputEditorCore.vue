@@ -171,7 +171,7 @@
 			color: $color__darkgray--primary;
 			border: thin solid $color__gray--primary;
 			transition: background-color 0.2s;
-			margin: 0;
+			margin: 0 0.25rem;
 
 			&:hover {
 				background-color: $color__gray--darker;
@@ -204,22 +204,6 @@
 			}
 		}
 
-		@at-root #{&}__markdownHTML {
-			height: 8.2rem;
-			overflow: auto;
-			word-break: break-word;
-			padding: 0.5rem;
-
-			@at-root #{&}--empty {
-				@include text($font--role-emphasis, 1rem);
-				display: flex;
-				margin-top: 1rem;
-				align-content: center;
-				@include user-select(none);
-				cursor: default;
-				color: $color__gray--darker;
-			}
-		}
 
 		@at-root #{&}__error {
 			position: absolute;
