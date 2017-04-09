@@ -2,36 +2,84 @@
 	<label class='heart_button' :class='{"heart_button--unlikeable": !likeable}'>
 		<input
 			type='checkbox'
-			:checked='value'
 			:disabled='!likeable'
+			:checked='liked'
 			v-on:change="change"
 		>
 		<span class='fa'></span>
-		<span class='heart_button__count'>{{likesCount}}</span>
+		<span class='heart_button__count'>{{likes}}</span>
 	</label>
 </template>
 
 <script>
+	import AjaxErrorHandler from '../assets/js/errorHandler'
+
 	export default {
 		name: 'HeartButton',
-		props: ['liked', 'likes', 'likeable'],
+		props: ['post'],
 		data () {
 			return {
-				value: this.liked,
-				likesCount: this.likes.length
+				changed: false,
+				liked_: false
+			}
+		},
+		computed: {
+			likeable () {
+				return (
+					this.$store.state.username &&
+					this.post.User &&
+					this.post.User.username !== this.$store.state.username
+				)
+			},
+			likes: {
+				get () {
+					let likes = this.post.Likes.length
+
+					if(this.changed) {
+						return this.liked ? likes+1 : likes-1
+					} else {
+						return likes
+					}
+				}
+			},
+			liked: {
+				get () {
+					if(this.changed) {
+						return this.liked_
+					} else {
+						return this.post.Likes.some(u => {
+							return u.username === this.$store.state.username
+						})
+					}
+				},
+				set (val) {
+					this.changed = true
+					this.liked_ = val
+				}
 			}
 		},
 		methods: {
 			change (e) {
-				this.value = e.target.checked
+				let liked = e.target.checked
+				let id = this.post.id
 				
-				if(this.value) {
-					this.likesCount++
+				if(liked) {
+					this.axios
+						.put('/api/v1/post/' + id + '/like')
+						.then(_ => this.liked = true)
+						.catch((err) => {
+							e.target.checked = !liked
+							AjaxErrorHandler(this.$store)(err)
+						})
 				} else {
-					this.likesCount--
+					this.axios
+						.delete('/api/v1/post/' + id + '/like')
+						.then(_ => this.liked = false)
+						.catch((err) => {
+							e.target.checked = !liked
+							AjaxErrorHandler(this.$store)(err)
+						})
 				}
-
-				this.$emit('change', this.value)
 			}
 		}
 	}
