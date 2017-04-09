@@ -84,13 +84,6 @@
 						})
 				}
 			}
-		},
-		watch: {
-			//TODO: fix this subtle bug
-			'$store.state.username': function() {
-				this._liked = false
-				this.$forceUpdate()
-			}
 		}
 	}
 </script>
