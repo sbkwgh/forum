@@ -81,7 +81,7 @@
 						Settings
 					</button>
 					<loading-button @click='logout' :loading='loadingLogout'>
-						Log out
+						Log out, {{$store.state.username}}
 					</loading-button>
 				</template>
 				<template v-else>
