@@ -41,7 +41,7 @@
 			@at-root #{&}--empty {
 				@include text($font--role-emphasis, 1rem);
 				display: flex;
-				margin-top: 1rem;
+				margin-top: 0.5rem;
 				align-content: center;
 				@include user-select(none);
 				cursor: default;
