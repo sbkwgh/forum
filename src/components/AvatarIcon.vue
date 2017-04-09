@@ -15,8 +15,8 @@
 						<span class='avatar_icon__date'>Created: {{ajaxUser.createdAt | formatDate('date') }}</span>
 					</div>
 				</div>
-				<div class='avatar_icon__description'>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				<div class='avatar_icon__description' v-if='ajaxUser.description'>
+					{{ajaxUser.description}}
 				</div>
 			</template>
 			<template v-else>Loading...</template>
