@@ -1,19 +1,43 @@
 <template>
-	<div class='route_container'>
+	<div class='route_container thread_new'>
 		<div class='h1'>Post new thread</div>
-		<span class='select_button_text'>Post in category:</span>
-		<select-button v-model='selectedCategory' :options='categories'></select-button>
-		<div>
-			<span class='select_button_text'>Name of thread:</span>
-			<fancy-input placeholder='Thread name' v-model='name' style='display: inline-block;'></fancy-input>
+		<div class='thread_meta_info'>
+			<div class='thread_meta_info__text'>Enter the thread title and the category to post it in</div>
+			<select-button v-model='selectedCategory' :options='categories'></select-button>
+			<fancy-input
+				placeholder='Thread title'
+				v-model='name'
+				style='margin-left: 0.5rem; display: inline-block;'
+				large='true'
+				width='15rem'
+			></fancy-input>
 		</div>
-		<input-editor v-model='editor' :show='true' :hide-close='true' :error='errors.content' style='margin-top: 1rem'></input-editor>
+		<div class='editor' :class='{"editor--focus": focusInput}'>
+			<div class='editor__input'>
+				<div class='editor__format_bar'>
+					editor
+				</div>
+				<input-editor-core
+					v-model='editor'
+					:error='errors.content'
+					@focus='setFocusInput(true)'
+					@blur='setFocusInput(false)'
+				></input-editor-core>
+			</div>
+			<div class='editor__preview'>
+				<div class='editor__format_bar editor__format_bar--preview'>
+					preview
+				</div>
+				<input-editor-preview :value='editor'></input-editor-preview>
+			</div>
+		</div>
 		<loading-button class='button--green submit' :loading='loading' @click='postThread'>Post thread</loading-button>
 	</div>
 </template>
 
 <script>
-	import InputEditor from '../InputEditor'
+	import InputEditorCore from '../InputEditorCore'
+	import InputEditorPreview from '../InputEditorPreview'
 	import FancyInput from '../FancyInput'
 	import SelectButton from '../SelectButton'
 	import LoadingButton from '../LoadingButton'
@@ -23,7 +47,8 @@
 	export default {
 		name: 'ThreadNew',
 		components: {
-			InputEditor,
+			InputEditorCore,
+			InputEditorPreview,
 			SelectButton,
 			FancyInput,
 			LoadingButton
@@ -34,6 +59,7 @@
 				editor: '',
 				name: '',
 				loading: false,
+				focusInput: false,
 
 				errors: {
 					content: '',
@@ -82,6 +108,9 @@
 						}
 					})
 				})
+			},
+			setFocusInput (val) {
+				this.focusInput = val
 			}
 		},
 		watch: {
@@ -102,16 +131,70 @@
 	}
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 	@import '../../assets/scss/variables.scss';
 
-	.select_button_text {
-		font-weight: bold;
+	.thread_new {
 		margin-top: 1rem;
-		display: inline-block;
-		margin-right: 0.5rem;
 	}
+
+	.thread_meta_info {
+		background-color: #fff;
+		@extend .shadow_border;
+		border-radius: 0.25rem;
+		padding: 1rem;
+		margin: 1rem 0;
+
+		@at-root #{&}__text {
+			margin-bottom: 0.5rem;
+		}
+	}
+
 	.submit {
 		margin-top: 1rem;
+	}
+
+	.editor {
+		display: flex;
+		background-color: #fff;
+		border-radius: 0.25rem;
+		border: 0.125rem solid $color__gray--darker;
+		transition: color 0.2s;
+
+		@at-root #{&}--focus {
+			border-color: $color__gray--darkest;
+		}
+
+		@at-root #{&}__format_bar {
+			height: 2.5rem;
+			background-color: $color__gray--primary;
+			display: flex;
+			padding-right: 1rem;
+			padding-bottom: 0.25rem;
+			justify-content: flex-end;
+			align-items: center;
+			font-variant: small-caps;
+		}
+
+		@at-root #{&}__input {
+			width: 50%;
+			position: relative;
+
+			.input_editor_core__format_bar {
+				left: 0rem;
+			}
+			.input_editor_core textarea {
+				height: 14rem;
+			}
+		}
+
+		@at-root #{&}__preview {
+			border-left: 0.125rem solid $color__gray--darker;
+			width: 50%;
+
+			.input_editor_preview__markdownHTML {
+				height: 14.2rem;
+			}
+		}
 	}
 </style>

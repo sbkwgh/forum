@@ -7,13 +7,17 @@
 			<error-tooltip :error='error'></error-tooltip>
 			<div
 				class='fancy_input__placeholder'
-				:class='{"fancy_input__placeholder--active": active || value.length}'
+				:class='{
+					"fancy_input__placeholder--active": active || value.length,
+					"fancy_input__placeholder--large": large
+				}'
 			>
 				{{placeholder}}
 			</div>
 			<input
 				v-bind:type='type || "text"'
 				class='input'
+				:class='{"fancy_input__input--large": large}'
 				v-bind:value='value'
 				v-bind:style='{width: width || "10rem"}'
 				v-on:input='updateValue($event.target.value)'
@@ -29,7 +33,7 @@
 
 	export default {
 		name: 'FancyInput',
-		props: ['value', 'placeholder', 'width', 'type', 'error'],
+		props: ['value', 'placeholder', 'width', 'type', 'error', 'large'],
 		components: {
 			ErrorTooltip
 		},
@@ -60,6 +64,12 @@
 		margin-top: 0.25rem;
 		margin-bottom: 0.5rem;
 
+		@at-root #{&}__input {
+			@at-root #{&}--large {
+				padding: 0.5rem;
+			}
+		}
+
 		@at-root #{&}__placeholder {
 			position: absolute;
 			top: 0.35rem;
@@ -68,6 +78,11 @@
 			color: $color__gray--darkest;
 			pointer-events: none;
 			transition: top 0.2s, font-size 0.2s;
+
+			@at-root #{&}--large {
+				top: 0.55rem;
+				left: 0.6rem;
+			}
 
 			@at-root #{&}--active {
 				top: -0.5rem;

@@ -16,7 +16,6 @@
 		</header>
 		<input-editor
 			v-model='editor'
-			:float='true'
 			:show='editorState'
 			:replyUsername='replyUsername'
 			v-on:close='hideEditor'
