@@ -34,12 +34,12 @@
 					<heart-button
 						:liked='liked'
 						:likes='post.Likes'
-						:likeable='$store.state.username && $store.state.username !== post.User.username'
+						:likeable='$store.state.username && $store.state.username !== username'
 						@change='emitLikeUpdate'
 					></heart-button>
 				</div>
 				<div class='post__footer_sub_group' v-if='post.Replies.length'>
-						<span class='post__footer_sub_group__text post__footer_sub_group__text--replies'>replies</span>
+					<span class='post__footer_sub_group__text post__footer_sub_group__text--replies'>replies</span>
 					<post-reply
 						v-for='(reply, index) in post.Replies'
 						:post='reply'
@@ -56,7 +56,7 @@
 				<div
 					class='post__action post__reply'
 					v-if='$store.state.username && showReply'
-					@click='$emit("reply", post.id, post.User.username)'
+					@click='$emit("reply", post.id, username)'
 				>
 					Reply
 				</div>
