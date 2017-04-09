@@ -81,7 +81,7 @@
 						Settings
 					</button>
 					<loading-button @click='logout' :loading='loadingLogout'>
-						Log out, {{$store.state.username}}
+						Log out
 					</loading-button>
 				</template>
 				<template v-else>
@@ -202,6 +202,8 @@
 				).then(res => {
 					this.loadingLogout = false
 					this.$store.commit('setUsername', '')
+
+					this.$router.push('/')
 				}).catch(err => {
 					this.loadingLogout = false
 					this.ajaxErrorHandler(err)
