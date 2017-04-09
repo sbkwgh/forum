@@ -183,7 +183,7 @@
 			.input_editor_core__format_bar {
 				left: 0rem;
 			}
-			textarea {
+			.input_editor_core textarea {
 				height: 14rem;
 			}
 		}
