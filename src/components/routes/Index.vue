@@ -61,8 +61,6 @@
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
-	let socket = require('socket.io-client')()
-
 	export default {
 		name: 'index',
 		components: {
@@ -200,6 +198,7 @@
 			this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
 			this.getThreads(true)
 
+			socket.emit('join', 'index')
 			socket.on('new thread', data => {
 				if(data.value === this.selectedCategory || this.selectedCategory == 'ALL') {
 					this.newThreads++
@@ -207,6 +206,7 @@
 			})
 		},
 		destroyed () {
+			socket.emit('leave', 'index')
 			socket.off('new thread')
 		}
 	}
