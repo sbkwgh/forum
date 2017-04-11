@@ -8,6 +8,7 @@
 				:class="{'settings_menu__item--selected': index === selected}"
 				@click='$router.push("/settings/" + item.route)'
 			>
+				<span class='fa' :class='item.icon'></span>
 				{{item.name}}
 			</div>
 		</div>
@@ -23,8 +24,8 @@
 		data () {
 			return {
 				menuItems: [
-					{ name: 'General', route: 'general' }, 
-					{ name: 'Account', route: 'account' },
+					{ name: 'General', route: 'general', icon: 'fa-cog' }, 
+					{ name: 'Account', route: 'account', icon: 'fa-lock'},
 				],
 				selected: 0
 			}
@@ -91,33 +92,53 @@
 			margin-bottom: 0.5rem;
 		}
 
-		@at-root #{&}__item {
+		@at-root #{&}__item  {
 			padding: 0.5rem 1rem;
+			margin-bottom: 0.25rem;
 			padding-right: 0;
 			transition: background-color 0.2s;
 			cursor: pointer;
 			position: relative;
+			border-radius: 0.25rem;
+			color: $color__text--secondary;
 
 			&:first-child { margin-top: 0.5rem; }
 			&:last-child { margin-bottom: 0.5rem; }
 
 			&:hover { background-color: $color__lightgray--primary; }
 
+			&::before {
+				content: '';
+				display: inline-block;
+				width: 0.25rem;
+				z-index: 1;
+				height: 100%;
+				position: absolute;
+				left: 0;
+				border-radius: 0.25rem 0 0 0.25em;
+				top: 0;
+				background-color: $color__gray--darkest;
+				opacity: 0;
+				transition: opacity 0.2s;
+			}
+
+			span {
+				color: $color__text--secondary;
+				margin-right: 0.5rem;
+			}
+
 			@at-root #{&}--selected {
 				background-color: $color__lightgray--darker;
+				color: $color__text--primary;
+
+				span {
+					color: $color__text--primary;
+				}
 
 				&:hover { background-color: $color__lightgray--darker; }
 
 				&::before {
-					content: '';
-					display: inline-block;
-					width: 0.25rem;
-					z-index: 1;
-					height: 100%;
-					position: absolute;
-					left: 0;
-					top: 0;
-					background-color: $color__gray--darkest;
+					opacity: 1;
 				}
 			}
 		}
@@ -127,5 +148,6 @@
 		background-color: #fff;
 		border-radius: 0.25rem;
 		margin-left: 2rem;
+		@extend .shadow_border;
 	}
 </style>
