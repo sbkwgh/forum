@@ -149,6 +149,11 @@ router.post('/', async (req, res) => {
 		res.json(await post.reload({
 			include: Post.includeOptions()
 		}))
+
+		req.app.get('io').to('thread/' + thread.id).emit('new post', {
+			postNumber: thread.postsCount,
+			id: post.id
+		})
 	} catch (e) {
 		if(e === Errors.VALIDATION_ERROR) {
 			res.status(400)
