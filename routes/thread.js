@@ -134,7 +134,7 @@ router.post('/', async (req, res) => {
 			]
 		}))
 
-		req.app.get('io').emit('new thread', {
+		req.app.get('io').to('index').emit('new thread', {
 			name: category.name,
 			value: category.value
 		})

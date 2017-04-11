@@ -60,8 +60,10 @@ describe('Socket-io', () => {
 
 		it('should emit a notification when a thread is created	', (done) => {
 			let client = io.connect('http://localhost:3000')
+			client.emit('join', 'index')
+
 			client.on('new thread', data => {
-				data.should.have.property('category', 'category_name')
+				data.should.have.property('name', 'category_name')
 
 				done()
 			})
