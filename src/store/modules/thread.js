@@ -121,6 +121,18 @@ const actions = {
 					AjaxErrorHandler(vue.$store)
 				})
 		}
+	},
+	loadNewPostsSinceLoad ({ state,  commit }, post) {
+		if(state.nextPostsCount < 10) {
+			let nextURL = state.nextURL
+			let baseURL = '/api/v1/thread/' + state.threadId + '?limit=10&from='
+
+			commit('incrementNextPostsCount')
+			
+			if(nextURL === null) {
+				commit('setNextURL', baseURL + (post.postNumber-1))
+			}
+		}
 	}
 }
 
@@ -180,6 +192,9 @@ const mutations = {
 	setPostCounts (state, meta) {
 		state.previousPostsCount = meta.previousPostsCount
 		state.nextPostsCount = meta.nextPostsCount
+	},
+	incrementNextPostsCount (state) {
+		state.nextPostsCount++
 	}
 }
 

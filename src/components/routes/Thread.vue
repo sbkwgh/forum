@@ -58,8 +58,9 @@
 	import ThreadPost from '../ThreadPost'
 	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 
-	import throttle from 'lodash.throttle'
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+
+	import throttle from 'lodash.throttle'
 
 	export default {
 		name: 'Thread',
@@ -197,6 +198,15 @@
 			document.addEventListener('scroll', throttle(setHeader, 200));
 
 			this.loadInitialPosts()
+			
+			socket.emit('join', 'thread/' + this.$route.params.id)
+			socket.on('new post', post => {
+				this.$store.dispatch('loadNewPostsSinceLoad', post)
+			})
+		},
+		destroyed () {
+			socket.emit('leave', 'thread/' + this.$route.params.id)
+			socket.off('new post')
 		}
 	}
 </script>
