@@ -151,8 +151,7 @@ router.post('/', async (req, res) => {
 		}))
 
 		req.app.get('io').to('thread/' + thread.id).emit('new post', {
-			postNumber: thread.postsCount,
-			id: post.id
+			postNumber: thread.postsCount
 		})
 	} catch (e) {
 		if(e === Errors.VALIDATION_ERROR) {
