@@ -365,7 +365,10 @@ router.delete('/:username', async (req, res) => {
 
 		await user.destroy()
 
-		res.json({ success: true })
+		req.session.destroy(() => {
+			res.clearCookie('username')
+			res.json({ success: true })
+		})
 
 	} catch (e) {
 		if(validationErrors.length) {
