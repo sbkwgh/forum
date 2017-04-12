@@ -32,7 +32,7 @@
 						<span class='notification_button__menu__item__header__date'>{{new Date() | formatDate }}</span>
 					</div>
 					<div>
-						<span class='notification_button__menu__item__user'>@John</span> wrote "Message here 123..."
+						<span class='notification_button__menu__item__link'>@John</span> wrote "Message here 123..."
 					</div>
 				</div>
 				<div class='notification_button__menu__empty' v-if='!notifications.length'>
@@ -197,7 +197,7 @@
 				}
 
 				
-				@at-root #{&}__user {
+				@at-root #{&}__link {
 					font-weight: 400;
 					cursor: pointer;
 				}
