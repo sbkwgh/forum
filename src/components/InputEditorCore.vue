@@ -13,12 +13,19 @@
 			</div>
 			<textarea
 				class='input_editor_core__input'
+				placeholder='Type here - you can format using Markdown'
+
 				ref='textarea'
 				:value='value'
+
 				@input='setEditor($event.target.value)'
 				@focus='$emit("focus")'
 				@blur='$emit("blur")'
-				placeholder='Type here - you can format using Markdown'
+				
+				@keydown.prevent.ctrl.66='replaceSelectedText("**", "**")'
+				@keydown.prevent.ctrl.73='replaceSelectedText("*", "*")'
+				@keydown.prevent.ctrl.76='setModalState("link", true)'
+				@keydown.prevent.ctrl.75='formatCode'
 			>
 			</textarea>
 		</div>
