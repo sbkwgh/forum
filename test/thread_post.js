@@ -146,6 +146,22 @@ describe('Thread and post', () => {
 				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('category'))
 			}
 		})
+		it('should return an error if name has no length', done => {
+			userAgent
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({
+						name: '',
+						category: 'CATEGORY_NAME'
+					})
+					.end((err, res) => {
+						res.should.be.json
+						res.should.have.status(400)
+						res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
+
+						done()
+					})
+		})
 		it('should return an error if invalid types', async () => {
 			try {
 				let res = await userAgent

@@ -100,6 +100,8 @@ router.post('/', async (req, res) => {
 			validationErrors.push(Errors.missingParameter('name'))
 		} else if(typeof req.body.name !== 'string') {
 			validationErrors.push(Errors.invalidParameterType('name', 'string'))
+		} else if(req.body.name.length === 0) {
+			validationErrors.push(Errors.missingParameter('name'))
 		}
 
 		if(req.body.category === undefined) {
