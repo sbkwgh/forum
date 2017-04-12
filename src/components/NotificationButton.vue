@@ -136,7 +136,7 @@
 			}
 		}
 		@at-root #{&}__menu {
-			left: -50%;
+			left: calc(-50% - 1.25rem);
 			position: absolute;
 			top: 2.9rem;
 			background-color: #fff;
