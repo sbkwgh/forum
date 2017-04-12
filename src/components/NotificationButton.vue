@@ -26,7 +26,15 @@
 				:class='{ "notification_button__small_triangle--empty": !notifications.length}'
 			></div>
 			<div class='notification_button__menu'>
-				<div v-for='notification in notifications' class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div v-for='notification in notifications' class='notification_button__menu__item'>
+					<div class='notification_button__menu__item__header'>
+						<span>New mention</span>
+						<span class='notification_button__menu__item__header__date'>{{new Date() | formatDate }}</span>
+					</div>
+					<div>
+						<span class='notification_button__menu__item__user'>@John</span> wrote "Message here 123..."
+					</div>
+				</div>
 				<div class='notification_button__menu__empty' v-if='!notifications.length'>
 					<span>{{emojis[emojiIndex % 6]}}</span>
 					No notifications
@@ -186,6 +194,22 @@
 				}
 				&:active {
 					background-color: $color__lightgray--darker;
+				}
+
+				
+				@at-root #{&}__user {
+					font-weight: 400;
+					cursor: pointer;
+				}
+
+				@at-root #{&}__header {
+					display: flex;
+					justify-content: space-between;
+					font-size: 0.9rem;
+
+					@at-root #{&}__date {
+						color: $color__text--secondary;
+					}
 				}
 			}
 		}
