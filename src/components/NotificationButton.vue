@@ -28,7 +28,7 @@
 			<div class='notification_button__menu'>
 				<div v-for='notification in notifications' class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
 				<div class='notification_button__menu__empty' v-if='!notifications.length'>
-					<span>{{emojis[emojiIndex % 4]}}</span>
+					<span>{{emojis[emojiIndex % 6]}}</span>
 					No notifications
 				</div>
 			</div>
@@ -45,8 +45,8 @@
 				notifications: [],
 
 				showMenu: false,
-				emojis: ['😢', '🤷', '😘', '🤔'],
-				emojiIndex: 0
+				emojis: ['😢', '🤷', '😘', '😒', '😔', '💩'],
+				emojiIndex: Math.round(Math.random()*5)
 			}
 		},
 		computed: {
