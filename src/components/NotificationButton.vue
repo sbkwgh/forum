@@ -1,5 +1,6 @@
 <template>
 	<div class='notification_button'>
+		<div class='notification_button__overlay'></div>
 		<button class='button notification_button__button'>
 			<span>Notifications</span>
 			<span
@@ -45,6 +46,16 @@
 	.notification_button {
 		position: relative;
 
+		@at-root #{&}__overlay {
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			position: fixed;
+			z-index: 5;
+			background-color: rgba(black, 0.5);
+		}
+
 		@at-root #{&}__big_triangle {
 			width: 1rem;
 			height: 1rem;
@@ -56,6 +67,7 @@
 			border-radius: 0.125rem 0 0 0;
 			border: 0.125rem solid $color__gray--primary;
 			left: calc(50% - 1.414rem /2);
+			z-index: 6;
 		}
 		@at-root #{&}__small_triangle {
 			width: 0;
@@ -66,7 +78,7 @@
 			border-right: 0.625rem solid transparent;
 			border-bottom: 0.625rem solid #ffffff;
 			position: absolute;
-			z-index: 2;
+			z-index: 8;
 		}
 		@at-root #{&}__menu {
 			position: absolute;
@@ -77,6 +89,7 @@
 			border-radius: 0.25rem;
 			border: 0.125rem solid $color__gray--darker;
 			box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+			z-index: 7;
 		}
 
 		@at-root #{&}__button {
