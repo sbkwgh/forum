@@ -122,6 +122,7 @@
 			z-index: 8;
 		}
 		@at-root #{&}__menu {
+			left: -50%;
 			position: absolute;
 			top: 2.9rem;
 			background-color: #fff;
