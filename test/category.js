@@ -83,6 +83,32 @@ describe('Category', () => {
 				JSON.parse(res.response.text).errors.should.contain.something.that.deep.equals(Errors.categoryAlreadyExists)
 			}
 		})
+		it('should return an error if missing category parameter', done => {
+			agent
+				.post('/api/v1/category')
+				.set('content-type', 'application/json')
+				.send({})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
+
+					done()
+				})
+		})
+		it('should return an error if category parameter has no length', done => {
+			agent
+				.post('/api/v1/category')
+				.set('content-type', 'application/json')
+				.send({ name: '' })
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
+
+					done()
+				})
+		})
 		it('should return an error if not an admin account', async () => {
 			let agent = chai.request.agent(server)
 

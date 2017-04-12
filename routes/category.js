@@ -155,7 +155,7 @@ router.post('/', async (req, res) => {
 		} else if(typeof req.body.name !== 'string') {
 			validationErrors.push(Errors.invalidParameterType('name', 'string'))
 		} else if(!req.body.name.length) {
-			validationErrors.push(Errors.parameterLengthTooSmall('name', '0'))
+			validationErrors.push(Errors.missingParameter('name'))
 		}
 
 		if(validationErrors.length) throw Errors.VALIDAITON_ERROR
