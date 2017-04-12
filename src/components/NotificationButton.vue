@@ -1,7 +1,11 @@
 <template>
 	<div class='notification_button'>
-		<div class='notification_button__overlay'></div>
-		<button class='button notification_button__button'>
+		<div
+			class='notification_button__overlay'
+			:class='{ "notification_button__overlay--show" : showMenu}'
+			@click='setShowMenu(false)'
+		></div>
+		<button class='button notification_button__button' @click='setShowMenu(!showMenu)'>
 			<span>Notifications</span>
 			<span
 				class='notification_button__button__count'
@@ -12,10 +16,13 @@
 				}'
 			>{{countText}}</span>
 		</button>
-		<div class='notification_button__big_triangle'></div>
-		<div class='notification_button__small_triangle'></div>
-		<div class='notification_button__menu'>
-		
+		<div
+			class='notification_button__menu_group'
+			:class='{ "notification_button__menu_group--show" : showMenu}'
+		>
+			<div class='notification_button__big_triangle'></div>
+			<div class='notification_button__small_triangle'></div>
+			<div class='notification_button__menu'></div>
 		</div>
 	</div>
 </template>
@@ -25,7 +32,8 @@
 		name: 'NotificationButton',
 		data () {
 			return {
-				count: 3
+				count: 3,
+				showMenu: false
 			}
 		},
 		computed: {
@@ -35,6 +43,11 @@
 				} else {
 					return this.count
 				}
+			}
+		},
+		methods: {
+			setShowMenu (val) {
+				this.showMenu = val
 			}
 		}
 	}
@@ -53,7 +66,26 @@
 			left: 0;
 			position: fixed;
 			z-index: 5;
-			background-color: rgba(black, 0.5);
+			pointer-events: none;
+
+			@at-root #{&}--show {
+				pointer-events: all;
+			}
+		}
+
+		@at-root #{&}__menu_group {
+			position: relative;
+			top: -3rem;
+
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 0.2s, top 0.2s;
+
+			@at-root #{&}--show {
+				pointer-events: all;
+				opacity: 1;
+				top: -2.5rem;
+			}
 		}
 
 		@at-root #{&}__big_triangle {
