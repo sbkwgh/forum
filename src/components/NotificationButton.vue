@@ -22,7 +22,16 @@
 		>
 			<div class='notification_button__big_triangle'></div>
 			<div class='notification_button__small_triangle'></div>
-			<div class='notification_button__menu'></div>
+			<div class='notification_button__menu'>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -116,12 +125,32 @@
 			position: absolute;
 			top: 2.9rem;
 			background-color: #fff;
-			padding: 1rem;
 			width: 20rem;
 			border-radius: 0.25rem;
 			border: 0.125rem solid $color__gray--darker;
 			box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+			max-height: 15rem;
+			overflow-y: auto;
 			z-index: 7;
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			@at-root #{&}__item {
+				padding: 0.5rem;
+				border-bottom: thin solid $color__gray--primary;
+				cursor: default;
+
+				transition: background-color 0.2s;
+
+				&:hover {
+					background-color: $color__lightgray--primary;
+				}
+				&:active {
+					background-color: $color__lightgray--darker;
+				}
+			}
 		}
 
 		@at-root #{&}__button {
