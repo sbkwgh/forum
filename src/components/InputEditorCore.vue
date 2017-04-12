@@ -8,7 +8,7 @@
 				<div
 					class='input_editor_core__format_button'
 					title='Bold (ctrl + b)'
-					@click='replaceSelectedText("**", "**")'
+					@click='replaceSelectedText("__", "__")'
 				>
 					B
 				</div>
@@ -45,7 +45,7 @@
 				@focus='$emit("focus")'
 				@blur='$emit("blur")'
 				
-				@keydown.ctrl.66='replaceSelectedText("**", "**")'
+				@keydown.ctrl.66='replaceSelectedText("__", "__")'
 				@keydown.ctrl.73='replaceSelectedText("*", "*")'
 				@keydown.ctrl.76='setModalState("link", true)'
 				@keydown.ctrl.75='formatCode'
