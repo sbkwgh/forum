@@ -21,16 +21,16 @@
 			:class='{ "notification_button__menu_group--show" : showMenu}'
 		>
 			<div class='notification_button__big_triangle'></div>
-			<div class='notification_button__small_triangle'></div>
+			<div
+				class='notification_button__small_triangle'
+				:class='{ "notification_button__small_triangle--empty": !notifications.length}'
+			></div>
 			<div class='notification_button__menu'>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
-				<div class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div v-for='notification in notifications' class='notification_button__menu__item'>qwertyuiopasdfghjkl</div>
+				<div class='notification_button__menu__empty' v-if='!notifications.length'>
+					<span>{{emojis[emojiIndex % 4]}}</span>
+					No notifications
+				</div>
 			</div>
 		</div>
 	</div>
@@ -42,7 +42,11 @@
 		data () {
 			return {
 				count: 3,
-				showMenu: false
+				notifications: [],
+
+				showMenu: false,
+				emojis: ['😢', '🤷', '😘', '🤔'],
+				emojiIndex: 0
 			}
 		},
 		computed: {
@@ -57,6 +61,12 @@
 		methods: {
 			setShowMenu (val) {
 				this.showMenu = val
+
+				if(!val) {
+					setTimeout(_ => {
+						this.emojiIndex++
+					}, 200)
+				}
 			}
 		}
 	}
@@ -120,6 +130,10 @@
 			border-bottom: 0.625rem solid #ffffff;
 			position: absolute;
 			z-index: 8;
+
+			@at-root #{&}--empty {
+				border-bottom-color: #fafafa;
+			}
 		}
 		@at-root #{&}__menu {
 			left: -50%;
@@ -130,9 +144,31 @@
 			border-radius: 0.25rem;
 			border: 0.125rem solid $color__gray--darker;
 			box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+			min-height: 8rem;
 			max-height: 15rem;
 			overflow-y: auto;
 			z-index: 7;
+
+			@at-root #{&}__empty {
+				background-color: #fafafa;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 2rem;
+				height: 8rem;
+				justify-content: center;
+				font-size: 1rem;
+				user-select: none;
+				cursor: default;
+				transition: none;
+				color: $color__gray--darkest;
+
+				span {
+					font-size: 2rem;
+					color: $color__gray--darker;
+					margin-bottom: 0.5rem;
+				}
+			}
 
 			&:last-child {
 				border-bottom: none;
