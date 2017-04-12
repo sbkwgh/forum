@@ -87,7 +87,7 @@
 			return {
 				hover: false,
 				showShareModal: false,
-				postURL: `${location.origin}/thread/${post.Thread.slug}/${post.ThreadId}/${post.postNumber}`
+				postURL: `${location.origin}/p/${post.id}`
 			}
 		},
 		computed: {

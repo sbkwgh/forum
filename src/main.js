@@ -12,6 +12,7 @@ import App from './App'
 import store from './store/index'
 
 import Index from './components/routes/Index'
+import P from './components/routes/P'
 import Start from './components/routes/Start'
 import Thread from './components/routes/Thread'
 import ThreadNew from './components/routes/ThreadNew'
@@ -36,6 +37,7 @@ const router = new VueRouter({
 	routes: [
 		{ path: '/', redirect: '/category/all' },
 		{ path: '/category/:category', component: Index },
+		{ path: '/p/:id', component: P },
 		{ path: '/start', component: Start },
 		{ path: '/thread/:slug/:id', component: Thread },
 		{ path: '/thread/:slug/:id/:post_number', name: 'thread-post', component: Thread },
