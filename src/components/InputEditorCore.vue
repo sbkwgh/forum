@@ -45,10 +45,10 @@
 				@focus='$emit("focus")'
 				@blur='$emit("blur")'
 				
-				@keydown.prevent.ctrl.66='replaceSelectedText("**", "**")'
-				@keydown.prevent.ctrl.73='replaceSelectedText("*", "*")'
-				@keydown.prevent.ctrl.76='setModalState("link", true)'
-				@keydown.prevent.ctrl.75='formatCode'
+				@keydown.ctrl.66='replaceSelectedText("**", "**")'
+				@keydown.ctrl.73='replaceSelectedText("*", "*")'
+				@keydown.ctrl.76='setModalState("link", true)'
+				@keydown.ctrl.75='formatCode'
 			>
 			</textarea>
 		</div>
