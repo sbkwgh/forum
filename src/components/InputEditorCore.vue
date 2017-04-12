@@ -5,11 +5,34 @@
 		<error-tooltip :error='error'></error-tooltip>
 		<div>
 			<div class='input_editor_core__format_bar'>
-				<div class='input_editor_core__format_button' @click='replaceSelectedText("**", "**")'>B</div>
-				<div class='input_editor_core__format_button' @click='replaceSelectedText("*", "*")'>I</div>
-				<div class='input_editor_core__format_button' @click='setModalState("link", true)'><span class='fa fa-link'></span></div>
-				<div class='input_editor_core__format_button' @click='formatCode'><span class='fa fa-code'></span></div>
-				<div class='input_editor_core__format_button' @click='setModalState("image", true)'><span class='fa fa-picture-o'></span></div>
+				<div
+					class='input_editor_core__format_button'
+					title='Bold (ctrl + b)'
+					@click='replaceSelectedText("**", "**")'
+				>
+					B
+				</div>
+				<div
+					class='input_editor_core__format_button'
+					title='Italic (ctrl + i)'
+					@click='replaceSelectedText("*", "*")'
+				>
+					I
+				</div>
+				<div
+					class='input_editor_core__format_button'
+					title='Link (ctrl + l)'
+					@click='setModalState("link", true)'
+				>
+					<span class='fa fa-link'></span>
+				</div>
+				<div
+					class='input_editor_core__format_button'
+					title='Code (ctrl + k)'
+					@click='formatCode'
+				>
+					<span class='fa fa-code'></span>
+				</div>
 			</div>
 			<textarea
 				class='input_editor_core__input'
