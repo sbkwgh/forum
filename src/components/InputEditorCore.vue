@@ -140,7 +140,7 @@
 				setTimeout(function() {
 					el.selectionStart = selectionData.start + before.length;
 					el.selectionEnd = selectionData.end + before.length;
-				}, 1);
+				}, 0);
 			},
 			addLink () {
 				var linkTextLength = this.linkText.length;
@@ -157,16 +157,18 @@
 				setTimeout(function() {
 					el.selectionStart = selectionData.start + 1;
 					el.selectionEnd = selectionData.start + 1 + linkTextLength;
-				}, 1);
+				}, 0);
 
 				this.setModalState('link', false);
 			},
-			formatCode () {
+			formatCode (e) {
+				e.preventDefault()
+
 				var selectionData = this.getSelectionData();
 
 				if(this.value[selectionData.start-1] === '\n' || selectionData.start === 0) {
 					var el = this.$refs.textarea;
-					var matches = selectionData.val.match(/\n/g || [] ).length
+					var matches = ( selectionData.val.match(/\n/g) || [] ).length
 					var replacedText = '    ' + selectionData.val.replace(/\n/g, '\n    ')
 
 					this.setEditor(
@@ -178,8 +180,8 @@
 
 					setTimeout(function() {
 						el.selectionStart = selectionData.start + 4;
-						el.selectionEnd = selectionData.end + matches*4;
-					}, 1);
+						el.selectionEnd = selectionData.end + (matches + 1)*4;
+					}, 0);
 				} else {
 					this.replaceSelectedText('`', '`');
 				}
