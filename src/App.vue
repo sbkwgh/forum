@@ -77,6 +77,7 @@
 			</div>
 			<div class='header__group'>
 				<template v-if='$store.state.username'>
+					<notification-button></notification-button>
 					<button @click='$router.push("/settings")' class='button' >
 						Settings
 					</button>
@@ -107,6 +108,7 @@
 	import TabView from './components/TabView'
 	import FancyInput from './components/FancyInput'
 	import LoadingButton from './components/LoadingButton'
+	import NotificationButton from './components/NotificationButton'
 
 	import mapGetters from 'vuex'
 
@@ -119,7 +121,8 @@
 			ModalWindow,
 			TabView,
 			FancyInput,
-			LoadingButton
+			LoadingButton,
+			NotificationButton
 		},
 		data () {
 			return {
