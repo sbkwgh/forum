@@ -7,6 +7,7 @@
 			<fancy-input
 				placeholder='Thread title'
 				v-model='name'
+				:error='errors.name'
 				style='margin-left: 0.5rem; display: inline-block;'
 				large='true'
 				width='15rem'
@@ -102,7 +103,7 @@
 						let param = error.parameter
 
 						if(this.errors[param] !== undefined) {
-							this.error[param] = error.message
+							this.errors[param] = error.message
 						} else {
 							errors.push(error.message)
 						}
