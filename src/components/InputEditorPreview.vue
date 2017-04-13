@@ -8,6 +8,7 @@
 </template>
 
 <script>
+	import throttle from 'lodash.throttle'
 	import Marked from 'marked'
 
 	Marked.setOptions({
@@ -17,16 +18,56 @@
 		sanitize: true
 	});
 
+	let usernames = {}
+
 	export default {
 		name: 'InputEditorPreview',
 		props: ['value'],
+		data () {
+			return {
+				value_: this.value
+			}
+		},
+		methods: {
+			replaceUsername (match) {
+				let username = match.slice(1)
+				let link = usernames[username]
+				let regexp = new RegExp('(^|\\s)' + match + '($|\\s)')
+
+				if(link) {
+					this.$nextTick(() => {
+						this.value_ = this.value_.replace(regexp, '$1' + link + '$2')
+					})
+				} else if(link === undefined) {				
+					this.axios
+						.get('/api/v1/user/' + username)
+						.then(_ => {
+							let newLink = `[${match}](/user/${username})`
+
+							this.$nextTick(() => {
+								this.value_ = this.value_.replace(regexp, '$1' + newLink + '$2')
+							})
+							usernames[username] = newLink
+						})
+						.catch(_ => {
+							usernames[username] = null
+						})
+				}
+			}
+		},
 		computed: {
 			HTML () {
-				let replacedMd = this.value.replace(/@[^\s]+/g, match => {
-					return `[${match}](/user/${match.slice(1)})`
+				return Marked(this.value_);
+			}
+		},
+		watch: {
+			value (val) {
+				let matches = val.match(/@[^\s]+/g) || []
+				matches.forEach(match => {
+					this.replaceUsername(match)
 				})
 
-				return Marked(replacedMd);
+				this.value_ = val
 			}
 		}
 	}
