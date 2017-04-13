@@ -22,7 +22,11 @@
 		props: ['value'],
 		computed: {
 			HTML () {
-				return Marked(this.value);
+				let replacedMd = this.value.replace(/@[^\s]+/g, match => {
+					return `[${match}](/user/${match.slice(1)})`
+				})
+
+				return Marked(replacedMd);
 			}
 		}
 	}
