@@ -2,9 +2,9 @@ module.exports = (sequelize, DataTypes) => {
 	let MentionNotification = sequelize.define('MentionNotification', {}, {
 		classMethods: {
 			associate (models) {
-				Notification.belongsTo(models.User)
-				Notification.belongsTo(models.Post)
-				Notification.belongsTo(models.Notification)
+				MentionNotification.belongsTo(models.User)
+				MentionNotification.belongsTo(models.Post)
+				MentionNotification.belongsTo(models.Notification)
 			}
 		}
 	})
