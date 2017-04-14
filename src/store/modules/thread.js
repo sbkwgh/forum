@@ -30,8 +30,15 @@ const getters = {
 
 const actions = {
 	addPostAsync ({ state, commit, rootState }, vue) {
+		let content = state.editor.value
+		state.mentions.forEach(mention => {
+			let regexp = new RegExp('(^|\\s)@' + mention + '($|\\s)')
+			content = content.replace(regexp, `$1[@${mention}](/user/${mention})$2`)
+		})
+
 		var post = {
-			content: state.editor.value,
+			content,
+			mentions: state.mentions,
 			threadId: +vue.$route.params.id
 		};
 
