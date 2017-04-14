@@ -76,8 +76,14 @@
 			}
 		},
 		watch: {
-			show () {
-				this.$el.querySelector('textarea').focus()
+			show (val) {
+				let textarea
+
+				if(val) this.showTab = 0
+
+				textarea = this.$el.querySelector('textarea')
+				if(textarea) textarea.focus()
+
 			}
 		}
 	}
