@@ -80,6 +80,8 @@
 	import TabView from './TabView'
 	import ErrorTooltip from './ErrorTooltip'
 
+	let usernames = {}
+
 	export default {
 		name: 'InputEditorCore',
 		props: ['value', 'error'],
@@ -111,7 +113,48 @@
 					this.imageModalVisible = state
 				}
 			},
+			checkUsernames (matches) {
+				let doneCount = 0
+				let mentions = []
+
+				let done = res => {
+					doneCount++
+
+					if(res) mentions.push(res)
+
+					if(doneCount === matches.length) {
+						this.$emit('mentions', mentions)
+					}
+				}
+
+				matches.forEach(match => {
+					this.checkUsername(match, done)
+				})
+
+			},
+			checkUsername (match, cb) {
+				let username = match.trim().slice(1)
+				let checkedUsername = usernames[username]
+
+				if(checkedUsername !== undefined) {
+					cb(checkedUsername)
+				} else if(checkedUsername === undefined) {				
+					this.axios
+						.get('/api/v1/user/' + username)
+						.then(_ => {
+							usernames[username] = username
+							cb(username)
+						})
+						.catch(_ => {
+							usernames[username] = null
+							cb(null)
+						})
+				}
+			},
 			setEditor (value) {
+				let matches = value.match(/(^|\s)@[^\s]+/g) || []
+				this.checkUsernames(matches)
+
 				this.$emit('input', value)
 			},
 			getSelectionData () {

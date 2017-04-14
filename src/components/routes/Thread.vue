@@ -16,8 +16,11 @@
 		</header>
 		<input-editor
 			v-model='editor'
+
 			:show='editorState'
 			:replyUsername='replyUsername'
+			
+			v-on:mentions='setMentions'
 			v-on:close='hideEditor'
 			v-on:submit='addPost'
 		>
@@ -101,6 +104,9 @@
 			hideEditor () {
 				this.$store.commit('setThreadEditorState', false);
 				this.clearReply()
+			},
+			setMentions (mentions) {
+				this.$store.commit('setMentions', mentions)
 			},
 			clearReply () {
 				this.$store.commit({

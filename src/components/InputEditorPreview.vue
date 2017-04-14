@@ -22,52 +22,17 @@
 
 	export default {
 		name: 'InputEditorPreview',
-		props: ['value'],
-		data () {
-			return {
-				value_: this.value
-			}
-		},
-		methods: {
-			replaceUsername (match) {
-				let username = match.slice(1)
-				let link = usernames[username]
-				let regexp = new RegExp('(^|\\s)' + match + '($|\\s)')
-
-				if(link) {
-					this.$nextTick(() => {
-						this.value_ = this.value_.replace(regexp, '$1' + link + '$2')
-					})
-				} else if(link === undefined) {				
-					this.axios
-						.get('/api/v1/user/' + username)
-						.then(_ => {
-							let newLink = `[${match}](/user/${username})`
-
-							this.$nextTick(() => {
-								this.value_ = this.value_.replace(regexp, '$1' + newLink + '$2')
-							})
-							usernames[username] = newLink
-						})
-						.catch(_ => {
-							usernames[username] = null
-						})
-				}
-			}
-		},
+		props: ['value', 'mentions'],
 		computed: {
 			HTML () {
-				return Marked(this.value_);
-			}
-		},
-		watch: {
-			value (val) {
-				let matches = val.match(/@[^\s]+/g) || []
-				matches.forEach(match => {
-					this.replaceUsername(match)
+				let replacedMd = this.value
+
+				;(this.mentions || []).forEach(mention => {
+					let regexp = new RegExp('(^|\\s)@' + mention + '($|\\s)')
+					replacedMd = replacedMd.replace(regexp, `$1[@${mention}](/user/${mention})$2`)
 				})
 
-				this.value_ = val
+				return Marked(replacedMd);
 			}
 		}
 	}

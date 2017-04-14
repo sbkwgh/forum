@@ -12,6 +12,7 @@ const state = {
 		show: false,
 		value: ''
 	},
+	mentions: [],
 	loadingPosts: false,
 	nextURL: '',
 	previousURL: '',
@@ -195,6 +196,9 @@ const mutations = {
 	},
 	incrementNextPostsCount (state) {
 		state.nextPostsCount++
+	},
+	setMentions (state, mentions) {
+		state.mentions = mentions
 	}
 }
 
