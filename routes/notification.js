@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors')
-let { Notification } = require('../models')
+let { Notification, User, Post, MentionNotification } = require('../models')
 
 router.all('*', (req, res, next) => {
 	if(req.session.loggedIn) {
@@ -19,21 +19,23 @@ router.get('/', async (req, res) => {
 	try {
 		let Notifications = await Notification.findAll({
 			where: {
-				'$User.username$': req.session.username
+				'UserId': req.session.UserId
 			},
 			include: [{
-				model: 'MentionNotification',
-				include: ['User', 'Post']
+				model: MentionNotification,
+				include: [Post, { model: User, attributes: ['createdAt', 'username', 'color'] }]
 			}]
 		})
 
-		let unreadCount = notifications.reduce((acc, val) => {
+		let unreadCount = Notifications.reduce((acc, val) => {
 			return val.read ? acc : acc+1
 		}, 0)
 
 		res.json({ Notifications, unreadCount })
 
 	} catch (e) {
+		console.log(e)
+
 		res.status(500)
 		res.json({
 			errors: [Errors.unknown]
@@ -44,9 +46,9 @@ router.get('/', async (req, res) => {
 
 router.put('/', async (req, res) => {
 	try {
-		await Notification.updateAll({ read: true }, {
+		await Notification.update({ read: true }, {
 			where: {
-				'$User.username$': req.session.username,
+				'UserId': req.session.UserId,
 				'read': false
 			}
 		})
@@ -54,6 +56,8 @@ router.put('/', async (req, res) => {
 		res.json({ success: true })
 
 	} catch (e) {
+		console.log(e)
+
 		res.status(500)
 		res.json({
 			errors: [Errors.unknown]
