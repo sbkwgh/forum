@@ -170,6 +170,45 @@ describe('Notifications', () => {
 	})
 
 	describe('/notification/:id', () => {
-		
+		it('should set notification as interacted', async () => {
+			await admin.put('/api/v1/notification/1')
+
+			let res = await admin.get('/api/v1/notification')
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.Notifications.should.have.property('length', 2)
+			res.body.Notifications[0].should.have.property('interacted', true)
+		})
+		it('should return an error if notification does not exist', done => {
+			admin
+				.put('/api/v1/notification/notanid')
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.should.contain.something.that.deep.equals(Errors.invalidParameter('notification id', 'invalid notification id'))
+
+					done()
+				})
+		})
+		it('should delete a notification', async () => {
+			await admin.delete('/api/v1/notification/1')
+			await admin.delete('/api/v1/notification/3')
+
+			let res = await admin.get('/api/v1/notification')
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.Notifications.should.have.property('length', 0)
+		})
+		it('should return an error if notification does not exist', done => {
+			admin
+				.delete('/api/v1/notification/notanid')
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.should.contain.something.that.deep.equals(Errors.invalidParameter('notification id', 'invalid notification id'))
+
+					done()
+				})
+		})
 	})
 })
