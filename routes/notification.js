@@ -5,7 +5,7 @@ const Errors = require('../lib/errors')
 let { Notification } = require('../models')
 
 router.all('*', (req, res, next) => {
-	if(req.session.admin) {
+	if(req.session.loggedIn) {
 		next()
 	} else {
 		res.status(401)
