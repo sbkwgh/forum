@@ -93,7 +93,8 @@
 				}).then(res => {
 					return this.axios.post('/api/v1/post', {
 						threadId: res.data.id,
-						content: this.editor
+						content: this.editor,
+						mentions: this.mentions
 					})
 				}).then(res => {
 					this.loading = false
