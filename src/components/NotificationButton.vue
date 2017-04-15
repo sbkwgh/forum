@@ -10,11 +10,11 @@
 			<span
 				class='notification_button__button__count'
 				:class='{
-					"notification_button__button__count--none": !count,
-					"notification_button__button__count--two_figure": count > 9,
-					"notification_button__button__count--three_figure": count > 99
+					"notification_button__button__count--none": !unreadCount,
+					"notification_button__button__count--two_figure": unreadCount > 9,
+					"notification_button__button__count--three_figure": unreadCount > 99
 				}'
-			>{{countText}}</span>
+			>{{unreadCountText}}</span>
 		</button>
 		<div
 			class='notification_button__menu_group'
@@ -26,14 +26,36 @@
 				:class='{ "notification_button__small_triangle--empty": !notifications.length}'
 			></div>
 			<div class='notification_button__menu'>
-				<div v-for='notification in notifications' class='notification_button__menu__item'>
-					<div class='notification_button__menu__item__header'>
-						<span>New mention</span>
-						<span class='notification_button__menu__item__header__date'>{{new Date() | formatDate }}</span>
-					</div>
-					<div>
-						<span class='notification_button__menu__item__link'>@John</span> wrote "Message here 123..."
-					</div>
+				<div
+					v-for='notification in notifications'
+					class='notification_button__menu__item'
+					:class='{
+						"notification_button__menu__item--uninteracted": !notification.interacted
+					}'
+
+					@click='click(notification)'
+				>
+
+					<template v-if='notification.type === "mention"'>
+						<div class='notification_button__menu__item__header'>
+							<span>New mention</span>
+							<span>
+								<span class='notification_button__menu__item__header__date'>{{notification.createdAt | formatDate }}</span>
+								<span
+									class='notification_button__menu__item__header__close'
+									@click.stop='deleteNotification(notification.id)'
+								>&times;</span>
+							</span>
+						</div>
+						<div>
+							<span class='notification_button__menu__item__link'>
+								{{notification.MentionNotification.User.username}}
+							</span>
+							wrote
+							"{{notification.MentionNotification.Post.content | stripTags | truncate(50)}}"
+						</div>
+					</template>
+
 				</div>
 				<div class='notification_button__menu__empty' v-if='!notifications.length'>
 					<span>{{emojis[emojiIndex % 6]}}</span>
@@ -45,11 +67,13 @@
 </template>
 
 <script>
+	import AjaxErrorHandler from '../assets/js/errorHandler'
+
 	export default {
 		name: 'NotificationButton',
 		data () {
 			return {
-				count: 3,
+				unreadCount: 0,
 				notifications: [],
 
 				showMenu: false,
@@ -58,11 +82,11 @@
 			}
 		},
 		computed: {
-			countText () {
-				if(this.count > 99) {
+			unreadCountText () {
+				if(this.unreadCount > 99) {
 					return '99+'
 				} else {
-					return this.count
+					return this.unreadCount
 				}
 			}
 		},
@@ -70,12 +94,84 @@
 			setShowMenu (val) {
 				this.showMenu = val
 
-				if(!val) {
+				if(val) {
+					this.resetUnreadCount()
+				} else {
 					setTimeout(_ => {
 						this.emojiIndex++
 					}, 200)
 				}
+			},
+			getIndexById (id) {
+				let index
+
+				this.notifications.forEach((notification, i) => {
+					if(notification.id === id) {
+						index = i
+					}
+				})
+
+				return index
+			},
+			getNotifications () {
+				this.axios
+					.get('/api/v1/notification')
+					.then(res => {
+						this.notifications = res.data.Notifications
+						this.unreadCount = res.data.unreadCount
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			},
+			resetUnreadCount () {
+				this.axios
+					.get('/api/v1/notification')
+					.then(res => {
+						this.unreadCount = 0
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			},
+			deleteNotification (id) {
+				let index = this.getIndexById(id)
+
+				this.axios
+					.delete('/api/v1/notification/' + id)
+					.then(res => {
+						this.notifications.splice(index, 1)
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			},
+			setInteracted (id) {
+				let index = this.getIndexById(id)
+				let item = this.notifications[index]
+				
+				this.axios
+					.put('/api/v1/notification/' + id)
+					.then(res => {
+						this.$set(
+							this.notifications,
+							index,
+							Object.assign(item, { interacted: true })
+						)
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			},
+			click (notification) {
+				if(!notification.interacted) {
+					this.setInteracted(notification.id)
+				}
+
+				if(notification.type === 'mention') {
+					this.$router.push('/p/' + notification.MentionNotification.Post.id)
+				}
+
+				this.setShowMenu(false)
 			}
+		},
+		created () {
+			this.getNotifications()
+		},
+		watch: {
+			'$store.state.username': 'getNotifications'
 		}
 	}
 </script>
@@ -178,11 +274,11 @@
 				}
 			}
 
-			&:last-child {
-				border-bottom: none;
-			}
-
 			@at-root #{&}__item {
+				&:last-child {
+					border-bottom: none;
+				}
+
 				padding: 0.5rem;
 				border-bottom: thin solid $color__gray--primary;
 				cursor: default;
@@ -196,6 +292,13 @@
 					background-color: $color__lightgray--darker;
 				}
 
+				@at-root #{&}--uninteracted {
+					background-color: rgba(13, 71, 161, 0.1);
+
+					&:hover {
+						background-color: rgba(13, 71, 161, 0.2);
+					}
+				}
 				
 				@at-root #{&}__link {
 					font-weight: 400;
@@ -209,6 +312,27 @@
 
 					@at-root #{&}__date {
 						color: $color__text--secondary;
+					}
+					@at-root #{&}__close {
+						background-color: $color__gray--darkest;
+						height: 0.9rem;
+						width: 0.9rem;
+						cursor: pointer;
+						display: inline-flex;
+						border-radius: 100%;
+						margin-left: 0.25rem;
+						align-items: center;
+						justify-content: center;
+						padding: 0;
+						color: #fff;
+						position: relative;
+						top: 0.0625rem;
+						line-height: 1;
+						transition: all 0.2s;
+
+						&:hover {
+							filter: brightness(0.9);
+						}
 					}
 				}
 			}
