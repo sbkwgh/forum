@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors')
-let { User, Thread, Post } = require('../models')
+let { User, Thread, Post, Notification } = require('../models')
 
 router.get('/:post_id', async (req, res) => {
 	try {
@@ -108,6 +108,14 @@ router.post('/', async (req, res) => {
 			validationErrors.push(Errors.invalidParameterType('threadId', 'integer'))
 		} if(req.body.replyingToId !== undefined && !Number.isInteger(req.body.replyingToId)) {
 			validationErrors.push(Errors.invalidParameterType('replyingToId', 'integer'))
+		} if(req.body.mentions !== undefined) {
+			if(Array.isArray(req.body.mentions)) {
+				if(req.body.mentions.some(m => typeof m !== 'string')) {
+					validationErrors.push(Errors.invalidParameterType('mention', 'string'))
+				}
+			} else {
+				validationErrors.push(Errors.invalidParameterType('mentions', 'array'))
+			}
 		}
 
 		if(validationErrors.length) throw Errors.VALIDATION_ERROR
@@ -153,6 +161,13 @@ router.post('/', async (req, res) => {
 		req.app.get('io').to('thread/' + thread.id).emit('new post', {
 			postNumber: thread.postsCount
 		})
+
+		if(req.body.mentions) {
+			req.body.mentions.forEach(mention => {
+				Notification.createMention({ mention, user, post })
+			})
+		}
+
 	} catch (e) {
 		if(e === Errors.VALIDATION_ERROR) {
 			res.status(400)
