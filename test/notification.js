@@ -116,7 +116,20 @@ describe('Notifications', () => {
 				.send({ threadId: 1, content: 'POST 1', mentions: ['adminaccount', 123] })
 				.end((err, res) => {
 					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('mentions', 'string'))
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('mention', 'string'))
+
+					done()
+				})
+		})
+
+		it('should return an error if any mentions is not an array', done => {
+			user
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ threadId: 1, content: 'POST 1', mentions: false })
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('mentions', 'array'))
 
 					done()
 				})
