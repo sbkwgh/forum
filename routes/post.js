@@ -154,6 +154,12 @@ router.post('/', async (req, res) => {
 
 		await thread.increment('postsCount')
 
+		if(req.body.mentions) {
+			for(var i = 0; i < req.body.mentions.length; i++) {
+				await Notification.createMention({ mention: req.body.mentions[i], user, post })
+			}
+		}
+
 		res.json(await post.reload({
 			include: Post.includeOptions()
 		}))
@@ -161,12 +167,6 @@ router.post('/', async (req, res) => {
 		req.app.get('io').to('thread/' + thread.id).emit('new post', {
 			postNumber: thread.postsCount
 		})
-
-		if(req.body.mentions) {
-			req.body.mentions.forEach(mention => {
-				Notification.createMention({ mention, user, post })
-			})
-		}
 
 	} catch (e) {
 		if(e === Errors.VALIDATION_ERROR) {
