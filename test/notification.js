@@ -159,15 +159,7 @@ describe('Notifications', () => {
 		})
 
 		it('should set unreadCount to 0', async () => {
-			await user
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ threadId: 1, content: 'POST 1', mentions: ['adminaccount'] })
-
-			await user
-				.post('/api/v1/post')
-				.set('content-type', 'application/json')
-				.send({ threadId: 1, content: 'POST 2', mentions: ['adminaccount'] })
+			await admin.put('/api/v1/notification')
 
 			let res = await admin.get('/api/v1/notification')
 
@@ -178,7 +170,7 @@ describe('Notifications', () => {
 			res.body.Notifications.should.contain.something.that.has.deep.property('interacted', false)
 			res.body.Notifications.should.contain.something.that.has.deep.property('User.username', 'useraccount')
 			res.body.Notifications.should.contain.something.that.has.deep.property('Post.content', '<p>POST 1</p>\n')
-			res.body.should.have.property('unreadCount', 2)
+			res.body.should.have.property('unreadCount', 0)
 		})
 	})
 
