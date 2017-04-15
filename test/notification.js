@@ -92,7 +92,7 @@ describe('Notifications', () => {
 				.set('content-type', 'application/json')
 				.send({ threadId: 1, content: 'POST 1', mentions: ['adminaccount'] })
 
-			await adminaccount
+			await admin
 				.post('/api/v1/post')
 				.set('content-type', 'application/json')
 				.send({ threadId: 1, content: 'POST 2', mentions: ['useraccount'] })
@@ -109,8 +109,8 @@ describe('Notifications', () => {
 			res.body.should.have.property('Notifications')
 			res.body.Notifications.should.have.property('length', 2)
 			res.body.Notifications.should.contain.something.that.has.deep.property('interacted', false)
-			res.body.Notifications.should.contain.something.that.has.deep.property('User.username', 'useraccount')
-			res.body.Notifications.should.contain.something.that.has.deep.property('Post.content', '<p>POST 1</p>\n')
+			res.body.Notifications.should.contain.something.that.has.deep.property('MentionNotification.User.username', 'useraccount')
+			res.body.Notifications.should.contain.something.that.has.deep.property('MentionNotification.Post.content', '<p>POST 1</p>\n')
 			res.body.should.have.property('unreadCount', 2)
 		})
 
@@ -127,26 +127,18 @@ describe('Notifications', () => {
 				})
 		})
 
-		it('should return an error if any mentions is not an array', done => {
-			user
+		it('should return an error if any mentions is not an array', async () => {
+			let res = await user
 				.post('/api/v1/post')
 				.set('content-type', 'application/json')
-				.send({ threadId: 1, content: 'POST 1', mentions: false })
-				.end((err, res) => {
-					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('mentions', 'array'))
+				.send({ threadId: 1, content: 'POST 4', mentions: ['notrealaccount'] })
 
-					done()
-				})
+			res.should.be.json
+			res.should.have.status(200)
 		})
 
 		it('should not crash if user doesnt exist', async () => {
-			let deleteRes = await admin
-				.delete('/api/v1/notification')
-
-			deleteRes.should.be.json
-			deleteRes.should.have.status(200)
-			deleteRes.should.have.property('success', true)
+			await admin.put('/api/v1/notification')
 
 			let res = await admin.get('/api/v1/notification')
 
@@ -154,6 +146,9 @@ describe('Notifications', () => {
 			res.should.be.json
 			res.body.should.have.property('Notifications')
 			res.body.Notifications.should.have.property('length', 2)
+			res.body.Notifications.should.contain.something.that.has.deep.property('interacted', false)
+			res.body.Notifications.should.contain.something.that.has.deep.property('MentionNotification.User.username', 'useraccount')
+			res.body.Notifications.should.contain.something.that.has.deep.property('MentionNotification.Post.content', '<p>POST 1</p>\n')
 			res.body.should.have.property('unreadCount', 0)
 
 		})
@@ -168,8 +163,8 @@ describe('Notifications', () => {
 			res.body.should.have.property('Notifications')
 			res.body.Notifications.should.have.property('length', 2)
 			res.body.Notifications.should.contain.something.that.has.deep.property('interacted', false)
-			res.body.Notifications.should.contain.something.that.has.deep.property('User.username', 'useraccount')
-			res.body.Notifications.should.contain.something.that.has.deep.property('Post.content', '<p>POST 1</p>\n')
+			res.body.Notifications.should.contain.something.that.has.deep.property('MentionNotification.User.username', 'useraccount')
+			res.body.Notifications.should.contain.something.that.has.deep.property('MentionNotification.Post.content', '<p>POST 1</p>\n')
 			res.body.should.have.property('unreadCount', 0)
 		})
 	})
