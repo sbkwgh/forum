@@ -6,10 +6,13 @@ const Errors = require('../lib/errors.js')
 let { User, Post, AdminToken, Thread, Category } = require('../models')
 let pagination = require('../lib/pagination.js')
 
-function setUserSession(req, res, username, admin) {
+function setUserSession(req, res, username, UserId, admin) {
 	req.session.loggedIn = true
 	req.session.username = username
+	req.session.UserId = UserId
+
 	res.cookie('username', username)
+
 	if(admin) req.session.admin = true
 }
 router.post('/', async (req, res) => {
@@ -86,7 +89,7 @@ router.post('/', async (req, res) => {
 			await token.destroy()
 		}
 
-		setUserSession(req, res, user.username, userParams.admin)
+		setUserSession(req, res, user.username, user.id, userParams.admin)
 
 		res.json(user.toJSON())
 	} catch (err) {
@@ -213,7 +216,7 @@ router.post('/:username/login', async (req, res) => {
 			bcryptRes = await bcrypt.compare(req.body.password, user.hash)
 
 			if(bcryptRes) {
-				setUserSession(req, res, user.username, user.admin)
+				setUserSession(req, res, user.username, user.id, user.admin)
 
 				res.json({
 					username: user.username,
