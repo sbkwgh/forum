@@ -109,6 +109,19 @@ describe('Notifications', () => {
 			res.body.should.have.property('unreadCount', 2)
 		})
 
+		it('should return an error if any mention is not a string', done => {
+			user
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ threadId: 1, content: 'POST 1', mentions: ['adminaccount', 123] })
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('mentions', 'string'))
+
+					done()
+				})
+		})
+
 		it('should not crash if user doesnt exist', async () => {
 			let deleteRes = await admin
 				.delete('/api/v1/notification')
