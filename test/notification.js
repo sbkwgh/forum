@@ -92,10 +92,15 @@ describe('Notifications', () => {
 				.set('content-type', 'application/json')
 				.send({ threadId: 1, content: 'POST 1', mentions: ['adminaccount'] })
 
+			await adminaccount
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ threadId: 1, content: 'POST 2', mentions: ['useraccount'] })
+
 			await user
 				.post('/api/v1/post')
 				.set('content-type', 'application/json')
-				.send({ threadId: 1, content: 'POST 2', mentions: ['adminaccount'] })
+				.send({ threadId: 1, content: 'POST 3', mentions: ['adminaccount'] })
 
 			let res = await admin.get('/api/v1/notification')
 
