@@ -33,6 +33,7 @@ app.use('/api/v1/user', require('./routes/user'))
 app.use('/api/v1/admin_token', require('./routes/admin_token'))
 app.use('/api/v1/category', require('./routes/category'))
 app.use('/api/v1/thread', require('./routes/thread'))
+app.use('/api/v1/notification', require('./routes/notification'))
 app.use('/api/v1/post', require('./routes/post'))
 app.use('/api/v1/settings', require('./routes/settings'))
 
