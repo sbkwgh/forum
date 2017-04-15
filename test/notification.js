@@ -185,7 +185,7 @@ describe('Notifications', () => {
 				.put('/api/v1/notification/notanid')
 				.end((err, res) => {
 					res.should.have.status(400)
-					res.body.should.contain.something.that.deep.equals(Errors.invalidParameter('notification id', 'invalid notification id'))
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'invalid notification id'))
 
 					done()
 				})
@@ -205,7 +205,7 @@ describe('Notifications', () => {
 				.delete('/api/v1/notification/notanid')
 				.end((err, res) => {
 					res.should.have.status(400)
-					res.body.should.contain.something.that.deep.equals(Errors.invalidParameter('notification id', 'invalid notification id'))
+					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'invalid notification id'))
 
 					done()
 				})
