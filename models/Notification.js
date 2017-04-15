@@ -25,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
 				let notification = await Notification.create({ type: 'mention' })
 				let mentionNotification = await MentionNotification.create()
 
-				await mentionNotification.addUser(props.user)
-				await mentionNotification.addPost(props.post)
+				await mentionNotification.setUser(props.user)
+				await mentionNotification.setPost(props.post)
 
-				await notification.addMentionNotification(mentionNotification)
-				await notification.addUser(user)
+				await notification.setMentionNotification(mentionNotification)
+				await notification.setUser(user)
 
 				return notification
 			}
