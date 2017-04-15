@@ -66,4 +66,60 @@ router.put('/', async (req, res) => {
 	
 })
 
+router.put('/:id', async (req, res) => {
+	try {
+		let updatedRows = await Notification.update({ interacted: true, read: true }, {
+			where: {
+				'UserId': req.session.UserId,
+				id: req.params.id
+			}
+		})
+
+		if(updatedRows[0] === 0) {
+			res.status(400)
+			res.json({
+				errors: [Errors.invalidParameter('id', 'invalid notification id')]
+			})
+		} else {
+			res.json({ success: true })
+		}
+	} catch (e) {
+		console.log(e)
+
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
+	}
+	
+})
+
+router.delete('/:id', async (req, res) => {
+	try {
+		let deleted = await Notification.destroy({
+			where: {
+				'UserId': req.session.UserId,
+				id: req.params.id
+			}
+		})
+
+		if(deleted) {
+			res.json({ success: true })
+		} else {
+			res.status(400)
+			res.json({
+				errors: [Errors.invalidParameter('id', 'invalid notification id')]
+			})
+		}
+	} catch (e) {
+		console.log(e)
+
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
+	}
+	
+})
+
 module.exports = router
