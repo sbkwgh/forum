@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
 		},
+		read: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
+		},
 		type: DataTypes.ENUM('mention', 'thread update') 
 	}, {
 		classMethods: {
