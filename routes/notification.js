@@ -17,19 +17,47 @@ router.all('*', (req, res, next) => {
 
 router.get('/', async (req, res) => {
 	try {
-		
+		let Notifications = await Notification.findAll({
+			where: {
+				'$User.username$': req.session.username
+			},
+			include: [{
+				model: 'MentionNotification',
+				include: ['User', 'Post']
+			}]
+		})
+
+		let unreadCount = notifications.reduce((acc, val) => {
+			return val.read ? acc : acc+1
+		}, 0)
+
+		res.json({ Notifications, unreadCount })
+
 	} catch (e) {
-		if(e) {
-			res.status(500)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
+	}
+	
+})
+
+router.put('/', async (req, res) => {
+	try {
+		await Notification.updateAll({ read: true }, {
+			where: {
+				'$User.username$': req.session.username,
+				'read': false
+			}
+		})
+
+		res.json({ success: true })
+
+	} catch (e) {
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
 	}
 	
 })
