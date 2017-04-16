@@ -124,7 +124,7 @@
 			},
 			resetUnreadCount () {
 				this.axios
-					.get('/api/v1/notification')
+					.put('/api/v1/notification')
 					.then(res => {
 						this.unreadCount = 0
 					})
@@ -169,6 +169,11 @@
 		},
 		created () {
 			this.getNotifications()
+
+			socket.on('notification', notification => {
+				this.unreadCount++
+				this.notifications.unshift(notification)
+			})
 		},
 		watch: {
 			'$store.state.username': 'getNotifications'
@@ -294,6 +299,7 @@
 
 				@at-root #{&}--uninteracted {
 					background-color: rgba(13, 71, 161, 0.1);
+					border-bottom-color: $color__gray--darkest;
 
 					&:hover {
 						background-color: rgba(13, 71, 161, 0.2);
