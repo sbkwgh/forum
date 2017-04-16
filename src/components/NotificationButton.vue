@@ -168,7 +168,7 @@
 			}
 		},
 		created () {
-			this.getNotifications()
+			if(this.$store.state.username) this.getNotifications()
 
 			socket.on('notification', notification => {
 				this.unreadCount++
@@ -371,7 +371,8 @@
 					background-color: rgba(white, 0.75);
 					font-weight: 300;
 					color: initial;
-					border: 0.0125rem solid $color__blue--darker;
+					border: 0.0125rem solid transparent;
+					background-color: $color__gray--primary;
 					padding: calc(0.75rem - 4*0.0125rem);
 				}
 				@at-root #{&}--two_figure {
