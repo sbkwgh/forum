@@ -252,6 +252,8 @@
 						this.signup.loading = false
 						this.$store.commit('setUsername', res.data.username)
 						this.closeAccountModal()
+
+						socket.emit('login')
 					}).catch(e => {
 						this.signup.loading = false
 
@@ -281,6 +283,8 @@
 					this.login.loading = false
 					this.$store.commit('setUsername', res.data.username)
 					this.closeAccountModal()
+
+					socket.emit('login')
 				}).catch(e => {
 					this.login.loading = false
 					this.ajaxErrorHandler(e, (error) => {
