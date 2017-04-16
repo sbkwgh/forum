@@ -83,5 +83,31 @@ describe('Socket-io', () => {
 
 			
 		})
+
+		it('should emit a notification when a notification is emitted', (done) => {
+			let client = io.connect('http://localhost:3000')
+
+			client.on('notification', data => {
+				data.should.have.property('type', 'mention')
+
+				done()
+			})
+
+			//Post new thread
+			agent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({ name: `THREAD 3` , category: 'category_name' })
+				.then(res => {
+					return agent
+						.post('/api/v1/post')
+						.set('content-type', 'application/json')
+						.send({ threadId: res.body.id , content: `POST 4`, mentions: ['adminaccount'] })
+				})
+				.catch(done)
+
+			
+		})
+
 	})
 })
