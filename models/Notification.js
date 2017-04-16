@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			//Props fields: user, post, mention
 			async createMention (props) {
-				let { MentionNotification, User } = sequelize.models
+				let { MentionNotification, User, Post } = sequelize.models
 
 				let user = await User.findOne({ where: { username: props.mention } })
 				if(!user) return null
@@ -31,7 +31,14 @@ module.exports = (sequelize, DataTypes) => {
 				await notification.setMentionNotification(mentionNotification)
 				await notification.setUser(user)
 
-				return notification
+				let reloadedNotification = await notification.reload({
+					include: [{
+						model: MentionNotification,
+						include: [Post, { model: User, attributes: ['createdAt', 'username', 'color'] }]
+					}]
+				})
+
+				return reloadedNotification
 			}
 		}
 	})
