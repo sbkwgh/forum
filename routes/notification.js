@@ -21,6 +21,7 @@ router.get('/', async (req, res) => {
 			where: {
 				'UserId': req.session.UserId
 			},
+			order: [['id', 'DESC']],
 			include: [{
 				model: MentionNotification,
 				include: [Post, { model: User, attributes: ['createdAt', 'username', 'color'] }]
