@@ -156,7 +156,14 @@ router.post('/', async (req, res) => {
 
 		if(req.body.mentions) {
 			for(var i = 0; i < req.body.mentions.length; i++) {
-				await Notification.createMention({ mention: req.body.mentions[i], user, post })
+				let mention = req.body.mentions[i]
+				let ioUsers = req.app.get('io-users')
+
+				let notification = await Notification.createMention({ mention, user, post })
+				
+				if(ioUsers[mention]) {
+					req.app.get('io').to(ioUsers[mention]).emit('notification', notification.toJSON())
+				}
 			}
 		}
 
