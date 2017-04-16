@@ -10,16 +10,17 @@ let config = require('./config/server.js')
 //Middle-ware
 let bodyParser = require('body-parser')
 let morgan = require('morgan')
-let session = require('express-session')
+let expressSession = require('express-session')
+
+let session = expressSession({
+	secret: config.sessionSecret,
+	resave: true,
+	saveUninitialized: true
+})
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(session({
-	secret: config.sessionSecret,
-	resave: false,
-	saveUninitialized: true,
-	cookie: {}
-}))
+app.use(session)
 
 if(process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
 	app.use(morgan('dev'))
@@ -47,7 +48,7 @@ sequelize
 			app.emit('appStarted')
 		})
 
-		sockets.init(app, server)
+		sockets.init(app, server, session)
 	})
 	.catch((err) => {
 		console.log(err)
