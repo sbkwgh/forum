@@ -170,8 +170,12 @@ router.post('/', async (req, res) => {
 		await thread.increment('postsCount')
 
 		if(req.body.mentions) {
-			for(var i = 0; i < req.body.mentions.length; i++) {
-				let mention = req.body.mentions[i]
+			let uniqueMentions = req.body.mentions.filter((mention, pos, self) => {
+				return self.indexOf(mention) === pos
+			})
+
+			for(var i = 0; i < uniqueMentions.length; i++) {
+				let mention = uniqueMentions[i]
 				let ioUsers = req.app.get('io-users')
 
 				let mentionNotification = await Notification.createPostNotification({
