@@ -149,9 +149,9 @@ router.post('/', async (req, res) => {
 					usernameTo: replyingToPost.User.username,
 					userFrom: user,
 					type: 'reply',
-					post: replyingToPost
+					post: post
 				})
-				
+
 				let ioUsers = req.app.get('io-users')
 				if(ioUsers[replyingToPost.User.username]) {
 					req.app
