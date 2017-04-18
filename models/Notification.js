@@ -8,32 +8,32 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
 		},
-		type: DataTypes.ENUM('mention', 'thread update') 
+		type: DataTypes.ENUM('mention', 'thread update', 'reply') 
 	}, {
 		classMethods: {
 			associate (models) {
-				Notification.hasOne(models.MentionNotification)
+				Notification.hasOne(models.PostNotification)
 				Notification.belongsTo(models.User)
 			},
-			//Props fields: user, post, mention
-			async createMention (props) {
-				let { MentionNotification, User, Post } = sequelize.models
+			//Props fields: userFrom, usernameTo, post, type
+			async createPostNotification (props) {
+				let { PostNotification, User, Post } = sequelize.models
 
-				let user = await User.findOne({ where: { username: props.mention } })
-				if(!user) return null
+				let userTo = await User.findOne({ where: { username: props.usernameTo } })
+				if(!userTo) return null
 				
-				let notification = await Notification.create({ type: 'mention' })
-				let mentionNotification = await MentionNotification.create()
+				let notification = await Notification.create({ type: props.type })
+				let postNotification = await PostNotification.create()
 
-				await mentionNotification.setUser(props.user)
-				await mentionNotification.setPost(props.post)
+				await postNotification.setUser(props.userFrom)
+				await postNotification.setPost(props.post)
 
-				await notification.setMentionNotification(mentionNotification)
-				await notification.setUser(user)
+				await notification.setPostNotification(postNotification)
+				await notification.setUser(userTo)
 
 				let reloadedNotification = await notification.reload({
 					include: [{
-						model: MentionNotification,
+						model: PostNotification,
 						include: [Post, { model: User, attributes: ['createdAt', 'username', 'color'] }]
 					}]
 				})
