@@ -2,7 +2,7 @@
 	<div class='route_container'>
 		<post-scrubber
 			:posts='$store.state.thread.totalPostsCount'
-			:value='$route.params.id || 0'
+			:value='$route.params.post_number || 0'
 			@input='goToPost'
 		></post-scrubber>
 		<header class='thread_header'>

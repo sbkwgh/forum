@@ -1,5 +1,6 @@
 <template>
 	<div class='post_scrubber'>
+		<div class='post_scrubber__label post_scrubber__label--first' @click='$emit("input", 0)'>First post</div>
 		<div class='post_scrubber__line' ref='line' @click='lineClick'></div>
 		<div
 			class='post_scrubber__dragger'
@@ -20,6 +21,7 @@
 		>
 			Post <strong>{{currentPost}}</strong> out of {{posts}}
 		</div>
+		<div class='post_scrubber__label post_scrubber__label--last' @click='$emit("input", posts-1)'>Latest post</div>
 	</div>
 </template>
 
@@ -78,7 +80,11 @@
 				let postNumber = +this.value
 				let postDivision = this.lineHeight / this.posts
 
-				this.clientY = this.lineTop + postDivision * postNumber
+				if(postNumber+1 === this.posts) {
+					this.clientY = this.lineTop + this.lineHeight
+				} else {
+					this.clientY = this.lineTop + postDivision * postNumber
+				}
 			}
 		},
 		watch: {
@@ -97,8 +103,10 @@
 				}
 			})
 			window.addEventListener('mouseup', e => {
+				if(this.dragging) {
+					this.$emit('input', this.currentPost-1)
+				}
 				this.dragging = false
-				this.$emit('input', this.currentPost-1)
 			})
 		}
 	}
@@ -111,8 +119,8 @@
 	.post_scrubber {
 		height: 10rem;
 		position: fixed;
-		right: calc(10% + 5rem);
-		margin-top: 5.25rem;
+		right: calc(10% + 7.5rem);
+		margin-top: 6.5rem;
 
 		@at-root #{&}__line {
 			height: 100%;
@@ -138,6 +146,21 @@
 			}
 			&:active {
 				background-color: $color__blue--darkest;
+			}
+		}
+
+		@at-root #{&}__label {
+			position: absolute;
+			color: $color__blue--primary;
+			cursor: pointer;
+			left: -0.25rem;
+			width: 10rem;
+
+			@at-root #{&}--first {
+				top: -2.25rem;
+			}
+			@at-root #{&}--last {
+				bottom: -2.25rem;
 			}
 		}
 
