@@ -26,14 +26,13 @@
 <script>
 	export default {
 		name: 'PostScrubber',
+		props: ['posts'],
 		data () {
 			return {
 				clientY: 0,
 				lineTop: 0,
 				lineHeight: 0,
-				dragging: false,
-
-				posts: 20
+				dragging: false
 			}
 		},
 		computed: {

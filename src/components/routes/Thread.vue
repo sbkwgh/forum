@@ -1,6 +1,6 @@
 <template>
 	<div class='route_container'>
-		<post-scrubber></post-scrubber>
+		<post-scrubber :posts='$store.state.thread.totalPostsCount'></post-scrubber>
 		<header class='thread_header'>
 			<div
 				class='thread_header__thread_title thread_header__thread_title--app_header'

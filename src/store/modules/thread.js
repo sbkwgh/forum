@@ -17,7 +17,8 @@ const state = {
 	nextURL: '',
 	previousURL: '',
 	nextPostsCount: 10,
-	previousPostsCount: 0
+	previousPostsCount: 0,
+	totalPostsCount: 0
 }
 
 const getters = {
@@ -78,6 +79,7 @@ const actions = {
 				commit('setNextURL', res.data.meta.nextURL)
 				commit('setPreviousURL', res.data.meta.previousURL)
 				commit('setPostCounts', res.data.meta)
+				commit('setTotalPostsCount', res.data.postsCount)
 				commit('setPosts', res.data.Posts)
 
 				if(postNumber !== undefined) {
@@ -200,6 +202,9 @@ const mutations = {
 	setPostCounts (state, meta) {
 		state.previousPostsCount = meta.previousPostsCount
 		state.nextPostsCount = meta.nextPostsCount
+	},
+	setTotalPostsCount (state, count) {
+		state.totalPostsCount = count
 	},
 	incrementNextPostsCount (state) {
 		state.nextPostsCount++
