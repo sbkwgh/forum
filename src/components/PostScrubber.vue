@@ -11,6 +11,15 @@
 			@mousedown.prevent.stop='setDragging(true)'
 			@mouseup.prevent.stop='setDragging(false)'
 		></div>
+		<div
+			class='post_scrubber__dragger_info'
+			
+			:style='{
+				"top": draggerYCoordPx
+			}'
+		>
+			012345
+		</div>
 	</div>
 </template>
 
@@ -22,7 +31,9 @@
 				clientY: 0,
 				lineTop: 0,
 				lineHeight: 0,
-				dragging: false
+				dragging: false,
+
+				posts: 20
 			}
 		},
 		computed: {
@@ -90,7 +101,7 @@
 			position: absolute;
 			top: 0;
 			left: calc( (0.5rem - 0.125rem) / -2);
-			margin-top: calc(-1.5rem /2 );
+			margin-top: calc(-1.5rem / 2 );
 			cursor: pointer;
 			transition: background-color 0.2s;
 
@@ -100,6 +111,19 @@
 			&:active {
 				background-color: $color__blue--darkest;
 			}
+		}
+
+		@at-root #{&}__dragger_info {
+			position: absolute;
+			margin-top: calc(-1.5rem / 2 - 0.125rem);
+			pointer-events: none;
+			background-color: #fff;
+			left: 1rem;
+			font-size: 0.9rem;
+			border-radius: 0.125rem;
+			padding: 0.25rem;
+
+			@extend .shadow_border;
 		}
 	}
 </style>
