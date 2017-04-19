@@ -5,7 +5,7 @@
 			class='post_scrubber__dragger'
 			
 			:style='{
-				"top": draggerYCoordPx
+				"top": draggerYCoord + "px"
 			}'
 
 			@mousedown.prevent.stop='setDragging(true)'
@@ -15,10 +15,10 @@
 			class='post_scrubber__dragger_info'
 			
 			:style='{
-				"top": draggerYCoordPx
+				"top": draggerYCoord + "px"
 			}'
 		>
-			012345
+			Post <strong>{{currentPost}}</strong> out of {{posts}}
 		</div>
 	</div>
 </template>
@@ -37,17 +37,27 @@
 			}
 		},
 		computed: {
-			draggerYCoordPx () {
-				if(!this.clientY || !this.lineTop) return '0px'
+			draggerYCoord () {
+				if(!this.clientY || !this.lineTop) return 0
 
 				let top = this.clientY - this.lineTop
 
 				if(top < 0) {
-					return '0px'
+					return 0
 				} else if(top > this.lineHeight) {
-					return this.lineHeight + 'px'
+					return this.lineHeight
 				} else {
-					return top + 'px'
+					return top
+				}
+			},
+			currentPost () {
+				let postDivision = this.lineHeight / this.posts
+				let postNumber = Math.floor(this.draggerYCoord/ postDivision)
+
+				if(postNumber === this.posts) {
+					return postNumber
+				} else {
+					return postNumber + 1
 				}
 			}
 		},
@@ -115,6 +125,7 @@
 
 		@at-root #{&}__dragger_info {
 			position: absolute;
+			width: 10rem;
 			margin-top: calc(-1.5rem / 2 - 0.125rem);
 			pointer-events: none;
 			background-color: #fff;
