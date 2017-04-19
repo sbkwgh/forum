@@ -26,7 +26,7 @@
 <script>
 	export default {
 		name: 'PostScrubber',
-		props: ['posts'],
+		props: ['posts', 'value'],
 		data () {
 			return {
 				clientY: 0,
@@ -50,28 +50,46 @@
 				}
 			},
 			currentPost () {
-				let postDivision = this.lineHeight / this.posts
-				let postNumber = Math.floor(this.draggerYCoord/ postDivision)
+					let postDivision = this.lineHeight / this.posts
+					let postNumber = Math.floor(this.draggerYCoord/ postDivision)
+					let retPostNumber
 
-				if(postNumber === this.posts) {
-					return postNumber
-				} else {
-					return postNumber + 1
-				}
+					if(postNumber === this.posts) {
+						retPostNumber = postNumber
+					} else {
+						retPostNumber = postNumber + 1
+					}
+
+					return retPostNumber
 			}
 		},
 		methods: {
 			setDragging (val) {
 				this.dragging = val
+
+				if(!val) {
+					this.$emit('input', this.currentPost-1)
+				}
 			},
 			lineClick (e) {
 				this.clientY = e.clientY
+			},
+			setCurrentPost () {
+				let postNumber = +this.value
+				let postDivision = this.lineHeight / this.posts
+
+				this.clientY = this.lineTop + postDivision * postNumber
 			}
+		},
+		watch: {
+			value: 'setCurrentPost'
 		},
 		mounted () {
 			let lineRect = this.$refs.line.getBoundingClientRect()
 			this.lineTop = lineRect.top
 			this.lineHeight = lineRect.height
+
+			this.setCurrentPost()
 
 			window.addEventListener('mousemove', e => {
 				if(this.dragging) {
@@ -80,6 +98,7 @@
 			})
 			window.addEventListener('mouseup', e => {
 				this.dragging = false
+				this.$emit('input', this.currentPost-1)
 			})
 		}
 	}

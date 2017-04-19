@@ -1,6 +1,10 @@
 <template>
 	<div class='route_container'>
-		<post-scrubber :posts='$store.state.thread.totalPostsCount'></post-scrubber>
+		<post-scrubber
+			:posts='$store.state.thread.totalPostsCount'
+			:value='$route.params.id || 0'
+			@input='goToPost'
+		></post-scrubber>
 		<header class='thread_header'>
 			<div
 				class='thread_header__thread_title thread_header__thread_title--app_header'
