@@ -1,5 +1,6 @@
 <template>
 	<div class='route_container'>
+		<post-scrubber></post-scrubber>
 		<header class='thread_header'>
 			<div
 				class='thread_header__thread_title thread_header__thread_title--app_header'
@@ -60,6 +61,7 @@
 	import ScrollLoad from '../ScrollLoad'
 	import ThreadPost from '../ThreadPost'
 	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
+	import PostScrubber from '../PostScrubber'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -71,7 +73,8 @@
 			InputEditor,
 			ScrollLoad,
 			ThreadPost,
-			ThreadPostPlaceholder
+			ThreadPostPlaceholder,
+			PostScrubber
 		},
 		data () {
 			return {
