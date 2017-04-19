@@ -70,6 +70,9 @@ export default new Vuex.Store({
 		setForumName (state, value) {
 			state.meta.name = value
 		},
+		setForumDescription (state, value) {
+			state.meta.description = value
+		},
 		addCategories (state, value) {
 			if(Array.isArray(value)) {
 				state.meta.categories.push(...value)

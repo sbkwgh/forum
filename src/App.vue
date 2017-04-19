@@ -301,6 +301,7 @@
 			this.axios.get('/api/v1/settings')
 				.then(res => {
 					this.$store.commit('setForumName', res.data.forumName)
+					this.$store.commit('setForumDescription', res.data.forumDescription)
 				}).catch(err => {
 					if(err.response.data.errors[0].name === 'noSettings') {
 						this.$router.push('/start')

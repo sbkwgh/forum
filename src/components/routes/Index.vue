@@ -1,5 +1,8 @@
 <template>
 	<div class='route_container'>
+		<div class='forum_description' v-if='$store.state.meta.description'>
+			{{$store.state.meta.description}}
+		</div>
 		<div class='thread_sorting'>
 			<select-options
 				:options='filterOptions'
@@ -215,6 +218,15 @@
 <style lang='scss' scoped>
 	@import '../../assets/scss/elementStyles.scss';
 	@import '../../assets/scss/variables.scss';
+
+	.forum_description {
+		padding: 1rem;
+		margin-bottom: 2rem;
+		background-color: #fff;
+		border-radius: 0.25rem;
+		
+		@extend .shadow_border;
+	}
 
 	.threads_main {
 		display: flex;
