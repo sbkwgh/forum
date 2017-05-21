@@ -96,6 +96,7 @@
 		width: 35rem;
 		border: 0.125rem solid $color__gray--darker;
 		border-bottom: none;
+		border-radius: 0.25rem 0.25rem 0 0;
 		margin-bottom: 0;
 		pointer-events: all;
 		transition:  margin-bottom 0.2s, filter 0.2s, border-color 0.2s;
