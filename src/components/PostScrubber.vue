@@ -103,10 +103,12 @@
 				}
 			})
 			window.addEventListener('mouseup', e => {
+				this.dragging = false
+				
 				if(this.dragging) {
 					this.$emit('input', this.currentPost-1)
 				}
-				this.dragging = false
+				
 			})
 		}
 	}

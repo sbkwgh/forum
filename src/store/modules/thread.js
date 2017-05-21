@@ -54,6 +54,7 @@ const actions = {
 				commit('addReplyBubble', res.data)
 				commit('setThreadEditorValue', '');
 				commit('setThreadEditorState', false);
+				commit('setTotalPostsCount', state.totalPostsCount+1)
 				commit({
 					type: 'setReply',
 					username: '',
@@ -83,7 +84,9 @@ const actions = {
 				commit('setPosts', res.data.Posts)
 
 				if(postNumber !== undefined) {
-					vue.highlightPost(+postNumber)
+					//vue.highlightPost(+postNumber)
+					vue.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+					vue.scrollTo(postNumber)
 				}
 			}).catch(AjaxErrorHandler(vue.$store))
 	},

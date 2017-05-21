@@ -154,13 +154,14 @@
 						this.highlightPost(postNumber)
 					} else {
 						this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+						this.loadInitialPosts()
 					}
 				}
 
 				if(getPostNumber) {
 					this.axios
 						.get('/api/v1/post/' + number)
-						.then(res => pushRoute(res.data.postNumber) )
+						.then( res => pushRoute(res.data.postNumber) )
 				} else {
 					pushRoute(number)
 				}
@@ -173,6 +174,7 @@
 						this.$nextTick(() => {
 							let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
 							let header = this.$refs.title.getBoundingClientRect().height
+							debugger
 							window.scrollTo(0, postTop - header - 32)
 
 							if(cb) cb(i, post)
@@ -192,10 +194,7 @@
 				})
 			}
 		},
-		watch: {
-			'$route': 'loadInitialPosts'
-		},
-		created () {
+		mounted () {
 			let self = this;
 			let setHeader = function() {
 				if(!self.$refs.title) return;
@@ -207,8 +206,28 @@
 				}
 			};
 
+			let postInView = function() {
+				let posts = self.$refs.posts
+				if(!posts) return;
+
+				let topPostInView = posts.find(post => {
+					let rect = post.$el.getBoundingClientRect()
+
+					return (rect.top >= 0) && (rect.bottom <= window.innerHeight)
+				})
+
+				let postIndex = posts.indexOf(topPostInView)
+
+				if(postIndex > -1) {
+					let postNumber = self.posts[postIndex].postNumber
+					self.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+				}
+			};
+
 			setHeader();
 			document.addEventListener('scroll', throttle(setHeader, 200));
+
+			document.addEventListener('scroll', throttle(postInView, 200));
 
 			this.loadInitialPosts()
 			
