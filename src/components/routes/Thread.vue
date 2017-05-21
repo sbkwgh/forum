@@ -150,7 +150,8 @@
 			},	
 			goToPost (number, getPostNumber) {
 				let pushRoute = postNumber => {
-					if(this.$route.params.post_number === postNumber) {
+					//If postNumber is a post in `this.posts`
+					if(this.posts.find(post => post.postNumber === postNumber)) {
 						this.highlightPost(postNumber)
 					} else {
 						this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
@@ -158,6 +159,8 @@
 					}
 				}
 
+				//If `number` is actualy the postId
+				//Get the postNumber via api request
 				if(getPostNumber) {
 					this.axios
 						.get('/api/v1/post/' + number)
@@ -167,18 +170,26 @@
 				}
 			},
 			scrollTo (postNumber, cb) {
-				for(var i = 0; i < this.posts.length; i++) {
+				let getScrollTopPosition = i => {
+					let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
+					let header = this.$refs.title.getBoundingClientRect().height
+					
+					return window.pageYOffset + postTop - header - 32
+				}
+
+				let scroll = (i) => {
 					let post = this.posts[i]
+					window.scrollTo(0, getScrollTopPosition(i))
+					if(cb) cb(i, post)
+				}
 
-					if(post.postNumber === postNumber) {
-						this.$nextTick(() => {
-							let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
-							let header = this.$refs.title.getBoundingClientRect().height
-							debugger
-							window.scrollTo(0, postTop - header - 32)
-
-							if(cb) cb(i, post)
-						})
+				for(var i = 0; i < this.posts.length; i++) {
+					if(this.posts[i].postNumber === postNumber) {
+						if(this.$refs.posts) {
+							scroll(i)
+						} else {
+							this.$nextTick(_ => scroll(i))
+						}
 
 						break;
 					}
@@ -187,6 +198,7 @@
 			highlightPost (postNumber) {
 				this.scrollTo(postNumber, (i) => {
 					this.highlightedPostIndex = i
+					this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
 					
 					if(this.highlightedPostIndex === i) {
 						setTimeout(() => this.highlightedPostIndex = null, 3000)
