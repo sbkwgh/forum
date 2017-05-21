@@ -54,7 +54,12 @@
 						</div>
 						<div>
 							<span class='notification_button__menu__item__link'>
-								{{notification.PostNotification.User.username}}
+								<template v-if='notification.PostNotification.User'>
+									{{notification.PostNotification.User.username}}
+								</template>
+								<template v-else>
+									[deleted]
+								</template>
 							</span>
 							wrote
 							"{{notification.PostNotification.Post.content | stripTags | truncate(50)}}"
@@ -74,7 +79,12 @@
 						</div>
 						<div>
 							<span class='notification_button__menu__item__link'>
-								{{notification.PostNotification.User.username}}
+								<template v-if='notification.PostNotification.User'>
+									{{notification.PostNotification.User.username}}
+								</template>
+								<template v-else>
+									[deleted]
+								</template>
 							</span>
 							replied
 							"{{notification.PostNotification.Post.content | stripTags | truncate(50)}}"
