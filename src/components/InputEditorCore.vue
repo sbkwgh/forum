@@ -267,6 +267,7 @@
 		@at-root #{&}__format_button {
 			height: 1.5rem;
 			width: 1.5rem;
+			border-radius: 0.25rem;
 			text-align: center;
 			line-height: 1.4rem;
 			cursor: pointer;

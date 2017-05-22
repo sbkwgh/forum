@@ -160,6 +160,7 @@
 			@include text($font--role-default, 1rem, 600);
 			color: $color__darkgray--primary;
 			border: thin solid $color__gray--primary;
+			border-radius: 0.25rem;
 			transition: background-color 0.2s;
 			margin: 0;
 

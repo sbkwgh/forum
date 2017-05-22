@@ -99,7 +99,7 @@
 			}
 
 			@at-root #{&}--small_tabs {
-				border-radius: 0.125rem 0.125rem 0 0;
+				border-radius: 0.25rem 0.25rem 0 0;
 				flex-grow: 0;
 				border-bottom: 0;
 				margin: 0 0.25rem;
