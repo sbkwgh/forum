@@ -173,17 +173,32 @@
 				var selectionData = this.getSelectionData();
 				var el = this.$refs.textarea;
 
-				this.setEditor(
-					this.value.slice(0, selectionData.start) +
-					before + selectionData.val + after +
-					this.value.slice(selectionData.end)
-				);
-				el.focus();
+				if(
+					this.value.substr(selectionData.start - before.length, before.length) === before &&
+					this.value.substr(selectionData.end, after.length) === after
+				) {
+					this.setEditor(
+						this.value.slice(0, selectionData.start - before.length) +
+						selectionData.val +
+						this.value.slice(selectionData.end + after.length)
+					);
+					setTimeout(function() {
+						el.selectionStart = selectionData.start - before.length;
+						el.selectionEnd = selectionData.end - after.length;
+					}, 0);
+				} else {
+					this.setEditor(
+						this.value.slice(0, selectionData.start) +
+						before + selectionData.val + after +
+						this.value.slice(selectionData.end)
+					);
+					setTimeout(function() {
+						el.selectionStart = selectionData.start + before.length;
+						el.selectionEnd = selectionData.end + after.length;
+					}, 0);
+				}
 
-				setTimeout(function() {
-					el.selectionStart = selectionData.start + before.length;
-					el.selectionEnd = selectionData.end + before.length;
-				}, 0);
+				el.focus();
 			},
 			addLink () {
 				var linkTextLength = this.linkText.length;
