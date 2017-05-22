@@ -6,6 +6,10 @@
 			"input_editor--focus-input": focusInput
 		}'
 	>
+		<div class='input_editor__overlay' :class='{ "input_editor__overlay--show" : loading }'>
+			<loading-icon></loading-icon>
+		</div>
+
 		<div class='input_editor__reply_username' v-if='replyUsername'>Replying to <strong>{{replyUsername}}</strong></div>
 		<div class='input_editor__close input_editor__format_button' @click='closeEditor'>&times;</div>
 		
@@ -36,15 +40,17 @@
 <script>
 	import InputEditorCore from './InputEditorCore'
 	import InputEditorPreview from './InputEditorPreview'
+	import LoadingIcon from './LoadingIcon'
 	import TabView from './TabView'
 
 
 	export default {
 		name: 'InputEditor',
-		props: ['value', 'error', 'replyUsername', 'show'],
+		props: ['value', 'error', 'replyUsername', 'show', 'loading'],
 		components: {
 			InputEditorCore,
 			InputEditorPreview,
+			LoadingIcon,
 			TabView
 		},
 		data () {
@@ -116,6 +122,28 @@
 			opacity: 0;
 			margin-bottom: -3rem;
 			transition:  margin-bottom 0.2s, opacity 0.2s;
+		}
+
+		@at-root #{&}__overlay {
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 100%;
+			z-index: 5;
+			background-color: rgba(0, 0, 0, 0.15);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: none;
+			opacity: 0;
+
+			transition: all 0.2s;
+
+			@at-root #{&}--show {
+				pointer-events: all;
+				opacity: 1;
+			}
 		}
 
 

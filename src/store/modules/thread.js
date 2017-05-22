@@ -10,6 +10,7 @@ const state = {
 	},
 	editor: {
 		show: false,
+		loading: false,
 		value: ''
 	},
 	mentions: [],
@@ -47,9 +48,12 @@ const actions = {
 			post.replyingToId = state.reply.id;
 		}
 
+		commit('setThreadEditorLoading', true)
+
 		vue.axios
 			.post('/api/v1/post', post)
 			.then(res => {
+				commit('setThreadEditorLoading', false)
 				commit('addPost', res.data);
 				commit('addReplyBubble', res.data)
 				commit('setThreadEditorValue', '');
@@ -61,7 +65,10 @@ const actions = {
 					id: ''
 				});
 			})
-			.catch(AjaxErrorHandler(vue.$store))
+			.catch(e => {
+				commit('setThreadEditorLoading', false)
+				AjaxErrorHandler(vue.$store)(e)
+			})
 	},
 	loadInitialPostsAsync ({ state, commit, rootState }, vue) {
 		let postNumber = vue.$route.params.post_number
@@ -181,6 +188,9 @@ const mutations = {
 	},
 	setThreadEditorValue (state, value) {
 		state.editor.value = value
+	},
+	setThreadEditorLoading (state, value) {
+		state.editor.loading = value
 	},
 	setThreadEditorState (state, value) {
 		state.editor.show = value

@@ -24,6 +24,7 @@
 
 			:show='editorState'
 			:replyUsername='replyUsername'
+			:loading='$store.state.thread.editor.loading'
 			
 			v-on:mentions='setMentions'
 			v-on:close='hideEditor'
