@@ -67,6 +67,8 @@
 			}
 		},
 		created () {
+			this.$store.dispatch('setTitle', 'general settings')
+
 			this.$nextTick(() => {
 				this.axios
 					.get('/api/v1/user/' + this.$store.state.username)

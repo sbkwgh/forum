@@ -64,6 +64,8 @@
 			}
 		},
 		created () {
+			this.$store.dispatch('setTitle', this.$route.params.username + ' | threads')
+
 			this.axios
 				.get(`/api/v1/user/${this.$route.params.username}?threads=true`)
 				.then(res => {

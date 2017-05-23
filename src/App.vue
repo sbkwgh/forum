@@ -302,6 +302,8 @@
 				.then(res => {
 					this.$store.commit('setForumName', res.data.forumName)
 					this.$store.commit('setForumDescription', res.data.forumDescription)
+
+					this.$store.dispatch('setTitle', this.$store.meta.title)
 				}).catch(err => {
 					if(err.response.data.errors[0].name === 'noSettings') {
 						this.$router.push('/start')
@@ -311,7 +313,20 @@
 				})
 
 			this.axios.get('/api/v1/category')
-				.then(res => this.$store.commit('addCategories', res.data))
+				.then(res => {
+					this.$store.commit('addCategories', res.data)
+					
+					//Need categories to have loaded to set
+					//the title of the index page
+					//but if we're on another page (i.e. title is not set)
+					//don't overwrite the title
+					if(!this.$store.state.meta.title.length) {
+						let selectedCategory = this.$route.params.category.toUpperCase()
+						let category = this.categories.find(c => c.value === selectedCategory)
+
+						this.$store.dispatch('setTitle', category.name)
+					}
+				})
 				.catch(this.ajaxErrorHandler)
 		}
 	}

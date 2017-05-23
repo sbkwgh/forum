@@ -10,6 +10,7 @@ export default new Vuex.Store({
 	state: {
 		meta: {
 			name: '',
+			title: '',
 			categories: [
 				{ name: 'All', value: 'ALL', color: '#1565C0' }
 			]
@@ -34,6 +35,13 @@ export default new Vuex.Store({
 
 			return categories.filter(category => category.value !== 'ALL' )
 		},
+		title (state) {
+			if(state.meta.title.trim().length) {
+				return state.meta.name + ' | ' + state.meta.title
+			} else {
+				return state.meta.name
+			}
+		},
 		alphabetizedCategories (state) {
 			return state.meta.categories.sort((a, b) => {
 				if(a.name === 'All') return -1
@@ -46,6 +54,12 @@ export default new Vuex.Store({
 
 				return 0
 			})
+		}
+	},
+	actions: {
+		setTitle ({ state, getters }, value) {
+			state.meta.title = value
+			document.title = getters.title
 		}
 	},
 	mutations: {

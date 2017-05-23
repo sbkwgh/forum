@@ -71,6 +71,8 @@
 			}
 		},
 		created () {
+			this.$store.dispatch('setTitle', this.$route.params.username + ' | posts')
+
 			this.axios
 				.get(`/api/v1/user/${this.$route.params.username}?posts=true`)
 				.then(res => {

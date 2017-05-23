@@ -70,7 +70,7 @@ const actions = {
 				AjaxErrorHandler(vue.$store)(e)
 			})
 	},
-	loadInitialPostsAsync ({ state, commit, rootState }, vue) {
+	loadInitialPostsAsync ({ state, commit, dispatch, rootState }, vue) {
 		let postNumber = vue.$route.params.post_number
 		let apiURL = '/api/v1/thread/' + vue.$route.params.id
 
@@ -81,7 +81,9 @@ const actions = {
 		vue.axios
 			.get(apiURL)
 			.then(res => {
+
 				commit('setThread', res.data)
+				dispatch('setTitle', res.data.name)
 				commit('setNextURL', res.data.meta.nextURL)
 				commit('setPreviousURL', res.data.meta.previousURL)
 				commit('setNextURL', res.data.meta.nextURL)

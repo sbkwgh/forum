@@ -123,6 +123,9 @@
 						AjaxErrorHandler(this.$store)(e)
 					})
 			}
+		},
+		mounted () {
+			this.$store.dispatch('setTitle', 'account settings')
 		}
 	}
 </script>

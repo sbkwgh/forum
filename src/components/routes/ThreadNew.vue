@@ -127,6 +127,9 @@
 				}
 			}
 		},
+		mounted () {
+			this.$store.dispatch('setTitle', 'new thread')
+		},
 		beforeRouteEnter (to, from, next) {
 			next(vm => {
 				if(!vm.$store.state.username) {
