@@ -320,7 +320,7 @@
 					//the title of the index page
 					//but if we're on another page (i.e. title is not set)
 					//don't overwrite the title
-					if(!this.$store.state.meta.title.length) {
+					if(!this.$store.state.meta.title.length && this.$route.params.category) {
 						let selectedCategory = this.$route.params.category.toUpperCase()
 						let category = this.categories.find(c => c.value === selectedCategory)
 
