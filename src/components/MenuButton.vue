@@ -62,7 +62,6 @@
 			position: absolute;
 			background-color: #fff;
 			width: 10rem;
-			top: calc(100% + 0.25rem);
 			border-radius: 0.125rem;
 			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.06);
 			z-index: 3;
@@ -73,6 +72,8 @@
 			opacity: 0;
 			margin-top: -1rem;
 			transition: all 0.25s;
+			top: 0.25rem;
+			left: 0;
 
 			@at-root #{&}--show {
 				opacity: 1;
