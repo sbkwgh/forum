@@ -1,16 +1,19 @@
 <template>
 	<div class='route_container'>
-		<menu-button :options='["Lock thread", "Remove posts"]' class=''>
-			<button class='button'>
-				<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
-				Manage thread
-			</button>
-		</menu-button>
-		<post-scrubber
-			:posts='$store.state.thread.totalPostsCount'
-			:value='$route.params.post_number || 0'
-			@input='goToPost'
-		></post-scrubber>
+		<div class='thread_side_bar'>
+			<menu-button :options='["Lock thread", "Remove posts"]' class=''>
+				<button class='button'>
+					<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
+					Manage thread
+				</button>
+			</menu-button>
+			<button class='button' @click='replyThread' v-if='$store.state.username'>Reply to thread</button>
+			<post-scrubber
+				:posts='$store.state.thread.totalPostsCount'
+				:value='$route.params.post_number || 0'
+				@input='goToPost'
+			></post-scrubber>
+		</div>
 		<header class='thread_header'>
 			<div
 				class='thread_header__thread_title thread_header__thread_title--app_header'
@@ -23,7 +26,6 @@
 			<div class='thread_header__thread_title' ref='title'>
 				{{thread}}
 			</div>
-			<button class='button thread_header__reply_button' @click='replyThread' v-if='$store.state.username'>Reply to thread</button>
 		</header>
 		<input-editor
 			v-model='editor'
@@ -267,6 +269,18 @@
 <style lang='scss' scoped>
 	@import '../../assets/scss/variables.scss';
 
+	.thread_side_bar {
+		position: fixed;
+		right: 10%;
+		top: 7.25rem;
+
+		button {
+			margin-bottom: 0.75rem;
+			margin-left: -0.25rem;
+			height: 3rem;
+		} 
+	}
+
 	.thread_header {
 		display: flex;
 		justify-content: space-between;
@@ -293,12 +307,6 @@
 					transition: opacity 0.2s;
 				}
 			}
-		}
-		@at-root #{&}__reply_button {
-			height: 3rem;
-			position: fixed;
-			right: 10%;
-			margin-top: 0.75rem;
 		}
 	}
 
