@@ -1,5 +1,11 @@
 <template>
 	<div class='route_container'>
+		<menu-button :options='["Lock thread", "Remove posts"]' class=''>
+			<button class='button'>
+				<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
+				Manage thread
+			</button>
+		</menu-button>
 		<post-scrubber
 			:posts='$store.state.thread.totalPostsCount'
 			:value='$route.params.post_number || 0'
@@ -67,6 +73,7 @@
 	import ThreadPost from '../ThreadPost'
 	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 	import PostScrubber from '../PostScrubber'
+	import MenuButton from '../MenuButton'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -79,7 +86,8 @@
 			ScrollLoad,
 			ThreadPost,
 			ThreadPostPlaceholder,
-			PostScrubber
+			PostScrubber,
+			MenuButton
 		},
 		data () {
 			return {
