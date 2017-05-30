@@ -1,7 +1,13 @@
 <template>
 	<div class='route_container'>
 		<div class='thread_side_bar'>
-			<menu-button :options='["Lock thread", "Remove posts"]' class=''>
+			<menu-button
+				:options='[
+					{ event: "lock_thread", value: thread.locked ? "Unlock thread" : "Lock thread" },
+					{ event: "remove_posts", value: "Remove posts" }
+				]'
+				@lock_thread='lockThread'
+			>
 				<button class='button'>
 					<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
 					Manage thread
@@ -116,6 +122,9 @@
 			editorState () { return this.$store.state.thread.editor.show }
 		},
 		methods: {
+			lockThread () {
+				
+			},
 			showEditor () {
 				this.$store.commit('setThreadEditorState', true);
 			},
