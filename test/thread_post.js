@@ -218,7 +218,7 @@ describe('Thread and post', () => {
 
 			let thread = await userAgent.get('/api/v1/thread/1')
 
-			thread.body.should.have.status('locked', true)
+			thread.body.should.have.property('locked', true)
 		
 		})
 		it('should unlock the thread', async () => {
@@ -235,10 +235,10 @@ describe('Thread and post', () => {
 
 			let thread = await userAgent.get('/api/v1/thread/1')
 
-			thread.body.should.have.status('locked', false)
+			thread.body.should.have.property('locked', false)
 		})
 		it('should return an error if thread does not exist', done => {
-			chai.request(server)
+			userAgent
 				.put('/api/v1/thread/not_a_thread')
 				.set('content-type', 'application/json')
 				.send({
