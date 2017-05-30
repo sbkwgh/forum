@@ -128,6 +128,7 @@ router.post('/', async (req, res) => {
 		}})
 
 		if(!thread) throw Errors.invalidParameter('threadId', 'thread does not exist')
+		if(thread.locked) throw Errors.threadLocked
 
 		if(req.body.replyingToId) {
 			replyingToPost = await Post.findById(
@@ -205,7 +206,7 @@ router.post('/', async (req, res) => {
 			res.json({
 				errors: validationErrors
 			})
-		} else if(e.name === 'invalidParameter') {
+		} else if(e.name === 'invalidParameter' || e.name === 'threadLocked') {
 			res.status(400)
 			res.json({
 				errors: [e]
