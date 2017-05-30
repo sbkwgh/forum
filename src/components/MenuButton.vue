@@ -8,10 +8,10 @@
 			<div
 				class='menu_button__option'
 				v-for='(option, $index) in options'
-				@click='emit(option)'
+				@click='emit(option.event)'
 				:style="{ 'border-bottom' : $index === options.length-1 ? 'none' :  'solid thin rgb(245, 245, 245)' }"
 			>
-				{{option}}
+				{{option.value}}
 			</div>
 		</div>
 	</div>
