@@ -91,6 +91,33 @@ router.all('*', (req, res, next) => {
 	}
 })
 
+router.put('/:thread_id', async (req, res) => {
+	try {
+		let thread = await Thread.findById(req.params.thread_id)
+
+		if(!thread) {
+			res.status(400)
+			res.json({ errors: 
+				[Errors.invalidParameter('threadId', 'thread does not exist')]
+			})
+		} else {
+			if(req.body.locked) {
+				await thread.update({ locked: true })
+			} else {
+				await thread.update({ locked: false })
+			}
+
+			res.json({ success: true })
+		}
+	} catch (e) {
+		console.log(e)
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
+	}
+})
+
 router.post('/', async (req, res) => {
 	let validationErrors = []
 
