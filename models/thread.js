@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
 		postsCount: {
 			type: DataTypes.INTEGER,
 			defaultValue: 0
+		},
+		locked: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
 		}
 	}, {
 		classMethods: {
