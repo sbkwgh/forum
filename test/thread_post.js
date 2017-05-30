@@ -204,9 +204,27 @@ describe('Thread and post', () => {
 	})
 
 	describe('PUT /thread', () => {
+		let threadId
+
+		before(done => {
+			userAgent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({
+					name: 'thread_lock',
+					category: 'CATEGORY_NAME'
+				})
+				.then(res => {
+					threadId = res.body.id
+
+					done()
+				})
+				.catch(done)
+		})
+
 		it('should lock the thread', async () => {
 			let res = await userAgent
-				.put('/api/v1/thread/1')
+				.put('/api/v1/thread/' + threadId)
 				.set('content-type', 'application/json')
 				.send({
 					locked: true
@@ -216,14 +234,14 @@ describe('Thread and post', () => {
 			res.should.have.status(200)
 			res.body.should.have.property('success', true)
 
-			let thread = await userAgent.get('/api/v1/thread/1')
+			let thread = await userAgent.get('/api/v1/thread/' + threadId)
 
 			thread.body.should.have.property('locked', true)
 		
 		})
 		it('should unlock the thread', async () => {
 			let res = await userAgent
-				.put('/api/v1/thread/1')
+				.put('/api/v1/thread/' + threadId)
 				.set('content-type', 'application/json')
 				.send({
 					locked: false
@@ -233,7 +251,7 @@ describe('Thread and post', () => {
 			res.should.have.status(200)
 			res.body.should.have.property('success', true)
 
-			let thread = await userAgent.get('/api/v1/thread/1')
+			let thread = await userAgent.get('/api/v1/thread/' + threadId)
 
 			thread.body.should.have.property('locked', false)
 		})
@@ -254,7 +272,7 @@ describe('Thread and post', () => {
 		})
 		it('should return an error if not logged in', done => {
 			chai.request(server)
-				.put('/api/v1/thread/1')
+				.put('/api/v1/thread/' + threadId)
 				.set('content-type', 'application/json')
 				.send({
 					locked: false
@@ -269,18 +287,26 @@ describe('Thread and post', () => {
 		})
 		it('should not allow new posts if locked', done => {
 			userAgent
-				.post('/api/v1/post')
+				.put('/api/v1/thread/' + threadId)
 				.set('content-type', 'application/json')
 				.send({
-					content: 'new post',
-					threadId: 1
+					locked: true
 				})
-				.end((err, res) => {
-					res.should.be.json
-					res.should.have.status(401)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.threadLocked)
+				.end(_ => {
+					userAgent
+						.post('/api/v1/post')
+						.set('content-type', 'application/json')
+						.send({
+							content: 'new post',
+							threadId
+						})
+						.end((err, res) => {
+							res.should.be.json
+							res.should.have.status(400)
+							res.body.errors.should.contain.something.that.deep.equals(Errors.threadLocked)
 
-					done()
+							done()
+						})
 				})
 		})
 	})
