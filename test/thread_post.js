@@ -203,6 +203,88 @@ describe('Thread and post', () => {
 		})
 	})
 
+	describe('PUT /thread', () => {
+		it('should lock the thread', async () => {
+			let res = await userAgent
+				.put('/api/v1/thread/1')
+				.set('content-type', 'application/json')
+				.send({
+					locked: true
+				})
+
+			res.should.be.json
+			res.should.have.status(200)
+			res.body.should.have.property('success', true)
+
+			let thread = await userAgent.get('/api/v1/thread/1')
+
+			thread.body.should.have.status('locked', true)
+		
+		})
+		it('should unlock the thread', async () => {
+			let res = await userAgent
+				.put('/api/v1/thread/1')
+				.set('content-type', 'application/json')
+				.send({
+					locked: false
+				})
+
+			res.should.be.json
+			res.should.have.status(200)
+			res.body.should.have.property('success', true)
+
+			let thread = await userAgent.get('/api/v1/thread/1')
+
+			thread.body.should.have.status('locked', false)
+		})
+		it('should return an error if thread does not exist', done => {
+			chai.request(server)
+				.put('/api/v1/thread/not_a_thread')
+				.set('content-type', 'application/json')
+				.send({
+					locked: false
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameter('threadId', 'thread does not exist'))
+
+					done()
+				})
+		})
+		it('should return an error if not logged in', done => {
+			chai.request(server)
+				.put('/api/v1/thread/1')
+				.set('content-type', 'application/json')
+				.send({
+					locked: false
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should not allow new posts if locked', done => {
+			userAgent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({
+					content: 'new post',
+					threadId: 1
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.threadLocked)
+
+					done()
+				})
+		})
+	})
+
 	describe('POST /post', () => {
 		it('should create a post if logged in', async () => {
 			let res = await userAgent
