@@ -3,10 +3,10 @@
 		<div class='thread_side_bar'>
 			<menu-button
 				:options='[
-					{ event: "lock_thread", value: thread.locked ? "Unlock thread" : "Lock thread" },
+					{ event: "lock_thread", value: $store.state.thread.locked ? "Unlock thread" : "Lock thread" },
 					{ event: "remove_posts", value: "Remove posts" }
 				]'
-				@lock_thread='lockThread'
+				@lock_thread='setThreadLockedState'
 			>
 				<button class='button'>
 					<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
@@ -122,8 +122,8 @@
 			editorState () { return this.$store.state.thread.editor.show }
 		},
 		methods: {
-			lockThread () {
-				
+			setThreadLockedState () {
+				this.$store.dispatch('setThreadLockedState', this)
 			},
 			showEditor () {
 				this.$store.commit('setThreadEditorState', true);

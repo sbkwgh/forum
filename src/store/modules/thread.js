@@ -4,6 +4,7 @@ const state = {
 	thread: '',
 	threadId: undefined,
 	posts: [],
+	locked: false,
 	reply: {
 		username: '',
 		id: null
@@ -85,6 +86,7 @@ const actions = {
 				commit('setThread', res.data)
 				dispatch('setTitle', res.data.name)
 				commit('setNextURL', res.data.meta.nextURL)
+				commit('setLocked', res.data.locked)
 				commit('setPreviousURL', res.data.meta.previousURL)
 				commit('setNextURL', res.data.meta.nextURL)
 				commit('setPreviousURL', res.data.meta.previousURL)
@@ -154,6 +156,17 @@ const actions = {
 				commit('setNextURL', baseURL + (post.postNumber-1))
 			}
 		}
+	},
+	setThreadLockedState ({ state, commit }, vue) {
+		vue.axios
+			.put('/api/v1/thread/' + state.threadId, { locked: !state.locked })
+			.then(res => {
+				commit('setLocked', !state.locked)
+			})
+			.catch((e) => {
+				console.log(e)
+				AjaxErrorHandler(vue.$store)
+			})
 	}
 }
 
@@ -225,6 +238,9 @@ const mutations = {
 	},
 	setMentions (state, mentions) {
 		state.mentions = mentions
+	},
+	setLocked (state, value) {
+		state.locked = value
 	}
 }
 
