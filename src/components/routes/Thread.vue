@@ -14,7 +14,13 @@
 					Manage thread
 				</button>
 			</menu-button>
-			<button class='button' @click='replyThread' v-if='$store.state.username'>Reply to thread</button>
+			<button
+				class='button'
+				@click='replyThread'
+				v-if='$store.state.username && !$store.state.thread.locked'
+			>
+					Reply to thread
+			</button>
 			<post-scrubber
 				:posts='$store.state.thread.totalPostsCount'
 				:value='$route.params.post_number || 0'
@@ -67,7 +73,7 @@
 					@reply='replyUser'
 					@goToPost='goToPost'
 					:post='post'
-					:show-reply='true'
+					:show-reply='!$store.state.thread.locked'
 					:highlight='highlightedPostIndex === index'
 					:class='{"post--last": index === posts.length-1}'
 					ref='posts'
