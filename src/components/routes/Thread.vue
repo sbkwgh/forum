@@ -2,6 +2,7 @@
 	<div class='route_container'>
 		<div class='thread_side_bar'>
 			<menu-button
+				v-if='$store.state.admin'
 				:options='[
 					{ event: "lock_thread", value: $store.state.thread.locked ? "Unlock thread" : "Lock thread" },
 					{ event: "remove_posts", value: "Remove posts" }
