@@ -48,7 +48,7 @@
 		</input-editor>
 
 		<div class='locked_thread' v-if='$store.state.thread.locked'>
-			<h1>Thread locked</h1>
+			<h2>Thread locked</h2>
 			You can't post in this thread because it has been locked by an administrator
 		</div>
 
@@ -328,13 +328,13 @@
 	}
 
 	.locked_thread {
-		h1 {
+		h2 {
 			margin-top: 0;
 			margin-bottom: 0.5rem;
 		}
 
 		background-color: #fff;
-		padding: 2rem;
+		padding: 1.5rem;
 		margin-bottom: 1rem;
 		width: 80%;
 		border-radius: 0.25rem;
