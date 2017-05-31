@@ -289,6 +289,7 @@
 		position: fixed;
 		right: 10%;
 		top: 7.25rem;
+		width: 10rem;
 
 		button {
 			margin-bottom: 0.75rem;
