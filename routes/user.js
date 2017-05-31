@@ -12,8 +12,12 @@ function setUserSession(req, res, username, UserId, admin) {
 	req.session.UserId = UserId
 
 	res.cookie('username', username)
+	//Not for security purposes, just so client side can determine
+	//to show certain parts of ui or not (i.e. could trivially be spoofed
+	//but the server would not accept any api requests)
+	res.cookie('admin', !!admin)
 
-	if(admin) req.session.admin = true
+	if(admin) { req.session.admin = true }
 }
 router.post('/', async (req, res) => {
 	let user, adminUser, hash, token
@@ -220,6 +224,7 @@ router.post('/:username/login', async (req, res) => {
 
 				res.json({
 					username: user.username,
+					admin: user.admin,
 					success: true
 				})
 			} else {
@@ -254,6 +259,7 @@ router.post('/:username/login', async (req, res) => {
 router.post('/:username/logout', async (req, res) => {
 	req.session.destroy(() => {
 		res.clearCookie('username')
+		res.clearCookie('admin')
 		res.json({
 			success: true
 		})
@@ -370,6 +376,7 @@ router.delete('/:username', async (req, res) => {
 
 		req.session.destroy(() => {
 			res.clearCookie('username')
+			res.clearCookie('admin')
 			res.json({ success: true })
 		})
 
