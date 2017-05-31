@@ -129,10 +129,23 @@ let Root = new Vue({
 	router
 })
 
-let usernameCookie = document.cookie
+let cookieDict = document.cookie
 	.split(';')
-	.map(c => c.split('='))
-	.filter(pair => pair[0].trim() === 'username')
-	.map(pair => pair[1])[0]
+	.map(a => a.split('=').map(a => a.trim()) )
+	.map(a => {
+		let k = a[0], v = a[1]
+		return { [k] : v }
+	})
+	.reduce((combinedObj, o) => {
+		let key = Object.keys(o)[0]
+		combinedObj[key] = o[key]
 
-if(usernameCookie) Root.$store.commit('setUsername', usernameCookie)
+		return combinedObj
+	}, {})
+
+if(cookieDict.username) Root.$store.commit('setUsername', cookieDict.username)
+if(cookieDict.admin === 'false') {
+	Root.$store.commit('setAdmin', false)
+} else if(cookieDict.admin === 'true') {
+	Root.$store.commit('setAdmin', true)
+}

@@ -18,6 +18,7 @@ export default new Vuex.Store({
 		accountTabs: 0,
 		accountModal: false,
 		username: '',
+		admin: false,
 
 		ajaxErrors: [],
 		ajaxErrorsModal: false
@@ -80,6 +81,9 @@ export default new Vuex.Store({
 		},
 		setUsername (state, value) {
 			state.username = value
+		},
+		setAdmin (state, value) {
+			state.admin = value
 		},
 		setForumName (state, value) {
 			state.meta.name = value

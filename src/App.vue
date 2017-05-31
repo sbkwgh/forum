@@ -205,6 +205,7 @@
 				).then(res => {
 					this.loadingLogout = false
 					this.$store.commit('setUsername', '')
+					this.$store.commit('setAdmin', res.data.admin)
 
 					this.$router.push('/')
 				}).catch(err => {
@@ -251,6 +252,7 @@
 					}).then(res => {
 						this.signup.loading = false
 						this.$store.commit('setUsername', res.data.username)
+						this.$store.commit('setAdmin', res.data.admin)
 						this.closeAccountModal()
 
 						socket.emit('login')
@@ -282,6 +284,7 @@
 				}).then(res => {
 					this.login.loading = false
 					this.$store.commit('setUsername', res.data.username)
+					this.$store.commit('setAdmin', res.data.admin)
 					this.closeAccountModal()
 
 					socket.emit('login')
