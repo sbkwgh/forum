@@ -8,6 +8,7 @@
 					{ event: "remove_posts", value: "Remove posts" }
 				]'
 				@lock_thread='setThreadLockedState'
+				@remove_posts='setThreadSelectState'
 			>
 				<button class='button'>
 					<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
@@ -74,6 +75,7 @@
 					@goToPost='goToPost'
 					:post='post'
 					:show-reply='!$store.state.thread.locked'
+					:showSelect='showSelect'
 					:highlight='highlightedPostIndex === index'
 					:class='{"post--last": index === posts.length-1}'
 					ref='posts'
@@ -113,7 +115,8 @@
 		data () {
 			return {
 				headerTitle: false,
-				highlightedPostIndex: null
+				highlightedPostIndex: null,
+				showSelect: false
 			}
 		},
 		computed: {
@@ -137,6 +140,9 @@
 		methods: {
 			setThreadLockedState () {
 				this.$store.dispatch('setThreadLockedState', this)
+			},
+			setThreadSelectState () {
+				this.showSelect = !this.showSelect
 			},
 			showEditor () {
 				this.$store.commit('setThreadEditorState', true);
