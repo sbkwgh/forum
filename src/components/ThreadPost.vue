@@ -117,11 +117,15 @@
 			toggleSelected () {
 				this.selected = !this.selected
 
-				this.$emit('selected', { state: this.selected, id: post.id })
+				this.$emit('selected', this.post.id)
 			}
 		},
 		watch: {
 			showSelect () {
+				if(this.selected) {
+					this.$emit('selected', this.post.id)
+				}
+
 				this.selected = false
 			}
 		}

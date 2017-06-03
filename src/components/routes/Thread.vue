@@ -1,5 +1,8 @@
 <template>
 	<div class='route_container'>
+		<template v-if='showSelect'>
+			Selected {{$store.state.thread.selectedPosts.length}}
+		</template>
 		<div class='thread_side_bar'>
 			<menu-button
 				v-if='$store.state.admin'
@@ -71,12 +74,16 @@
 				</thread-post-placeholder>
 				<thread-post
 					v-for='(post, index) in posts'
+
 					@reply='replyUser'
 					@goToPost='goToPost'
+					@selected='setSelectedPosts'
+
 					:post='post'
 					:show-reply='!$store.state.thread.locked'
 					:showSelect='showSelect'
 					:highlight='highlightedPostIndex === index'
+
 					:class='{"post--last": index === posts.length-1}'
 					ref='posts'
 				></thread-post>
@@ -143,6 +150,9 @@
 			},
 			setThreadSelectState () {
 				this.showSelect = !this.showSelect
+			},
+			setSelectedPosts (postId) {
+				this.$store.commit('setSelectedPosts', postId)
 			},
 			showEditor () {
 				this.$store.commit('setThreadEditorState', true);

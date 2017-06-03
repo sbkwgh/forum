@@ -20,7 +20,8 @@ const state = {
 	previousURL: '',
 	nextPostsCount: 10,
 	previousPostsCount: 0,
-	totalPostsCount: 0
+	totalPostsCount: 0,
+	selectedPosts: []
 }
 
 const getters = {
@@ -241,6 +242,15 @@ const mutations = {
 	},
 	setLocked (state, value) {
 		state.locked = value
+	},
+	setSelectedPosts (state, id ) {
+		let index = state.selectedPosts.indexOf(id)
+
+		if(index > -1) {
+			state.selectedPosts.splice(index, 1)
+		} else {
+			state.selectedPosts.push(id)
+		}
 	}
 }
 
