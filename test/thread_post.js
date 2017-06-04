@@ -675,6 +675,7 @@ describe('Thread and post', () => {
 	describe('DELETE /post/:id', () => {
 		let threadId
 		let postId
+		let normalUserAgent = chai.request.agent(server)
 
 		before(done => {
 			userAgent
@@ -698,6 +699,15 @@ describe('Thread and post', () => {
 				.then(res => {
 					postId = res.body.id
 
+					return normalUserAgent
+						.post('/api/v1/user')
+						.set('content-type', 'application/json')
+						.send({
+							username: 'delete_post_non_admin',
+							password: 'password'
+						})
+				})
+				.then(_ => {
 					done()
 				})
 				.catch(done)
@@ -742,7 +752,7 @@ describe('Thread and post', () => {
 				})
 		})
 		it('should return an error if not an admin', done => {
-			replyAgent
+			normalUserAgent
 				.delete('/api/v1/post/' + postId)
 				.end((err, res) => {
 					res.should.be.json
