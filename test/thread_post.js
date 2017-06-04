@@ -687,7 +687,7 @@ describe('Thread and post', () => {
 			let post = await userAgent.get('/api/v1/post/' + postId)
 
 			post.body.should.have.property('removed', true)
-			post.body.should.have.property('content', null)
+			post.body.should.have.property('content', '<p>[This post has been removed by an administrator]</p>\n')
 		})
 		it('should return an error if post does not exist', done => {
 			userAgent
