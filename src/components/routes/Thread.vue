@@ -2,7 +2,7 @@
 	<div class='route_container'>
 		<div class='thread_side_bar'>
 			<button class='button' :class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }' v-if='showSelect'>
-				Delete selected posts
+				Delete selected posts ({{$store.state.thread.selectedPosts.length}})
 			</button>
 			<menu-button
 				v-if='$store.state.admin'
@@ -311,7 +311,7 @@
 		position: fixed;
 		right: 10%;
 		top: 7.25rem;
-		width: 10rem;
+		min-width: 10rem;
 
 		button {
 			margin-bottom: 0.75rem;
