@@ -205,6 +205,7 @@ describe('Thread and post', () => {
 
 	describe('PUT /thread', () => {
 		let threadId
+		let normalUserAgent = chai.request.agent(server)
 
 		before(done => {
 			userAgent
@@ -217,6 +218,15 @@ describe('Thread and post', () => {
 				.then(res => {
 					threadId = res.body.id
 
+					return normalUserAgent
+						.post('/api/v1/user')
+						.set('content-type', 'application/json')
+						.send({
+							username: 'normaluseragent',
+							password: 'password'
+						})
+				})
+				.then(_ => {
 					done()
 				})
 				.catch(done)
@@ -272,6 +282,21 @@ describe('Thread and post', () => {
 		})
 		it('should return an error if not logged in', done => {
 			chai.request(server)
+				.put('/api/v1/thread/' + threadId)
+				.set('content-type', 'application/json')
+				.send({
+					locked: false
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should return an error if not an administrator', done => {
+			normalUserAgent
 				.put('/api/v1/thread/' + threadId)
 				.set('content-type', 'application/json')
 				.send({
