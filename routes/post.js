@@ -36,6 +36,36 @@ router.all('*', (req, res, next) => {
 	}
 })
 
+router.delete('/:post_id', async (req, res) => {
+	try {
+		if(!req.session.admin) {
+			throw Errors.requestNotAuthorized
+		} else {
+			let post = await Post.findById(req.params.post_id)
+			if(!post) throw Errors.invalidParameter('postId', 'post does not exist')
+
+			await post.update({ content: '[This post has been removed by an administrator]', removed: true })
+
+			res.json({ success: true })
+		}
+	} catch (e) {
+		if(e.name === 'requestNotAuthorized') {
+			res.status(401)
+			res.json({ errors: [e] })
+		} else if(e.name === 'invalidParameter') {
+			res.status(400)
+			res.json({ errors: [e] })
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 router.put('/:post_id/like', async (req, res) => {
 	try {
 		let post = await Post.findById(req.params.post_id)
