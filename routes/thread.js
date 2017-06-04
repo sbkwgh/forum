@@ -80,6 +80,7 @@ router.get('/:thread_id', async (req, res) => {
 	}
 })
 
+//Only logged in routes
 router.all('*', (req, res, next) => {
 	if(req.session.loggedIn) {
 		next()
@@ -87,33 +88,6 @@ router.all('*', (req, res, next) => {
 		res.status(401)
 		res.json({
 			errors: [Errors.requestNotAuthorized]
-		})
-	}
-})
-
-router.put('/:thread_id', async (req, res) => {
-	try {
-		let thread = await Thread.findById(req.params.thread_id)
-
-		if(!thread) {
-			res.status(400)
-			res.json({ errors: 
-				[Errors.invalidParameter('threadId', 'thread does not exist')]
-			})
-		} else {
-			if(req.body.locked) {
-				await thread.update({ locked: true })
-			} else {
-				await thread.update({ locked: false })
-			}
-
-			res.json({ success: true })
-		}
-	} catch (e) {
-		console.log(e)
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
 		})
 	}
 })
@@ -186,6 +160,45 @@ router.post('/', async (req, res) => {
 				errors: [Errors.unknown]
 			}) 
 		}
+	}
+})
+
+//Only admin routes
+router.all('*', (req, res, next) => {
+	if(req.session.admin) {
+		next()
+	} else {
+		res.status(401)
+		res.json({
+			errors: [Errors.requestNotAuthorized]
+		})
+	}
+})
+
+router.put('/:thread_id', async (req, res) => {
+	try {
+		let thread = await Thread.findById(req.params.thread_id)
+
+		if(!thread) {
+			res.status(400)
+			res.json({ errors: 
+				[Errors.invalidParameter('threadId', 'thread does not exist')]
+			})
+		} else {
+			if(req.body.locked) {
+				await thread.update({ locked: true })
+			} else {
+				await thread.update({ locked: false })
+			}
+
+			res.json({ success: true })
+		}
+	} catch (e) {
+		console.log(e)
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
 	}
 })
 
