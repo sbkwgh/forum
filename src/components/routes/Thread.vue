@@ -1,14 +1,15 @@
 <template>
 	<div class='route_container'>
 		<div class='thread_side_bar'>
-			<button
-				class='button'
+			<loading-button
 				:class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }'
+				:loading='false || $store.state.thread.removePostsButtonLoading'
+				:dark='true'
 				@click='removePosts'
-				v-if='showSelect'
+				v-if='$store.state.thread.showRemovePostsButton'
 			>
 				Delete selected posts ({{$store.state.thread.selectedPosts.length}})
-			</button>
+			</loading-button>
 			<menu-button
 				v-if='$store.state.admin'
 				:options='[
@@ -86,7 +87,7 @@
 
 					:post='post'
 					:show-reply='!$store.state.thread.locked'
-					:showSelect='showSelect'
+					:showSelect='$store.state.thread.showRemovePostsButton'
 					:highlight='highlightedPostIndex === index'
 
 					:class='{"post--last": index === posts.length-1}'
@@ -109,6 +110,7 @@
 	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 	import PostScrubber from '../PostScrubber'
 	import MenuButton from '../MenuButton'
+	import LoadingButton from '../LoadingButton'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -122,13 +124,13 @@
 			ThreadPost,
 			ThreadPostPlaceholder,
 			PostScrubber,
-			MenuButton
+			MenuButton,
+			LoadingButton
 		},
 		data () {
 			return {
 				headerTitle: false,
-				highlightedPostIndex: null,
-				showSelect: false
+				highlightedPostIndex: null
 			}
 		},
 		computed: {
@@ -157,7 +159,7 @@
 				this.$store.dispatch('setThreadLockedState', this)
 			},
 			setThreadSelectState () {
-				this.showSelect = !this.showSelect
+				this.$store.commit('setShowRemovePostsButton', !this.$store.state.thread.showRemovePostsButton)
 			},
 			setSelectedPosts (postId) {
 				this.$store.commit('setSelectedPosts', postId)
@@ -321,7 +323,7 @@
 		top: 7.25rem;
 		min-width: 10rem;
 
-		button {
+		.button {
 			margin-bottom: 0.75rem;
 			margin-left: -0.25rem;
 			height: 3rem;

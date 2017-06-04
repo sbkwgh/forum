@@ -22,7 +22,8 @@ const state = {
 	previousPostsCount: 0,
 	totalPostsCount: 0,
 	selectedPosts: [],
-	removePostsButtonLoading: false
+	removePostsButtonLoading: false,
+	showRemovePostsButton: false
 }
 
 const getters = {
@@ -42,9 +43,11 @@ const actions = {
 		Promise.all(promises)
 			.then(res => {
 				commit('setRemovePostsButtonLoading', false)
+				commit('setShowRemovePostsButton', false)
 			})
 			.catch(e => {
 				commit('setRemovePostsButtonLoading', false)
+				commit('setShowRemovePostsButton', false)
 				AjaxErrorHandler(vue.$store)(e)
 			})
 	},
@@ -269,6 +272,9 @@ const mutations = {
 	},
 	setRemovePostsButtonLoading (state, value) {
 		state.removePostsButtonLoading = value
+	},
+	setShowRemovePostsButton (state, value) {
+		state.showRemovePostsButton = value
 	}
 }
 
