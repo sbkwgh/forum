@@ -8,7 +8,11 @@
 		@mouseenter='setPostFooterState(true)'
 		@mouseleave='setPostFooterState(false)'
 	>
-		<span class='post__remove_icon fa fa-check' :class='{"post__remove_icon--show": showSelect}' @click='toggleSelected'></span>
+		<span
+			class='post__remove_icon fa fa-check'
+			:class='{"post__remove_icon--show": showSelect && !post.removed}'
+			@click='toggleSelected'
+		></span>
 		<modal-window v-model='showShareModal'>
 			<div style='padding: 0rem 1rem 1rem 1rem;'>
 				<p>Copy this URL to share the post</p>
