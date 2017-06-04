@@ -1,7 +1,12 @@
 <template>
 	<div class='route_container'>
 		<div class='thread_side_bar'>
-			<button class='button' :class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }' v-if='showSelect'>
+			<button
+				class='button'
+				:class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }'
+				@click='removePosts'
+				v-if='showSelect'
+			>
 				Delete selected posts ({{$store.state.thread.selectedPosts.length}})
 			</button>
 			<menu-button
@@ -145,6 +150,9 @@
 			editorState () { return this.$store.state.thread.editor.show }
 		},
 		methods: {
+			removePosts () {
+				this.$store.dispatch("removePostsAsync", this)
+			},
 			setThreadLockedState () {
 				this.$store.dispatch('setThreadLockedState', this)
 			},

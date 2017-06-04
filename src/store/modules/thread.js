@@ -21,7 +21,8 @@ const state = {
 	nextPostsCount: 10,
 	previousPostsCount: 0,
 	totalPostsCount: 0,
-	selectedPosts: []
+	selectedPosts: [],
+	removePostsButtonLoading: false
 }
 
 const getters = {
@@ -33,6 +34,20 @@ const getters = {
 }
 
 const actions = {
+	removePostsAsync ({ state, commit }, vue) {
+		commit('setRemovePostsButtonLoading', true)
+
+		let promises = state.selectedPosts.map(id => vue.axios.delete('/api/v1/post/' + id))
+
+		Promise.all(promises)
+			.then(res => {
+				commit('setRemovePostsButtonLoading', false)
+			})
+			.catch(e => {
+				commit('setRemovePostsButtonLoading', false)
+				AjaxErrorHandler(vue.$store)(e)
+			})
+	},
 	addPostAsync ({ state, commit, rootState }, vue) {
 		let content = state.editor.value
 		state.mentions.forEach(mention => {
@@ -251,6 +266,9 @@ const mutations = {
 		} else {
 			state.selectedPosts.push(id)
 		}
+	},
+	setRemovePostsButtonLoading (state, value) {
+		state.removePostsButtonLoading = value
 	}
 }
 
