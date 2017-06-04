@@ -688,8 +688,6 @@ describe('Thread and post', () => {
 
 			post.body.should.have.property('removed', true)
 			post.body.should.have.property('content', null)
-			post.body.should.have.property('User', null)
-		
 		})
 		it('should return an error if post does not exist', done => {
 			userAgent
