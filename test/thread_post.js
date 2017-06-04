@@ -648,6 +648,7 @@ describe('Thread and post', () => {
 	})
 
 	describe('DELETE /post/:id', () => {
+		let threadId
 		let postId
 
 		before(done => {
@@ -659,7 +660,7 @@ describe('Thread and post', () => {
 					category: 'CATEGORY_NAME'
 				})
 				.then(res => {
-					let threadId = res.body.id
+					threadId = res.body.id
 
 					return userAgent
 						.post('/api/v1/post')
@@ -688,6 +689,21 @@ describe('Thread and post', () => {
 
 			post.body.should.have.property('removed', true)
 			post.body.should.have.property('content', '<p>[This post has been removed by an administrator]</p>\n')
+		})
+		it('should return an error if trying to reply to a removed post', async () => {
+			replyAgent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({
+					content: 'reply to deleted post',
+					replyId: postId,
+					threadId
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.include.something.that.deep.equals(Errors.postRemoved)
+				})
 		})
 		it('should return an error if post does not exist', done => {
 			userAgent
