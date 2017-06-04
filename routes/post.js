@@ -170,6 +170,8 @@ router.post('/', async (req, res) => {
 				throw Errors.invalidParameter('replyingToId', 'post does not exist')
 			} else if(replyingToPost.Thread.id !== thread.id) {
 				throw Errors.invalidParameter('replyingToId', 'replies must be in same thread')
+			} else if (replyingToPost.removed) {
+				throw Errors.postRemoved
 			} else {
 				post = await Post.create({ content: req.body.content, postNumber: thread.postsCount })
 
@@ -236,7 +238,7 @@ router.post('/', async (req, res) => {
 			res.json({
 				errors: validationErrors
 			})
-		} else if(e.name === 'invalidParameter' || e.name === 'threadLocked') {
+		} else if(['invalidParameter', 'threadLocked', 'postRemoved'].indexOf(e.name) > -1) {
 			res.status(400)
 			res.json({
 				errors: [e]
