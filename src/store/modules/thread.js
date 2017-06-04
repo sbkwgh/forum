@@ -44,6 +44,15 @@ const actions = {
 			.then(res => {
 				commit('setRemovePostsButtonLoading', false)
 				commit('setShowRemovePostsButton', false)
+
+				state.posts = state.posts.map(post => {
+					if(state.selectedPosts.includes(post.id)) {
+						post.content = '<p>[This post has been removed by an administrator]</p>'
+					}
+
+					return post
+				})
+				state.selectedPosts = []
 			})
 			.catch(e => {
 				commit('setRemovePostsButtonLoading', false)
