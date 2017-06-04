@@ -1,9 +1,9 @@
 <template>
 	<div class='route_container'>
-		<template v-if='showSelect'>
-			Selected {{$store.state.thread.selectedPosts.length}}
-		</template>
 		<div class='thread_side_bar'>
+			<button class='button' :class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }' v-if='showSelect'>
+				Delete selected posts
+			</button>
 			<menu-button
 				v-if='$store.state.admin'
 				:options='[
