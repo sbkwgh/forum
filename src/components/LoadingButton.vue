@@ -41,6 +41,7 @@
 			transition: all 0.2s;
 			opacity: 1;
 			display: flex;
+			justify-content: center;
 			align-items: center;
 			height: 100%;
 		}
