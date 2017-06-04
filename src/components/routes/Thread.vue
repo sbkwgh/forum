@@ -8,7 +8,7 @@
 				@click='removePosts'
 				v-if='$store.state.thread.showRemovePostsButton'
 			>
-				Delete selected posts ({{$store.state.thread.selectedPosts.length}})
+				Remove selected posts ({{$store.state.thread.selectedPosts.length}})
 			</loading-button>
 			<menu-button
 				v-if='$store.state.admin'
