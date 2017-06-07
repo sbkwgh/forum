@@ -122,28 +122,24 @@ describe('Thread and post', () => {
 						category: 'CATEGORY_NAME'
 					})
 
-				res.should.be.json
-				res.should.have.status(401)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 			} catch (res) {
 				res.should.have.status(401)
 				JSON.parse(res.response.text).errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 			}
 		})
-		it('should return an error if missing parameters', async () => {
+		it('should return an error if missing title', async () => {
 			try {
 				let res = await userAgent
 					.post('/api/v1/thread')
+					.send({
+						category: 'CATEGORY_NAME'
+					})
 
-				res.should.be.json
-				res.should.have.status(400)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
-				res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('category'))
 			} catch (res) {
 				let body = JSON.parse(res.response.text)
+
 				res.should.have.status(400)
-				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
-				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('category'))
+				body.errors.should.contain.something.that.has.property('message', 'name cannot be null')
 			}
 		})
 		it('should return an error if name has no length', done => {
@@ -157,7 +153,7 @@ describe('Thread and post', () => {
 					.end((err, res) => {
 						res.should.be.json
 						res.should.have.status(400)
-						res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
+						res.body.errors.should.contain.something.that.has.property('message', 'The title cannot be empty')
 
 						done()
 					})
@@ -169,18 +165,14 @@ describe('Thread and post', () => {
 					.set('content-type', 'application/json')
 					.send({
 						name: 123,
-						category: 123
+						category: 'CATEGORY_NAME'
 					})
 
-				res.should.be.json
-				res.should.have.status(400)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('name', 'string'))
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('category', 'string'))
 			} catch (res) {
 				let body = JSON.parse(res.response.text)
+
 				res.should.have.status(400)
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('name', 'string'))
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('category', 'string'))
+				body.errors.should.contain.something.that.has.property('message', 'The title must be a string')
 			}
 		})
 		it('should return an error if category does not exist', async () => {
@@ -193,9 +185,6 @@ describe('Thread and post', () => {
 						category: 'non-existent'
 					})
 
-				res.should.be.json
-				res.should.have.status(400)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidCategory)
 			} catch (res) {
 				res.should.have.status(400)
 				JSON.parse(res.response.text).errors.should.contain.something.that.deep.equals(Errors.invalidCategory)

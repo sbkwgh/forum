@@ -6,7 +6,22 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.TEXT,
 			set (val) {
 				this.setDataValue('name', val)
-				this.setDataValue('slug', slug(val).toLowerCase())
+				if(val) this.setDataValue('slug', slug(val).toLowerCase())
+			},
+			allowNull: false,
+			validate: {
+				notEmpty: {
+					msg: 'The title cannot be empty'
+				},
+				max: {
+					args: '256',
+					msg: 'The title can only be up to 256 characters'
+				},
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('The title must be a string')
+					}
+				}
 			}
 		},
 		slug: DataTypes.TEXT,
@@ -22,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
 		instanceMethods: {
 			async getMeta (limit) {
 				let meta = {}
-				
+
 				let posts = this.Posts
 				let firstPost = posts[0]
 				let lastPost = posts.slice(-1)[0]

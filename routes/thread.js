@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Thread, Category, Post } = require('../models')
+let { User, Thread, Category, Post, Sequelize } = require('../models')
 let pagination = require('../lib/pagination.js')
 
 router.get('/:thread_id', async (req, res) => {
@@ -49,27 +49,9 @@ router.post('/', async (req, res) => {
 	let validationErrors = []
 
 	try {
-
-		if(req.body.name === undefined) {
-			validationErrors.push(Errors.missingParameter('name'))
-		} else if(typeof req.body.name !== 'string') {
-			validationErrors.push(Errors.invalidParameterType('name', 'string'))
-		} else if(req.body.name.length === 0) {
-			validationErrors.push(Errors.missingParameter('name'))
-		}
-
-		if(req.body.category === undefined) {
-			validationErrors.push(Errors.missingParameter('category'))
-		} else if(typeof req.body.category !== 'string') {
-			validationErrors.push(Errors.invalidParameterType('category', 'string'))
-		}
-
-		if(validationErrors.length) throw Errors.VALIDATION_ERROR
-
 		let category = await Category.findOne({ where: {
 			value: req.body.category
 		}})
-
 		if(!category) throw Errors.invalidCategory
 
 		let user = await User.findOne({ where: {
@@ -96,15 +78,13 @@ router.post('/', async (req, res) => {
 		})
 
 	} catch (e) {
-		if(e === Errors.VALIDATION_ERROR) {
+		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)
-			res.json({
-				errors: validationErrors
-			})
+			res.json(e)
 		} else if(e === Errors.invalidCategory) {
 			res.status(400)
 			res.json({
-				errors: [Errors.invalidCategory]
+				errors: [e]
 			})
 		} else {
 			console.log(e)
