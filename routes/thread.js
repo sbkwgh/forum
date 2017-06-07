@@ -13,7 +13,7 @@ router.get('/:thread_id', async (req, res) => {
 		}) 
 		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
 		
-		let meta = await thread.getMeta(limit, thread.Posts)
+		let meta = await thread.getMeta(limit)
 
 		res.json(Object.assign( thread.toJSON(), { meta } ))
 		

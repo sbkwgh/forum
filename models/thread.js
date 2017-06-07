@@ -20,9 +20,10 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	}, {
 		instanceMethods: {
-			async getMeta (limit, posts) {
+			async getMeta (limit) {
 				let meta = {}
-
+				
+				let posts = this.Posts
 				let firstPost = posts[0]
 				let lastPost = posts.slice(-1)[0]
 
