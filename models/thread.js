@@ -19,6 +19,61 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: false
 		}
 	}, {
+		instanceMethods: {
+			async getMeta (limit, posts) {
+				let meta = {}
+
+				let firstPost = posts[0]
+				let lastPost = posts.slice(-1)[0]
+
+				//next url
+				if(!lastPost || lastPost.postNumber+1 === this.postsCount) {
+					meta.nextURL = null
+				} else {
+					meta.nextURL =
+						`/api/v1/thread/${this.id}?limit=${limit}&from=${lastPost.postNumber + 1}`
+				}
+
+				//previous url
+				if(!firstPost || firstPost.postNumber === 0) {
+					meta.previousURL = null
+				} else if(firstPost.postNumber - limit < 0) {
+					meta.previousURL =
+						`/api/v1/thread/${this.id}?limit=${firstPost.postNumber}&from=0`
+				} else {
+					meta.previousURL =
+						`/api/v1/thread/${this.id}?limit=${limit}&from=${firstPost.postNumber - limit}`
+				}
+
+				//remaining posts
+				if(lastPost === undefined) {
+					meta.nextPostsCount = 0
+					meta.previousPostsCount = 0
+					meta.postsRemaining = 0
+				} else {
+					let postsRemaining =
+						this.postsCount - lastPost.postNumber - 1
+
+					meta.postsRemaining = postsRemaining
+
+					if(postsRemaining < limit) {
+						meta.nextPostsCount = postsRemaining
+					} else {
+						meta.nextPostsCount = limit
+					}
+
+					if(firstPost.postNumber === 0) {
+						meta.previousPostsCount = 0
+					} else if(firstPost.postNumber - limit < 0) {
+						meta.previousPostsCount = firstPost.postNumber
+					} else {
+						meta.previousPostsCount = limit
+					}
+				}
+
+				return meta
+			}
+		},
 		classMethods: {
 			associate (models) {
 				Thread.belongsTo(models.User)

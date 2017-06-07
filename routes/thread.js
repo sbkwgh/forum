@@ -8,61 +8,14 @@ let pagination = require('../lib/pagination.js')
 router.get('/:thread_id', async (req, res) => {
 	try {
 		let { from, limit } = pagination.getPaginationProps(req.query)
-		let thread, resThread
-	
-		thread = await Thread.findById(req.params.thread_id, {
+		let thread = await Thread.findById(req.params.thread_id, {
 			include: Thread.includeOptions(from, limit)
-		})
-
+		}) 
 		if(!thread) throw Errors.invalidParameter('id', 'thread does not exist')
-		resThread = thread.toJSON()
+		
+		let meta = await thread.getMeta(limit, thread.Posts)
 
-		resThread.meta = {}
-	
-		let lastPost = thread.Posts.slice(-1)[0]
-		let firstPost = thread.Posts[0]
-
-		if(!lastPost || lastPost.postNumber+1 === thread.postsCount) {
-			resThread.meta.nextURL = null
-		} else {
-			resThread.meta.nextURL =
-				`/api/v1/thread/${thread.id}?limit=${limit}&from=${lastPost.postNumber + 1}`
-		}
-
-		if(!firstPost || firstPost.postNumber === 0) {
-			resThread.meta.previousURL = null
-		} else if(firstPost.postNumber - limit < 0) {
-			resThread.meta.previousURL =
-				`/api/v1/thread/${thread.id}?limit=${firstPost.postNumber}&from=0`
-		} else {
-			resThread.meta.previousURL =
-				`/api/v1/thread/${thread.id}?limit=${limit}&from=${firstPost.postNumber - limit}`
-		}
-
-		if(lastPost === undefined) {
-			resThread.meta.postsRemaining = 0
-			resThread.meta.nextPostsCount = 0
-			resThread.meta.previousPostsCount = 0
-		} else {
-			resThread.meta.postsRemaining =
-				resThread.postsCount - lastPost.postNumber - 1
-
-			if(resThread.meta.postsRemaining < limit) {
-				resThread.meta.nextPostsCount = resThread.meta.postsRemaining
-			} else {
-				resThread.meta.nextPostsCount = limit
-			}
-
-			if(firstPost.postNumber === 0) {
-				resThread.meta.previousPostsCount = 0
-			} else if(firstPost.postNumber - limit < 0) {
-				resThread.meta.previousPostsCount = firstPost.postNumber
-			} else {
-				resThread.meta.previousPostsCount = limit
-			}
-		}
-
-		res.json(resThread)
+		res.json(Object.assign( thread.toJSON(), { meta } ))
 		
 	} catch (e) {
 		if(e.name === 'invalidParameter') {
