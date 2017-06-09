@@ -76,31 +76,10 @@ describe('User', () => {
 					admin: true
 				})
 				.end((err, res) => {
-					res.should.have.status(400)
+					res.should.have.status(401)
 					res.should.be.json
 					res.body.should.have.property('errors')
 					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('token'))
-
-					done()
-				})
-		})
-
-		it('should give an error if admin and token fields are not of the correct type ', (done) => {
-			chai.request(server)
-				.post('/api/v1/user')
-				.set('content-type', 'application/json')
-				.send({
-					username: 'adminaccount1',
-					password: 'password',
-					admin: 'not a boolean',
-					token: 123
-				})
-				.end((err, res) => {
-					res.should.have.status(400)
-					res.should.be.json
-					res.body.should.have.property('errors')
-					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('admin', 'boolean'))
-					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('token', 'string'))
 
 					done()
 				})
@@ -188,7 +167,7 @@ describe('User', () => {
 					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-					res.body.errors.should.include.something.that.deep.equals(Errors.accountAlreadyCreated)
+					res.body.errors.should.contain.something.that.has.property('message', 'username must be unique')
 					
 					done()
 				})
@@ -203,9 +182,8 @@ describe('User', () => {
 				.end((err, res) => {
 					res.should.have.status(400)
 					res.should.be.json
-					res.body.should.have.property('errors')
-					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('username'))
-					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('password'))
+					res.body.should.have.property('errors')	
+					res.body.errors.should.contain.something.that.has.property('message', 'hash cannot be null')
 					
 					done()
 				})
@@ -223,8 +201,9 @@ describe('User', () => {
 					res.should.be.json
 					res.body.should.have.property('errors')
 					res.body.should.have.property('errors')
-					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('username', 'string'))
-					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameterType('password', 'string'))
+
+					res.body.errors.should.contain.something.that.has.property('message', 'username must be a string')
+					res.body.errors.should.contain.something.that.has.property('message', 'password must be a string')
 					
 					done()
 				})
@@ -241,8 +220,11 @@ describe('User', () => {
 					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('username', '6'))
-					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('password', '6'))
+
+					console.log(res.body)
+
+					res.body.errors.should.contain.something.that.has.property('message', 'username can\'t be less than 6 characters')
+					res.body.errors.should.contain.something.that.has.property('message', 'password can\'t be less than 6 characters')
 					
 					done()
 				})
@@ -259,9 +241,10 @@ describe('User', () => {
 					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('username', '50'))
-					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('password', '100'))
-					
+
+					res.body.errors.should.contain.something.that.has.property('message', 'username can\'t be more than 50 characters')
+					res.body.errors.should.contain.something.that.has.property('message', 'password can\'t be more than 100 characters')
+
 					done()
 				})
 		})

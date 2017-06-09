@@ -6,6 +6,13 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			defaultValue () {
 				return crypto.randomBytes(64).toString('hex')
+			},
+			validate: {
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('token must be a string')
+					}
+				}
 			}
 		}
 	}, {

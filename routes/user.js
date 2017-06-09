@@ -3,7 +3,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Post, AdminToken, Thread, Category } = require('../models')
+let { User, Post, AdminToken, Thread, Category, Sequelize } = require('../models')
 let pagination = require('../lib/pagination.js')
 
 function setUserSession(req, res, username, UserId, admin) {
@@ -20,97 +20,29 @@ function setUserSession(req, res, username, UserId, admin) {
 	if(admin) { req.session.admin = true }
 }
 router.post('/', async (req, res) => {
-	let user, adminUser, hash, token
-	let validationErrors = []
-	let userParams = {}
-
 	try {
-		//Validations
-		if(req.body.username === undefined) {
-			validationErrors.push(Errors.missingParameter('username'))
-		} else {
-			if(typeof req.body.username !== 'string') {
-				validationErrors.push(Errors.invalidParameterType('username', 'string'))
-			} if(req.body.username.length < 6) {
-				validationErrors.push(Errors.parameterLengthTooSmall('username', 6))
-			} if(req.body.username.length > 50) {
-				validationErrors.push(Errors.parameterLengthTooLarge('username', 50))
-			}
+		let userParams = {
+			username: req.body.username,
+			hash: req.body.password,
+			admin: false
 		}
 
-		if(req.body.password === undefined) {
-			validationErrors.push(Errors.missingParameter('password'))
-		} else {
-			if(typeof req.body.password !== 'string') {
-				validationErrors.push(Errors.invalidParameterType('password', 'string'))
-			} if(req.body.password.length < 6) {
-				validationErrors.push(Errors.parameterLengthTooSmall('password', 6))
-			} if(req.body.password.length > 100) {
-				validationErrors.push(Errors.parameterLengthTooLarge('password', 100))
-			}
+		if(req.body.admin && await User.canBeAdmin(req.body.token)) {
+			userParams.admin = true
 		}
 
-		if(req.body.token !== undefined && typeof req.body.token !== 'string') {
-			validationErrors.push(Errors.invalidParameterType('token', 'string'))
-		}
-		if(req.body.admin !== undefined && typeof req.body.admin !== 'boolean') {
-			validationErrors.push(Errors.invalidParameterType('admin', 'boolean'))
-		}
-
-		if(validationErrors.length) throw Errors.VALIDATION_ERROR
-
-		if(req.body.admin && !req.body.token) {
-			adminUser = await User.findOne({ where: {
-				admin: true
-			}})
-
-			if(adminUser) {
-				validationErrors.push(Errors.missingParameter('token'))
-				throw Errors.VALIDATION_ERROR
-			} else {
-				
-				userParams.admin = true
-			}
-		} else if(req.body.admin && req.body.token) {
-			token = await AdminToken.findOne({ where: {
-				token: req.body.token
-			}})
-
-			if(token && token.isValid()) {
-				userParams.admin = true
-			} else {
-				throw Errors.invalidToken
-			}
-		}
-
-		hash = await bcrypt.hash(req.body.password, 12)
-
-		userParams.username = req.body.username
-		userParams.hash = hash
-		user = await User.create(userParams)
-
-		if(req.body.token) {
-			await token.destroy()
-		}
+		let user = await User.create(userParams)
 
 		setUserSession(req, res, user.username, user.id, userParams.admin)
-
 		res.json(user.toJSON())
-	} catch (err) {
-		if(err === Errors.VALIDATION_ERROR) {
+	} catch (e) {
+		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)
-			res.json({
-				errors: validationErrors
-			})
-		} else if(err.name === 'SequelizeUniqueConstraintError') {
-			res.status(400)
-			res.json({
-				errors: [Errors.accountAlreadyCreated]
-			})
-		} else if (err = Errors.invalidToken) {
+			res.json(e)
+		} else if (e.name in Errors) {
 			res.status(401)
 			res.json({
-				errors: [Errors.invalidToken]
+				errors: [e]
 			})
 		} else {
 			console.log(e)
