@@ -75,6 +75,9 @@ module.exports = (sequelize, DataTypes) => {
 				} else {
 					throw Errors.invalidLoginCredentials
 				}
+			},
+			async comparePassword (password) {
+				return await bcrypt.compare(password, this.hash)
 			}
 		},
 		classMethods: {

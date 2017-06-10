@@ -786,7 +786,7 @@ describe('User', () => {
 			agent
 				.delete('/api/v1/user/notloggedin')
 				.end((err, res) => {
-					res.should.have.status(400)
+					res.should.have.status(401)
 					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
 					done()

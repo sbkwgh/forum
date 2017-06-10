@@ -130,28 +130,13 @@ router.get('/:username', async (req, res) => {
 })
 
 router.post('/:username/login', async (req, res) => {
-	let user, bcryptRes, validationErrors = []
-
 	try {
-		//Validations
-		if(req.body.password === undefined) {
-			validationErrors.push(Errors.missingParameter('password'))
-		} else if(typeof req.body.password !== 'string') {
-			validationErrors.push(Errors.invalidParameterType('password', 'string'))
-		}
-
-		if(validationErrors.length) throw Errors.VALIDATION_ERROR
-
-		user = await User.findOne({
-			where: {
-				username: req.params.username,
-			}
-		})
+		let user = await User.findOne({ where: {
+			username: req.params.username
+		}})
 
 		if(user) {
-			bcryptRes = await bcrypt.compare(req.body.password, user.hash)
-
-			if(bcryptRes) {
+			if(await user.comparePassword(req.body.password)) {
 				setUserSession(req, res, user.username, user.id, user.admin)
 
 				res.json({
@@ -173,18 +158,12 @@ router.post('/:username/login', async (req, res) => {
 		}
 
 	} catch (err) {
-		if(err === Errors.VALIDATION_ERROR) {
-			res.status(400)
-			res.json({
-				errors: validationErrors
-			})
-		} else {
-			console.log(err)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
+		console.log(err)
+
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
 	}
 })
 
@@ -253,12 +232,9 @@ router.put('/:username', async (req, res) => {
 })
 
 router.delete('/:username', async (req, res) => {
-	let validationErrors = []
-
 	try {
 		if(req.session.username !== req.params.username) {
-			validationErrors.push(Errors.requestNotAuthorized)
-			throw validationErrors
+			throw Errors.requestNotAuthorized
 		}
 
 		let user = await User.findOne({ where: {
@@ -274,9 +250,9 @@ router.delete('/:username', async (req, res) => {
 		})
 
 	} catch (e) {
-		if(validationErrors.length) {
+		if(e.name in Errors) {
 			res.status(400)
-			res.json({ errors: validationErrors })
+			res.json({ errors: [e] })
 		} else {
 			console.log(e)
 
