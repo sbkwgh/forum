@@ -1,6 +1,7 @@
 let bcrypt = require('bcryptjs')
 let randomColor = require('randomcolor')
 
+let pagination = require('../lib/pagination.js')
 const Errors = require('../lib/errors.js')
 
 module.exports = (sequelize, DataTypes) => {
@@ -78,6 +79,28 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			async comparePassword (password) {
 				return await bcrypt.compare(password, this.hash)
+			},
+			async getMeta (limit) {
+				let Post = sequelize.models.Post
+				let meta = {}
+
+				let nextId = await pagination.getNextIdDesc(Post, { userId: this.id }, this.Posts)
+
+				if(nextId === null) {
+					meta.nextURL = null
+					meta.nextPostsCount = 0
+				} else {
+					meta.nextURL =
+						`/api/v1/user/${user.username}?posts=true&limit=${limit}&from=${nextId - 1}`
+
+					meta.nextPostsCount = await pagination.getNextCount(
+						Post, this.Posts, limit,
+						{ UserId: this.id },
+						true
+					)
+				}
+
+				return meta
 			}
 		},
 		classMethods: {

@@ -79,26 +79,9 @@ router.get('/:username', async (req, res) => {
 			let user = await User.findOne(queryObj)
 			if(!user) throw Errors.accountDoesNotExist
 
-			let resUser = user.toJSON()
-			resUser.meta = {}
+			let meta = await user.getMeta(limit)
 
-			let nextId = await pagination.getNextIdDesc(Post, { userId: user.id }, resUser.Posts)
-
-			if(nextId === null) {
-				resUser.meta.nextURL = null
-				resUser.meta.nextPostsCount = 0
-			} else {
-				resUser.meta.nextURL =
-					`/api/v1/user/${user.username}?posts=true&limit=${limit}&from=${nextId - 1}`
-
-				resUser.meta.nextPostsCount = await pagination.getNextCount(
-					Post, resUser.Posts, limit,
-					{ UserId: user.id },
-					true
-				)
-			}
-
-			res.json(resUser)
+			res.json(Object.assign( user.toJSON(limit), { meta } ))
 		} else if(req.query.threads) {
 			let queryString = ''
 
