@@ -208,33 +208,46 @@ describe('User', () => {
 					done()
 				})
 		})
-		it('should throw an error if username or password less than 6 characters', (done) => {
+		it('should throw an error if username less than 6 characters', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
 					username: 'test',
-					password: 'pass'
+					password: '12345678'
 				})
 				.end((err, res) => {
 					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-
-					console.log(res.body)
-
-					res.body.errors.should.contain.something.that.has.property('message', 'username can\'t be less than 6 characters')
-					res.body.errors.should.contain.something.that.has.property('message', 'password can\'t be less than 6 characters')
+					res.body.errors.should.contain.something.that.has.property('message', 'username must be between 6 and 50 characters')
 					
 					done()
 				})
 		})
-		it('should throw an error if username greater than 50 characters or password is greater than 100 characters', (done) => {
+		it('should throw an error if password less than 6 characters', (done) => {
 			chai.request(server)
 				.post('/api/v1/user')
 				.set('content-type', 'application/x-www-form-urlencoded')
 				.send({
-					username: '123456789012345678901234567890123456789012345678901',
+					username: 'test12567',
+					password: '123'
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.should.be.json
+					res.body.should.have.property('errors')
+					res.body.errors.should.contain.something.that.has.property('message', 'password must be between 6 and 100 characters')
+					
+					done()
+				})
+		})
+		it('should throw an error if password is greater than 100 characters', (done) => {
+			chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: '12345678765432345676543',
 					password: '12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901'
 				})
 				.end((err, res) => {
@@ -242,8 +255,25 @@ describe('User', () => {
 					res.should.be.json
 					res.body.should.have.property('errors')
 
-					res.body.errors.should.contain.something.that.has.property('message', 'username can\'t be more than 50 characters')
-					res.body.errors.should.contain.something.that.has.property('message', 'password can\'t be more than 100 characters')
+					res.body.errors.should.contain.something.that.has.property('message', 'password must be between 6 and 100 characters')
+
+					done()
+				})
+		})
+		it('should throw an error if username greater than 50 characters', (done) => {
+			chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/x-www-form-urlencoded')
+				.send({
+					username: '123456789012345678901234567890123456789012345678901',
+					password: '123456789876'
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.should.be.json
+					res.body.should.have.property('errors')
+
+					res.body.errors.should.contain.something.that.has.property('message', 'username must be between 6 and 50 characters')
 
 					done()
 				})
@@ -561,14 +591,14 @@ describe('User', () => {
 				.end((err, res) => {
 					res.should.be.json
 					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('description', 'string'))
+					res.body.errors.should.contain.something.that.has.property('message', 'description must be a string')
 
 					done()
 				})
 		})
 		it('should return an error if description is too long', done => {
 			let str = []
-			for(var i = 0; i < 1025; i++) { str.push('a') }
+			for(var i = 0; i < 2000; i++) { str.push('a') }
 
 			agent
 				.put('/api/v1/user/adminaccount')
@@ -579,7 +609,7 @@ describe('User', () => {
 				.end((err, res) => {
 					res.should.be.json
 					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('description', '1024'))
+					res.body.errors.should.contain.something.that.has.property('message', 'description must be less than 1024 characters')
 
 					done()
 				})
@@ -672,8 +702,8 @@ describe('User', () => {
 					newPassword: ''
 				})
 				.end((err, res) => {
-					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooSmall('new password', '7'))
+					res.should.have.status(400)					
+					res.body.errors.should.contain.something.that.has.property('message', 'password must be between 6 and 100 characters')
 
 					done()
 				})
@@ -691,7 +721,7 @@ describe('User', () => {
 				})
 				.end((err, res) => {
 					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.parameterLengthTooLarge('new password', '1024'))
+					res.body.errors.should.contain.something.that.has.property('message', 'password must be between 6 and 100 characters')
 
 					done()
 				})
@@ -704,8 +734,9 @@ describe('User', () => {
 					newPassword: 'qwertyujkjnbgfdswazxcvbhytr'
 				})
 				.end((err, res) => {
-					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('current password'))
+					res.should.have.status(200)
+					
+					res.body.should.deep.equal({ success: false })
 
 					done()
 				})

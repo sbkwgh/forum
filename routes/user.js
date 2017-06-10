@@ -210,78 +210,39 @@ router.all('*', (req, res, next) => {
 })
 
 router.put('/:username', async (req, res) => {
-	let validationErrors = []
-
 	try {
 		if(req.session.username !== req.params.username) {
-			validationErrors.push(Errors.requestNotAuthorized)
-			throw validationErrors
+			throw Errors.requestNotAuthorized
 		}
 
-
 		if(req.body.description !== undefined) {
-			if(typeof req.body.description !== 'string') {
-				validationErrors.push(Errors.invalidParameterType('description', 'string'))
-			} else if(req.body.description.length > 1024) {
-				validationErrors.push(Errors.parameterLengthTooLarge('description', 1024))
-			}
-
-			if(validationErrors.length) throw validationErrors
-
 			let user = await User.update({ description: req.body.description }, { where: {
 				username: req.session.username
 			}})
 
 			res.json({ success: true })
 
-		} else if(req.body.newPassword !== undefined) {
-			if(req.body.currentPassword === undefined) {
-				validationErrors.push(Errors.missingParameter('current password'))
-			} if(typeof req.body.currentPassword !== 'string') {
-				validationErrors.push(Errors.invalidParameterType('currentPassword', 'string'))
-			} else if(req.body.currentPassword.length < 8) {
-				validationErrors.push(Errors.parameterLengthTooSmall('current password', 7))
-			}
-
-			if(typeof req.body.newPassword !== 'string') {
-				validationErrors.push(Errors.invalidParameterType('newPassword', 'string'))
-			} else {
-				if(req.body.newPassword.length > 1024) {
-					validationErrors.push(Errors.parameterLengthTooLarge('new password', 1024))
-				} if(req.body.newPassword.length < 8) {
-					validationErrors.push(Errors.parameterLengthTooSmall('new password', 7))
-				} if(req.body.newPassword === req.body.currentPassword) {
-					validationErrors.push(Errors.passwordSame)
-				}
-			}
-
-			if(validationErrors.length) throw validationErrors
-
+		} else if(
+			req.body.currentPassword !== undefined &&
+			req.body.newPassword !== undefined
+		) {
 			let user = await User.findOne({where: {
 				username: req.session.username
 			}})
 
-			let bcryptRes = await bcrypt.compare(req.body.currentPassword, user.hash)
+			await user.updatePassword(req.body.currentPassword, req.body.newPassword)
+			res.json({ success: true })
 
-			if(bcryptRes) {
-				let newHash = await bcrypt.hash(req.body.newPassword, 12)
-
-				let user = await User.update({ hash: newHash }, { where: {
-					username: req.session.username
-				}})
-
-				res.json({ success: true })
-			} else {
-				validationErrors.push(Errors.invalidLoginCredentials)
-				throw validationErrors
-			}
 		} else {
-			res.json({})
+			res.json({ success: false })
 		}
 	} catch (e) {
-		if(validationErrors.length) {
+		if(e.name in Errors) {
 			res.status(400)
-			res.json({ errors: validationErrors })
+			res.json({ errors: [e] })
+		} else if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
 		} else {
 			console.log(e)
 

@@ -9,13 +9,9 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			unique: true,
 			validate: {
-				min: {
-					args: [1],
-					msg: 'username can\'t be less than 6 characters'
-				},
-				max: {
-					arg: 50,
-					msg: 'username can\'t be more than 50 characters'
+				len: {
+					args: [6, 50],
+					msg: 'username must be between 6 and 50 characters'
 				},
 				isString (val) {
 					if(typeof val !== 'string') {
@@ -24,7 +20,20 @@ module.exports = (sequelize, DataTypes) => {
 				}
 			}
 		},
-		description: DataTypes.TEXT,
+		description: {
+			type: DataTypes.TEXT,
+			validate: {
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('description must be a string')
+					}
+				},
+				len: {
+					args: [0, 1024],
+					msg: 'description must be less than 1024 characters'
+				}
+			}
+		},
 		color: {
 			type: DataTypes.STRING,
 			defaultValue () {
@@ -35,13 +44,9 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 			validate: {
-				min: {
-					arg: 6,
-					msg: 'password can\'t be less than 6 characters'
-				},
-				max: {
-					arg: 100,
-					msg: 'password can\'t be more than 100 characters'
+				len: {
+					args: [6, 100],
+					msg: 'password must be between 6 and 100 characters'
 				},
 				isString (val) {
 					if(typeof val !== 'string') {
@@ -55,6 +60,23 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: false
 		}
 	}, {
+		instanceMethods: {
+			async updatePassword (currentPassword, newPassword) {
+				if(currentPassword === newPassword) {
+					throw Errors.passwordSame
+				} else if(typeof currentPassword !== 'string' || typeof newPassword !== 'string') {
+					throw new sequelize.ValidationError('password must be a string')
+				}
+
+				let correctPassword = await bcrypt.compare(currentPassword, this.hash)
+
+				if(correctPassword) {
+					await this.update({ hash: newPassword })
+				} else {
+					throw Errors.invalidLoginCredentials
+				}
+			}
+		},
 		classMethods: {
 			associate (models) {
 				User.hasMany(models.Post)
@@ -100,8 +122,13 @@ module.exports = (sequelize, DataTypes) => {
 			}
 		},
 		hooks: {
-			async afterValidate(user) {
-				user.hash = await bcrypt.hash(user.hash, 12)
+			async afterValidate(user, options) {
+				if(user.changed('hash') && user.hash.length <= 50) {
+					user.hash = await bcrypt.hash(user.hash, 12)
+				}
+
+				options.hooks = false
+				return options
 			}
 		}
 	})
