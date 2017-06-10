@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	}, {
 		instanceMethods: {
-			async getMeta (limit) {
+			getMeta (limit) {
 				let meta = {}
 
 				let posts = this.Posts
