@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
 				notEmpty: {
 					msg: 'The title cannot be empty'
 				},
-				max: {
-					args: '256',
+				len: {
+					args: [0, 256],
 					msg: 'The title can only be up to 256 characters'
 				},
 				isString (val) {
