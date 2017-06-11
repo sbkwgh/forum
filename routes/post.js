@@ -79,7 +79,7 @@ router.put('/:post_id/like', async (req, res) => {
 		res.json({ success: true })
 
 	} catch (e) {
-		if(['invalidParameter', 'cannotLikeOwnPost'].includes(e.name)) {
+		if(e.name in Errors) {
 			res.status(400)
 			res.json({
 				errors: [e]
