@@ -1,7 +1,12 @@
 <template>
 	<div class='admin'>
 		<div class='admin__menu'>
-			<div class='admin__menu__item' v-for='route in routes' :class='{ "admin__menu__item--selected" : false }'>
+			<div 
+				class='admin__menu__item'
+				v-for='route in routes'
+				:class='{ "admin__menu__item--selected" : route.route === selected }'
+				@click='$router.push("/admin/" + route.route)'
+			>
 				<div>
 					<span class='fa admin__menu__item__icon' :class='route.icon'></span>
 				</div>
@@ -15,6 +20,7 @@
 				</div>
 			</div>
 		</div>
+		<router-view class='admin__router_view'></router-view>
 	</div>
 </template>
 
@@ -23,13 +29,22 @@
 		name: 'Admin',
 		data () {
 			return {
+				selected: null,
 				routes: [
-					{ title: 'Dashboard', description: 'Quick links and stats about your forum', icon: 'fa-home' },
-					{ title: 'Moderation', description: 'View and respond to user reports', icon: 'fa-exclamation-circle' },
-					{ title: 'Categories', description: 'Add and remove thread categories', icon: 'fa-th' },
-					{ title: 'Back-up', description: 'Download and restore forum data', icon: 'fa-cloud-download' }
+					{ title: 'Dashboard', route: 'dashboard', description: 'Quick links and stats about your forum', icon: 'fa-home' },
+					{ title: 'Moderation', route: 'moderation', description: 'View and respond to user reports', icon: 'fa-exclamation-circle' },
+					{ title: 'Categories', route: 'categories', description: 'Add and remove thread categories', icon: 'fa-th' },
+					{ title: 'Back-up', route: 'backup', description: 'Download and restore forum data', icon: 'fa-cloud-download' }
 				]
 			}
+		},
+		watch: {
+			$route (to, from) {
+				this.selected = to.path.split('/')[2]
+			}
+		},
+		created () {
+			this.selected = this.$route.path.split('/')[2]
 		}
 	}
 </script>
@@ -40,6 +55,8 @@
 	.admin {
 		height: calc(100% + 1rem);
 		margin-top: -1rem;
+		display: flex;
+		flex-direction: row;
 
 		@at-root #{&}__menu {
 			width: 15rem;
@@ -69,7 +86,7 @@
 					width: 0.25rem;
 					height: 100%;
 					background-color: $color__gray--darkest;
-					transition: right 0.2s;
+					transition: left 0.2s;
 				}
 
 				@at-root #{&}--selected {
@@ -94,6 +111,12 @@
 					margin-top: 0.125rem;
 				}
 			}
+		}
+
+		@at-root #{&}__router_view {
+			width: 100%;
+			height: 100%;
+			overflow-y: auto;
 		}
 	}
 </style>
