@@ -50,7 +50,8 @@
 			background-color: #fff;
 			border-radius: 0.25rem;
 			flex: 1;
-			position: relative;
+			display: flex;
+			flex-direction: column;
 
 			@extend .shadow_border;
 
@@ -61,8 +62,6 @@
 			}
 
 			@at-root #{&}__title {
-				position: absolute;
-				bottom: 0;
 				background-color: $color__gray--primary;
 				width: 100%;
 				padding: 0.25rem 0.35rem;
