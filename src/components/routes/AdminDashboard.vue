@@ -5,24 +5,32 @@
 				card
 				<div class='admin_dashboard__card__title'>A title here</div>
 			</div>
-			<div class='admin_dashboard__card admin_dashboard__card--2'>card</div>
+			<div class='admin_dashboard__card admin_dashboard__card--2'>
+				<new-posts></new-posts>
+				<div class='admin_dashboard__card__title'>New posts in the last 24 hours</div>
+			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2'>card</div>
 		</div>
 		<div class='admin_dashboard__row'>
-			<div class='admin_dashboard__card'>card</div>
-			<div class='admin_dashboard__card'>card</div>
+			<div class='admin_dashboard__card'>card<div class='admin_dashboard__card__title'>A title here</div></div>
+			<div class='admin_dashboard__card'>card<div class='admin_dashboard__card__title'>A title here</div></div>
 		</div>
 		<div class='admin_dashboard__row'>
 			<div class='admin_dashboard__card admin_dashboard__card--1'>card</div>
-			<div class='admin_dashboard__card admin_dashboard__card--1'>card</div>
-			<div class='admin_dashboard__card admin_dashboard__card--2'>card</div>
+			<div class='admin_dashboard__card admin_dashboard__card--1'>card<div class='admin_dashboard__card__title'>A title here</div></div>
+			<div class='admin_dashboard__card admin_dashboard__card--2'>card<div class='admin_dashboard__card__title'>A title here</div></div>
 		</div>
 	</div>
 </template>
 
 <script>
+	import NewPosts from '../widgets/NewPosts'
+
 	export default {
-		name: 'AdminDashboard'
+		name: 'AdminDashboard',
+		components: {
+			NewPosts
+		}
 	}
 </script>
 
