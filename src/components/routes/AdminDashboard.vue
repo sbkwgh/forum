@@ -2,8 +2,8 @@
 	<div class='admin_dashboard'>
 		<div class='admin_dashboard__row'>
 			<div class='admin_dashboard__card admin_dashboard__card--3'>
-				card
-				<div class='admin_dashboard__card__title'>A title here</div>
+				<page-views></page-views>
+				<div class='admin_dashboard__card__title'>Page views over the past week</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2'>
 				<new-posts></new-posts>
@@ -25,11 +25,13 @@
 
 <script>
 	import NewPosts from '../widgets/NewPosts'
+	import PageViews from '../widgets/PageViews'
 
 	export default {
 		name: 'AdminDashboard',
 		components: {
-			NewPosts
+			NewPosts,
+			PageViews
 		}
 	}
 </script>

@@ -1,5 +1,8 @@
 <template>
 	<div class='widgets__new_post'>
+		<div class='widgets__new_post__overlay' :class='{ "widgets__new_post__overlay--show" : loading }'>
+			<loading-icon></loading-icon>
+		</div>
 		<div class='widgets__new_post__main'>
 			<template v-if='count'>
 				{{count}} new {{count | pluralize('post')}}
@@ -26,13 +29,22 @@
 </template>
 
 <script>
+	import LoadingIcon from '../LoadingIcon'
+
 	export default {
 		name: 'NewPosts',
+		components: { LoadingIcon },
 		data () {
 			return {
+				loading: true,
 				count: 1,
 				change: -2,
 			}
+		},
+		created () {
+			setTimeout(() => {
+				this.loading = false;
+			}, 3000)
 		}
 	}
 </script>
@@ -47,10 +59,15 @@
 		height: 100%;
 		border-radius: 0.25rem 0.25rem 0 0;
 		display: flex;
+		position: relative;
 		flex-direction: column;
 		padding: 0.5rem;
 		align-items: center;
 		justify-content: center;
+
+		@at-root #{&}__overlay {
+			@include loading-overlay(#3498db, 0.25rem 0.25rem 0 0);
+		}
 
 		@at-root #{&}__main {
 			font-size: 2.5rem;
