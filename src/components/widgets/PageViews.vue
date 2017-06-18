@@ -107,8 +107,9 @@
 			updateFuncs () {
 				this.setXFunc()
 				this.setYFunc()
-
-				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0))
+			
+				d3.select(this.$refs.y_axis).call(d3.axisLeft(this.y.nice()))
+				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0).ticks(this.data.length))
 			},
 			showTooltip (e, i) {
 				this.tooltipShow = true
@@ -143,9 +144,6 @@
 				this.updateFuncs()
 			}, 200)
 			window.addEventListener('resize', resizeCb)
-
-			d3.select(this.$refs.y_axis).call(d3.axisLeft(this.y.nice()))
-			d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0))
 		}
 	}
 </script>
