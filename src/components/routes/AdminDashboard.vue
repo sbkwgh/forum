@@ -11,18 +11,29 @@
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2'></div>
 		</div>
+		<div class='admin_dashboard__row'>
+			<div class='admin_dashboard__card admin_dashboard__card--3'>
+				<categories-chart></categories-chart>
+				<div class='admin_dashboard__card__title'>Number of threads by category</div>
+			</div>
+			<div class='admin_dashboard__card admin_dashboard__card--2 admin_dashboard__card--hidden'></div>
+			<div class='admin_dashboard__card admin_dashboard__card--2 admin_dashboard__card--hidden'></div>
+		</div>
+
 	</div>
 </template>
 
 <script>
 	import NewPosts from '../widgets/NewPosts'
 	import PageViews from '../widgets/PageViews'
+	import CategoriesChart from '../widgets/CategoriesChart'
 
 	export default {
 		name: 'AdminDashboard',
 		components: {
 			NewPosts,
-			PageViews
+			PageViews,
+			CategoriesChart
 		}
 	}
 </script>
@@ -52,6 +63,10 @@
 				@at-root #{&}--#{$i} {
 					flex: $i;
 				}
+			}
+
+			@at-root #{&}--hidden {
+				visibility: hidden;
 			}
 
 			@at-root #{&}__title {
