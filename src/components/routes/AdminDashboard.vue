@@ -2,21 +2,25 @@
 	<div class='admin_dashboard'>
 		<div class='admin_dashboard__row'>
 			<div class='admin_dashboard__card admin_dashboard__card--3'>
-				<page-views></page-views>
+				<line-chart></line-chart>
 				<div class='admin_dashboard__card__title'>Page views over the past week</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2'>
 				<new-posts></new-posts>
 				<div class='admin_dashboard__card__title'>New posts in the last 24 hours</div>
 			</div>
-			<div class='admin_dashboard__card admin_dashboard__card--2'></div>
-		</div>
-		<div class='admin_dashboard__row'>
-			<div class='admin_dashboard__card admin_dashboard__card--3'>
+			<div class='admin_dashboard__card admin_dashboard__card--2'>
 				<categories-chart></categories-chart>
 				<div class='admin_dashboard__card__title'>Number of threads by category</div>
 			</div>
-			<div class='admin_dashboard__card admin_dashboard__card--2 admin_dashboard__card--hidden'></div>
+		</div>
+		<div class='admin_dashboard__row'>
+			<div class='admin_dashboard__card admin_dashboard__card--2'>
+			</div>
+			<div class='admin_dashboard__card admin_dashboard__card--3'>
+				<line-chart color='#84dec0'></line-chart>
+				<div class='admin_dashboard__card__title'>New users over the past week</div>
+			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2 admin_dashboard__card--hidden'></div>
 		</div>
 
@@ -25,14 +29,14 @@
 
 <script>
 	import NewPosts from '../widgets/NewPosts'
-	import PageViews from '../widgets/PageViews'
+	import LineChart from '../widgets/LineChart'
 	import CategoriesChart from '../widgets/CategoriesChart'
 
 	export default {
 		name: 'AdminDashboard',
 		components: {
 			NewPosts,
-			PageViews,
+			LineChart,
 			CategoriesChart
 		}
 	}

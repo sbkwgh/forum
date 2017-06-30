@@ -1,11 +1,11 @@
 <template>
-	<div class='widgets__page_views' ref='container'>
-		<div class='widgets__page_views__overlay' :class='{ "widgets__page_views__overlay--show" : loading }'>
+	<div class='widgets__line_chart' ref='container' :style='{ "background-color": color }'>
+		<div class='widgets__line_chart__overlay' :class='{ "widgets__line_chart__overlay--show" : loading }'>
 			<loading-icon></loading-icon>
 		</div>
 		<div
-			class='widgets__page_views__tooltip'
-			:class='{ "widgets__page_views__tooltip--show": tooltipShow }'
+			class='widgets__line_chart__tooltip'
+			:class='{ "widgets__line_chart__tooltip--show": tooltipShow }'
 			:style='{ "left": tooltipX, "top": tooltipY }'
 		>
 			{{data[tooltipItem].pageViews}} {{data[tooltipItem] | pluralize('page view') }}
@@ -13,12 +13,12 @@
 		<svg>
 			<g
 				ref='y_axis'
-				class='widgets__page_views__axis'
+				class='widgets__line_chart__axis'
 				:transform='"translate(" + 3*padding + ",0)"'
 			></g>
 			<g
 				ref='x_axis'
-				class='widgets__page_views__axis widgets__page_views__axis--x'
+				class='widgets__line_chart__axis widgets__line_chart__axis--x'
 				:transform='"translate(0,150)"'
 			></g>
 			<path :d='linePath' fill='none' stroke-width='2' stroke='#fff'></path>
@@ -52,7 +52,8 @@
 	import throttle from 'lodash.throttle'
 
 	export default {
-		name: 'PageViews',
+		name: 'LineChart',
+		props: ['color'],
 		components: { LoadingIcon },
 		data () {
 			let data = [
@@ -151,7 +152,7 @@
 <style lang='scss'>
 	@import '../../assets/scss/variables.scss';
 
-	.widgets__page_views {
+	.widgets__line_chart {
 		background-color: #f39c12;
 		width: 100%;
 		height: 100%;
