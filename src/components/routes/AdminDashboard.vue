@@ -16,6 +16,8 @@
 		</div>
 		<div class='admin_dashboard__row'>
 			<div class='admin_dashboard__card admin_dashboard__card--2'>
+				<top-posts></top-posts>
+				<div class='admin_dashboard__card__title'>Top threads by page views today</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--3'>
 				<line-chart color='#84dec0'></line-chart>
@@ -31,13 +33,15 @@
 	import NewPosts from '../widgets/NewPosts'
 	import LineChart from '../widgets/LineChart'
 	import CategoriesChart from '../widgets/CategoriesChart'
+	import TopPosts from '../widgets/TopPosts'
 
 	export default {
 		name: 'AdminDashboard',
 		components: {
 			NewPosts,
 			LineChart,
-			CategoriesChart
+			CategoriesChart,
+			TopPosts
 		}
 	}
 </script>
