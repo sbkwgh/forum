@@ -9,7 +9,23 @@
 			:style='{ "left": tooltipX, "top": tooltipY }'
 		>
 		</div>
-		<svg></svg>
+		<div class='widgets__categories_chart__main'>
+			<svg>
+				<g ref='g'></g>
+			</svg>
+			<div class='widgets__categories_chart__main__legend'>
+				<div
+					v-for='(category, $index) in data'
+					class='widgets__categories_chart__label'
+					@mouseover='toggleLabelHover($index)'
+					@mouseout='toggleLabelHover($index)'
+				>
+					<div class='widgets__categories_chart__label__square' :style="{ 'background-color': category.color }"></div>
+					{{category.label}}
+				</div>
+			</div>
+		</div>
+
 	</div>
 </template>
 
@@ -23,33 +39,88 @@
 		name: 'CategoriesChart',
 		components: { LoadingIcon },
 		data () {
-			let data = []
+			let data_ = [
+				{ label: 'category 1', value: 0 },
+				{ label: 'category 2', value: 2 },
+				{ label: 'category 3', value: 3 },
+				{ label: 'category 4', value: 4 },
+				{ label: 'category 5', value: 5 }
+			]
+
+			let colors = d3
+				.scaleLinear()
+				.domain([0, data_.length])
+				.interpolate(d3.interpolateHcl)
+				.range(['#415f9c', '#4bd9ff'])
 
 			return {
 				loading: false,
-				padding: 10,
+				padding: 20,
 				
 				tooltipX: 0,
 				tooltipY: 0,
 				tooltipShow: false,
 				tooltipItem: 0,
 
-				data
+				colors,
+				data_
+			}
+		},
+		computed: {
+			data () {
+				return this.data_.map((d, i) => {
+					d.color = this.colors(i)
+
+					return d
+				})
 			}
 		},
 		methods: {
 			updateFuncs () {
-				let width = this.$refs.container.getBoundingClientRect().width - this.padding*2
-				let height = this.$refs.container.getBoundingClientRect().height - this.padding*2
+				let height = this.$refs.container.getBoundingClientRect().height
+
+				let paddedHeight = (height - this.padding) / 2
+				let translate = paddedHeight + this.padding / 2
+
+				let pieSegments = d3.pie()(this.data.map(d => d.value))
+				let arcGenerator = d3.arc()
+					.innerRadius(paddedHeight - 40)
+					.outerRadius(paddedHeight)
+					.padAngle(Math.PI*2 * 2/360)
+
+				let g = d3.select(this.$refs.g).attr('transform', `translate(${translate}, ${translate})`)
+
+				let arcs = g.selectAll('path')
+					.data(pieSegments)
+					.enter()
+					.append('path')
+					.attr('d', arcGenerator)
+					.attr('data-index', (d, i) => i)
+					.attr('fill', (d, i) => this.colors(i))
+
+				let labels = g.selectAll('text')
+					.data(pieSegments)
+					.enter()
+					.append('text')
+					.text(d => d.value ? d.value : '')
+					.attr('fill', '#fff')
+					.attr('transform', d => {
+						d.innerRadius = paddedHeight - 40
+						d.outerRadius = paddedHeight
+		
+						
+						let coords = arcGenerator.centroid(d)
+							.map((val, i) => i ? val+5 : val-5)
+							.join(',')
+
+						return `translate(${coords})`
+					})
 			},
-			showTooltip (e, i) {
-				this.tooltipShow = true
-				this.tooltipX = e.clientX + 'px'
-				this.tooltipY = e.clientY - 30 + 'px'
-				this.tooltipItem = i
-			},
-			hideTooltip () {
-				this.tooltipShow = false
+			toggleLabelHover (index) {
+				let g = this.$refs.g
+				let path = g.querySelector('path[data-index="' + index + '"]')
+
+				path.classList.toggle('widgets__categories_chart__main--large')
 			}
 		},
 		mounted () {
@@ -67,7 +138,7 @@
 	@import '../../assets/scss/variables.scss';
 
 	.widgets__categories_chart {
-		background-color: #2ecc71;
+		background-color: rgba(225, 245, 254, 0.5);
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
@@ -78,9 +149,46 @@
 			@include loading-overlay(#2ecc71, 0.25rem 0.25rem 0 0);
 		}
 
-		svg {
+		@at-root #{&}__main {
+			display: flex;
+			flex-direction: row;
 			height: 100%;
-			width: 100%;
+			
+			svg {
+				height: 100%;
+				width: 11rem;
+	
+				path {
+					transition: all 0.2s;
+				}
+			}
+			@at-root #{&}--large {
+				transform: scale(1.075);
+			}
+			@at-root #{&}__legend {
+				padding: 10px 0;
+			}
 		}
+
+		@at-root #{&}__label {
+			position: relative;
+			cursor: default;
+			margin-left: 1rem;
+
+		
+		 	&:hover {
+				text-decoration: underline;
+			}
+
+			@at-root #{&}__square {
+				position: absolute;
+				top: 0.375rem;
+				left: -1.25rem;
+				height: 0.75rem;
+				width: 0.75rem;
+				border-radius: 0.125rem;
+			}
+		}
+
 	}
 </style>
