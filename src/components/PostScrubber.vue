@@ -5,6 +5,7 @@
 		<div
 			class='post_scrubber__dragger'
 			
+			:class='{ "post_scrubber--no_top_transition": dragging }'
 			:style='{
 				"top": draggerYCoord + "px"
 			}'
@@ -14,6 +15,7 @@
 		></div>
 		<div
 			class='post_scrubber__dragger_info'
+			:class='{ "post_scrubber--no_top_transition": dragging }'
 			
 			:style='{
 				"top": draggerYCoord + "px"
@@ -21,7 +23,12 @@
 		>
 			Post <strong>{{currentPost}}</strong> out of {{posts}}
 		</div>
-		<div class='post_scrubber__label post_scrubber__label--last' @click='$emit("input", posts-1)'>Latest post</div>
+		<div
+			class='post_scrubber__label post_scrubber__label--last'
+			@click='$emit("input", posts-1)'
+		>
+			Latest post
+		</div>
 	</div>
 </template>
 
@@ -121,6 +128,10 @@
 		position: relative;
 		margin-top: 2rem;
 
+		@at-root #{&}--no_top_transition {
+			transition: background-color 0.2s !important;
+		}
+
 		@at-root #{&}__line {
 			height: 100%;
 			background-color: $color__gray--darker;
@@ -138,7 +149,7 @@
 			left: calc( (0.5rem - 0.125rem) / -2);
 			margin-top: calc(-1.5rem / 2 );
 			cursor: pointer;
-			transition: background-color 0.2s;
+			transition: background-color 0.2s, top 0.3s;
 
 			&:hover {
 				background-color: $color__blue--darker;
@@ -173,6 +184,7 @@
 			font-size: 0.9rem;
 			border-radius: 0.125rem;
 			padding: 0.25rem;
+			transition: top 0.3s;
 
 			@extend .shadow_border;
 		}
