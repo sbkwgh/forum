@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors')
-let { Settings } = require('../models')
+let { Settings, Sequelize } = require('../models')
 
 router.get('/', async (req, res) => {
 	try {
@@ -39,26 +39,15 @@ router.all('*', (req, res, next) => {
 })
 
 router.put('/', async (req, res) => {
-	let validationErrors = []
-	let params = {}
-
 	try {
-		if(req.body.forumName !== undefined) {
-			if(typeof req.body.forumName !== 'string') {
-				validationErrors.push(Errors.invalidParameterType('forumName', 'string'))
-			} else {
-				params.forumName = req.body.forumName
-			}
+		let params = {}
+
+		if(req.body.forumName) {
+			params.forumName = req.body.forumName
 		}
-		if(req.body.forumDescription !== undefined) {
-			if(typeof req.body.forumDescription !== 'string') {
-				validationErrors.push(Errors.invalidParameterType('forumDescription', 'string'))
-			} else {
-				params.forumDescription = req.body.forumDescription
-			}
+		if(req.body.forumDescription) {
+			params.forumDescription = req.body.forumDescription
 		}
-		
-		if(validationErrors.length) throw Errors.VALIDAITON_ERROR
 
 		let updatedSettings = await Settings.set(params)
 
@@ -68,11 +57,9 @@ router.put('/', async (req, res) => {
 		})
 		
 	} catch (e) {
-		if(e === Errors.VALIDAITON_ERROR) {
+		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)
-			res.json({
-				errors: [validationErrors]
-			})
+			res.json(e)
 		} else {
 			console.log(e)
 			res.status(500)

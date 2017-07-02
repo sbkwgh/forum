@@ -1,7 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
 	let Settings = sequelize.define('Settings', {
-		forumName: DataTypes.STRING,
-		forumDescription: DataTypes.STRING
+		forumName: {
+			type: DataTypes.STRING,
+			validate: {
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('The name must be a string')
+					}
+				}
+			}
+		},
+		forumDescription: {
+			type: DataTypes.STRING,
+			validate: {
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('The description must be a string')
+					}
+				}
+			}
+		}
 	}, {
 		classMethods: {
 			set (values) {
