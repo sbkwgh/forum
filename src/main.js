@@ -25,6 +25,10 @@ import Settings from './components/routes/Settings'
 import SettingsGeneral from './components/routes/SettingsGeneral'
 import SettingsAccount from './components/routes/SettingsAccount'
 
+import Admin from './components/routes/Admin'
+import AdminDashboard from './components/routes/AdminDashboard'
+import AdminModeration from './components/routes/AdminModeration'
+
 let { onResize } = require('./assets/js/flexBoxGridCorrect.js')
 
 onResize('.index_categories', 'index_category');
@@ -49,6 +53,10 @@ const router = new VueRouter({
 		{ path: '/settings', redirect: '/settings/general', component: Settings, children: [
 			{ path: 'general', component: SettingsGeneral },
 			{ path: 'account', component: SettingsAccount }
+		] },
+		{ path: '/admin', redirect: '/admin/dashboard', component: Admin, children: [
+			{ path: 'dashboard', component: AdminDashboard },
+			{ path: 'moderation', component: AdminModeration },
 		] }
 	],
 	mode: 'history'
