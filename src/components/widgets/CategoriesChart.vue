@@ -159,7 +159,7 @@
 		position: relative;
 
 		@at-root #{&}__overlay {
-			@include loading-overlay(#2ecc71, 0.25rem 0.25rem 0 0);
+			@include loading-overlay(rgb(225, 245, 254), 0.25rem 0.25rem 0 0);
 		}
 
 		@at-root #{&}__main {

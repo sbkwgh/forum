@@ -73,7 +73,7 @@
 
 
 		@at-root #{&}__overlay {
-			@include loading-overlay(#2ecc71, 0.25rem 0.25rem 0 0);
+			@include loading-overlay(rgb(160, 160, 160), 0.25rem 0.25rem 0 0);
 		}
 
 		@at-root #{&}__item {
