@@ -44,7 +44,7 @@
 		created () {
 			setTimeout(() => {
 				this.loading = false;
-			}, 3000)
+			}, Math.random*3000)
 		}
 	}
 </script>

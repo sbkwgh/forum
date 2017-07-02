@@ -28,7 +28,7 @@
 		components: { LoadingIcon },
 		data () {
 			return {
-				loading: false,
+				loading: true,
 
 				data_: [
 					{ title: 'Post title here', views: 20 },
@@ -51,6 +51,11 @@
 
 				return ret
 			}
+		},
+		created () {
+			setTimeout(() => {
+				this.loading = false;
+			}, Math.random()*3000)
 		}
 	}
 </script>

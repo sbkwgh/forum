@@ -78,7 +78,7 @@
 				.range([0, 0])
 
 			return {
-				loading: false,
+				loading: true,
 				padding: 10,
 				
 				tooltipX: 0,
@@ -146,6 +146,10 @@
 				this.updateFuncs()
 			}, 200)
 			window.addEventListener('resize', resizeCb)
+
+			setTimeout(() => {
+				this.loading = false;
+			}, Math.random()*3000)
 		}
 	}
 </script>

@@ -54,7 +54,7 @@
 				.range(['#415f9c', '#4bd9ff'])
 
 			return {
-				loading: false,
+				loading: true,
 				padding: 20,
 				
 				tooltipX: 0,
@@ -139,6 +139,10 @@
 				this.updateFuncs()
 			}, 200)
 			window.addEventListener('resize', resizeCb)
+
+			setTimeout(() => {
+				this.loading = false;
+			}, Math.random()*3000)
 		}
 	}
 </script>
