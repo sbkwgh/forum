@@ -57,19 +57,20 @@
 		components: { LoadingIcon },
 		data () {
 			let data = [
-				{ pageViews: Math.floor(Math.random() * 100) },
-				{ pageViews: Math.floor(Math.random() * 100) },
-				{ pageViews: Math.floor(Math.random() * 100) },
-				{ pageViews: Math.floor(Math.random() * 100) },
-				{ pageViews: Math.floor(Math.random() * 100) },
-				{ pageViews: Math.floor(Math.random() * 100) },
-				{ pageViews: Math.floor(Math.random() * 100) }
+				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 26) },
+				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 27) },
+				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 28) },
+				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 29) },
+				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 30) },
+				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 6, 1) },
+				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 6, 2) }
 			]
 
 			let x = d3
-				.scaleLinear()
+				.scaleTime()
 				.domain([0, 0])
 				.range([0, 0])
+
 
 			let y = d3
 				.scaleLinear()
@@ -93,8 +94,8 @@
 				let width = this.$refs.container.getBoundingClientRect().width - this.padding*2
 
 				this.x = d3
-					.scaleLinear()
-					.domain([0, this.data.length-1])
+					.scaleTime()
+					.domain([this.data[0].date, this.data.slice(-1)[0].date])
 					.range([this.padding * 4, width])
 			},
 			setYFunc () {
@@ -110,7 +111,7 @@
 				this.setYFunc()
 			
 				d3.select(this.$refs.y_axis).call(d3.axisLeft(this.y.nice()))
-				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0).ticks(this.data.length))
+				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0).ticks(7))
 			},
 			showTooltip (e, i) {
 				this.tooltipShow = true
@@ -127,14 +128,14 @@
 				let line = 	d3
 					.line()
 					.curve(d3.curveCatmullRom)
-					.x((d, i) => this.x(i))
+					.x(d => this.x(d.date))
 					.y(d => this.y(d.pageViews))
 
 				return line(this.data)
 			},
 			circles () {
-				return this.data.map((d, i) => {
-					return { x: this.x(i), y: this.y(d.pageViews) }
+				return this.data.map(d => {
+					return { x: this.x(d.date), y: this.y(d.pageViews) }
 				})
 			}
 		},
