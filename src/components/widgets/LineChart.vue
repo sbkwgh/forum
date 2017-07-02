@@ -1,6 +1,6 @@
 <template>
 	<div class='widgets__line_chart' ref='container' :style='{ "background-color": background }'>
-		<div class='widgets__line_chart__overlay' :style='{ "background-color": background }'' :class='{ "widgets__line_chart__overlay--show" : loading }'>
+		<div class='widgets__line_chart__overlay'  :style='{ "background-color": background }' :class='{ "widgets__line_chart__overlay--show" : loading }'>
 			<loading-icon></loading-icon>
 		</div>
 		<div
