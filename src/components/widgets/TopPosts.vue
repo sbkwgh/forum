@@ -95,7 +95,7 @@
 						$alpha: 0.8 - ($i + 1) / 5
 					}
 					
-					background-color: rgba(0, 222, 56, $alpha);
+					background-color: rgba(160, 160, 160, $alpha);
 				}
 			}
 
