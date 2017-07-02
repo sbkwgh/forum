@@ -103,6 +103,7 @@
 					.enter()
 					.append('text')
 					.text(d => d.value ? d.value : '')
+					.attr('data-index', (d, i) => i)
 					.attr('fill', '#fff')
 					.attr('transform', d => {
 						d.innerRadius = paddedHeight - 40
@@ -119,8 +120,16 @@
 			toggleLabelHover (index) {
 				let g = this.$refs.g
 				let path = g.querySelector('path[data-index="' + index + '"]')
+				let text = g.querySelector('text[data-index="' + index + '"]')
+				let textTransform = text.getAttribute('transform')
 
 				path.classList.toggle('widgets__categories_chart__main--large')
+				
+				if(textTransform.includes('scale')) {
+					text.setAttribute('transform', textTransform.split(' ')[0])
+				} else {
+					text.setAttribute('transform', textTransform + ' scale(1.15)')
+				}
 			}
 		},
 		mounted () {
@@ -158,7 +167,7 @@
 				height: 100%;
 				width: 11rem;
 	
-				path {
+				path, text {
 					transition: all 0.2s;
 				}
 			}
