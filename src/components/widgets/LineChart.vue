@@ -1,5 +1,5 @@
 <template>
-	<div class='widgets__line_chart' ref='container' :style='{ "background-color": color }'>
+	<div class='widgets__line_chart' ref='container' :style='{ "background-color": background }'>
 		<div class='widgets__line_chart__overlay' :class='{ "widgets__line_chart__overlay--show" : loading }'>
 			<loading-icon></loading-icon>
 		</div>
@@ -27,7 +27,7 @@
 				:cx='circle.x'
 				:cy='circle.y'
 				r='4'
-				fill='rgb(255, 237, 127)'
+				:fill='point'
 			>
 			</circle>
 			<circle
@@ -53,7 +53,7 @@
 
 	export default {
 		name: 'LineChart',
-		props: ['color'],
+		props: ['point', 'background'],
 		components: { LoadingIcon },
 		data () {
 			let data = [
@@ -154,7 +154,6 @@
 	@import '../../assets/scss/variables.scss';
 
 	.widgets__line_chart {
-		background-color: #f39c12;
 		width: 100%;
 		height: 100%;
 		overflow: hidden;

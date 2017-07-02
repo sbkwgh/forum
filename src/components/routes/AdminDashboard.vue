@@ -2,7 +2,7 @@
 	<div class='admin_dashboard'>
 		<div class='admin_dashboard__row'>
 			<div class='admin_dashboard__card admin_dashboard__card--3'>
-				<line-chart></line-chart>
+				<line-chart background='#f39c12' point='rgb(255, 237, 127)'></line-chart>
 				<div class='admin_dashboard__card__title'>Page views over the past week</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2'>
@@ -20,7 +20,7 @@
 				<div class='admin_dashboard__card__title'>Top threads by page views today</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--3'>
-				<line-chart color='#84dec0'></line-chart>
+				<line-chart background='#84dec0' point='#1da8ce'></line-chart>
 				<div class='admin_dashboard__card__title'>New users over the past week</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2 admin_dashboard__card--hidden'></div>
