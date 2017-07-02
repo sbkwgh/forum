@@ -9,10 +9,10 @@
 			:class='"widgets__top_posts__item--" + $index'
 			v-for='(thread, $index) in data'
 		>
-			<div class='widgets__top_posts__item__number'>{{$index + 1}}</div>
+			<div class='widgets__top_posts__item__number' v-if='thread.title'>{{$index + 1}}</div>
 			<div class='widgets__top_posts__item__info'>
 				<div class='widgets__top_posts__item__title'>{{thread.title}}</div>
-				<div class='widgets__top_posts__item__views'>
+				<div class='widgets__top_posts__item__views' v-if='thread.title'>
 					{{thread.views}} {{thread.views | pluralize('page view')}}
 				</div>
 			</div>
@@ -30,12 +30,26 @@
 			return {
 				loading: false,
 
-				data: [
+				data_: [
 					{ title: 'Post title here', views: 20 },
 					{ title: 'Another', views: 18 },
-					{ title: 'Lorem ipsum dolor sit amet loremp', views: 10 },
-					{ title: 'Post here', views: 2 }
+					{ title: 'Lorem ipsum dolor sit amet loremp', views: 10 }
 				]
+			}
+		},
+		computed: {
+			data () {
+				let ret = []
+
+				for(let i = 0; i < 4; i++) {
+					if(this.data_[i]) {
+						ret.push(this.data_[i])
+					} else {
+						ret.push({})
+					}
+				}
+
+				return ret
 			}
 		}
 	}
