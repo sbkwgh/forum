@@ -111,7 +111,7 @@
 				this.setYFunc()
 			
 				d3.select(this.$refs.y_axis).call(d3.axisLeft(this.y.nice()))
-				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0).ticks(7))
+				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0).ticks(this.data.length))
 			},
 			showTooltip (e, i) {
 				this.tooltipShow = true
