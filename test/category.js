@@ -80,7 +80,7 @@ describe('Category', () => {
 				res.body.errors.should.contain.something.that.deep.equals(Errors.categoryAlreadyExists)
 			} catch (res) {
 				res.should.have.status(400)
-				JSON.parse(res.response.text).errors.should.contain.something.that.deep.equals(Errors.categoryAlreadyExists)
+				res.response.body.errors.should.contain.something.that.deep.equals(Errors.categoryAlreadyExists)
 			}
 		})
 		it('should return an error if missing category parameter', done => {
@@ -91,7 +91,7 @@ describe('Category', () => {
 				.end((err, res) => {
 					res.should.be.json
 					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
+					res.body.errors.should.contain.something.that.has.property('message', 'name cannot be null')
 
 					done()
 				})
@@ -104,7 +104,7 @@ describe('Category', () => {
 				.end((err, res) => {
 					res.should.be.json
 					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('name'))
+					res.body.errors.should.contain.something.that.has.property('message', 'The category name can\'t be empty')
 
 					done()
 				})

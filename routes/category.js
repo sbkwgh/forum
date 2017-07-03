@@ -3,7 +3,7 @@ let router = express.Router()
 
 const Errors = require('../lib/errors')
 let pagination = require('../lib/pagination')
-let { Category, Post, Thread, User } = require('../models')
+let { Category, Post, Thread, User, Sequelize } = require('../models')
 
 router.get('/', async (req, res) => {
 	try {
@@ -147,36 +147,24 @@ router.all('*', (req, res, next) => {
 })
 
 router.post('/', async (req, res) => {
-	let validationErrors = []
-
 	try {
-		if(req.body.name === undefined) {
-			validationErrors.push(Errors.missingParameter('name'))
-		} else if(typeof req.body.name !== 'string') {
-			validationErrors.push(Errors.invalidParameterType('name', 'string'))
-		} else if(!req.body.name.length) {
-			validationErrors.push(Errors.missingParameter('name'))
-		}
-
-		if(validationErrors.length) throw Errors.VALIDAITON_ERROR
-
 		let category = await Category.create({
 			name: req.body.name
 		})
 
 		res.json(category.toJSON())
 	} catch (e) {
-		if(e === Errors.VALIDAITON_ERROR) {
-			res.status(400)
-			res.json({
-				errors: validationErrors
-			})
-		} else if(e.name === 'SequelizeUniqueConstraintError') {
+		if(e.name === 'SequelizeUniqueConstraintError') {
 			res.status(400)
 			res.json({
 				errors: [Errors.categoryAlreadyExists]
 			})
+		} else if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
 		} else {
+			console.log(e)
+
 			res.status(500)
 			res.json({
 				errors: [Errors.unknown]

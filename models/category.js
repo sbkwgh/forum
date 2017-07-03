@@ -5,10 +5,16 @@ module.exports = (sequelize, DataTypes) => {
 		name: {
 			type: DataTypes.STRING,
 			unique: true,
-			set (val) {
-				let underscored = val.trim().replace(/\s/g, '_').toUpperCase()
-				this.setDataValue('name', val)
-				this.setDataValue('value', underscored)
+			allowNull: false,
+			validate: {
+				notEmpty: {
+					msg: 'The category name can\'t be empty'
+				},
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('The category name must be a string')
+					}
+				}
 			}
 		},
 		value: {
@@ -22,6 +28,16 @@ module.exports = (sequelize, DataTypes) => {
 			}
 		}
 	}, {
+		hooks: {
+			beforeCreate (category) {
+				if(!category.name) {
+					throw new sequelize.ValidationError('The category name cant\'t be empty')
+				} else {
+					let underscored = category.name.trim().replace(/\s/g, '_').toUpperCase()
+					category.value = underscored
+				}
+			}
+		},
 		classMethods: {
 			associate (models) {
 				Category.hasMany(models.Thread)
