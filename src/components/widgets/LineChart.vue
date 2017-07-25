@@ -8,7 +8,7 @@
 			:class='{ "widgets__line_chart__tooltip--show": tooltipShow }'
 			:style='{ "left": tooltipX, "top": tooltipY }'
 		>
-			{{data[tooltipItem].pageViews}} {{data[tooltipItem] | pluralize('page view') }}
+			{{data[tooltipItem].pageViews}} {{data[tooltipItem].pageViews | pluralize(tooltip) }}
 		</div>
 		<svg>
 			<g
@@ -53,7 +53,7 @@
 
 	export default {
 		name: 'LineChart',
-		props: ['point', 'background'],
+		props: ['point', 'background', 'tooltip'],
 		components: { LoadingIcon },
 		data () {
 			let data = [
