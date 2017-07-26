@@ -61,7 +61,7 @@
 			text-align: center;
 			position: relative;
 			cursor: pointer;
-			font-weight: 400;
+			font-weight: 300;
 			padding: 0.5rem 0;
 			background-color: $color__gray--primary;
 			transition: background-color 0.2s;
@@ -71,6 +71,10 @@
 			}
 			&:active {
 				background-color: rgba(210, 210, 210, 1);
+			}
+
+			@at-root #{&}--small_tabs {
+				border: thin solid $color__gray--primary;
 			}
 
 			@at-root #{&}--selected {
