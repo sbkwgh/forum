@@ -1,13 +1,20 @@
 <template>
 	<div class='tab_view'>
-		<div class='tab_view__tabs' :class='{"tab_view__tabs--small_tabs": smallTabs}'>
+		<div
+			class='tab_view__tabs'
+			:class='{
+				"tab_view__tabs--small_tabs": smallTabs,
+				"tab_view__tabs--transparent": transparent
+			}'
+		>
 			<div
 				class='tab_view__tab'
 				v-for='(tab, index) in tabs'
 				:class='{
 					"tab_view__tab--selected": tabIndex === index,
 					"tab_view__tab--selected_small_tabs": tabIndex === index && smallTabs,
-					"tab_view__tab--small_tabs": smallTabs
+					"tab_view__tab--small_tabs": smallTabs,
+					"tab_view__tab--transparent": transparent
 				}'
 				@click='changeTab(index)'
 			>
@@ -28,7 +35,7 @@
 <script>
 	export default {
 		name: 'TabView',
-		props: ['tabs', 'value', 'padding', 'small-tabs'],
+		props: ['tabs', 'value', 'padding', 'small-tabs', 'transparent'],
 		methods: {
 			changeTab (index) {
 				this.$emit('input', index)
@@ -55,6 +62,10 @@
 				background-color: $color__gray--primary;
 				border-bottom: thin solid $color__gray--darker;
 			}
+
+			@at-root #{&}--transparent {
+				background-color: transparent;
+			}
 		}
 		@at-root #{&}__tab {
 			flex-grow: 1;
@@ -75,6 +86,17 @@
 
 			@at-root #{&}--small_tabs {
 				border: thin solid $color__gray--primary;
+			}
+
+			@at-root #{&}--transparent {
+				background-color: transparent;
+
+				&:hover {
+					background-color: $color__gray--primary;
+				}
+				&:active {
+					background-color: $color__gray--darker;
+				}
 			}
 
 			@at-root #{&}--selected {
