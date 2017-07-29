@@ -13,6 +13,7 @@
 			:class='{"post__remove_icon--show": showSelect && !post.removed}'
 			@click='toggleSelected'
 		></span>
+
 		<modal-window v-model='showShareModal'>
 			<div style='padding: 0rem 1rem 1rem 1rem;'>
 				<p>Copy this URL to share the post</p>
@@ -20,6 +21,9 @@
 				<button class='button button--modal' @click='setShareModalState(false)'>OK</button>
 			</div>
 		</modal-window>
+
+		<report-post-modal v-model='showReportPostModal'></report-post-modal>
+
 		<div class='post__meta_data'>
 			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
 			<div class='post__thread' v-if='showThread' @click='goToThread'>{{post.Thread.name}}</div>
@@ -57,6 +61,13 @@
 				class='post__footer_group'>
 				<div class='post__action post__share' @click='setShareModalState(true)'>Share</div>
 				<div
+					class='post__action'
+					@click='setShowReportPostModal(true)'
+					v-if='$store.state.username && !post.removed'
+				>
+					Report
+				</div>
+				<div
 					class='post__action post__reply'
 					v-if='$store.state.username && showReply'
 					@click='$emit("reply", post.id, username)'
@@ -75,6 +86,7 @@
 	import FancyInput from './FancyInput'
 	import ReplyingTo from './ReplyingTo'
 	import AvatarIcon from './AvatarIcon'
+	import ReportPostModal from './ReportPostModal'
 
 	import AjaxErrorHandler from '../assets/js/errorHandler'
 
@@ -87,7 +99,8 @@
 			FancyInput,
 			ReplyingTo,
 			AvatarIcon,
-			HeartButton
+			HeartButton,
+			ReportPostModal
 		},
 		data () {
 			let post = this.post
@@ -95,6 +108,7 @@
 			return {
 				hover: false,
 				showShareModal: false,
+				showReportPostModal: false,
 				postURL: `${location.origin}/p/${post.id}`,
 				selected: false
 			}
@@ -114,6 +128,9 @@
 			},
 			setShareModalState (val) {
 				this.showShareModal = val
+			},
+			setShowReportPostModal (val) {
+				this.showReportPostModal = val
 			},
 			goToThread () {
 				this.$router.push(`/thread/${this.post.Thread.slug}/${this.post.Thread.id}`)
