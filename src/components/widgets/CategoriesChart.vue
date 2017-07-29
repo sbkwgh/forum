@@ -134,15 +134,14 @@
 		},
 		mounted () {
 			this.updateFuncs()
-
-			let resizeCb = throttle(() => {
-				this.updateFuncs()
-			}, 200)
-			window.addEventListener('resize', resizeCb)
+			window.addEventListener('resize', this.updateFuncs)
 
 			setTimeout(() => {
 				this.loading = false;
 			}, Math.random()*3000)
+		},
+		destroyed () {
+			window.removeEventListener('resize', this.updateFuncs)
 		}
 	}
 </script>
