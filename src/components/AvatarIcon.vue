@@ -8,7 +8,7 @@
 						:style='{ "background-color": user.color }'
 						@click='goToUser'
 					>
-						{{user.username[0]}}
+						{{userLetter}}
 					</div>
 					<div class='avatar_icon__header_info'>
 						<span class='avatar_icon__username' @click='goToUser'>{{ajaxUser.username}}</span>
@@ -49,7 +49,7 @@
 		computed: {
 			userLetter () {
 				if(this.user) {
-					return this.user.username[0]
+					return this.user.username[0].toLowerCase()
 				} else {
 					return ''
 				}
