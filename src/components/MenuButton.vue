@@ -72,7 +72,7 @@
 			opacity: 0;
 			margin-top: -1rem;
 			transition: all 0.25s;
-			top: 0.25rem;
+			top: 0rem;
 			left: 0;
 
 			@at-root #{&}--show {
