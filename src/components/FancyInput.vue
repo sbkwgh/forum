@@ -4,7 +4,7 @@
 			 style='position: relative; display: inline-block;'
 			 v-bind:style='{width: width || "10rem"}'
 		>
-			<error-tooltip :error='error'></error-tooltip>
+			<error-tooltip :error='error' :bottom='errorBottom'></error-tooltip>
 			<div
 				class='fancy_input__placeholder'
 				:class='{
@@ -33,7 +33,7 @@
 
 	export default {
 		name: 'FancyInput',
-		props: ['value', 'placeholder', 'width', 'type', 'error', 'large'],
+		props: ['value', 'placeholder', 'width', 'type', 'error', 'large', 'error-bottom'],
 		components: {
 			ErrorTooltip
 		},

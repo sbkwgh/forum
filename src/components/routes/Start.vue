@@ -81,6 +81,7 @@
 					<fancy-input
 						v-model='category'
 						:error='errors.name'
+						:error-bottom='true'
 						width='100%'
 						placeholder='Category name'
 					></fancy-input>

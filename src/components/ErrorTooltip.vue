@@ -1,7 +1,7 @@
 <template>
 	<div
 		class='error_tooltip'
-		:class='{"error_tooltip--show": error }'
+		:class='{"error_tooltip--show": error, "error_tooltip--bottom": bottom }'
 	>
 		{{delayed_error}}
 	</div>
@@ -10,7 +10,7 @@
 <script>
 	export default {
 		name: 'ErrorTooltip',
-		props: ['error'],
+		props: ['error', 'bottom'],
 		data () {
 			return {
 				delayed_error: this.error
@@ -40,23 +40,15 @@
 		font-size: 0.9rem;
 		padding: 0.1rem 0.25rem;
 		top: 0.2125rem;
+		border-radius: 0.2rem;
 		left: calc(100% + 0.25rem);
 		white-space: nowrap;
-		
-
-		&:first-letter{ text-transform: capitalize; }
-
 		opacity: 0;
 		pointer-events: none;
 		margin-top: -1rem;
 		transition: opacity 0.2s, margin-top 0.2s;
 
-		@at-root #{&}--show {
-			opacity: 1;
-			pointer-events: all;
-			margin-top: 0;
-			transition: opacity 0.2s, margin-top 0.2s;
-		}
+		&:first-letter{ text-transform: capitalize; }
 
 		&::after {
 			content: '';
@@ -68,6 +60,26 @@
 			border-top: 0.3rem solid transparent;
 			border-bottom: 0.3rem solid transparent;
 			border-right: 0.3rem solid #D32F2F;
+		}
+
+		@at-root #{&}--show {
+			opacity: 1;
+			pointer-events: all;
+			margin-top: 0;
+			transition: opacity 0.2s, margin-top 0.2s;
+		}
+
+		@at-root #{&}--bottom {
+			left: 0;
+			top: calc(100% + 0.25rem);
+
+			&::after {
+				top: -1.1rem;
+				right: calc(100% - 0.5rem);
+				border-left: 0.3rem solid transparent;
+				border-right: 0.3rem solid transparent;
+				border-bottom: 0.3rem solid #D32F2F;
+			}
 		}
 	}
 </style>
