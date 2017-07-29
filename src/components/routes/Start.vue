@@ -14,7 +14,7 @@
 				></fancy-input>
 				<fancy-input
 					v-model='password'
-					:error='errors.password'
+					:error='errors.hash'
 					width='100%'
 					placeholder='Password'
 					type='password'
@@ -125,7 +125,7 @@
 
 				errors: {
 					username: '',
-					password: '',
+					hash: '',
 					confirmPassword: '',
 					forumName: '',
 					forumDescription: '',
@@ -147,7 +147,7 @@
 		methods: {
 			clearErrors () {
 				this.errors.username = ''
-				this.errors.password = ''
+				this.errors.hash = ''
 				this.errors.confirmPassword = ''
 				this.errors.forumName = ''
 				this.errors.forumDescription = ''
@@ -157,8 +157,8 @@
 				this.loading = false
 
 				AjaxErrorHandler(this.$store)(err, (error, modalErrors) => {
-					if(this.errors[error.parameter] !== undefined) {
-						this.errors[error.parameter] = error.message
+					if(this.errors[error.path] !== undefined) {
+						this.errors[error.path] = error.message
 					} else {
 						modalErrors.push(error.message)
 					}

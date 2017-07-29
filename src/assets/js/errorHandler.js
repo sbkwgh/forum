@@ -1,15 +1,15 @@
 module.exports = function(vuex) {
-	return function (res, ignoreParamErrorCb) {
+	return function (res, ignorePathErrorCb) {
 		let errors = []
 
 		if(res.response === undefined || res.response.data.errors === undefined) {
 			errors.push('An error occured. Try again later')
 		} else {
 			res.response.data.errors.forEach(error => {
-				let param = error.parameter
+				let path = error.path
 
-				if(param && ignoreParamErrorCb) {
-					ignoreParamErrorCb(error, errors)
+				if(path && ignorePathErrorCb) {
+					ignorePathErrorCb(error, errors)
 					return
 				}
 				errors.push(error.message)

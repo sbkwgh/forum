@@ -102,7 +102,9 @@
 						console.log(e)
 
 						AjaxErrorHandler(this.$store)(e, error => {
-							this.password.errors[error.parameter] = error.message
+							if(error.path === 'hash') {
+								this.password.errors['new password'] = error.message
+							}
 						})
 					})
 			},

@@ -22,7 +22,7 @@
 					</fancy-input>
 					<fancy-input
 						v-model='signup.password'
-						:error='signup.errors.password'
+						:error='signup.errors.hash'
 						placeholder='Password'
 						type='password'
 						width='100%'
@@ -56,7 +56,7 @@
 					</fancy-input>
 					<fancy-input
 						v-model='login.password'
-						:error='login.errors.password'
+						:error='login.errors.hash'
 						placeholder='Password'
 						type='password'
 						width='100%'
@@ -135,7 +135,7 @@
 
 					errors: {
 						username: '',
-						password: '',
+						hash: '',
 						confirmPassword: ''
 					}
 				},
@@ -147,7 +147,7 @@
 
 					errors: {
 						username: '',
-						password: ''
+						hash: ''
 					}
 				},
 				loadingLogout: false,
@@ -220,7 +220,7 @@
 			},
 			clearSignupErrors () {
 				this.signup.errors.username = ''
-				this.signup.errors.password = ''
+				this.signup.errors.hash = ''
 				this.signup.errors.confirmPassword = ''
 			},
 			clearLogin () {
@@ -229,7 +229,7 @@
 			},
 			clearLoginErrors () {
 				this.login.errors.username = ''
-				this.login.errors.password = ''
+				this.login.errors.hash = ''
 			},
 			closeAccountModal () {
 				this.showAccountModal = false
@@ -260,10 +260,10 @@
 						this.signup.loading = false
 
 						this.ajaxErrorHandler(e, (error) => {
-							let param = error.parameter
+							let path = error.path
 
-							if(this.signup.errors[param] !== undefined) {
-								this.signup.errors[param] = error.message
+							if(this.signup.errors[path] !== undefined && this.signup.errors[path] !== undefined) {
+								this.signup.errors[path] = error.message
 							}
 						})
 					})
@@ -291,10 +291,10 @@
 				}).catch(e => {
 					this.login.loading = false
 					this.ajaxErrorHandler(e, (error) => {
-						let param = error.parameter
+						let path = error.path
 
-						if(this.login.errors[param] !== undefined) {
-							this.login.errors[param] = error.message
+						if(this.signup.errors[path] !== undefined && this.signup.errors[path] !== undefined) {
+							this.signup.errors[path] = error.message
 						}
 					})
 				})

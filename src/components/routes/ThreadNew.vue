@@ -103,10 +103,10 @@
 					this.loading = false
 
 					AjaxErrorHandler(this.$store)(e, (error, errors) => {
-						let param = error.parameter
+						let path = error.path
 
-						if(this.errors[param] !== undefined) {
-							this.errors[param] = error.message
+						if(this.errors[path] !== undefined) {
+							this.errors[path] = error.message
 						} else {
 							errors.push(error.message)
 						}
