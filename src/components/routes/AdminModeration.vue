@@ -6,7 +6,117 @@
 			:tabs='["User reports", "Banned users"]'
 			v-model='showTab'
 		>
-			<div slot='User reports' class='admin_moderation__tab'>test</div>
+			<div slot='User reports' class='admin_moderation__tab admin_moderation__tab--boom'>
+				Below are posts reported by users - to remove the thread or block the user, click 'More options&hellip;'<br/>
+				Note that all actions here are <strong>permanent</strong>
+
+				<div class='admin_moderation__reports'>
+
+					<div class='admin_moderation__report admin_moderation__report--header'>
+						<div class='admin_moderation__report__post admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
+							Post and thread reported
+						</div>
+						<div class='admin_moderation__report__reason admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>Report reason</div>
+						<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
+							Reported by user
+						</div>
+						<div class='admin_moderation__report__actions'>
+							Actions
+						</div>
+					</div>				
+
+					<div class='admin_moderation__report'>
+						<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
+							<div class='admin_moderation__report__post__header'>
+								<div class='admin_moderation__report__post__thread'>Thread title</div>
+								<div class='admin_moderation__report__post__user'>User/username</div>
+							</div>
+							<div class='admin_moderation__report__post__content'>Post content of reported post</div>
+						</div>
+						<div class='admin_moderation__report__reason admin_moderation__report--cell_border'>Report reason</div>
+						<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
+							<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='user'></avatar-icon>
+							<div class='admin_moderation__report__flagged_by__text_info'>
+								<div class='admin_moderation__report__flagged_by__user'>Username</div>
+								<div class='admin_moderation__report__flagged_by__date'>{{new Date() | formatDate}}</div>
+							</div>
+						</div>
+						<div class='admin_moderation__report__actions'>
+							<button class='button button--red'>Remove post</button>
+							<menu-button :options='[{ value: "Delete report" }, { value: "Ban or block user" }, { value: "Remove thread" }]'>
+								<button class='button'>More options&hellip;</button>
+							</menu-button>
+						</div>
+					</div><div class='admin_moderation__report'>
+						<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
+							<div class='admin_moderation__report__post__header'>
+								<div class='admin_moderation__report__post__thread'>Thread title</div>
+								<div class='admin_moderation__report__post__user'>User/username</div>
+							</div>
+							<div class='admin_moderation__report__post__content'>Post content of reported post</div>
+						</div>
+						<div class='admin_moderation__report__reason admin_moderation__report--cell_border'>Report reason</div>
+						<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
+							<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='user'></avatar-icon>
+							<div class='admin_moderation__report__flagged_by__text_info'>
+								<div class='admin_moderation__report__flagged_by__user'>Username</div>
+								<div class='admin_moderation__report__flagged_by__date'>{{new Date() | formatDate}}</div>
+							</div>
+						</div>
+						<div class='admin_moderation__report__actions'>
+							<button class='button button--red'>Remove post</button>
+							<menu-button :options='[{ value: "Delete report" }, { value: "Ban or block user" }, { value: "Remove thread" }]'>
+								<button class='button'>More options&hellip;</button>
+							</menu-button>
+						</div>
+					</div><div class='admin_moderation__report'>
+						<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
+							<div class='admin_moderation__report__post__header'>
+								<div class='admin_moderation__report__post__thread'>Thread title</div>
+								<div class='admin_moderation__report__post__user'>User/username</div>
+							</div>
+							<div class='admin_moderation__report__post__content'>Post content of reported post</div>
+						</div>
+						<div class='admin_moderation__report__reason admin_moderation__report--cell_border'>Report reason</div>
+						<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
+							<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='user'></avatar-icon>
+							<div class='admin_moderation__report__flagged_by__text_info'>
+								<div class='admin_moderation__report__flagged_by__user'>Username</div>
+								<div class='admin_moderation__report__flagged_by__date'>{{new Date() | formatDate}}</div>
+							</div>
+						</div>
+						<div class='admin_moderation__report__actions'>
+							<button class='button button--red'>Remove post</button>
+							<menu-button :options='[{ value: "Delete report" }, { value: "Ban or block user" }, { value: "Remove thread" }]'>
+								<button class='button'>More options&hellip;</button>
+							</menu-button>
+						</div>
+					</div><div class='admin_moderation__report'>
+						<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
+							<div class='admin_moderation__report__post__header'>
+								<div class='admin_moderation__report__post__thread'>Thread title</div>
+								<div class='admin_moderation__report__post__user'>User/username</div>
+							</div>
+							<div class='admin_moderation__report__post__content'>Post content of reported post</div>
+						</div>
+						<div class='admin_moderation__report__reason admin_moderation__report--cell_border'>Report reason</div>
+						<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
+							<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='user'></avatar-icon>
+							<div class='admin_moderation__report__flagged_by__text_info'>
+								<div class='admin_moderation__report__flagged_by__user'>Username</div>
+								<div class='admin_moderation__report__flagged_by__date'>{{new Date() | formatDate}}</div>
+							</div>
+						</div>
+						<div class='admin_moderation__report__actions'>
+							<button class='button button--red'>Remove post</button>
+							<menu-button :options='[{ value: "Delete report" }, { value: "Ban or block user" }, { value: "Remove thread" }]'>
+								<button class='button'>More options&hellip;</button>
+							</menu-button>
+						</div>
+					</div>
+
+				</div>
+			</div>
 			<div slot='Banned users' class='admin_moderation__tab'>
 
 				<div class='admin_moderation__header'>
@@ -72,6 +182,8 @@
 	import ModalWindow from '../ModalWindow'
 	import FancyInput from '../FancyInput'
 	import SelectButton from '../SelectButton'
+	import MenuButton from '../MenuButton'
+	import AvatarIcon from '../AvatarIcon'
 
 	export default {
 		name: 'AdminDashboard',
@@ -79,7 +191,9 @@
 			TabView,
 			ModalWindow,
 			FancyInput,
-			SelectButton
+			SelectButton,
+			MenuButton,
+			AvatarIcon
 		},
 		data () {
 			return {
@@ -94,6 +208,11 @@
 					{ name: "Ban from replying to threads", value: "post"}
 				],
 				selectedOption: 0,
+
+				user: {
+					username: 'Username',
+					color: '#9bd0eb'
+				},
 
 				bans_: [
 					{ user: 'john', type: 'ip', date: new Date(26, 6, 2017) },
@@ -128,6 +247,9 @@
 			toggleShowAddNewBanModal () {
 				this.showAddNewBanModal = !this.showAddNewBanModal
 			}
+		},
+		mounted () {
+			this.$store.dispatch('setTitle', 'admin | moderation')
 		}
 	}
 </script>
@@ -141,6 +263,84 @@
 
 		@at-root #{&}__tab {
 			height: 100%;
+		}
+
+		@at-root #{&}__reports {
+			margin-top: 1rem;
+			@extend .shadow_border;
+
+			border-radius: 0.25rem;
+			&> :first-child {
+				border-radius: 0.25rem 0.25rem 0 0;
+			}
+			&> :last-child {
+				border-radius: 0 0 0.25rem 0.25rem;
+			}
+			
+		}
+
+		@at-root #{&}__report {
+			display: flex;
+			background-color: #fff;
+			border-bottom: thin solid $color__lightgray--primary;
+			padding: 0.5rem;
+
+
+			@at-root #{&}--header {
+				font-weight: bold;
+			}
+			@at-root #{&}--cell_border {
+				padding-right: 0.5rem;
+				margin-right: 0.5rem;
+				border-right: thin solid $color__lightgray--primary;
+
+				@at-root #{&}-hidden {
+					border-right-color: transparent;
+				}
+			}
+
+			@at-root #{&}__post {
+				width: 40%;
+
+				@at-root #{&}__header {
+					display: flex;
+					justify-content: space-between;
+				}
+				@at-root #{&}__thread {
+					font-size: 1rem;
+					text-decoration: underline;
+		
+				}
+				@at-root #{&}__content {
+
+				}
+			}
+			@at-root #{&}__reason {
+				width: 15%;
+			}
+			@at-root #{&}__flagged_by {
+				width: 20%;
+				display: flex;
+
+			
+				@at-root #{&}__text_info {
+					margin-left: 0.5rem;
+					display: flex;
+					flex-direction: column;
+				}
+				@at-root #{&}__date {
+					color: $color__darkgray--primary;
+				}
+			}
+			@at-root #{&}__actions {
+				width: 25%;
+				display: flex;
+				align-items: center;
+
+				.button--red {
+					margin-right: 0.5rem;
+				}
+			}
 		}
 
 

@@ -42,6 +42,9 @@
 			LineChart,
 			CategoriesChart,
 			TopPosts
+		},
+		mounted () {
+			this.$store.dispatch('setTitle', 'admin | dashboard')
 		}
 	}
 </script>
