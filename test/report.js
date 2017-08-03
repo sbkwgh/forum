@@ -104,6 +104,34 @@ describe('Report', () => {
 			report.should.have.property('reason', 'spam')
 		})
 
+		it('should be fine with multiple reports from one user', async () => {
+			let res = await userAccount
+				.post('/api/v1/report')
+				.set('content-type', 'application/json')
+				.send({
+					postId: 1,
+					reason: 'inappropriate'
+				})
+
+			res.should.have.status(200)
+			res.should.be.json
+
+			let report1 = await Report.findById(1, {
+				include: [{ model: User, as: 'FlaggedByUser' }]
+			})
+			report1.should.not.be.null
+			report1.should.have.deep.property('FlaggedByUser.username', 'useraccount')
+			report1.should.have.property('reason', 'spam')
+
+			let report2 = await Report.findById(res.body.id, {
+				include: [{ model: User, as: 'FlaggedByUser' }]
+			})
+
+			report2.should.not.be.null
+			report2.should.have.deep.property('FlaggedByUser.username', 'useraccount')
+			report2.should.have.property('reason', 'inappropriate')
+		})
+
 		it('should return an error if not a logged in user', done => {
 			chai.request(server)
 				.post('/api/v1/report')

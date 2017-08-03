@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
 	}, {
 		classMethods: {
 			associate (models) {
-				Report.hasOne(models.User, { as: 'FlaggedByUser' })
-				Report.hasOne(models.Post)
+				Report.belongsTo(models.User, { as: 'FlaggedByUser' })
+				Report.belongsTo(models.Post)
 			},
 			InvalidPostId (value) {
 				return new sequelize.ValidationError('Post id is not valid', [
