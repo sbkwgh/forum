@@ -75,5 +75,26 @@ router.get('/', async (req, res) => {
 		})
 	}
 })
+router.delete('/:id', async (req, res) => {
+	try {
+		let report = await Report.findById(req.params.id)
+		if(!report) throw Report.InvalidPostId(req.params.id)
+
+		await report.destroy()
+		res.json({ success: true })
+	} catch (e) {
+		if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
 
 module.exports = router

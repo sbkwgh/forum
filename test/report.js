@@ -198,4 +198,51 @@ describe('Report', () => {
 				})
 		})
 	})
+
+	describe('DELETE /report/:id', () => {
+		let reportId;
+
+		before(async () => {
+			let report = await Report.create({ reason: 'spam' })
+
+			let post = await Post.findById(1)
+			let user = await User.find({
+				where: { username: 'useraccount' }
+			})
+
+			await report.setFlaggedByUser(user)
+			await report.setPost(post)
+
+			reportId = report.id
+		})
+
+		it('should delete the report', async () => {
+			let res = await adminAccount.delete('/api/v1/report/' + reportId)
+			res.should.have.status(200)
+
+			let report = await Report.findById(reportId)
+
+			expect(report).to.be.null
+		})
+		it('should return an error if not an admin', done => {
+			userAccount
+				.delete('/api/v1/report/2')
+				.end((err, res) => {
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should return an error if invalid id', done => {
+			adminAccount
+				.delete('/api/v1/report/fake')
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.has.property('message', 'Post id is not valid')
+
+					done()
+				})
+		})
+	})
 })
