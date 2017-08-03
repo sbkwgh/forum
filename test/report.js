@@ -112,7 +112,7 @@ describe('Report', () => {
 					postId: 1,
 					reason: 'spam'
 				})
-				.end((res, err) => {
+				.end((err, res) => {
 					res.should.have.status(401)
 					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
@@ -127,7 +127,7 @@ describe('Report', () => {
 					postId: 'fake',
 					reason: 'spam'
 				})
-				.end((res, err) => {
+				.end((err, res) => {
 					res.should.have.status(400)
 					res.body.errors.should.contain.something.that.has.property('message', 'Post id is not valid')
 
@@ -142,7 +142,7 @@ describe('Report', () => {
 					postId: 1,
 					reason: 'not a reason'
 				})
-				.end((res, err) => {
+				.end((err, res) => {
 					res.should.have.status(400)
 					res.body.errors.should.contain.something.that.has.property('message', 'Report reason can only be one of the pre-defined options')
 				
@@ -190,7 +190,7 @@ describe('Report', () => {
 		it('should return an error if not admin account', done => {
 			userAccount
 				.get('/api/v1/report')
-				.end((res, err) => {
+				.end((err, res) => {
 					res.should.have.status(401)
 					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
