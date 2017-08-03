@@ -18,16 +18,7 @@ router.post('/', async (req, res) => {
 	try {
 		let post = await Post.findById(req.body.postId)
 
-		if(!post) {
-			throw new Sequelize.ValidationError('Post id is not valid', [
-				new Sequelize.ValidationErrorItem(
-					'Post id is not valid',
-					'Validation error',
-					'postId',
-					req.body.postId
-				)
-			])
-		}
+		if(!post) throw Report.InvalidPostId(req.body.postId)
 
 		let user = await User.findOne({
 			where: { username: req.session.username }

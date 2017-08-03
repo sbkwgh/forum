@@ -15,6 +15,16 @@ module.exports = (sequelize, DataTypes) => {
 			associate (models) {
 				Report.hasOne(models.User, { as: 'FlaggedByUser' })
 				Report.hasOne(models.Post)
+			},
+			InvalidPostId (value) {
+				return new sequelize.ValidationError('Post id is not valid', [
+					new sequelize.ValidationErrorItem(
+						'Post id is not valid',
+						'Validation error',
+						'postId',
+						value
+					)
+				])
 			}
 		}
 	})
