@@ -154,7 +154,7 @@ describe('Report', () => {
 	describe('GET /report', () => {
 		before(async () => {
 			await Report.destroy({
-				where: { id: 1 }
+				where: {}
 			})
 
 			let report1 = await Report.create({ reason: 'spam' })
@@ -182,9 +182,9 @@ describe('Report', () => {
 			res.should.be.json
 
 			res.body.should.have.length(2)
-			res.body[0].should.have.deep.property('User.username', 'useraccount')
-			res.body[0].should.have.deep.property('Post.id', 1)
-			res.body[0].should.have.property('reason', 'spam')
+			res.body.should.contain.something.with.deep.property('FlaggedByUser.username', 'useraccount')
+			res.body.should.contain.something.with.deep.property('reason', 'spam')
+			res.body.should.contain.something.with.deep.property('reason', 'inappropriate')
 		})
 
 		it('should return an error if not admin account', done => {
