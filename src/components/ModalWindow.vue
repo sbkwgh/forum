@@ -48,6 +48,7 @@
 		background-color: #fff;
 		margin-top: -3rem;
 		opacity: 0;
+		position: relative;
 		border: 0.125rem solid $color__gray--darkest;
 		border-radius: 0.25rem;
 		pointer-events: none;

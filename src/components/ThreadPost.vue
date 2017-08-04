@@ -22,7 +22,7 @@
 			</div>
 		</modal-window>
 
-		<report-post-modal v-model='showReportPostModal'></report-post-modal>
+		<report-post-modal v-model='showReportPostModal' :post-id='post.id'></report-post-modal>
 
 		<div class='post__meta_data'>
 			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
