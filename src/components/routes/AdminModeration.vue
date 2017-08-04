@@ -7,8 +7,11 @@
 			v-model='showTab'
 		>
 			<div slot='User reports' class='admin_moderation__tab admin_moderation__tab--boom'>
-				Below are posts reported by users - to remove the thread or block the user, click 'More options&hellip;'<br/>
-				Note that all actions here are <strong>permanent</strong>
+				Below are posts reported by users - to remove the thread or block the user, click 'More options&hellip;'
+
+				<confirm-modal v-model='removePostObj.showConfirmModal' @confirm='removePost' color='red'>
+					Are you sure you want to remove this post?
+				</confirm-modal>
 
 				<div class='admin_moderation__reports' v-if='reports.length'>
 
@@ -124,6 +127,7 @@
 	import SelectButton from '../SelectButton'
 	import MenuButton from '../MenuButton'
 	import AvatarIcon from '../AvatarIcon'
+	import ConfirmModal from '../ConfirmModal'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -135,7 +139,8 @@
 			FancyInput,
 			SelectButton,
 			MenuButton,
-			AvatarIcon
+			AvatarIcon,
+			ConfirmModal
 		},
 		data () {
 			return {
@@ -163,7 +168,13 @@
 				},
 
 				bans_: [],
-				reports: []
+				reports: [],
+
+				removePostObj: {
+					showConfirmModal: false,
+					report: null,
+					index: null
+				}
 			}
 		},
 		computed: {
@@ -196,15 +207,26 @@
 					.catch(AjaxErrorHandler())
 			},
 			removePost (report, index) {
-				this.axios
-					.delete('/api/v1/post/' + report.Post.id)
-					.then(_ => {
-						return this.axios.delete('/api/v1/report/' + report.id)
-					})
-					.then(_ => {
-						this.reports.splice(index, 1)
-					})
-					.catch(AjaxErrorHandler())
+				if(report) {
+					this.removePostObj.report = report
+					this.removePostObj.index = index
+
+					this.removePostObj.showConfirmModal = true
+				} else {
+					this.axios
+						.delete('/api/v1/post/' + this.removePostObj.report.Post.id)
+						.then(_ => {
+							return this.axios.delete('/api/v1/report/' + this.removePostObj.report.id)
+						})
+						.then(_ => {
+							this.reports.splice(this.removePostObj.index, 1)
+						})
+						.catch(AjaxErrorHandler())
+				}
+			
+			},
+			emit () {
+				console.log(arguments)
 			}
 		},
 		mounted () {
