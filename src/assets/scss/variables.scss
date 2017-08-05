@@ -123,3 +123,33 @@ $color__lightblue--primary: #03A9F4;
 .shadow_border--hover {
 	box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25), 0 0.2rem 0.35rem rgba(175, 175, 175, 0.25);
 }
+
+
+.tab_button {
+	padding: 0.5rem 1rem;
+	border-radius: 0.2rem;
+	cursor: pointer;
+	transition: all 0.2s;
+	margin-right: 0.5rem;
+	border-bottom: #d4d4d4 0.2rem solid;
+	display: inline-block;
+
+	@include user-select(none);
+
+	&:hover {
+		background-color: $color__lightgray--darker;
+	}
+	&:active {
+		background-color: #dcdcdc;
+	}
+
+	@at-root #{&}--selected {
+		border-bottom: #c1c1c1 0.2rem solid;
+		background-color: $color__lightgray--darker;
+		cursor: default;
+
+		&:active {
+			background-color: $color__lightgray--darker;
+		}
+	}
+}

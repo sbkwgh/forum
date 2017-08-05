@@ -4,7 +4,7 @@
 			<div 
 				class='admin__menu__item'
 				v-for='route in routes'
-				:class='{ "admin__menu__item--selected" : route.route === selected }'
+				:class='{ "admin__menu__item--selected" : route.route.includes(selected) }'
 				@click='$router.push("/admin/" + route.route)'
 			>
 				<div>
@@ -32,7 +32,7 @@
 				selected: null,
 				routes: [
 					{ title: 'Dashboard', route: 'dashboard', description: 'Quick links and stats about your forum', icon: 'fa-home' },
-					{ title: 'Moderation', route: 'moderation', description: 'View and respond to user reports', icon: 'fa-exclamation-circle' },
+					{ title: 'Moderation', route: 'moderation/reports', description: 'View and respond to user reports', icon: 'fa-exclamation-circle' },
 					{ title: 'Categories', route: 'categories', description: 'Add and remove thread categories', icon: 'fa-th' },
 					{ title: 'Back-up', route: 'backup', description: 'Download and restore forum data', icon: 'fa-cloud-download' }
 				]
