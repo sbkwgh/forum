@@ -362,64 +362,78 @@ describe('Thread and post', () => {
 				JSON.parse(res.response.text).errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 			}
 		})
-		it('should return an error if missing parameters', async () => {
-			try {
-				let res = await userAgent
+		it('should return an error if missing content', done => {
+				userAgent
 					.post('/api/v1/post')
-
-				res.should.be.json
-				res.should.have.status(400)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('content'))
-				res.body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('threadId'))
-			} catch (res) {
-				let body = JSON.parse(res.response.text)
-				res.should.have.status(400)
-				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('content'))
-				body.errors.should.contain.something.that.deep.equals(Errors.missingParameter('threadId'))
-			}
-		})
-		it('should return an error if invalid types', async () => {
-			try {
-				let res = await userAgent
-					.post('/api/v1/post')
-					.set('content-type', 'application/json')
-					.send({
-						content: 123,
-						threadId: 'string',
-						replyingToId: 'string'
+					.send({		
+						threadId: 1
 					})
+					.end((err, res) => {
+						res.should.be.json
+						res.should.have.status(400)
+						res.body.errors.should.contain.something.that.has.property('message', 'content must be a string')
 
-				res.should.be.json
-				res.should.have.status(400)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('content', 'string'))
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('threadId', 'integer'))
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('replyingToId', 'integer'))
-			} catch (res) {
-				let body = JSON.parse(res.response.text)
-				res.should.have.status(400)
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('content', 'string'))
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('threadId', 'integer'))
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('replyingToId', 'integer'))
-			}
-		})
-		it('should return an error if thread id does not exist', async () => {
-			try {
-				let res = await userAgent
-					.post('/api/v1/post')
-					.set('content-type', 'application/json')
-					.send({
-						content: 'content',
-						threadId: 10
+						done()
 					})
-
-				res.should.be.json
-				res.should.have.status(400)
-				res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameter('threadId', 'thread does not exist'))
-			} catch (res) {
-				let body = JSON.parse(res.response.text)
-				res.should.have.status(400)
-				body.errors.should.include.something.that.deep.equals(Errors.invalidParameter('threadId', 'thread does not exist'))
-			}
+		})
+		it('should return an error if missing threadId', done => {
+			userAgent
+				.post('/api/v1/post')
+				.send({
+					content: 'content'
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.has.property('message', 'thread does not exist')
+					
+					done()
+				})
+		})
+		it('should return an error if thread id does not exist', done => {
+			userAgent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({
+					content: 'content',
+					threadId: 10
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.has.property('message', 'thread does not exist')
+					done()
+				})
+		})
+		it('should return an error if mentions are invalid type', done => {
+			userAgent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({
+					content: 'content',
+					threadId: 1,
+					mentions: 'string'
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.has.property('message', 'mentions must be an array of strings')
+					
+					userAgent
+						.post('/api/v1/post')
+						.set('content-type', 'application/json')
+						.send({
+							content: 'content',
+							threadId: 1,
+							mentions: ['string', false, 3]
+						})
+						.end((err, res) => {
+							res.should.be.json
+							res.should.have.status(400)
+							res.body.errors.should.contain.something.that.has.property('message', 'mentions must be an array of strings')
+							done()
+						})
+				})
 		})
 		it('should be able to reply to a post', async () => {
 			await replyAgent
@@ -651,12 +665,12 @@ describe('Thread and post', () => {
 				let res = await chai.request(server).get('/api/v1/post/invalid')
 
 				res.should.have.status(400)
-				res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'post does not exist'))
+				res.body.errors.should.contain.something.that.has.property('message', 'post does not exist')
 			} catch (res) {
 				let body = JSON.parse(res.response.text)
 
 				res.should.have.status(400)
-				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'post does not exist'))
+				body.errors.should.contain.something.that.has.property('message', 'post does not exist')
 			}
 		})
 	})
@@ -735,7 +749,7 @@ describe('Thread and post', () => {
 				.end((err, res) => {
 					res.should.be.json
 					res.should.have.status(400)
-					res.body.errors.should.include.something.that.deep.equals(Errors.invalidParameter('postId', 'post does not exist'))
+					res.body.errors.should.include.something.that.has.property('message', 'post does not exist')
 
 					done()
 				})

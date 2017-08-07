@@ -1,3 +1,5 @@
+const Errors = require('../lib/errors')
+
 module.exports = (sequelize, DataTypes) => {
 	let Notification = sequelize.define('Notification', {
 		interacted: {
@@ -14,6 +16,19 @@ module.exports = (sequelize, DataTypes) => {
 			associate (models) {
 				Notification.hasOne(models.PostNotification)
 				Notification.belongsTo(models.User)
+			},
+			filterMentions (mentions) {
+				//If mentions is not an array of strings
+				if(!Array.isArray(mentions) || mentions.filter(m => typeof m !== 'string').length) {
+					throw Errors.sequelizeValidation(sequelize, {
+						error: 'mentions must be an array of strings',
+						value: mentions
+					})
+				}
+
+				return mentions.filter((mention, pos, self) => {
+					return self.indexOf(mention) === pos
+				})
 			},
 			//Props fields: userFrom, usernameTo, post, type
 			async createPostNotification (props) {
@@ -39,6 +54,18 @@ module.exports = (sequelize, DataTypes) => {
 				})
 
 				return reloadedNotification
+			}
+		},
+		instanceMethods: {
+			async emitNotificationMessage (ioUsers, io) {
+				let User = sequelize.models.User
+				let user = await User.findById(this.UserId)
+				
+				if(ioUsers[user.username]) {
+					console.log(ioUsers)
+					io.to(ioUsers[user.username])
+					  .emit('notification', this.toJSON())
+				}
 			}
 		}
 	})
