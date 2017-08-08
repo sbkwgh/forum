@@ -57,6 +57,10 @@ router.post('/', async (req, res) => {
 		let user = await User.findOne({ where: {
 			username: req.session.username	
 		}})
+	
+		if(!user.canCreateThreads) throw Errors.sequelizeValidation(Sequelize, {
+			error: 'You have been banned from creating threads'
+		})
 
 		let thread = await Thread.create({
 			name: req.body.name

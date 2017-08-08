@@ -111,6 +111,9 @@ router.post('/', async (req, res) => {
 			username: req.session.username
 		}})
 
+		if(!user.canCreatePosts) throw Errors.sequelizeValidation(Sequelize, {
+			error: 'You have been banned from posting'
+		})
 		if(!thread) throw Errors.sequelizeValidation(Sequelize, {
 			error: 'thread does not exist',
 			path: 'id'

@@ -245,4 +245,55 @@ router.delete('/:username', async (req, res) => {
 	}
 })
 
+router.all('*', (req, res, next) => {
+	if(req.session.admin) {
+		next()
+	} else {
+		res.status(400)
+		res.json({
+			errors: [Errors.requestNotAuthorized]
+		})
+	}
+})
+
+router.put('/:username/permissions', async (req, res) => {
+	try {
+		let update = {}
+		if(typeof req.body.canCreatePosts === 'boolean') {
+			update.canCreatePosts = req.body.canCreatePosts
+		}
+		if(typeof req.body.canCreateThreads === 'boolean') {
+			update.canCreateThreads = req.body.canCreateThreads
+		}
+
+		let affectedRows = await User.update(
+			update,
+			{ where: { username: req.params.username } }
+		)
+
+		//If the number of affected rows is 0
+		//i.e. the username does not match any records
+		if(!affectedRows[0]) { 
+			throw Errors.sequelizeValidation(Sequelize, {
+				error: 'user does not exist',
+				value: req.params.username
+			})
+		} else {
+			res.json({ success: true })
+		}
+	} catch (e) {
+		if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 module.exports = router

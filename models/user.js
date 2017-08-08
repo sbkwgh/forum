@@ -56,6 +56,14 @@ module.exports = (sequelize, DataTypes) => {
 				}
 			}
 		},
+		canCreatePosts: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: true
+		},
+		canCreateThreads: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: true
+		},
 		admin: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
