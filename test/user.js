@@ -6,7 +6,7 @@ let server = require('../server')
 let should = chai.should()
 let expect = chai.expect
 
-let { sequelize } = require('../models')
+let { sequelize, User } = require('../models')
 const Errors = require('../lib/errors.js')
 
 chai.use(require('chai-http'))
@@ -583,6 +583,21 @@ describe('User', () => {
 					done()
 				})
 		})
+		it('should return an error if username is not valid', done => {
+			admin
+				.put('/api/v1/user/fakeuser123/permissions')
+				.set('content-type', 'application/json')
+				.send({
+					canCreatePosts: true
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.has.property('message', 'user does not exist')
+
+					done()
+				})
+		})
 		it('should return an error if trying to post replies if permissions so set', done => {
 			user
 				.post('/api/v1/post')
@@ -600,7 +615,7 @@ describe('User', () => {
 				})
 		})
 		it('should return an error if trying to create thread if permissions so set', done => {
-			user
+			admin
 				.put('/api/v1/user/user123/permissions')
 				.set('content-type', 'application/json')
 				.send({
