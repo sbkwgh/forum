@@ -7,7 +7,7 @@ const state = {
 		{ name: "Block user's known ip addresses", value: "ip" },
 		{ name: "Ban from creating new threads", value: "thread"},
 		{ name: "Ban from replying to threads", value: "post"},
-		{ name: "Ban from creating threads and posting", value: "both"}
+		{ name: "Ban from both", value: "both"}
 	],
 	selectedOption: 0
 }
