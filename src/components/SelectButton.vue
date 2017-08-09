@@ -76,14 +76,12 @@
 			overflow: hidden;
 			background-color: #fff;
 			width: 15rem;
-			border: 0.125rem solid $color__gray--primary;
-			margin-top: -0.125rem;
+			border: 0.125rem solid #EEEEEE;
+			margin-top: 0.125rem;
 			max-height: 20rem;
-			box-shadow: 0 0.12rem 0.125rem rgba(0,0,0,0.125);
-
+			box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.35);
 			transition: max-height 0.4s ease-out;
-
-			
+			border-radius: 0.2rem;			
 
 			@at-root #{&}--hidden {
 				max-height: 0;
