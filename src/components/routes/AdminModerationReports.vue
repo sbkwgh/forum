@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		<div class='admin_moderation__no_reports' v-else>
-			<span class='fa fa-hand-peace-o'></span>
+			<span class='fa fa-thumbs-up'></span>
 			No user reports
 		</div>
 	</div>
