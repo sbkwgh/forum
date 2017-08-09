@@ -38,6 +38,7 @@ app.use('/api/v1/notification', require('./routes/notification'))
 app.use('/api/v1/post', require('./routes/post'))
 app.use('/api/v1/settings', require('./routes/settings'))
 app.use('/api/v1/report', require('./routes/report'))
+app.use('/api/v1/ban', require('./routes/ban'))
 
 sequelize
 	.sync({ force: true })

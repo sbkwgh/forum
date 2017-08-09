@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors')
-let { User, Thread, Post, Notification, Sequelize, sequelize } = require('../models')
+let { User, Thread, Post, Notification, Ban, Sequelize, sequelize } = require('../models')
 
 router.get('/:post_id', async (req, res) => {
 	try {
@@ -96,10 +96,12 @@ router.delete('/:post_id/like', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-	let validationErrors = []
 	let thread, replyingToPost, post, uniqueMentions = []
 
 	try {
+		//Will throw an error if banned
+		await Ban.canCreatePosts(req.session.username)
+
 		if(req.body.mentions) {
 			uniqueMentions = Notification.filterMentions(req.body.mentions)
 		}
@@ -111,9 +113,6 @@ router.post('/', async (req, res) => {
 			username: req.session.username
 		}})
 
-		if(!user.canCreatePosts) throw Errors.sequelizeValidation(Sequelize, {
-			error: 'You have been banned from posting'
-		})
 		if(!thread) throw Errors.sequelizeValidation(Sequelize, {
 			error: 'thread does not exist',
 			path: 'id'

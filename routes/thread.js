@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Thread, Category, Post, Sequelize } = require('../models')
+let { User, Thread, Category, Post, Ban, Sequelize } = require('../models')
 let pagination = require('../lib/pagination.js')
 
 router.get('/:thread_id', async (req, res) => {
@@ -49,6 +49,8 @@ router.post('/', async (req, res) => {
 	let validationErrors = []
 
 	try {
+		await Ban.canCreateThreads(req.session.username)
+
 		let category = await Category.findOne({ where: {
 			value: req.body.category
 		}})
@@ -57,10 +59,7 @@ router.post('/', async (req, res) => {
 		let user = await User.findOne({ where: {
 			username: req.session.username	
 		}})
-	
-		if(!user.canCreateThreads) throw Errors.sequelizeValidation(Sequelize, {
-			error: 'You have been banned from creating threads'
-		})
+
 
 		let thread = await Thread.create({
 			name: req.body.name
