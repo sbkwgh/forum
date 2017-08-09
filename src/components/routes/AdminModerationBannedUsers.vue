@@ -11,7 +11,7 @@
 			<button class='button button--blue' @click='toggleShowAddNewBanModal'>Add new ban</button>
 		</div>
 
-		<table class='admin_moderation__table'>
+		<table class='admin_moderation__table' v-if='bans.length'>
 			<tr>
 				<th>User</th>
 				<th>Ban type</th>
@@ -37,6 +37,11 @@
 				</td>
 			</tr>
 		</table>
+
+		<div class='admin_moderation__no_bans' v-else>
+			<span class='fa fa-thumbs-up'></span>
+			No banned users
+		</div>
 
 		<modal-window v-model='$store.state.moderation.showAddNewBanModal' width='30rem'>
 			<div class='admin_moderation__add_new_ban_modal'>
@@ -227,6 +232,24 @@
 				background-color: $color__lightgray--darker;
 			}
 			
+		}
+
+		@at-root #{&}__no_bans {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			padding-top: 5rem;
+			font-size: 2rem;
+			user-select: none;
+			cursor: default;
+			transition: none;
+			color: $color__gray--darkest;
+
+			span {
+				font-size: 4rem;
+				color: $color__gray--darker;
+			}
 		}
 	}
 </style>
