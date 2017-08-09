@@ -78,7 +78,10 @@
 			<div class='header__group'>
 				<template v-if='$store.state.username'>
 					<notification-button></notification-button>
-					<button @click='$router.push("/settings")' class='button' >
+					<button @click='$router.push("/admin")' class='button' v-if='$store.state.admin'>
+						Admin settings
+					</button>
+						<button @click='$router.push("/settings")' class='button' >
 						Settings
 					</button>
 					<loading-button @click='logout' :loading='loadingLogout'>
