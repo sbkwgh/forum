@@ -19,9 +19,9 @@
 				<th>Message</th>
 			</tr>
 			<tr v-for='ban in bans'>
-				<td>{{ban.user}}</td>
+				<td>{{ban.User.username}}</td>
 				<td>{{ban.type}}</td>
-				<td>{{ban.date | formatDate}}</td>
+				<td>{{ban.createdAt | formatDate}}</td>
 				<td>
 					<template v-if='ban.message'>{{ban.message}}</template>
 					<i v-else>No message given</i>
@@ -53,7 +53,7 @@
 
 				<div>
 					<button class='button button--modal' @click='toggleShowAddNewBanModal'>Cancel</button>
-					<button class='button button--modal button--green'>Add ban</button>
+					<button class='button button--modal button--green' @click='addBan'>Add ban</button>
 				</div>
 			</div>
 		</modal-window>
@@ -91,7 +91,8 @@
 					{ name: "Select a ban type", disabled: true },
 					{ name: "Block user's known ip addresses", value: "ip" },
 					{ name: "Ban from creating new threads", value: "thread"},
-					{ name: "Ban from replying to threads", value: "post"}
+					{ name: "Ban from replying to threads", value: "post"},
+					{ name: "Ban from creating threads and posting", value: "both"}
 				],
 				selectedOption: 0,
 
@@ -101,14 +102,14 @@
 		computed: {
 			bans () {
 				return this.bans_.map(ban => {
-					let type = ban.type
-
-					if(type === 'ip') {
+					if(ban.ipBlock) {
 						ban.type = 'IP block'
-					} else if (type === 'thread') {
-						ban.type = 'New threads'
+					} else if (ban.canCreateThreads && !ban.canCreatePosts) {
+						ban.type = 'Posting replies'
+					} else if(ban.canCreatePosts && !ban.canCreateThreads) {
+						ban.type = 'Creating threads'
 					} else {
-						ban.type = 'New threads and replies'
+						ban.type = 'Posting replies and creating threads'
 					}
 
 					return ban
@@ -118,10 +119,38 @@
 		methods: {
 			toggleShowAddNewBanModal () {
 				this.showAddNewBanModal = !this.showAddNewBanModal
+			},
+			addBan () {
+				let obj = { username: this.username }
+				if(this.message.trim().length) {
+					obj.message = this.message
+				}
+				if(this.selectedOption === 'both') {
+					obj.canCreatePosts = false
+					obj.canCreateThreads = false
+				} else if(this.selectedOption === 'thread') {
+					obj.canCreateThreads = false
+				} else if(this.selectedOption === 'post') {
+					obj.canCreatePosts = false
+				}
+
+				this.axios
+					.post('/api/v1/ban', obj)
+					.then(res => {
+						this.bans_.push(res.data)
+						this.toggleShowAddNewBanModal()
+					})
+					.catch(AjaxErrorHandler(this.$store))
 			}
 		},
 		mounted () {
 			this.$store.dispatch('setTitle', 'admin | moderation')
+			this.axios
+				.get('/api/v1/ban')
+				.then(res => {
+					this.bans_ = res.data
+				})
+				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>
