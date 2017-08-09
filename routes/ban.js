@@ -30,7 +30,14 @@ router.post('/', async (req, res) => {
 		})
 		await ban.setUser(user)
 
-		res.json(ban.toJSON())
+		let ret = await ban.reload({
+			include: [{
+				model: User,
+				attributes: ['username', 'description', 'color', 'createdAt']
+			}]
+		})
+		
+		res.json(ret.toJSON())
 	} catch (e) {
 		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)

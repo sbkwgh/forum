@@ -95,6 +95,7 @@ describe('Ban', () => {
 
 			res.should.be.json
 			res.should.have.status(200)
+			res.body.should.have.deep.property('User.username', 'useraccount')
 
 			let ban = await Ban.findById(1)
 			ban.should.have.property('canCreatePosts', false)
