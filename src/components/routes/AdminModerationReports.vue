@@ -46,6 +46,7 @@
 					<button class='button button--red' @click='removePost(report, $index)'>Remove post</button>
 					<menu-button
 						@delete='deleteReport(report.id, $index)'
+						@ban='banUser(report, $index)'
 						:options='reportMenuOptions'
 					>
 						<button class='button'>More options&hellip;</button>
@@ -86,7 +87,7 @@
 			return {
 				reportMenuOptions: [
 					{ value: "Delete report", event: 'delete' },
-					{ value: "Ban or block user" },
+					{ value: "Ban or block user", event: 'ban' },
 					{ value: "Remove thread" }
 				],
 				reports: [],
@@ -105,7 +106,7 @@
 					.then(_ => {
 						this.reports.splice(index, 1)
 					})
-					.catch(AjaxErrorHandler())
+					.catch(AjaxErrorHandler(this.$store))
 			},
 			removePost (report, index) {
 				if(report) {
@@ -122,7 +123,7 @@
 						.then(_ => {
 							this.reports.splice(this.removePostObj.index, 1)
 						})
-						.catch(AjaxErrorHandler())
+						.catch(AjaxErrorHandler(this.$store))
 				}
 			
 			}
@@ -135,7 +136,7 @@
 				.then(res => {
 					this.reports = res.data
 				})
-				.catch(AjaxErrorHandler())
+				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>

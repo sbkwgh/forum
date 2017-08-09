@@ -71,7 +71,7 @@
 						})
 						.catch(e => {
 							this.loading  = false
-							AjaxErrorHandler()(e)
+							AjaxErrorHandler(this.$store)(e)
 						})
 				}
 
