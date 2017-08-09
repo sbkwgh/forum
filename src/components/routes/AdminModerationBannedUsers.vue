@@ -17,8 +17,9 @@
 				<th>Ban type</th>
 				<th>Date banned</th>
 				<th>Message</th>
+				<th>Action</th>
 			</tr>
-			<tr v-for='ban in bans'>
+			<tr v-for='(ban, $index) in bans'>
 				<td>{{ban.User.username}}</td>
 				<td>{{ban.type}}</td>
 				<td>{{ban.createdAt | formatDate}}</td>
@@ -26,27 +27,45 @@
 					<template v-if='ban.message'>{{ban.message}}</template>
 					<i v-else>No message given</i>
 				</td>
+				<td>
+					<button
+						class='button button--red'
+						@click='deleteBan(ban, $index)'
+					>
+						Delete ban
+					</button>
+				</td>
 			</tr>
 		</table>
 
-		<modal-window v-model='showAddNewBanModal' width='30rem'>
+		<modal-window v-model='$store.state.moderation.showAddNewBanModal' width='30rem'>
 			<div class='admin_moderation__add_new_ban_modal'>
 				<h2>Ban or block a user</h2>
 				<p>Search for the user to ban, then select the relevant ban type for the user</p>
 
 				<div>
-					<fancy-input placeholder='Username to ban' v-model='username' width='15rem' :large='true'></fancy-input>
+					<fancy-input
+						placeholder='Username to ban'
+						v-model='$store.state.moderation.username'
+						width='15rem'
+						:large='true'
+					></fancy-input>
 				</div>
 
 				<div>
-					<fancy-input placeholder='Message to user (optional)' v-model='message' width='15rem' :large='true'></fancy-input>
+					<fancy-input
+						placeholder='Message to user (optional)'
+						v-model='$store.state.moderation.message'
+						width='15rem' 
+						:large='true'
+					></fancy-input>
 				</div>
 
 				<div>
 					<select-button
-						:options='options'
+						:options='$store.state.moderation.options'
 						name='test'
-						v-model='selectedOption'
+						v-model='$store.state.moderation.selectedOption'
 					>
 					</select-button>
 				</div>
@@ -84,18 +103,6 @@
 		},
 		data () {
 			return {
-				showAddNewBanModal: false,
-				username: '',
-				message: '',
-				options: [
-					{ name: "Select a ban type", disabled: true },
-					{ name: "Block user's known ip addresses", value: "ip" },
-					{ name: "Ban from creating new threads", value: "thread"},
-					{ name: "Ban from replying to threads", value: "post"},
-					{ name: "Ban from creating threads and posting", value: "both"}
-				],
-				selectedOption: 0,
-
 				bans_: []
 			}
 		},
@@ -118,20 +125,28 @@
 		},
 		methods: {
 			toggleShowAddNewBanModal () {
-				this.showAddNewBanModal = !this.showAddNewBanModal
+				this.$store.commit(
+					'moderation/setModal',
+					!this.$store.state.moderation.showAddNewBanModal
+				)
+				this.$store.dispatch('moderation/clearModal')
 			},
 			addBan () {
-				let obj = { username: this.username }
-				if(this.message.trim().length) {
-					obj.message = this.message
+				let store = this.$store.state.moderation
+
+				let obj = { username: store.username }
+				if(store.message.trim().length) {
+					obj.message = store.message
 				}
-				if(this.selectedOption === 'both') {
+				if(store.selectedOption === 'both') {
 					obj.canCreatePosts = false
 					obj.canCreateThreads = false
-				} else if(this.selectedOption === 'thread') {
+				} else if(store.selectedOption === 'thread') {
 					obj.canCreateThreads = false
-				} else if(this.selectedOption === 'post') {
+				} else if(store.selectedOption === 'post') {
 					obj.canCreatePosts = false
+				} else {
+					return
 				}
 
 				this.axios
@@ -139,6 +154,15 @@
 					.then(res => {
 						this.bans_.push(res.data)
 						this.toggleShowAddNewBanModal()
+						this.$store.dispatch('moderation/clearModal')
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			},
+			deleteBan (ban, index) {
+				this.axios
+					.delete('/api/v1/ban/' + ban.id)
+					.then(res => {
+						this.bans_.splice(index, 1)
 					})
 					.catch(AjaxErrorHandler(this.$store))
 			}

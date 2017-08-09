@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import thread from './modules/thread'
 import category from './modules/category'
+import moderation from './modules/moderation'
 
 Vue.use(Vuex)
 
@@ -99,5 +100,5 @@ export default new Vuex.Store({
 			}
 		}
 	},
-	modules: { thread, category }
+	modules: { thread, category, moderation }
 })
