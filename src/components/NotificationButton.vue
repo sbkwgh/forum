@@ -10,7 +10,7 @@
 			:class='{ "notification_button__button--shake": shake }'
 			@click='setShowMenu(!showMenu)'
 		>
-			<span>Notifications</span>
+			<span class='fa fa-bell-o notification_button__button__icon'></span>
 			<span
 				class='notification_button__button__count'
 				:class='{
@@ -287,12 +287,12 @@
 			top: 2.4rem;
 			border-radius: 0.125rem 0 0 0;
 			border: 0.125rem solid $color__gray--primary;
-			left: calc(50% - 1.414rem /2);
+			left: calc(50% - 1rem /2);
 			z-index: 6;
 		}
 		@at-root #{&}__small_triangle {
 			width: 0;
-			left: calc(50% - 1.414rem / 2 - .125rem);
+			left: calc(50% - 1rem / 2 - .125rem);
 			height: 0;
 			border-left: 0.625rem solid transparent;
 			top: 2.4rem;
@@ -402,7 +402,8 @@
 
 		@at-root #{&}__button {
 			position: relative;
-			padding-right: 2.5rem;
+			height: 2.5rem;
+			width: 2.5rem;
 
 			@at-root #{&}--shake {
 				animation-name: shake;
@@ -411,6 +412,12 @@
 				animation-timing-function: ease-in-out;
 			}
 
+			@at-root #{&}__icon {
+				font-size: 1.5rem;
+				position: absolute;
+				top: 0.35rem;
+				left: 0.4rem;
+			}
 
 			@at-root #{&}__count {
 				position: absolute;
@@ -418,8 +425,6 @@
 				line-height: 1;
 				margin-left: 0.25rem;
 				color: #fff;
-				top: 0.35rem;
-				right: 0.5rem;
 				border-radius: 100%;
 				height: 1rem;
 				width: 1rem;
@@ -428,16 +433,13 @@
 				padding: 0.75rem;
 				font-size: 0.9rem;
 				justify-content: center;
+				left: 0.8rem;
+				top: -0.2rem;
 
 				transition: all 0.2s;
 
 				@at-root #{&}--none {
-					background-color: rgba(white, 0.75);
-					font-weight: 300;
-					color: initial;
-					border: 0.0125rem solid transparent;
-					background-color: $color__gray--primary;
-					padding: calc(0.75rem - 4*0.0125rem);
+					opacity: 0;
 				}
 				@at-root #{&}--two_figure {
 					font-size: 0.8rem;
