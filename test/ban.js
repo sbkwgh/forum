@@ -89,7 +89,7 @@ describe('Ban', () => {
 				.send({
 					canCreatePosts: false,
 					canCreateThreads: false,
-					userId: userAccountId,
+					username: 'useraccount',
 					message: 'ban message'
 				})
 
@@ -109,7 +109,7 @@ describe('Ban', () => {
 				.send({
 					canCreatePosts: false,
 					canCreateThreads: false,
-					userId: userAccountId,
+					username: 'useraccount',
 					message: 'ban message'
 				})
 				.end((err, res) => {
@@ -127,7 +127,7 @@ describe('Ban', () => {
 				.send({
 					canCreatePosts: false,
 					canCreateThreads: false,
-					userId: 'not an id',
+					username: 'not a user',
 					message: 'ban message'
 				})
 				.end((err, res) => {
@@ -180,7 +180,7 @@ describe('Ban', () => {
 				.send({
 					canCreatePosts: false,
 					canCreateThreads: false,
-					userId: anotherUserAccountId,
+					username: 'anotheruseraccount',
 					message: 'ban message2'
 				})
 				.end((err, res) => {

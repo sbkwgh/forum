@@ -17,7 +17,7 @@ router.all('*', (req, res, next) => {
 
 router.post('/', async (req, res) => {
 	try {
-		let user = await User.findById(req.body.userId)
+		let user = await User.findOne({ where: { username: req.body.username } })
 		if(!user) throw Errors.sequelizeValidation(Sequelize, {
 			error: 'user does not exist',
 			value: req.body.userId
