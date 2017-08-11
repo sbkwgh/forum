@@ -107,6 +107,7 @@ module.exports = (sequelize, DataTypes) => {
 			associate (models) {
 				User.hasMany(models.Post)
 				User.hasMany(models.Thread)
+				User.belongsToMany(models.Ip, { through: 'UserIp' })
 			},
 			includeOptions (from, limit) {
 				let models = sequelize.models

@@ -3,7 +3,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Post, AdminToken, Thread, Category, Sequelize } = require('../models')
+let { User, Post, AdminToken, Thread, Category, Sequelize, Ip } = require('../models')
 let pagination = require('../lib/pagination.js')
 
 function setUserSession(req, res, username, UserId, admin) {
@@ -32,6 +32,7 @@ router.post('/', async (req, res) => {
 		}
 
 		let user = await User.create(userParams)
+		await Ip.createIfNotExists(req.ip, user)
 
 		setUserSession(req, res, user.username, user.id, userParams.admin)
 		res.json(user.toJSON())
@@ -120,8 +121,9 @@ router.post('/:username/login', async (req, res) => {
 
 		if(user) {
 			if(await user.comparePassword(req.body.password)) {
-				setUserSession(req, res, user.username, user.id, user.admin)
+				await Ip.createIfNotExists(req.ip, user)
 
+				setUserSession(req, res, user.username, user.id, user.admin)
 				res.json({
 					username: user.username,
 					admin: user.admin,
