@@ -1,5 +1,6 @@
 <template>
 	<div class='admin_moderation'>
+		<h1 style='margin: 0.5rem 0;'>Moderation</h1>
 		<div class='admin_moderation__tabs'>
 			<div class='tab_button' @click='$router.push("reports")'>Reports</div>
 			<div class='tab_button tab_button--selected'>Banned users</div>
@@ -193,6 +194,8 @@
 
 		@at-root #{&}__tabs {
 			margin-bottom: 1rem;
+			border-bottom: 0.2rem solid $color__gray--darker;
+			width: 15rem;
 		}
 
 		@at-root #{&}__header {
