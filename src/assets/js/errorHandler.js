@@ -12,7 +12,7 @@ module.exports = function(vuex) {
 					ignorePathErrorCb(error, errors)
 					return
 				}
-				errors.push(error.message)
+				errors.push(error.message[0].toUpperCase() + error.message.slice(1))
 			})
 		}
 
