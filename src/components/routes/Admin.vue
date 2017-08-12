@@ -45,6 +45,12 @@
 		},
 		created () {
 			this.selected = this.$route.path.split('/')[2]
+
+			if(!this.$store.state.admin) {
+				this.$router.push('/')
+				this.$store.commit('setAccountTabs', 1)
+				this.$store.commit('setAccountModalState', true)
+			}
 		}
 	}
 </script>
