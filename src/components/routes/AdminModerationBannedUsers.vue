@@ -114,8 +114,8 @@
 		computed: {
 			bans () {
 				return this.bans_.map(ban => {
-					if(ban.ipBlock) {
-						ban.type = 'IP block'
+					if(ban.ipBanned) {
+						ban.type = 'IP banned'
 					} else if (ban.canCreateThreads && !ban.canCreatePosts) {
 						ban.type = 'Posting replies'
 					} else if(ban.canCreatePosts && !ban.canCreateThreads) {
@@ -151,7 +151,7 @@
 				} else if(store.selectedOption === 'post') {
 					obj.canCreatePosts = false
 				} else {
-					return
+					obj.ipBanned = true
 				}
 
 				this.axios
