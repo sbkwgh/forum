@@ -63,7 +63,7 @@
 					>
 					</fancy-input>
 					<loading-button class='button button--green' :loading='login.loading' @click='doLogin'>
-						Log in
+						<span class='fa fa-unlock-alt' style='margin-right:0.25rem'></span> Log in
 					</loading-button>
 					<button class='button' @click='closeAccountModal'>
 						Cancel
