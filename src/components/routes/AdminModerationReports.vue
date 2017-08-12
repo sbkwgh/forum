@@ -156,8 +156,8 @@
 	@import '../../assets/scss/variables.scss';
 
 	.admin_moderation {
-		padding: 1rem;
-		padding-top: 0.5rem;
+		padding: 2rem;
+		padding-top: 1rem;
 
 		@at-root #{&}__tabs {
 			margin-bottom: 1rem;

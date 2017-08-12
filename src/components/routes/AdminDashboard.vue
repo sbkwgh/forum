@@ -1,5 +1,6 @@
 <template>
 	<div class='admin_dashboard'>
+		<h1 style='margin: 0.5rem 1rem;'>Dashboard</h1>
 		<div class='admin_dashboard__row'>
 			<div class='admin_dashboard__card admin_dashboard__card--3'>
 				<line-chart background='#f39c12' point='rgb(255, 237, 127)' tooltip='page view'></line-chart>
