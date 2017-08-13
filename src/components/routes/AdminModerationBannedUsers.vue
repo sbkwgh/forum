@@ -1,11 +1,7 @@
 <template>
 	<div class='admin_moderation'>
-		<moderation-header selected-tab='bans'></moderation-header>
-
 		<div class='admin_moderation__header'>
-			<div>
-				Remove or edit banned users below, or add a new ban
-			</div>
+			<moderation-header selected-tab='bans'></moderation-header>
 			<button class='button button--blue' @click='toggleShowAddNewBanModal'>Add new ban</button>
 		</div>
 
@@ -192,16 +188,14 @@
 		padding-top: 1rem;
 
 
-		@at-root #{&}__tabs {
-			margin-bottom: 1rem;
-			border-bottom: 0.2rem solid $color__gray--darker;
-			width: 15rem;
-		}
-
 		@at-root #{&}__header {
 			display: flex;
 			justify-content: space-between;
-			align-items: center;
+			align-items: flex-end;
+
+			button {
+				margin-bottom: 1.2rem;
+			}
 		}
 
 		@at-root #{&}__add_new_ban_modal {

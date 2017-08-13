@@ -2,8 +2,6 @@
 	<div class='admin_moderation'>
 		<moderation-header selected-tab='reports'></moderation-header>
 
-		Below are posts reported by users - to remove the thread or block the user, click 'More options&hellip;'
-
 		<confirm-modal v-model='removePostObj.showConfirmModal' @confirm='removePost' color='red'>
 			Are you sure you want to remove this post?
 		</confirm-modal>
