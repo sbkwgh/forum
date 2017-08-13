@@ -127,8 +127,6 @@
 			banUser (report, index) {
 				this.$router.push('bans')
 
-				console.log(report)
-
 				setTimeout(() => {
 					this.$store.commit('moderation/setModal', true)
 					this.$store.commit('moderation/setUsername', report.Post.User.username)
