@@ -1,10 +1,6 @@
 <template>
 	<div class='admin_moderation'>
-		<h1 style='margin: 0.5rem 0;'>Moderation</h1>	
-		<div class='admin_moderation__tabs'>
-			<div class='tab_button tab_button--selected'>Reports</div>
-			<div class='tab_button' @click='$router.push("bans")'>Banned users</div>
-		</div>
+		<moderation-header selected-tab='reports'></moderation-header>
 
 		Below are posts reported by users - to remove the thread or block the user, click 'More options&hellip;'
 
@@ -70,6 +66,7 @@
 	import MenuButton from '../MenuButton'
 	import AvatarIcon from '../AvatarIcon'
 	import ConfirmModal from '../ConfirmModal'
+	import ModerationHeader from '../ModerationHeader'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -82,7 +79,8 @@
 			SelectButton,
 			MenuButton,
 			AvatarIcon,
-			ConfirmModal
+			ConfirmModal,
+			ModerationHeader
 		},
 		data () {
 			return {
@@ -158,12 +156,6 @@
 	.admin_moderation {
 		padding: 2rem;
 		padding-top: 1rem;
-
-		@at-root #{&}__tabs {
-			margin-bottom: 1rem;
-			border-bottom: 0.2rem solid $color__gray--darker;
-			width: 15rem;
-		}
 
 		@at-root #{&}__reports {
 			margin-top: 1rem;

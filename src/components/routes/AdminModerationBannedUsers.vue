@@ -1,10 +1,7 @@
 <template>
 	<div class='admin_moderation'>
-		<h1 style='margin: 0.5rem 0;'>Moderation</h1>
-		<div class='admin_moderation__tabs'>
-			<div class='tab_button' @click='$router.push("reports")'>Reports</div>
-			<div class='tab_button tab_button--selected'>Banned users</div>
-		</div>
+		<moderation-header selected-tab='bans'></moderation-header>
+
 		<div class='admin_moderation__header'>
 			<div>
 				Remove or edit banned users below, or add a new ban
@@ -93,6 +90,7 @@
 	import MenuButton from '../MenuButton'
 	import AvatarIcon from '../AvatarIcon'
 	import ConfirmModal from '../ConfirmModal'
+	import ModerationHeader from '../ModerationHeader'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -105,7 +103,8 @@
 			SelectButton,
 			MenuButton,
 			AvatarIcon,
-			ConfirmModal
+			ConfirmModal,
+			ModerationHeader
 		},
 		data () {
 			return {
