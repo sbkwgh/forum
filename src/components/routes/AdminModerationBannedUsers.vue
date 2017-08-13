@@ -39,6 +39,13 @@
 
 		<modal-window v-model='$store.state.moderation.showAddNewBanModal' width='30rem'>
 			<div class='admin_moderation__add_new_ban_modal'>
+				<div
+					class='admin_moderation__add_new_ban_modal__overlay'
+					:class='{ "admin_moderation__add_new_ban_modal__overlay--show": loading }'
+				>
+					<loading-icon></loading-icon>
+				</div>
+
 				<h2>Ban or block a user</h2>
 				<p>Search for the user to ban, then select the relevant ban type for the user</p>
 
@@ -87,6 +94,7 @@
 	import AvatarIcon from '../AvatarIcon'
 	import ConfirmModal from '../ConfirmModal'
 	import ModerationHeader from '../ModerationHeader'
+	import LoadingIcon from '../LoadingIcon'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -100,10 +108,12 @@
 			MenuButton,
 			AvatarIcon,
 			ConfirmModal,
-			ModerationHeader
+			ModerationHeader,
+			LoadingIcon
 		},
 		data () {
 			return {
+				loading: false,
 				bans_: []
 			}
 		},
@@ -150,14 +160,20 @@
 					obj.ipBanned = true
 				}
 
+				this.loading = true
+
 				this.axios
 					.post('/api/v1/ban', obj)
 					.then(res => {
+						this.loading = false
 						this.bans_.push(res.data)
 						this.toggleShowAddNewBanModal()
 						this.$store.dispatch('moderation/clearModal')
 					})
-					.catch(AjaxErrorHandler(this.$store))
+					.catch(e => {
+						this.loading = false
+						AjaxErrorHandler(this.$store)(e)
+					})
 			},
 			deleteBan (ban, index) {
 				this.axios
@@ -200,6 +216,11 @@
 
 		@at-root #{&}__add_new_ban_modal {
 			padding: 1rem;
+
+			@at-root #{&}__overlay {
+				margin-left: -1rem;
+				@include loading-overlay(rgba(0, 0, 0, 0.3), 0.125rem);
+			}
 
 			h2 {
 				padding: 0;
