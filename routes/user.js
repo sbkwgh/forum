@@ -3,7 +3,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Post, AdminToken, Thread, Category, Sequelize, Ip } = require('../models')
+let { User, Post, AdminToken, Thread, Category, Sequelize, Ip, Ban } = require('../models')
 let pagination = require('../lib/pagination.js')
 
 function setUserSession(req, res, username, UserId, admin) {
@@ -21,6 +21,8 @@ function setUserSession(req, res, username, UserId, admin) {
 }
 router.post('/', async (req, res) => {
 	try {
+		await Ban.isIpBanned(req.ip)
+
 		let userParams = {
 			username: req.body.username,
 			hash: req.body.password,
@@ -115,6 +117,8 @@ router.get('/:username', async (req, res) => {
 
 router.post('/:username/login', async (req, res) => {
 	try {
+		await Ban.isIpBanned(req.ip, req.params.username)
+
 		let user = await User.findOne({ where: {
 			username: req.params.username
 		}})
@@ -143,12 +147,18 @@ router.post('/:username/login', async (req, res) => {
 		}
 
 	} catch (err) {
-		console.log(err)
+		if(err instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(err)
+		} else {
+			console.log(err)
 
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+
 	}
 })
 

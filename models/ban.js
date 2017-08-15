@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
 			validate: {
 				isBoolean (val) {
 					if(typeof val !== 'boolean') {
-						throw new sequelize.ValidationError('canCreateThreads must be a string')
+						throw new sequelize.ValidationError('canCreateThreads must be a boolean')
 					}
 				}
 			}
@@ -19,7 +19,18 @@ module.exports = (sequelize, DataTypes) => {
 			validate: {
 				isBoolean (val) {
 					if(typeof val !== 'boolean') {
-						throw new sequelize.ValidationError('canCreateThreads must be a string')
+						throw new sequelize.ValidationError('canCreateThreads must be a boolean')
+					}
+				}
+			}
+		},
+		ipBanned: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+			validate: {
+				isBoolean (val) {
+					if(typeof val !== 'boolean') {
+						throw new sequelize.ValidationError('ipBanned must be a boolean')
 					}
 				}
 			}
@@ -29,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 			validate: {
 				isString (val) {
 					if(typeof val !== 'string') {
-						throw new sequelize.ValidationError('description must be a string')
+						throw new sequelize.ValidationError('message must be a string')
 					}
 				},
 				len: {
@@ -57,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
 						error: ban.message || 'You have been banned from posting'
 					})
 				} else {
-					false
+					return false
 				}
 			},
 			async canCreateThreads (username) {
@@ -68,7 +79,42 @@ module.exports = (sequelize, DataTypes) => {
 						error: ban.message || 'You have been banned from creating threads'
 					})
 				} else {
-					false
+					return false
+				}
+			},
+			async isIpBanned (ip, username) {
+				let { User, Ip } = sequelize.models
+
+				if(username) {
+					let user = await User.findOne({ where: {
+						username
+					}})
+					if(user && user.admin) return false
+				}
+		
+
+				let users = await User.findAll({
+					include: [{
+						model: Ip,
+						where: { ip }
+					}]
+				})
+				if(!users.length) return false
+
+				let ban = await Ban.findOne({ where: {
+					UserId: {
+						$in: users.map(u => u.id)
+					},
+					ipBanned: true 
+				} })
+
+				if(ban) {
+					throw Errors.sequelizeValidation(sequelize.Sequelize, {
+						error: ban.message ||
+						'This IP has been banned from creating accounts or logging in'
+					})
+				} else {
+					return false
 				}
 			}
 		}

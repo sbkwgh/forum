@@ -26,7 +26,8 @@ router.post('/', async (req, res) => {
 		let ban = await Ban.create({
 			message: req.body.message,
 			canCreateThreads: req.body.canCreateThreads,
-			canCreatePosts: req.body.canCreatePosts
+			canCreatePosts: req.body.canCreatePosts,
+			ipBanned: req.body.ipBanned
 		})
 		await ban.setUser(user)
 
