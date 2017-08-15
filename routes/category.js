@@ -173,4 +173,40 @@ router.post('/', async (req, res) => {
 	}
 })
 
+router.put('/:category_id', async (req, res) => {
+	try {
+		let id = req.params.category_id
+		let obj = {}
+		if(req.body.color) obj.color = req.body.color
+		if(req.body.name) obj.name = req.body.name
+
+		let affectedRows = await Category.update(obj, {
+			where: { id }
+		})
+
+
+		if(!affectedRows[0]) {
+			throw Errors.sequelizeValidation(Sequelize, {
+				error: 'category id is not valid',
+				value: id
+			})
+		} else {
+			let ret = await Category.findById(id)
+			res.json(ret.toJSON())
+		}
+	} catch(e) {
+		if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 module.exports = router

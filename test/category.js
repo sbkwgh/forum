@@ -5,7 +5,7 @@ let server = require('../server')
 let should = chai.should()
 let expect = chai.expect
 
-let { sequelize, Thread } = require('../models')
+let { sequelize, Thread, Category } = require('../models')
 
 const Errors = require('../lib/errors.js')
 
@@ -321,6 +321,102 @@ describe('Category', () => {
 				res.should.have.status(400)
 				body.errors.should.contain.something.that.deep.equals(Errors.invalidParameter('id', 'category does not exist'))
 			}
+		})
+	})
+
+	describe('PUT /category/:category_id', () => {
+		let admin = chai.request.agent(server)
+
+		before(done => {
+			 admin
+			 	.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({ password: 'password' })
+				.end((err, res) => {
+					done()
+				})
+		})
+
+		it('should update a category', async () => {
+			let res = await admin
+				.put('/api/v1/category/1')
+				.set('content-type', 'application/json')
+				.send({
+					name: 'new category name',
+					color: '#8ae6f2'
+				})
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.should.have.property('name', 'new category name')
+			res.body.should.have.property('color', '#8ae6f2')
+
+			let categoryUpdated = await Category.findById(1)
+			categoryUpdated.should.have.property('name', 'new category name')
+			categoryUpdated.should.have.property('color', '#8ae6f2')
+
+		})
+		it('should update a category with only one param', async () => {
+			let res = await admin
+				.put('/api/v1/category/1')
+				.set('content-type', 'application/json')
+				.send({
+					name: 'new category name2',
+				})
+
+			let categoryUpdated = await Category.findById(1)
+			categoryUpdated.should.have.property('name', 'new category name2')
+			categoryUpdated.should.have.property('color', '#8ae6f2')
+
+		})
+		it('should return an error if not admin', done => {
+			chai.request(server)
+				.put('/api/v1/category/1')
+				.set('content-type', 'application/json')
+				.send({
+					name: 'new name here again',
+					color: '#fffff'
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should return an error if not valid id', done => {
+			admin
+				.put('/api/v1/category/notavalidid')
+				.set('content-type', 'application/json')
+				.send({
+					name: 'new category name',
+					color: '#8ae6f2'
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.with.property('message', 'category id is not valid')
+
+					done()
+				})
+		})
+		it('should return an error if invalid types', done => {
+			admin
+				.put('/api/v1/category/2')
+				.set('content-type', 'application/json')
+				.send({
+					name: 123,
+					color: 456
+				})
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.with.property('message', 'The color must be a string')
+					res.body.errors.should.contain.something.with.property('message', 'The category name must be a string')
+				
+					done()
+				})
 		})
 	})
 })

@@ -25,6 +25,13 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			defaultValue () {
 				return randomColor({ luminosity: 'bright' })
+			},
+			validate: {
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('The color must be a string')
+					}
+				}
 			}
 		}
 	}, {
