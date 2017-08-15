@@ -419,4 +419,87 @@ describe('Category', () => {
 				})
 		})
 	})
+
+	describe('DELETE /category/:category_id', () => {
+		let admin = chai.request.agent(server)
+		let categoryId, thread1Id, thread2Id
+
+		before(done => {
+			admin
+			 	.post('/api/v1/user/adminaccount/login')
+				.set('content-type', 'application/json')
+				.send({ password: 'password' })
+				.then(res => {
+					return admin
+						.post('/api/v1/category')
+						.set('content-type', 'application/json')
+						.send({ name: 'category_to_delete' })
+				})
+				.then(res => {
+					categoryId = res.body.id
+					
+					return admin
+						.post('/api/v1/thread')
+						.set('content-type', 'application/json')
+						.send({ name: 'thread1', category: 'category_to_delete' })
+				})
+				.then(res => {
+					thread1Id = res.body.id
+					
+					return admin
+						.post('/api/v1/thread')
+						.set('content-type', 'application/json')
+						.send({ name: 'thread2', category: 'category_to_delete' })
+				})
+				.then(res => {
+					thread2Id = res.body.id
+					done()
+				})
+				.catch(e => {
+					console.log(e)
+					done(e)
+				})
+		})
+
+		it('should delete a category and place all threads in that category into "Other"', async () => {
+			let res = await admin.delete('/api/v1/category/' + categoryId)
+			res.should.be.json
+			res.should.have.status(200)
+
+			let category = await Category.findById(categoryId)
+			expect(category).to.be.null
+
+			let thread1 = await Thread.findById(thread1Id, {
+				include: [Category]
+			})
+			let thread2 = await Thread.findById(thread2Id, {
+				include: [Category]
+			})
+
+			thread1.Category.should.have.property('name', 'Other')
+			thread2.Category.should.have.property('name', 'Other')
+		})
+		it('should return an error if not an admin', done => {
+			chai.request(server)
+				.delete('/api/v1/category/1')
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should return an error if invalid id', done => {
+			admin
+				.delete('/api/v1/category/notavalidid')
+				.end((err, res) => {
+					res.should.be.json
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.with.property('message', 'category id does not exist')
+
+					done()
+				})
+		})
+	})
 })

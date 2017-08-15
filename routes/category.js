@@ -209,4 +209,38 @@ router.put('/:category_id', async (req, res) => {
 	}
 })
 
+router.delete('/:id', async (req, res) => {
+	try {
+		let category = await Category.findById(req.params.id)
+		if(!category) throw Errors.sequelizeValidation(Sequelize, {
+			error: 'category id does not exist',
+			value: req.params.id
+		})
+
+		let otherCategory = await Category.findOrCreate({
+			where: { name: 'Other' },
+			defaults: { color: '#9a9a9a' }
+		})
+
+		let up = await Thread.update({ CategoryId: otherCategory[0].id }, {
+			where: { CategoryId: req.params.id }
+		})
+
+		await category.destroy()
+
+		res.json({ success: true })
+	} catch (e) {
+		if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 module.exports = router
