@@ -28,7 +28,7 @@ export default new Vuex.Store({
 		categoriesWithoutAll (state) {
 			let categories =
 				state.meta.categories
-				.filter(category => category.value !== 'ALL' )
+				.filter(category => ['ALL', 'OTHER'].indexOf(category.value) === -1 )
 
 			categories.unshift({
 				name: 'Select a category',
@@ -47,6 +47,7 @@ export default new Vuex.Store({
 		alphabetizedCategories (state) {
 			return state.meta.categories.sort((a, b) => {
 				if(a.name === 'All') return -1
+				if(a.name === 'Other' || b.name === 'Other') return -1
 
 				if(a.name < b.name) {
 					return -1

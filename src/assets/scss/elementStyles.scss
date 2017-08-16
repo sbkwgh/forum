@@ -78,6 +78,13 @@ b, strong {
 		}
 	}
 
+	@at-root #{&}--color_input {
+		width: 10rem;
+		margin-bottom: 1rem;
+		height: 31px;
+		padding: 0.25rem;
+	}
+
 	@at-root #{&}--disabled {
 		position: relative;
 		pointer-events: none;
