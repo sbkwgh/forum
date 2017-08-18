@@ -50,26 +50,32 @@
 				Removing a category will place any threads in that category into 'Other'
 			</div>
 
-			<div class='admin_categories__category' v-for='(category, $index) in categories'>
-				<div class='admin_categories__category__actions_holder'>
-					<div class='admin_categories__category__actions'>
-						<div
-							class='admin_categories__category__action'
-							@click='removeCateogry(category.id, $index)'
-						>Remove</div>
-						<div
-							class='admin_categories__category__action'
-							@click='toggleEditModal(category, $index)'
-						>Edit</div>
-					</div>
-				</div>
-
+			<transition-group name='slide'>
 				<div
-					class='admin_categories__category__color'
-					:style='{ "background-color": category.color }'
-				></div>
-				<div class='admin_categories__category__name'>{{category.name}}</div>
-			</div>
+					class='admin_categories__category'
+					v-for='(category, $index) in categories'
+					:key='category'		
+				>
+					<div class='admin_categories__category__actions_holder'>
+						<div class='admin_categories__category__actions'>
+							<div
+								class='admin_categories__category__action'
+								@click='removeCateogry(category.id, $index)'
+							>Remove</div>
+							<div
+								class='admin_categories__category__action'
+								@click='toggleEditModal(category, $index)'
+							>Edit</div>
+						</div>
+					</div>
+
+					<div
+						class='admin_categories__category__color'
+						:style='{ "background-color": category.color }'
+					></div>
+					<div class='admin_categories__category__name'>{{category.name}}</div>
+				</div>
+			</transition-group>
 			<div style="margin-top: 0.5rem;">
 				<div class='admin_categories__category admin_categories__category--add' @click='toggleAddModal'>
 					<div
@@ -147,6 +153,7 @@
 						this.toggleAddModal()
 						this.loading = false
 						this.categories.push(res.data)
+						this.$store.commit('addCategories', res.data)
 					})
 					.catch(AjaxErrorHandler(this.$store))
 			},
@@ -155,6 +162,7 @@
 					.delete('/api/v1/category/' + id)
 					.then(res => {
 						this.categories.splice(index, 1)
+						this.$store.commit('removeCategory', id)
 
 						if(res.data.otherCategoryCreated) {
 							this.$store.commit('addCategories', res.data.otherCategoryCreated)
@@ -173,6 +181,7 @@
 					.then(res => {
 						this.loading = false
 						this.categories.splice(this.edit.index, 1, res.data)
+						this.$store.commit('updateCategory', res.data)
 						this.toggleEditModal()
 					})
 					.catch(AjaxErrorHandler(this.$store))
@@ -192,6 +201,16 @@
 
 <style lang='scss' scoped>
 	@import '../../assets/scss/variables.scss';
+
+	.slide-enter-active, .slide-leave-active, .slice-move {
+		transition: all 1s;
+	}
+	.slide-enter, .slide-leave-to {
+		opacity: 0;
+		transform: translateY(30px);
+	}.slide-enter {
+		transform: translateY(-30px);
+	}
 
 	.admin_categories {
 		padding: 2rem;
@@ -238,7 +257,6 @@
 			margin-bottom: 0.5rem;
 			transition: all 0.2s;
 			cursor: default;
-
 
 			&:hover {
 				background-color: $color__lightgray--primary;

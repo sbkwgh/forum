@@ -99,6 +99,18 @@ export default new Vuex.Store({
 			} else {
 				state.meta.categories.push(value)
 			}
+		},
+		removeCategory (state, id) {
+			let category = state.meta.categories.filter(c => c.id === id)
+			let index = state.meta.categories.indexOf(category)
+
+			state.meta.categories.splice(index, 1)
+		},
+		updateCategory (state, updated) {
+			let category = state.meta.categories.filter(c => c.id === updated.id)
+			let index = state.meta.categories.indexOf(category)
+
+			state.meta.categories.splice(index, 1, updated)
 		}
 	},
 	modules: { thread, category, moderation }
