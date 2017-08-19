@@ -44,6 +44,7 @@
 
 		<div class='admin_categories__categories'>
 			<div class='admin_categories__text'>
+				<div>Categories</div>
 				Hover to remove or edit a category. <br/>
 				Removing a category will place any threads in that category into 'Other'
 			</div>
@@ -231,6 +232,12 @@
 
 		@at-root #{&}__text {
 			margin-bottom: 1rem;
+
+			div {
+				margin-bottom: 0.5rem;
+				font-weight: bold;
+				font-size: 1.25rem;
+			}
 		}
 
 		@at-root #{&}__category {
