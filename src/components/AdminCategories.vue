@@ -88,11 +88,11 @@
 </template>
 
 <script>
-	import ModalWindow from '../ModalWindow'
-	import FancyInput from '../FancyInput'
-	import LoadingIcon from '../LoadingIcon'
+	import ModalWindow from './ModalWindow'
+	import FancyInput from './FancyInput'
+	import LoadingIcon from './LoadingIcon'
 
-	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import AjaxErrorHandler from '../assets/js/errorHandler'
 
 	export default {
 		name: 'AdminCategories',
@@ -198,7 +198,7 @@
 </script>
 
 <style lang='scss' scoped>
-	@import '../../assets/scss/variables.scss';
+	@import '../assets/scss/variables.scss';
 
 	.slide-enter-active, .slide-leave-active, .slice-move {
 		transition: all 1s;
