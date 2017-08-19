@@ -29,7 +29,7 @@ import Admin from './components/routes/Admin'
 import AdminDashboard from './components/routes/AdminDashboard'
 import AdminModerationReports from './components/routes/AdminModerationReports'
 import AdminModerationBannedUsers from './components/routes/AdminModerationBannedUsers'
-import AdminCategories from './components/routes/AdminCategories'
+import AdminGeneral from './components/routes/AdminGeneral'
 
 let { onResize } = require('./assets/js/flexBoxGridCorrect.js')
 
@@ -58,10 +58,10 @@ const router = new VueRouter({
 		] },
 		{ path: '/admin', redirect: '/admin/dashboard', component: Admin, children: [
 			{ path: 'dashboard', component: AdminDashboard },
+			{ path: 'general', component: AdminGeneral },
 			{ path: 'moderation', redirect: '/admin/moderation/reports' },
 			{ path: 'moderation/reports', component: AdminModerationReports },
-			{ path: 'moderation/bans', component: AdminModerationBannedUsers },
-			{ path: 'categories', component: AdminCategories }
+			{ path: 'moderation/bans', component: AdminModerationBannedUsers }
 		] }
 	],
 	mode: 'history'
