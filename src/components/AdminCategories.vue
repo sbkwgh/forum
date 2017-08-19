@@ -42,8 +42,6 @@
 			</div>
 		</modal-window>
 
-		<h1 class='admin_categories__header'>Categories</h1>
-
 		<div class='admin_categories__categories'>
 			<div class='admin_categories__text'>
 				Hover to remove or edit a category. <br/>
@@ -210,8 +208,6 @@
 	}
 
 	.admin_categories {
-		padding: 2rem;
-		padding-top: 1rem;
 
 		@at-root #{&}__modal {
 			padding: 1rem;
@@ -223,10 +219,6 @@
 			@at-root #{&}__buttons {
 				margin-top: 0.5rem;
 			}
-		}
-
-		@at-root #{&}__header {
-			margin: 0.5rem 0 1rem 0;
 		}
 
 		@at-root #{&}__categories {
