@@ -207,9 +207,6 @@
 	}
 	.slide-enter, .slide-leave-to {
 		opacity: 0;
-		transform: translateY(30px);
-	}.slide-enter {
-		transform: translateY(-30px);
 	}
 
 	.admin_categories {
