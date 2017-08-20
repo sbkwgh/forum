@@ -115,11 +115,8 @@
 	import FancyInput from './components/FancyInput'
 	import LoadingButton from './components/LoadingButton'
 	import NotificationButton from './components/NotificationButton'
-
-	import mapGetters from 'vuex'
-
+	
 	import AjaxErrorHandler from './assets/js/errorHandler'
-	let { addFlexBoxChildren } = require('./assets/js/flexBoxGridCorrect')
 
 	export default {
 		name: 'app',
@@ -180,20 +177,6 @@
 			},
 			categories() {
 				return this.$store.state.meta.categories
-			}
-		},
-		watch: {
-			$route (to) {
-				if(to.path === '/') {
-					setTimeout(() => {
-						addFlexBoxChildren('.index_categories', 'index_category');
-					}, 50);
-				}
-			},
-			categories () {
-				setTimeout(() => {
-					addFlexBoxChildren('.index_categories', 'index_category');
-				}, 50);
 			}
 		},
 		methods: {

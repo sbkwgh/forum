@@ -31,10 +31,6 @@ import AdminModerationReports from './components/routes/AdminModerationReports'
 import AdminModerationBannedUsers from './components/routes/AdminModerationBannedUsers'
 import AdminGeneral from './components/routes/AdminGeneral'
 
-let { onResize } = require('./assets/js/flexBoxGridCorrect.js')
-
-onResize('.index_categories', 'index_category');
-
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
