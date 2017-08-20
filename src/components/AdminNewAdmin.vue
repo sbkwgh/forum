@@ -17,7 +17,7 @@
 				<div>Add other admin users</div>
 				Click to generate a login link for a new admin account - this will expire after 24 hours
 			</div>
-			<loading-button class='button--green' :loading='loading' @click='getLink'>Generate link</loading-button>
+			<loading-button :loading='loading' @click='getLink'>Generate link</loading-button>
 		</div>
 	</div>
 </template>
