@@ -207,6 +207,12 @@
 					this.newThreads++
 				}
 			})
+
+			if(this.$route.query.token) {
+				this.$store.commit('setToken', this.$route.query.token)
+				this.$store.commit('setAccountTabs', 0)
+				this.$store.commit('setAccountModalState', true)
+			}
 		},
 		destroyed () {
 			socket.emit('leave', 'index')

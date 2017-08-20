@@ -44,7 +44,7 @@
 				this.axios
 					.post('/api/v1/admin_token')
 					.then(res => {
-						this.link = window.location.origin + '/newaccount?token=' + res.data.token
+						this.link = window.location.origin + '/?token=' + res.data.token
 						this.toggleModal()
 					})
 					.catch(AjaxErrorHandler(this.$store))

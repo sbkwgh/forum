@@ -21,6 +21,8 @@ export default new Vuex.Store({
 		username: '',
 		admin: false,
 
+		token: null,
+
 		ajaxErrors: [],
 		ajaxErrorsModal: false
 	},
@@ -66,6 +68,9 @@ export default new Vuex.Store({
 		}
 	},
 	mutations: {
+		setToken (state, token) {
+			state.token = token
+		},
 		setAccountTabs (state, index) {
 			state.accountTabs = index;
 		},

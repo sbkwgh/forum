@@ -9,7 +9,10 @@
 		<modal-window v-model='showAccountModal'>
 			<tab-view :tabs='["Sign up", "Login"]' v-model="showAccountTab" padding='true'>
 				<template slot='Sign up'>
-					<p style='margin-top: 0;'>
+					<p style='margin-top: 0;' v-if='$store.state.token'>
+						<strong>Providing the token is still valid, this will create an admin account</strong>
+					</p>
+					<p style='margin-top: 0;' v-else>
 						Sign up to create and post in threads.
 						<br/>It only takes a few seconds
 					</p>
@@ -220,6 +223,8 @@
 				this.signup.username = ''
 				this.signup.password = ''
 				this.signup.confirmPassword = ''
+
+				this.$store.commit('setToken', null)
 			},
 			clearSignupErrors () {
 				this.signup.errors.username = ''
@@ -244,15 +249,21 @@
 			createAccount () {
 				this.clearSignupErrors()
 
+				let postParams = {
+					username: this.signup.username,
+					password: this.signup.password
+				}
+				if(this.$store.state.token) {
+					postParams.admin = true
+					postParams.token = this.$store.state.token
+				}
+
 				if(this.signup.password !== this.signup.confirmPassword) {
 					this.signup.errors.confirmPassword = 'Passwords must match'
 				} else {
 					this.signup.loading = true
 
-					this.axios.post('/api/v1/user', {
-						username: this.signup.username,
-						password: this.signup.password
-					}).then(res => {
+					this.axios.post('/api/v1/user', postParams).then(res => {
 						this.signup.loading = false
 						this.$store.commit('setUsername', res.data.username)
 						this.$store.commit('setAdmin', res.data.admin)
