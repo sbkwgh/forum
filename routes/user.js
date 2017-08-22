@@ -257,4 +257,39 @@ router.delete('/:username', async (req, res) => {
 	}
 })
 
+router.all('*', (req, res, next) => {
+	if(req.session.admin) {
+		next()
+	} else {
+		res.status(401)
+		res.json({
+			errors: [Errors.requestNotAuthorized]
+		})
+	}
+})
+
+router.get('/', async (req, res) => {
+	try {
+		console.log('here234')
+
+		if(req.query.admin) {
+			let admins = await User.findAll({
+				where: { admin: true },
+				attributes: {
+					exclude: ['hash']
+				}
+			})
+
+			res.json(admins)
+		} else {
+			res.json({})
+		}
+	} catch (e) {
+		console.log(e)
+		res.json({
+			errors: [Errors.unknown]
+		})
+	}
+})
+
 module.exports = router

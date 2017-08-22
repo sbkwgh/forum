@@ -149,7 +149,8 @@ router.all('*', (req, res, next) => {
 router.post('/', async (req, res) => {
 	try {
 		let category = await Category.create({
-			name: req.body.name
+			name: req.body.name,
+			color: req.body.color
 		})
 
 		res.json(category.toJSON())
@@ -228,7 +229,10 @@ router.delete('/:id', async (req, res) => {
 
 		await category.destroy()
 
-		res.json({ success: true })
+		res.json({
+			success: true,
+			otherCategoryCreated: otherCategory[1] ? otherCategory[0] : null
+		})
 	} catch (e) {
 		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)
