@@ -14,8 +14,20 @@
 
 		<div class='admin_new_admin__box'>
 			<div class='admin_new_admin__text'>
-				<div>Add other admin users</div>
+				<div class='admin_new_admin__text__title'>Add other admin users</div>
 				Click to generate a login link for a new admin account - this will expire after 24 hours
+				
+				<div v-if='!filteredAdmins'>Loading...</div>
+				<div v-else>
+					<strong v-if='filteredAdmins.length === 0'>There are no other admins</strong>
+					<template v-else>
+						Current admins are you,
+						<span v-for='(admin, $index) in filteredAdmins'>
+							<router-link :to='"/user/" + admin.username'>{{admin.username}}</router-link>
+							<template v-if='$index !== filteredAdmins.length-1'>,</template>
+						</span>
+					</template>
+				</div>
 			</div>
 			<loading-button :loading='loading' @click='getLink'>Generate link</loading-button>
 		</div>
@@ -54,8 +66,28 @@
 			return {
 				loading: false,
 				showModal: false,
-				link: ''
+				link: '',
+				admins: null
 			}
+		},
+		computed: {
+			filteredAdmins () {
+				if(!this.admins) {
+					return null
+				} else {
+					return this.admins.filter(a => {
+						return a.username !== this.$store.state.username
+					})
+				}
+			}
+		},
+		created () {
+			this.axios
+				.get('/api/v1/user?admin=true')
+				.then(res => {
+					this.admins = res.data
+				})
+				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>
@@ -80,7 +112,7 @@
 		@at-root #{&}__text {
 			margin-bottom: 1rem;
 
-			div {
+			@at-root #{&}__title {
 				margin-bottom: 0.5rem;
 				font-weight: bold;
 				font-size: 1.25rem;
