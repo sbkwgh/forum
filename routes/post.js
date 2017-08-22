@@ -169,7 +169,9 @@ router.post('/', async (req, res) => {
 		}))
 
 		req.app.get('io').to('thread/' + thread.id).emit('new post', {
-			postNumber: thread.postsCount
+			postNumber: thread.postsCount,
+			content: post.content,
+			username: user.username
 		})
 
 	} catch (e) {
