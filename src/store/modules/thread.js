@@ -4,6 +4,7 @@ const state = {
 	thread: '',
 	threadId: undefined,
 	posts: [],
+	postNotification: null,
 	locked: false,
 	reply: {
 		username: '',
@@ -202,6 +203,9 @@ const mutations = {
 	setReply (state, payload) {
 		state.reply.username = payload.username;
 		state.reply.id = payload.id;
+	},
+	'thread/setPostNotification': (state, post) => {
+		state.postNotification = post
 	},
 	addPost (state, post) {
 		if(Array.isArray(post)) {

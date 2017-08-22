@@ -1,5 +1,12 @@
 <template>
 	<div class='route_container'>
+		<thread-post-notification
+			v-if='$store.state.thread.postNotification'
+			:post='$store.state.thread.postNotification'
+			@close='$store.commit("thread/setPostNotification", null)'
+			@goToPost='goToPostNotification'
+		></thread-post-notification>
+
 		<div class='thread_side_bar'>
 			<loading-button
 				:class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }'
@@ -107,6 +114,7 @@
 	import InputEditor from '../InputEditor'
 	import ScrollLoad from '../ScrollLoad'
 	import ThreadPost from '../ThreadPost'
+	import ThreadPostNotification from '../ThreadPostNotification'
 	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 	import PostScrubber from '../PostScrubber'
 	import MenuButton from '../MenuButton'
@@ -122,6 +130,7 @@
 			InputEditor,
 			ScrollLoad,
 			ThreadPost,
+			ThreadPostNotification,
 			ThreadPostPlaceholder,
 			PostScrubber,
 			MenuButton,
@@ -130,7 +139,8 @@
 		data () {
 			return {
 				headerTitle: false,
-				highlightedPostIndex: null
+				highlightedPostIndex: null,
+				postNotification: null
 			}
 		},
 		computed: {
@@ -263,6 +273,22 @@
 						setTimeout(() => this.highlightedPostIndex = null, 3000)
 					}
 				})
+			},
+			showPostNotification (post) {
+				if(post.username === this.$store.state.username) return;
+
+				this.$store.commit('thread/setPostNotification', null)
+				this.$store.commit('thread/setPostNotification', post)
+
+				setTimeout(_ => {
+					this.$store.commit('thread/setPostNotification', null)
+				}, 5000)
+			},
+			goToPostNotification () {
+				let post = this.$store.state.thread.postNotification
+
+				this.goToPost(post.postNumber)
+				this.$store.commit('thread/setPostNotification', null)
 			}
 		},
 		mounted () {
@@ -304,6 +330,7 @@
 			
 			socket.emit('join', 'thread/' + this.$route.params.id)
 			socket.on('new post', post => {
+				this.showPostNotification(post)
 				this.$store.dispatch('loadNewPostsSinceLoad', post)
 			})
 		},
@@ -314,7 +341,7 @@
 	}
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss' >
 	@import '../../assets/scss/variables.scss';
 
 	.thread_side_bar {
