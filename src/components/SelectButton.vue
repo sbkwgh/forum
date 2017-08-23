@@ -1,5 +1,10 @@
 <template>
 	<div class='select_button'>
+		<div
+			class='select_button__overlay'
+			:class='{ "select_button__overlay--show": !hideMenu }'
+			@click='toggleMenu'
+		></div>
 		<div class='button button--thin_text' @click='toggleMenu' v-if='options.length'>
 			{{options[selectedIndex].name}}
 			<span class='button__icon fa fa-fw' :class='[hideMenu ? "fa-caret-down" : "fa-caret-up"]'></span>
@@ -7,6 +12,7 @@
 		<div class='button' v-else>
 			No options
 		</div>
+
 		<div class='select_button__options' :class='{"select_button__options--hidden": hideMenu}'>
 			<div
 				v-for='(option, index) in options'
@@ -70,9 +76,23 @@
 	.select_button {
 		display: inline-block;
 
+		@at-root #{&}__overlay {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			z-index: 2;
+			pointer-events: none;
+
+			@at-root #{&}--show {
+				pointer-events: all;
+			}
+		}
+
 		@at-root #{&}__options {
 			position: absolute;
-			z-index: 1;
+			z-index: 3;
 			overflow: hidden;
 			background-color: #fff;
 			width: 15rem;
