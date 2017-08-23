@@ -69,8 +69,7 @@ b, strong {
 		border-color: transparent;
 	}
 
-	@at-root #{&}--thick_border_thin_text {
-		border-width: 0.125rem;
+	@at-root #{&}--thin_text {
 		font-weight: 400;
 	}
 
@@ -153,7 +152,7 @@ b, strong {
 }
 
 .input {
-	border: 0.125rem solid $color__gray--primary;
+	border: 1px solid $color__gray--primary;
 	border-radius: 0.25rem;
 	@include text;
 	padding: 0.25rem;

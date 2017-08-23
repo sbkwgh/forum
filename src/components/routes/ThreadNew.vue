@@ -168,11 +168,12 @@
 		display: flex;
 		background-color: #fff;
 		border-radius: 0.25rem;
-		border: 0.125rem solid $color__gray--darker;
-		transition: color 0.2s;
+		box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.5);
+
+		transition: all 0.2s;
 
 		@at-root #{&}--focus {
-			border-color: $color__gray--darkest;
+			box-shadow: 0 0 0.3rem rgba(175, 175, 175, 1);
 		}
 
 		@at-root #{&}__format_bar {
@@ -199,7 +200,7 @@
 		}
 
 		@at-root #{&}__preview {
-			border-left: 0.125rem solid $color__gray--darker;
+			border-left: 1px solid $color__gray--darker;
 			width: 50%;
 
 			.input_editor_preview__markdownHTML {

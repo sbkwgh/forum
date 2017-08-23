@@ -32,8 +32,8 @@
 			this.axios
 				.get('/api/v1/settings')
 				.then(res => {
-					this.name = res.data.forumName
-					this.description = res.data.forumDescription
+					this.name = res.data.forumName || ''
+					this.description = res.data.forumDescription || ''
 				})
 				.catch(AjaxErrorHandler(this.$store))
 		}

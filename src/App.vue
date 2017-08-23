@@ -88,27 +88,27 @@
 			<div class='header__group'>
 				<template v-if='$store.state.username'>
 					<notification-button></notification-button>
-					<button @click='$router.push("/admin")' class='button button--thick_border_thin_text' v-if='$store.state.admin'>
+					<button @click='$router.push("/admin")' class='button button--thin_text' v-if='$store.state.admin'>
 						Admin settings
 					</button>
-						<button @click='$router.push("/settings")' class='button button--thick_border_thin_text' >
+						<button @click='$router.push("/settings")' class='button button--thin_text' >
 						Settings
 					</button>
-					<loading-button @click='logout' :loading='loadingLogout' class='button--thick_border_thin_text'>
+					<loading-button @click='logout' :loading='loadingLogout' class='button--thin_text'>
 						Log out
 					</loading-button>
 				</template>
 				<template v-else>
-					<div class='button button--green button--thick_border_thin_text' @click='showAccountModalTab(0)'>
+					<div class='button button--green button--thin_text' @click='showAccountModalTab(0)'>
 						Sign up
 					</div>
-					<div class='button button--thick_border_thin_text' @click='showAccountModalTab(1)'>
+					<div class='button button--thin_text' @click='showAccountModalTab(1)'>
 						Login
 					</div>
 				</template>
 				<div class='search' tabindex='0'>
 					<input class='search__field' placeholder='Search this forum'>
-					<button class='button button--borderless search__button'><span class='fa fa-search'></span></button>
+					<button class='search__button'><span class='fa fa-search'></span></button>
 				</div>
 			</div>
 		</header>
@@ -385,6 +385,7 @@
 
 		@at-root #{&}__group {
 			display: flex;
+			align-items: center;
 			> * { margin: 0 0.5rem; }
 			> *:first-child { margin-left: 0; }
 			> *:last-child { margin-right: 0; }
@@ -398,8 +399,9 @@
 	}
 
 	.search {
-		border: 0.125rem solid $color__gray--primary;
+		border: 1px solid $color__gray--darker;
 		border-radius: 0.25rem;
+		overflow: hidden;
 
 		@at-root #{&}__field {
 			outline: none;
@@ -416,7 +418,9 @@
 			}
 		}
 		@at-root #{&}__button {
-			border-radius: 0;
+			@extend .button;
+			border: 0;
+			border-radius: 0 0.125rem 0.125rem 0;
 		}
 	}
 </style>

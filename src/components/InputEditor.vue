@@ -32,7 +32,7 @@
 		
 		
 		<div class='input_editor__submit_bar'>
-			<button class='button' @click='submit'>Submit</button>
+			<button class='button button--thin_text' @click='submit'>Submit</button>
 		</div>
 	</div>
 </template>
@@ -191,6 +191,7 @@
 				font-size: 0.8rem;
 				height: 1.5rem;
 				padding: 0 0.25rem;
+				border-radius: 3px;
 				border-color: $color__gray--darkest;
 			}
 		}

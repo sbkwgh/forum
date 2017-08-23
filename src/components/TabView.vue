@@ -99,6 +99,18 @@
 				margin: 0 0.25rem;
 				padding: 0.5rem;
 				margin-top: 0.25rem;
+
+				&::after {
+					content: '';
+					position: absolute;
+					background-color: #fff;
+					width: 100%;
+					bottom: -2px;
+					left: 0;
+					height: 2px;
+					opacity: 0;
+					transition: all 0.2s;
+				}
 			}
 
 			@at-root #{&}--transparent {
@@ -152,13 +164,7 @@
 				border: thin solid $color__gray--darker;
 				
 				&::after {
-					content: '';
-					position: absolute;
-					background-color: #fff;
-					width: 100%;
-					bottom: -1px;
-					left: 0;
-					height: 1px;
+					opacity: 1;
 				}
 			}
 

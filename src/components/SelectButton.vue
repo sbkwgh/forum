@@ -1,6 +1,6 @@
 <template>
 	<div class='select_button'>
-		<div class='button button--thick_border_thin_text' @click='toggleMenu' v-if='options.length'>
+		<div class='button button--thin_text' @click='toggleMenu' v-if='options.length'>
 			{{options[selectedIndex].name}}
 			<span class='button__icon fa fa-fw' :class='[hideMenu ? "fa-caret-down" : "fa-caret-up"]'></span>
 		</div>
@@ -76,7 +76,7 @@
 			overflow: hidden;
 			background-color: #fff;
 			width: 15rem;
-			border: 0.125rem solid #EEEEEE;
+			border: 1px solid $color__gray--darker;
 			margin-top: 0.125rem;
 			max-height: 20rem;
 			box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.35);
@@ -101,7 +101,7 @@
 				background-color: $color__lightgray--primary;
 			}
 			&:active {
-				background-color: $color__lightgray--darker;
+				background-color: darken($color__lightgray--primary, 2%);
 			}
 
 			@at-root #{&}--disabled {

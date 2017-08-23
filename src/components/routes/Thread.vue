@@ -9,6 +9,7 @@
 
 		<div class='thread_side_bar'>
 			<loading-button
+				class='button--thin_text'
 				:class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }'
 				:loading='false || $store.state.thread.removePostsButtonLoading'
 				:dark='true'
@@ -26,13 +27,13 @@
 				@lock_thread='setThreadLockedState'
 				@remove_posts='setThreadSelectState'
 			>
-				<button class='button'>
+				<button class='button button--thin_text'>
 					<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
 					Manage thread
 				</button>
 			</menu-button>
 			<button
-				class='button'
+				class='button button--thin_text'
 				@click='replyThread'
 				v-if='$store.state.username && !$store.state.thread.locked'
 			>
