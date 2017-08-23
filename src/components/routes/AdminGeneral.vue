@@ -1,6 +1,7 @@
 <template>
 	<div class='admin_general'>
 		<h1 class='admin_general__header'>General</h1>
+		<admin-forum-info></admin-forum-info>
 		<admin-new-admin></admin-new-admin>
 		<admin-categories></admin-categories>	
 	</div>
@@ -9,12 +10,14 @@
 <script>
 	import AdminCategories from '../AdminCategories'
 	import AdminNewAdmin from '../AdminNewAdmin'
+	import AdminForumInfo from '../AdminForumInfo'
 
 	export default {
 		name: 'AdminGeneral',
 		components: {
 			AdminCategories,
-			AdminNewAdmin
+			AdminNewAdmin,
+			AdminForumInfo
 		}
 	}
 </script>
