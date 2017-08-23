@@ -231,7 +231,7 @@
 			justify-content: center;
 			border-radius: 5rem;
 			padding: 0.25rem 0.5rem 0.25rem 0.5rem;
-			border: 0.1rem solid $color__gray--darker;
+			border: thin solid $color__gray--darker;
 			margin-right: 0.5rem;
 			margin-bottom: 0.5rem;
 			transition: all 0.2s;
@@ -263,7 +263,7 @@
 			}
 			@at-root #{&}__actions {
 				border-radius: 3rem;
-				border: 0.1rem solid $color__gray--darker;
+				border: thin solid $color__gray--darker;
 				overflow: hidden;
 				display: flex;
 				background-color: #fff;
