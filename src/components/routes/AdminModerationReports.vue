@@ -2,7 +2,7 @@
 	<div class='admin_moderation'>
 		<moderation-header selected-tab='reports'></moderation-header>
 
-		<confirm-modal v-model='removePostObj.showConfirmModal' @confirm='removePost' color='red'>
+		<confirm-modal v-model='removePostObj.showConfirmModal' @confirm='removePost' text='Remove' color='red'>
 			Are you sure you want to remove this post?
 		</confirm-modal>
 
