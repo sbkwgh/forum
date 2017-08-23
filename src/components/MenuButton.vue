@@ -62,16 +62,17 @@
 			position: absolute;
 			background-color: #fff;
 			width: 10rem;
-			border-radius: 0.125rem;
+			border-radius: 0.25rem;
+			overflow: hidden;
 			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.06);
 			z-index: 3;
-			border: 0.125rem solid $color__gray--darker;
+			border: 1px solid $color__gray--darker;
 			pointer-events: none;
 			transform: perspective( 600 ) rotateX( 15deg );
 			-webkit-transform: perspective( 600 ) rotateX( 15deg );
 			opacity: 0;
 			margin-top: -1rem;
-			transition: all 0.25s;
+			transition: all 0.2s;
 			top: 0rem;
 			left: 0;
 

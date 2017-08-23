@@ -353,9 +353,11 @@
 
 		.button {
 			margin-bottom: 0.75rem;
-			margin-left: -0.25rem;
 			height: 3rem;
-		} 
+		}
+		& > .button, .menu_button {
+			margin-left: -0.25rem;
+		}
 	}
 
 	.thread_header {
