@@ -12,9 +12,9 @@
 			</div>
 		</modal-window>
 
-		<div class='admin_new_admin__box'>
-			<div class='admin_new_admin__text'>
-				<div class='admin_new_admin__text__title'>Add other admin users</div>
+		<div class='category_widget__box'>
+			<div class='category_widget__text'>
+				<div class='category_widget__text__title'>Add other admin users</div>
 				Click to generate a login link for a new admin account - this will expire after 24 hours
 				
 				<div v-if='!filteredAdmins'>Loading...</div>
@@ -98,25 +98,6 @@
 	@at-root .admin_new_admin {
 		@at-root #{&}__modal {
 			padding: 1rem;
-		}
-
-		@at-root #{&}__box {
-			background-color: #fff;
-			padding: 1.5rem;
-			border-radius: 0.25rem;
-			margin-bottom: 1rem;
-
-			@extend .shadow_border;
-		}
-
-		@at-root #{&}__text {
-			margin-bottom: 1rem;
-
-			@at-root #{&}__title {
-				margin-bottom: 0.5rem;
-				font-weight: bold;
-				font-size: 1.25rem;
-			}
 		}
 	}
 </style>

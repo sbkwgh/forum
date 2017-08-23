@@ -42,9 +42,9 @@
 			</div>
 		</modal-window>
 
-		<div class='admin_categories__categories'>
-			<div class='admin_categories__text'>
-				<div>Categories</div>
+		<div class='category_widget__box'>
+			<div class='category_widget__text'>
+				<div class='category_widget__text__title'>Categories</div>
 				Hover to remove or edit a category. <br/>
 				Removing a category will place any threads in that category into 'Other'
 			</div>
@@ -222,23 +222,6 @@
 			}
 		}
 
-		@at-root #{&}__categories {
-			background-color: #fff;
-			padding: 1.5rem;
-			border-radius: 0.25rem;
-
-			@extend .shadow_border;
-		}
-
-		@at-root #{&}__text {
-			margin-bottom: 1rem;
-
-			div {
-				margin-bottom: 0.5rem;
-				font-weight: bold;
-				font-size: 1.25rem;
-			}
-		}
 
 		@at-root #{&}__category {
 			display: inline-flex;

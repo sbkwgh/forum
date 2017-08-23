@@ -175,3 +175,24 @@ b, strong {
 .p--condensed {
 	margin-top: 0.25rem;
 }
+
+.category_widget {
+	@at-root #{&}__box {
+		background-color: #fff;
+		padding: 1.5rem;
+		border-radius: 0.25rem;
+		margin-bottom: 1rem;
+
+		@extend .shadow_border;
+	}
+
+	@at-root #{&}__text {
+		margin-bottom: 1rem;
+
+		@at-root #{&}__title {
+			margin-bottom: 0.5rem;
+			font-weight: bold;
+			font-size: 1.25rem;
+		}
+	}
+}
