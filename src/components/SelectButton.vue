@@ -1,6 +1,6 @@
 <template>
 	<div class='select_button'>
-		<div class='button' @click='toggleMenu' v-if='options.length'>
+		<div class='button button--thick_border_thin_text' @click='toggleMenu' v-if='options.length'>
 			{{options[selectedIndex].name}}
 			<span class='button__icon fa fa-fw' :class='[hideMenu ? "fa-caret-down" : "fa-caret-up"]'></span>
 		</div>

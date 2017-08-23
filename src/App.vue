@@ -39,12 +39,15 @@
 						width='100%'
 					>
 					</fancy-input>
-					<loading-button class='button--green' :loading='signup.loading' @click='createAccount'>
-						Sign up
-					</loading-button>
-					<button class='button' @click='closeAccountModal'>
-						Cancel
-					</button>
+
+					<div style='margin-top: 0.5rem;'>
+						<loading-button class='button--green button--margin' :loading='signup.loading' @click='createAccount'>
+							Sign up
+						</loading-button>
+						<button class='button' @click='closeAccountModal'>
+							Cancel
+						</button>
+					</div>
 				</template>
 				<template slot='Login'>
 					<p style='margin-top: 0;'>
@@ -65,12 +68,16 @@
 						width='100%'
 					>
 					</fancy-input>
-					<loading-button class='button button--green' :loading='login.loading' @click='doLogin'>
-						<span class='fa fa-unlock-alt' style='margin-right:0.25rem'></span> Log in
-					</loading-button>
-					<button class='button' @click='closeAccountModal'>
-						Cancel
-					</button>
+
+					<div style='margin-top: 0.5rem;'>
+						<loading-button class='button button--green button--margin' :loading='login.loading' @click='doLogin'>
+							<span class='fa fa-unlock-alt' style='margin-right:0.25rem'></span> Log in
+						</loading-button>
+						<button class='button' @click='closeAccountModal'>
+							Cancel
+						</button>
+						
+					</div>
 				</template>
 			</tab-view>
 		</modal-window>
@@ -81,21 +88,21 @@
 			<div class='header__group'>
 				<template v-if='$store.state.username'>
 					<notification-button></notification-button>
-					<button @click='$router.push("/admin")' class='button' v-if='$store.state.admin'>
+					<button @click='$router.push("/admin")' class='button button--thick_border_thin_text' v-if='$store.state.admin'>
 						Admin settings
 					</button>
-						<button @click='$router.push("/settings")' class='button' >
+						<button @click='$router.push("/settings")' class='button button--thick_border_thin_text' >
 						Settings
 					</button>
-					<loading-button @click='logout' :loading='loadingLogout'>
+					<loading-button @click='logout' :loading='loadingLogout' class='button--thick_border_thin_text'>
 						Log out
 					</loading-button>
 				</template>
 				<template v-else>
-					<div class='button button--green' @click='showAccountModalTab(0)'>
+					<div class='button button--green button--thick_border_thin_text' @click='showAccountModalTab(0)'>
 						Sign up
 					</div>
-					<div class='button' @click='showAccountModalTab(1)'>
+					<div class='button button--thick_border_thin_text' @click='showAccountModalTab(1)'>
 						Login
 					</div>
 				</template>

@@ -3,8 +3,8 @@
 		<div class='confirm_modal'>
 			<slot></slot>
 			<div class='confirm_modal__buttons'>
-				<button class='button button--modal' @click='setShowModal(false)'>Cancel</button>
-				<button class='button button--modal' :class='buttonColor' @click='confirm'>OK</button>
+				<button class='button button--modal button--borderless' @click='setShowModal(false)'>Cancel</button>
+				<button class='button button--modal' :class='buttonColor' @click='confirm'>{{text || 'OK'}}</button>
 			</div>
 		</div>
 	</modal-window>
@@ -15,7 +15,7 @@
 
 	export default {
 		name: 'ConfirmModal',
-		props: ['value', 'color'],
+		props: ['value', 'color', 'text'],
 		components: {
 			ModalWindow
 		},

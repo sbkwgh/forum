@@ -39,15 +39,16 @@ b, strong {
 }
 
 .button {
-	border: 0.125rem solid $color__gray--primary;
+	border: 1px solid $color__gray--primary;
 	display: inline-block;
 	border-radius: 0.25rem;
 	text-align: center;
-	@include text($font--role-default, 1rem, 400);
+	@include text($font--role-default, 1rem, bold);
 	padding: 0.5rem;
 	cursor: pointer;
+	letter-spacing: 0.25px;
 	background-color: #fff;
-	color: $color__text--primary;
+	color: lighten($color__text--primary, 30%);
 	transition: background-color 0.2s, border-color 0.2s, filter 0.2s;
 	outline: none;
 
@@ -64,12 +65,20 @@ b, strong {
 	}
 
 	@at-root #{&}--borderless {
-		border: 0;
+		color: $color__text--secondary;
+		border-color: transparent;
+	}
+
+	@at-root #{&}--thick_border_thin_text {
+		border-width: 0.125rem;
+		font-weight: 400;
+	}
+
+	@at-root #{&}--margin {
+		margin-right: 0.5rem;
 	}
 
 	@at-root #{&}--modal {
-		padding: 0.25rem 0.5rem;
-		font-size: 0.8rem;
 		float: right;
 		margin-bottom: 1rem;
 
@@ -119,16 +128,14 @@ b, strong {
 		color: $text;
 		
 		&:hover {
-			background-color: $background;
-			border-color: $border;
-			color: #fff;
-			filter: brightness(0.9);
+			background-color: darken($background, 5%);
+			border-color: rgba($border, 0.6);
+			color: darken(#fff, 5%);
 		}
 		&:active {
-			background-color: $background;
-			border-color: $border;
-			color: #fff;
-			filter: brightness(0.8);
+			background-color: darken($background, 10%);
+			border-color: rgba($border, 0.6);
+			color: darken(#fff, 10%);
 		}
 	}
 	@at-root #{&}--blue {

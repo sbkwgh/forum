@@ -2,7 +2,7 @@
 	<div class='select_options'>
 		<button
 			v-for='option in options'
-			class='button'
+			class='button button--thick_border_thin_text'
 			:class='{"button--lightblue": option.value === value}'
 			@click='select(option.value)'
 		>
