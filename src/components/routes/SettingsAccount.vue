@@ -1,5 +1,14 @@
 <template>
 	<div class='route_container'>
+		<confirm-modal
+			v-model='showConfirmModal'
+			@confirm='deleteAccount'
+			color='red'
+			text='Yes, delete it'
+		>
+			Are you sure you want to delete your account?
+		</confirm-modal>
+
 		<div class='h1'>Account settings</div>
 		<p>
 			<div class='h3'>Change your password</div>
@@ -33,7 +42,7 @@
 			<loading-button 
 				class='button button--red'
 				:loading='deleteAccountLoading'
-				@click='deleteAccount'
+				@click='showConfirmModal = true'
 			>Delete my account</loading-button>
 		</p>
 	</div>
@@ -42,6 +51,7 @@
 <script>
 	import FancyInput from '../FancyInput'
 	import LoadingButton from '../LoadingButton'
+	import ConfirmModal from '../ConfirmModal'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -49,7 +59,8 @@
 		name: 'settingsAccount',
 		components: {
 			FancyInput,
-			LoadingButton
+			LoadingButton,
+			ConfirmModal
 		},
 		data () {
 			return {
@@ -65,7 +76,8 @@
 					}
 				},
 
-				deleteAccountLoading: false
+				deleteAccountLoading: false,
+				showConfirmModal: false
 			}
 		},
 		computed: {},
