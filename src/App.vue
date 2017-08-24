@@ -401,6 +401,7 @@
 	.search {
 		border: 1px solid $color__gray--darker;
 		border-radius: 0.25rem;
+		outline: none;
 		overflow: hidden;
 
 		@at-root #{&}__field {
