@@ -83,17 +83,17 @@
 		</modal-window>
 		<header class='header'>
 			<div class='header__group'>
-				<div class='logo' @click='$router.push("/")'>{{name}}</div>
+				<router-link class='logo' to='/'>{{name}}</router-link>
 			</div>
 			<div class='header__group'>
 				<template v-if='$store.state.username'>
 					<notification-button></notification-button>
-					<button @click='$router.push("/admin")' class='button button--thin_text' v-if='$store.state.admin'>
+					<router-link to='/admin' class='button button--thin_text' v-if='$store.state.admin'>
 						Admin settings
-					</button>
-						<button @click='$router.push("/settings")' class='button button--thin_text' >
+					</router-link>
+					<router-link to='/settings' class='button button--thin_text' >
 						Settings
-					</button>
+					</router-link>
 					<loading-button @click='logout' :loading='loadingLogout' class='button--thin_text'>
 						Log out
 					</loading-button>
@@ -396,6 +396,7 @@
 		@include text($font--role-emphasis, 2rem, normal);
 		@include user-select(none);
 		cursor: pointer;
+		background: none;
 	}
 
 	.search {

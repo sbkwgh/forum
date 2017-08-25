@@ -47,8 +47,9 @@ b, strong {
 	padding: 0.5rem;
 	cursor: pointer;
 	letter-spacing: 0.25px;
+	background: none;
 	background-color: #fff;
-	color: lighten($color__text--primary, 30%);
+	color: lighten($color__text--primary, 30%) !important;
 	transition: background-color 0.2s, border-color 0.2s, filter 0.2s;
 	outline: none;
 
@@ -59,9 +60,6 @@ b, strong {
 	&:active {
 		background-color: $color__lightgray--darker;
 		border-color: $color__gray--darkest;
-	}
-
-	@at-root #{&}__icon {
 	}
 
 	@at-root #{&}--borderless {
@@ -124,17 +122,17 @@ b, strong {
 	@mixin filled_button($background, $border, $text: #fff) {
 		background-color: $background;
 		border-color: $border;
-		color: $text;
+		color: $text !important;
 		
 		&:hover {
 			background-color: darken($background, 5%);
 			border-color: rgba($border, 0.6);
-			color: darken(#fff, 5%);
+			color: darken(#fff, 5%) !important;
 		}
 		&:active {
 			background-color: darken($background, 10%);
 			border-color: rgba($border, 0.6);
-			color: darken(#fff, 10%);
+			color: darken(#fff, 10%) !important;
 		}
 	}
 	@at-root #{&}--blue {

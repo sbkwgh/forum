@@ -6,7 +6,10 @@
 				v-model='selectedFilterOption'
 				class='thread_sorting__filter'
 			></select-options>
-			<button class='button button--blue' v-if='this.$store.state.username' @click='$router.push("/thread/new")'>Post new thread</button>
+			<router-link
+				class='button button--blue'
+				v-if='$store.state.username' to='/thread/new'
+			>Post new thread</router-link>
 		</div>
 		<div class='threads_main'>
 			<div class='threads_main__side_bar'>
