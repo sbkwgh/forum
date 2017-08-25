@@ -24,6 +24,7 @@
 	.post_placeholder {
 		position: relative;
 		border-bottom: thin solid $color__gray--primary;
+		border-radius: 0.25rem;
 		transition: background-color 0.5s;
 		margin: 0.5rem 0;
 

@@ -7,18 +7,20 @@
 		}'
 		@mouseenter='setPostFooterState(true)'
 		@mouseleave='setPostFooterState(false)'
+
+		@click='goToPost'
 	>
 		<span
 			class='post__remove_icon fa fa-check'
 			:class='{"post__remove_icon--show": showSelect && !post.removed}'
-			@click='toggleSelected'
+			@click.stop='toggleSelected'
 		></span>
 
 		<modal-window v-model='showShareModal'>
 			<div style='padding: 0rem 1rem 1rem 1rem;'>
 				<p>Copy this URL to share the post</p>
 				<fancy-input placeholder='Post URL' :value='postURL' width='100%'></fancy-input>
-				<button class='button button--modal' @click='setShareModalState(false)'>OK</button>
+				<button class='button button--modal' @click.stop='setShareModalState(false)'>OK</button>
 			</div>
 		</modal-window>
 
@@ -26,14 +28,14 @@
 
 		<div class='post__meta_data'>
 			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
-			<div class='post__thread' v-if='showThread' @click='goToThread'>{{post.Thread.name}}</div>
+			<div class='post__thread' v-if='showThread' @click.stop='goToThread'>{{post.Thread.name}}</div>
 			<div class='post__user' v-else>{{username}}</div>
 			<replying-to
 				style='margin-right: 0.5rem;'
 				v-if='post.replyingToUsername'
 				:replyId='post.replyId'
 				:username='post.replyingToUsername'
-				@click='$emit("goToPost", post.replyId, true)'
+				@click.stop='$emit("goToPost", post.replyId, true)'
 			></replying-to>
 			<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		</div>
@@ -43,7 +45,7 @@
 				class='post__footer_group'
 			>
 				<div class='post__footer_sub_group'>
-					<heart-button :post='post'></heart-button>
+					<heart-button :post='post' v-if='showReply'></heart-button>
 				</div>
 				<div class='post__footer_sub_group' v-if='post.Replies.length'>
 					<span class='post__footer_sub_group__text post__footer_sub_group__text--replies'>replies</span>
@@ -52,17 +54,17 @@
 						:post='reply'
 						:hover='hover'
 						:first='index === 0'
-						@click='$emit("goToPost", reply.postNumber)'
+						@click.stop='$emit("goToPost", reply.postNumber)'
 					></post-reply>
 				</div>
 				
 			</div>
 			<div
 				class='post__footer_group'>
-				<div class='post__action post__share' @click='setShareModalState(true)'>Share</div>
+				<div class='post__action post__share' @click.stop='setShareModalState(true)'>Share</div>
 				<div
 					class='post__action'
-					@click='setShowReportPostModal(true)'
+					@click.stop='setShowReportPostModal(true)'
 					v-if='$store.state.username && !post.removed'
 				>
 					Report
@@ -70,7 +72,7 @@
 				<div
 					class='post__action post__reply'
 					v-if='$store.state.username && showReply'
-					@click='$emit("reply", post.id, username)'
+					@click.stop='$emit("reply", post.id, username)'
 				>
 					Reply
 				</div>
@@ -92,7 +94,14 @@
 
 	export default {
 		name: 'ThreadPost',
-		props: ['post', 'highlight', 'showReply', 'showThread', 'showSelect'],
+		props: [
+			'post',
+			'highlight',
+			'showReply',
+			'showThread',
+			'showSelect',
+			'clickForPost'
+		],
 		components: {
 			PostReply,
 			ModalWindow,
@@ -134,6 +143,16 @@
 			},
 			goToThread () {
 				this.$router.push(`/thread/${this.post.Thread.slug}/${this.post.Thread.id}`)
+			},
+			goToPost () {
+				if(this.clickForPost) {
+					this.$router.push(
+						'/thread/' +
+						this.post.Thread.slug + '/' +
+						this.post.Thread.id + '/' +
+						this.post.postNumber
+					)
+				}
 			},
 			toggleSelected () {
 				this.selected = !this.selected

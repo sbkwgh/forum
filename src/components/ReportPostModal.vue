@@ -14,8 +14,8 @@
 				<div class='report_post_modal--margin'>Select a reason for reporting this post below:</div>
 				<select-button :options='reportOptions' v-model='selectedOption' class='report_post_modal--margin'></select-button>
 				<div >
-					<button class='button button--modal' @click='setShowModal(false)'>Cancel</button>
-					<button class='button button--modal' @click='submitReport'>Submit</button>
+					<button class='button button--modal' @click.stop='setShowModal(false)'>Cancel</button>
+					<button class='button button--modal' @click.stop='submitReport'>Submit</button>
 				</div>
 			</div>
 		</modal-window>

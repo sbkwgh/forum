@@ -106,9 +106,22 @@
 						Login
 					</div>
 				</template>
-				<div class='search' tabindex='0'>
-					<input class='search__field' placeholder='Search this forum'>
-					<button class='search__button'><span class='fa fa-search'></span></button>
+				<div
+					class='search'
+					tabindex='0'
+					@keydown.enter='goToSearch'
+				>
+					<input
+						class='search__field'
+						placeholder='Search this forum'
+						v-model='searchField'
+					>
+					<button
+						class='search__button'
+						@click='goToSearch'
+					>
+						<span class='fa fa-search'></span>
+					</button>
 				</div>
 			</div>
 		</header>
@@ -161,7 +174,8 @@
 					}
 				},
 				loadingLogout: false,
-				ajaxErrorHandler: AjaxErrorHandler(this.$store)
+				ajaxErrorHandler: AjaxErrorHandler(this.$store),
+				searchField: ''
 			}
 		},
 		computed: {
@@ -187,6 +201,11 @@
 			}
 		},
 		methods: {
+			goToSearch () {
+				if(this.searchField.trim().length) {
+					this.$router.push("/search/" + this.searchField)
+				}
+			},
 			showAccountModalTab (index) {
 				this.showAccountModal = true
 				this.showAccountTab = index
