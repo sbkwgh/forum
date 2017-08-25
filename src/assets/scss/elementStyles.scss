@@ -202,3 +202,21 @@ b, strong {
 		}
 	}
 }
+
+.overlay_message {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding-right: 5rem;
+	font-size: 2rem;
+	user-select: none;
+	cursor: default;
+	transition: none;
+	color: $color__gray--darkest;
+
+	span {
+		font-size: 4rem;
+		color: $color__gray--darker;
+	}
+}

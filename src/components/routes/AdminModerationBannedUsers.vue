@@ -32,7 +32,7 @@
 			</tr>
 		</table>
 
-		<div class='admin_moderation__no_bans' v-else>
+		<div class='overlay_message' v-else>
 			<span class='fa fa-thumbs-up'></span>
 			No banned users
 		</div>
@@ -250,24 +250,6 @@
 				background-color: $color__lightgray--darker;
 			}
 			
-		}
-
-		@at-root #{&}__no_bans {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			padding-top: 5rem;
-			font-size: 2rem;
-			user-select: none;
-			cursor: default;
-			transition: none;
-			color: $color__gray--darkest;
-
-			span {
-				font-size: 4rem;
-				color: $color__gray--darker;
-			}
 		}
 	}
 </style>

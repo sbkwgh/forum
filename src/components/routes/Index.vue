@@ -44,7 +44,7 @@
 				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
 				<thread-display-placeholder v-for='n in nextThreadsCount' v-if='loading'></thread-display-placeholder>
 			</scroll-load>
-			<div v-else class='threads_main__threads thread--empty'>
+			<div v-else class='threads_main__threads overlay_message'>
 				<span class='fa fa-exclamation-circle'></span>
 				No threads or posts.
 			</div>
@@ -352,24 +352,6 @@
 				font-weight: 400;
 				padding-bottom: 0.25rem;
 				border-bottom: thin solid $color__lightgray--darkest;
-			}
-		}
-
-		@at-root #{&}--empty {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			padding-right: 5rem;
-			font-size: 2rem;
-			user-select: none;
-			cursor: default;
-			transition: none;
-			color: $color__gray--darkest;
-
-			span {
-				font-size: 4rem;
-				color: $color__gray--darker;
 			}
 		}
 

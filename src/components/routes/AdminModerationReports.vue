@@ -49,7 +49,7 @@
 				</div>
 			</div>
 		</div>
-		<div class='admin_moderation__no_reports' v-else>
+		<div class='overlay_message' v-else>
 			<span class='fa fa-thumbs-up'></span>
 			No user reports
 		</div>
@@ -165,24 +165,6 @@
 				border-radius: 0 0 0.25rem 0.25rem;
 			}
 		}
-		@at-root #{&}__no_reports {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			padding-top: 5rem;
-			font-size: 2rem;
-			user-select: none;
-			cursor: default;
-			transition: none;
-			color: $color__gray--darkest;
-
-			span {
-				font-size: 4rem;
-				color: $color__gray--darker;
-			}
-		}
-
 
 		@at-root #{&}__report {
 			display: flex;
