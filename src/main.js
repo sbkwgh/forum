@@ -16,6 +16,7 @@ import P from './components/routes/P'
 import Start from './components/routes/Start'
 import Thread from './components/routes/Thread'
 import ThreadNew from './components/routes/ThreadNew'
+import Search from './components/routes/Search'
 
 import User from './components/routes/User'
 import UserPosts from './components/routes/UserPosts'
@@ -44,6 +45,7 @@ const router = new VueRouter({
 		{ path: '/thread/:slug/:id', component: Thread },
 		{ path: '/thread/:slug/:id/:post_number', name: 'thread-post', component: Thread },
 		{ path: '/thread/new', component: ThreadNew },
+		{ path: '/search/:q', component: Search },
 		{ path: '/user/:username', redirect: '/user/:username/posts', component: User, children: [
 			{ path: 'posts', component: UserPosts },
 			{ path: 'threads', component: UserThreads }
