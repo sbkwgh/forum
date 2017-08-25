@@ -11,7 +11,7 @@
 						{{userLetter}}
 					</div>
 					<div class='avatar_icon__header_info'>
-						<span class='avatar_icon__username' @click='goToUser'>{{ajaxUser.username}}</span>
+						<span class='avatar_icon__username' @click.stop='goToUser'>{{ajaxUser.username}}</span>
 						<span class='avatar_icon__date'>Created: {{ajaxUser.createdAt | formatDate('date') }}</span>
 					</div>
 				</div>
@@ -26,7 +26,7 @@
 			class='avatar_icon__icon'
 			:class='{"avatar_icon__icon--small": size === "small"}'
 			:style='{ "background-color": userColor }'
-			@click='goToUser'
+			@click.stop='goToUser'
 		>
 			{{userLetter}}
 		</div>

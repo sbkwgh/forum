@@ -1,21 +1,108 @@
 <template>
 	<div class='route_container'>
-		
+		<h1>Search results for '{{$route.params.q}}'</h1>
+		<div class='search__results' v-if='posts && posts.length'>
+			<scroll-load
+				:loading='loading'
+				@loadNext='loadNextPage'
+			>
+				<thread-post
+					class='search__post'
+					v-for='post in posts'
+					:post='post'
+					:show-thread='true'
+					:click-for-post='true'
+				></thread-post>
+				<thread-post-placeholder
+					class='search__post'
+					v-if='loading'
+					v-for='n in next'
+				>
+			</scroll-load>
+		</div>
+		<div
+			class='overlay_message search__overlay_message'
+			v-else-if='posts && !posts.length'
+		>
+			<span class='fa fa-exclamation-circle'></span>
+			No results found
+		</div>
+		<div
+			class='overlay_message search__overlay_message search__overlay_message--loading'
+			v-else
+		>
+			<span>
+				<loading-icon dark='true'></loading-icon>
+			</span>
+			Loading...
+		</div>
 	</div>
 </template>
 
 <script>
+	import LoadingIcon from '../LoadingIcon'
+	import ScrollLoad from '../ScrollLoad'
 	import ThreadPost from '../ThreadPost'
+	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
 	export default {
 		name: 'Search',
 		components: {
-			ThreadPost
+			LoadingIcon,
+			ThreadPost,
+			ScrollLoad,
+			ThreadPostPlaceholder
+		},
+		data () {
+			return {
+				posts: null,
+				next: 0,
+				offset: 0,
+
+				loading: false
+			}
+		},
+		methods: {
+			getResults () {
+				this.axios
+					.get('/api/v1/search?q=' + this.$route.params.q)
+					.then(res => {
+						this.posts = res.data.posts
+						this.next = res.data.next
+						this.offset = res.data.offset
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			},
+			loadNextPage () {
+				if(this.next === 0) return
+
+				this.loading = true
+
+				this.axios
+					.get(
+						`/api/v1/search?q=${this.$route.params.q}&offset=${this.offset}`
+					)
+					.then(res => {
+						this.posts.push(...res.data.posts)
+						this.next = res.data.next
+						this.offset = res.data.offset
+
+						this.loading = false
+					})
+					.catch(e => {
+						this.loading = false
+						AjaxErrorHandler(this.$store)(e)
+					})
+			}
+		},
+		watch: {
+			'$route.params': 'getResults'
 		},
 		mounted () {
 			this.$store.dispatch('setTitle', 'Search | ' + this.$route.params.q)
+			this.getResults()
 		}
 	}
 </script>
@@ -24,6 +111,26 @@
 	@import '../../assets/scss/variables.scss';
 
 	.search {
+		@at-root #{&}__post {
+			background-color: #fff;
+			padding-left: 0.75rem;
+			margin-bottom: 1rem;
+			border: none;
+			transition: box-shadow 0.2s;
+			@extend .shadow_border;
 
+			&:hover {
+				@extend .shadow_border--hover;
+			}
+
+		}
+
+		@at-root #{&}__overlay_message {
+			margin-top: 5rem;
+
+			@at-root #{&}--loading span {
+				margin-bottom: 1rem;
+			}
+		}
 	}
 </style>
