@@ -35,32 +35,36 @@
 				</div>
 			</div>
 
-			<div
-				class='threads_main__threads'
-				v-if='!threads'
-			>
-				<thread-display-placeholder>
-				</thread-display-placeholder>
-			</div>
-
-			<scroll-load
-				class='threads_main__threads'
-				v-else-if='filteredThreads.length'
-				:loading='loading'
-				@loadNext='getThreads'
-			>
-				<thread-display-placeholder v-for='n in newThreads' v-if='loadingNewer'></thread-display-placeholder>
-				<div class='threads_main__load_new' v-if='newThreads' @click='getNewerThreads'>
-					Load {{newThreads}} new {{newThreads | pluralize('thread')}}</span>
+			<transition name='fade' mode='out-in'>
+				<div
+					class='threads_main__threads'
+					v-if='!threads'
+					key='loading'
+				>
+					<thread-display-placeholder>
+					</thread-display-placeholder>
 				</div>
-				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
-				<thread-display-placeholder v-for='n in nextThreadsCount' v-if='loading'></thread-display-placeholder>
-			</scroll-load>
 
-			<div v-else class='threads_main__threads overlay_message'>
-				<span class='fa fa-exclamation-circle'></span>
-				No threads or posts.
-			</div>
+				<scroll-load
+					key='threads'
+					class='threads_main__threads'
+					v-else-if='filteredThreads.length'
+					:loading='loading'
+					@loadNext='getThreads'
+				>
+					<thread-display-placeholder v-for='n in newThreads' v-if='loadingNewer'></thread-display-placeholder>
+					<div class='threads_main__load_new' v-if='newThreads' @click='getNewerThreads'>
+						Load {{newThreads}} new {{newThreads | pluralize('thread')}}</span>
+					</div>
+					<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
+					<thread-display-placeholder v-for='n in nextThreadsCount' v-if='loading'></thread-display-placeholder>
+				</scroll-load>
+
+				<div key='no threads' v-else class='threads_main__threads overlay_message'>
+					<span class='fa fa-exclamation-circle'></span>
+					No threads or posts.
+				</div>
+			</transition>
 		</div>
 	</div>
 </template>
