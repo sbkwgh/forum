@@ -28,13 +28,12 @@
 			No results found
 		</div>
 		<div
-			class='overlay_message search__overlay_message search__overlay_message--loading'
+			class='search__results'
 			v-else
 		>
-			<span>
-				<loading-icon dark='true'></loading-icon>
-			</span>
-			Loading...
+			<thread-post-placeholder
+					class='search__post'
+				>
 		</div>
 	</div>
 </template>
@@ -61,17 +60,33 @@
 				next: 0,
 				offset: 0,
 
-				loading: false
+				loading: false,
+				postsLoaded: false
 			}
 		},
 		methods: {
+			//Delay of 300ms so that you won't see
+			//a flash of placeholders when it's not necessary
+			setDelayedPostsNull () {
+				this.postsLoaded = false
+
+				setTimeout(() => {
+					if(!this.postsLoaded) {
+						this.posts = null
+					}
+				}, 300)
+			},
 			getResults () {
+				this.$store.dispatch('setTitle', 'Search | ' + this.$route.params.q)
+				this.setDelayedPostsNull()
+
 				this.axios
 					.get('/api/v1/search?q=' + this.$route.params.q)
 					.then(res => {
 						this.posts = res.data.posts
 						this.next = res.data.next
 						this.offset = res.data.offset
+						this.postsLoaded = true
 					})
 					.catch(AjaxErrorHandler(this.$store))
 			},
@@ -90,9 +105,11 @@
 						this.offset = res.data.offset
 
 						this.loading = false
+						this.postsLoaded = true
 					})
 					.catch(e => {
 						this.loading = false
+						this.postsLoaded = true
 						AjaxErrorHandler(this.$store)(e)
 					})
 			}
