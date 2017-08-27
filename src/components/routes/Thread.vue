@@ -82,6 +82,12 @@
 				@loadPrevious='loadPreviousPosts'
 			>
 				<thread-post-placeholder
+					v-if='!posts.length'
+					v-for='n in 3'
+					:class='{"post--last": n === 2}'
+				></thread-post-placeholder>
+
+				<thread-post-placeholder
 					v-if='$store.state.thread.loadingPosts === "previous"'
 					v-for='n in $store.state.thread.previousPostsCount'
 				>

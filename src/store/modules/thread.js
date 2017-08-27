@@ -101,6 +101,10 @@ const actions = {
 			})
 	},
 	loadInitialPostsAsync ({ state, commit, dispatch, rootState }, vue) {
+		commit('setPosts', [])
+		commit('setThread', { name: 'Loading...' })
+		dispatch('setTitle', 'Loading...')
+
 		let postNumber = vue.$route.params.post_number
 		let apiURL = '/api/v1/thread/' + vue.$route.params.id
 
