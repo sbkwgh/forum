@@ -16,6 +16,7 @@
 				v-for='(post, index) in posts'
 				:post='post'
 				:show-thread='true'
+				:click-for-post='true'
 				:class='{"post--last": index === posts.length-1}'
 			></thread-post>
 			<thread-post-placeholder
