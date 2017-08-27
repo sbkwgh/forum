@@ -1,40 +1,43 @@
 <template>
 	<div class='route_container'>
 		<h1>Search results for '{{$route.params.q}}'</h1>
-		<div class='search__results' v-if='posts && posts.length'>
-			<scroll-load
-				:loading='loading'
-				@loadNext='loadNextPage'
+		<transition name='fade' mode='out-in'>
+			<div class='search__results' key='results' v-if='posts && posts.length'>
+				<scroll-load
+					:loading='loading'
+					@loadNext='loadNextPage'
+				>
+					<thread-post
+						class='search__post'
+						v-for='post in posts'
+						:post='post'
+						:show-thread='true'
+						:click-for-post='true'
+					></thread-post>
+					<thread-post-placeholder
+						class='search__post'
+						v-if='loading'
+						v-for='n in next'
+					></thread-post-placeholder>
+				</scroll-load>
+			</div>
+			<div
+				class='overlay_message search__overlay_message'
+				v-else-if='posts && !posts.length'
+				key='no results'
 			>
-				<thread-post
-					class='search__post'
-					v-for='post in posts'
-					:post='post'
-					:show-thread='true'
-					:click-for-post='true'
-				></thread-post>
-				<thread-post-placeholder
-					class='search__post'
-					v-if='loading'
-					v-for='n in next'
-				>
-			</scroll-load>
-		</div>
-		<div
-			class='overlay_message search__overlay_message'
-			v-else-if='posts && !posts.length'
-		>
-			<span class='fa fa-exclamation-circle'></span>
-			No results found
-		</div>
-		<div
-			class='search__results'
-			v-else
-		>
-			<thread-post-placeholder
-					class='search__post'
-				>
-		</div>
+				<span class='fa fa-exclamation-circle'></span>
+				No results found
+			</div>
+			<div
+				class='search__results'
+				key='loading'
+				v-else
+			>
+				<thread-post-placeholder class='search__post'
+				></thread-post-placeholder>
+			</div>
+		</transition>
 	</div>
 </template>
 
