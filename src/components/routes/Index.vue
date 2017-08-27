@@ -34,9 +34,18 @@
 					>{{category.name}}</span>
 				</div>
 			</div>
+
+			<div
+				class='threads_main__threads'
+				v-if='!threads'
+			>
+				<thread-display-placeholder>
+				</thread-display-placeholder>
+			</div>
+
 			<scroll-load
 				class='threads_main__threads'
-				v-if='filteredThreads.length'
+				v-else-if='filteredThreads.length'
 				:loading='loading'
 				@loadNext='getThreads'
 			>
@@ -47,6 +56,7 @@
 				<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
 				<thread-display-placeholder v-for='n in nextThreadsCount' v-if='loading'></thread-display-placeholder>
 			</scroll-load>
+
 			<div v-else class='threads_main__threads overlay_message'>
 				<span class='fa fa-exclamation-circle'></span>
 				No threads or posts.
@@ -86,7 +96,7 @@
 				nextThreadsCount: 0,
 				loading: false,
 
-				threads: [],
+				threads: null,
 				newThreads: 0,
 				loadingNewer: false
 			}
