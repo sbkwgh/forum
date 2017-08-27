@@ -217,4 +217,17 @@ b, strong {
 		font-size: 4rem;
 		color: $color__gray--darker;
 	}
+
+	@at-root #{&}__loading {
+		margin-top: 2rem;
+		margin-bottom: 0.5rem;
+	}
+}
+
+//Vue transition class
+.fade-enter-active, .fade-leave-active {
+	transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+	opacity: 0;
 }

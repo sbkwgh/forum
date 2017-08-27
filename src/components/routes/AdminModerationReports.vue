@@ -6,53 +6,62 @@
 			Are you sure you want to remove this post?
 		</confirm-modal>
 
-		<div class='admin_moderation__reports' v-if='reports.length'>
+		<transition name='fade' mode='out-in'>
+			<loading-message v-if='!reports' key='loading'></loading-message>
 
-			<div class='admin_moderation__report admin_moderation__report--header'>
-				<div class='admin_moderation__report__post admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
-					Post and thread reported
-				</div>
-				<div class='admin_moderation__report__reason admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>Report reason</div>
-				<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
-					Reported by user
-				</div>
-				<div class='admin_moderation__report__actions'>
-					Actions
-				</div>
-			</div>				
+			<div
+				class='admin_moderation__reports'
+				v-else-if='reports.length'
+				key='reports'
+			>
 
-			<div class='admin_moderation__report' v-for='(report, $index) in reports'>
-				<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
-					<div class='admin_moderation__report__post__header'>
-						<div class='admin_moderation__report__post__thread'>{{report.Post.Thread.name}}</div>
-						<div class='admin_moderation__report__post__user'>{{report.Post.User.username}}</div>
+				<div class='admin_moderation__report admin_moderation__report--header'>
+					<div class='admin_moderation__report__post admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
+						Post and thread reported
 					</div>
-					<div class='admin_moderation__report__post__content'>{{report.Post.content | stripTags | truncate(150)}}</div>
-				</div>
-				<div class='admin_moderation__report__reason admin_moderation__report--cell_border'>{{report.reason}}</div>
-				<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
-					<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='report.FlaggedByUser'></avatar-icon>
-					<div class='admin_moderation__report__flagged_by__text_info'>
-						<div class='admin_moderation__report__flagged_by__user'>{{report.FlaggedByUser.username}}</div>
-						<div class='admin_moderation__report__flagged_by__date'>{{report.createdAt| formatDate}}</div>
+					<div class='admin_moderation__report__reason admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>Report reason</div>
+					<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
+						Reported by user
 					</div>
-				</div>
-				<div class='admin_moderation__report__actions'>
-					<button class='button button--red' @click='removePost(report, $index)'>Remove post</button>
-					<menu-button
-						@delete='deleteReport(report.id, $index)'
-						@ban='banUser(report, $index)'
-						:options='reportMenuOptions'
-					>
-						<button class='button'>More options&hellip;</button>
-					</menu-button>
+					<div class='admin_moderation__report__actions'>
+						Actions
+					</div>
+				</div>				
+
+				<div class='admin_moderation__report' v-for='(report, $index) in reports'>
+					<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
+						<div class='admin_moderation__report__post__header'>
+							<div class='admin_moderation__report__post__thread'>{{report.Post.Thread.name}}</div>
+							<div class='admin_moderation__report__post__user'>{{report.Post.User.username}}</div>
+						</div>
+						<div class='admin_moderation__report__post__content'>{{report.Post.content | stripTags | truncate(150)}}</div>
+					</div>
+					<div class='admin_moderation__report__reason admin_moderation__report--cell_border'>{{report.reason}}</div>
+					<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
+						<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='report.FlaggedByUser'></avatar-icon>
+						<div class='admin_moderation__report__flagged_by__text_info'>
+							<div class='admin_moderation__report__flagged_by__user'>{{report.FlaggedByUser.username}}</div>
+							<div class='admin_moderation__report__flagged_by__date'>{{report.createdAt| formatDate}}</div>
+						</div>
+					</div>
+					<div class='admin_moderation__report__actions'>
+						<button class='button button--red' @click='removePost(report, $index)'>Remove post</button>
+						<menu-button
+							@delete='deleteReport(report.id, $index)'
+							@ban='banUser(report, $index)'
+							:options='reportMenuOptions'
+						>
+							<button class='button'>More options&hellip;</button>
+						</menu-button>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class='overlay_message' v-else>
-			<span class='fa fa-thumbs-up'></span>
-			No user reports
-		</div>
+
+			<div class='overlay_message' v-else key='no reports'>
+				<span class='fa fa-thumbs-up'></span>
+				No user reports
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -62,6 +71,7 @@
 	import FancyInput from '../FancyInput'
 	import SelectButton from '../SelectButton'
 	import MenuButton from '../MenuButton'
+	import LoadingMessage from '../LoadingMessage'
 	import AvatarIcon from '../AvatarIcon'
 	import ConfirmModal from '../ConfirmModal'
 	import ModerationHeader from '../ModerationHeader'
@@ -76,6 +86,7 @@
 			FancyInput,
 			SelectButton,
 			MenuButton,
+			LoadingMessage,
 			AvatarIcon,
 			ConfirmModal,
 			ModerationHeader
@@ -87,7 +98,7 @@
 					{ value: "Ban or block user", event: 'ban' },
 					{ value: "Remove thread" }
 				],
-				reports: [],
+				reports: null,
 
 				removePostObj: {
 					showConfirmModal: false,

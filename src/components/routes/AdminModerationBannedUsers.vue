@@ -5,37 +5,41 @@
 			<button class='button button--blue' @click='toggleShowAddNewBanModal'>Add new ban</button>
 		</div>
 
-		<table class='admin_moderation__table' v-if='bans.length'>
-			<tr>
-				<th>User</th>
-				<th>Ban type</th>
-				<th>Date banned</th>
-				<th>Message</th>
-				<th>Action</th>
-			</tr>
-			<tr v-for='(ban, $index) in bans'>
-				<td>{{ban.User.username}}</td>
-				<td>{{ban.type}}</td>
-				<td>{{ban.createdAt | formatDate}}</td>
-				<td>
-					<template v-if='ban.message'>{{ban.message}}</template>
-					<i v-else>No message given</i>
-				</td>
-				<td>
-					<button
-						class='button button--red'
-						@click='deleteBan(ban, $index)'
-					>
-						Delete ban
-					</button>
-				</td>
-			</tr>
-		</table>
+		<transition name='fade' mode='out-in'>
+			<loading-message v-if='!bans' key='loading'></loading-message>
 
-		<div class='overlay_message' v-else>
-			<span class='fa fa-thumbs-up'></span>
-			No banned users
-		</div>
+			<table class='admin_moderation__table' v-else-if='bans.length' key='bans'>
+				<tr>
+					<th>User</th>
+					<th>Ban type</th>
+					<th>Date banned</th>
+					<th>Message</th>
+					<th>Action</th>
+				</tr>
+				<tr v-for='(ban, $index) in bans'>
+					<td>{{ban.User.username}}</td>
+					<td>{{ban.type}}</td>
+					<td>{{ban.createdAt | formatDate}}</td>
+					<td>
+						<template v-if='ban.message'>{{ban.message}}</template>
+						<i v-else>No message given</i>
+					</td>
+					<td>
+						<button
+							class='button button--red'
+							@click='deleteBan(ban, $index)'
+						>
+							Delete ban
+						</button>
+					</td>
+				</tr>
+			</table>
+
+			<div class='overlay_message' v-else key='no bans'>
+				<span class='fa fa-thumbs-up'></span>
+				No banned users
+			</div>
+		</transition>
 
 		<modal-window v-model='$store.state.moderation.showAddNewBanModal' width='30rem'>
 			<div class='admin_moderation__add_new_ban_modal'>
@@ -95,6 +99,7 @@
 	import ConfirmModal from '../ConfirmModal'
 	import ModerationHeader from '../ModerationHeader'
 	import LoadingIcon from '../LoadingIcon'
+	import LoadingMessage from '../LoadingMessage'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 
@@ -109,16 +114,19 @@
 			AvatarIcon,
 			ConfirmModal,
 			ModerationHeader,
-			LoadingIcon
+			LoadingIcon,
+			LoadingMessage
 		},
 		data () {
 			return {
 				loading: false,
-				bans_: []
+				bans_: null
 			}
 		},
 		computed: {
 			bans () {
+				if(!this.bans_) return null
+
 				return this.bans_.map(ban => {
 					if(ban.ipBanned) {
 						ban.type = 'IP banned'
