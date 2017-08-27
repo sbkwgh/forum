@@ -1,10 +1,16 @@
 <template>
-	<div class='user_posts' :class='{ "user_posts--no_border_bottom": !posts.length }'>
+	<div class='user_posts' :class='{ "user_posts--no_border_bottom": posts && !posts.length }'>
 		<div class='user_posts__title'>Posts by {{username}}</div>
+
+		<template v-if='!posts'>
+			<thread-post-placeholder v-if='!posts'>
+			</thread-post-placeholder>
+		</template>
+
 		<scroll-load
 			:loading='loadingPosts'
 			@loadNext='loadNewPosts'
-			v-if='posts.length'
+			v-else-if='posts.length'
 		>
 			<thread-post
 				v-for='(post, index) in posts'
@@ -15,7 +21,7 @@
 			<thread-post-placeholder
 				v-if='loadingPosts'
 				v-for='n in nextPostsCount'
-			>
+			></thread-post-placeholder>
 		</scroll-load>
 		<template v-else>This user hasn't posted anything yet</template>
 	</div>
@@ -38,7 +44,7 @@
 		},
 		data () {
 			return {
-				posts: [],
+				posts: null,
 				loadingPosts: false,
 				nextPostsCount: 0,
 				nextURL: ''
@@ -54,6 +60,8 @@
 					.get(this.nextURL)
 					.then(res => {
 						this.loadingPosts = false
+
+						if(!this.posts) this.posts = []
 
 						let currentPostsIds = this.posts.map(p => p.id)
 						let filteredPosts =

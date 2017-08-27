@@ -1,12 +1,19 @@
 <template>
 	<div class='user_threads'>
 		<div class='user_threads__title'>Threads by {{username}}</div>
+
+		<template v-if='!threads'>
+			<thread-display-placeholder v-for='n in 10'>
+			</thread-display-placeholder>
+		</template>
+		
+
 		<scroll-load
 			:loading='loadingThreads'
 			:showNext='nextURL !== null'
 			@loadNext='loadNewThreads'
 			message='threads'
-			v-if='threads.length'
+			v-else-if='threads.length'
 		>
 			<thread-display v-for='thread in threads' :thread='thread'></thread-display>
 			<thread-display-placeholder
@@ -14,6 +21,7 @@
 				v-for='n in nextThreadsCount'
 			></thread-display-placeholder>
 		</scroll-load>
+
 		<template v-else>This user hasn't started any threads yet</template>
 	</div>
 </template>
@@ -35,7 +43,7 @@
 		},
 		data () {
 			return {
-				threads: [],
+				threads: null,
 				loadingThreads: false,
 				nextURL: '',
 				nextThreadsCount: 0
@@ -51,6 +59,8 @@
 					.get(this.nextURL)
 					.then(res => {
 						this.loadingThreads = false
+
+						if(!this.threads) this.threads = []
 
 						this.threads.push(...res.data.Threads)
 						this.nextURL = res.data.meta.nextURL
