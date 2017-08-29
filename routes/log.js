@@ -67,6 +67,17 @@ router.post('/', async (req, res) => {
 	}
 })
 
+router.all('*', (req, res, next) => {
+	if(req.session.admin) {
+		next()
+	} else {
+		res.status(401)
+		res.json({
+			errors: [Errors.requestNotAuthorized]
+		})
+	}
+})
+
 router.get('/top-threads', async (req, res) => {
 	try {
 		let logs = await Log.findAll({

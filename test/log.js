@@ -252,7 +252,7 @@ describe('Log', () => {
 		})
 
 		it('should return top 3 threads', async () => {
-			let res = await user.get('/api/v1/log/top-threads')
+			let res = await admin.get('/api/v1/log/top-threads')
 
 			res.body[0].should.have.deep.property('Thread.name', 'thread3')
 			res.body[1].should.have.deep.property('Thread.name', 'thread')
@@ -262,6 +262,20 @@ describe('Log', () => {
 			//6 because there was a previous log to the thread in previous test
 			res.body[1].should.have.property('pageViews', 6)
 			res.body[2].should.have.property('pageViews', 3)
+		})
+
+		it('should return an error if not an admin', done => {
+			user
+				.get('/api/v1/log/top-threads')
+				.end((err, res) => {
+					res.should.have.status(401)
+					
+					res.body.errors.should.contain.something.that.deep.equals(
+						Errors.requestNotAuthorized
+					)
+
+					done()
+				})
 		})
 	})
 
