@@ -21,7 +21,7 @@
 				<div class='admin_dashboard__card__title'>Top threads by page views today</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--3'>
-				<line-chart background='#84dec0' point='#1da8ce' tooltip='new user' :points='[]'></line-chart>
+				<new-users-chart></new-users-chart>
 				<div class='admin_dashboard__card__title'>New users over the past week</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2 admin_dashboard__card--hidden'></div>
@@ -32,8 +32,8 @@
 
 <script>
 	import NewPosts from '../widgets/NewPosts'
-	import LineChart from '../widgets/LineChart'
 	import PageViewsChart from '../widgets/PageViewsChart'
+	import NewUsersChart from '../widgets/NewUsersChart'
 	import CategoriesChart from '../widgets/CategoriesChart'
 	import TopPosts from '../widgets/TopPosts'
 
@@ -41,8 +41,8 @@
 		name: 'AdminDashboard',
 		components: {
 			NewPosts,
-			LineChart,
 			PageViewsChart,
+			NewUsersChart,
 			CategoriesChart,
 			TopPosts
 		},
