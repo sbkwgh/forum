@@ -5,7 +5,7 @@
 		</div>
 		<div class='widgets__new_post__main'>
 			<template v-if='count'>
-				{{count}} new {{count | pluralize('post')}}
+				{{count}} new {{count | pluralize('thread')}}
 			</template>
 			<template v-else>
 				No new posts
@@ -31,20 +31,27 @@
 <script>
 	import LoadingIcon from '../LoadingIcon'
 
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
+
 	export default {
 		name: 'NewPosts',
 		components: { LoadingIcon },
 		data () {
 			return {
 				loading: true,
-				count: 1,
-				change: -2,
+				count: 0,
+				change: 0,
 			}
 		},
 		created () {
-			setTimeout(() => {
-				this.loading = false;
-			}, Math.random*3000)
+			this.axios
+				.get('/api/v1/log/new-thread')
+				.then(res => {
+					this.count = res.data.count
+					this.change = res.data.change
+					this.loading = false
+				})
+				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>
@@ -70,7 +77,7 @@
 		}
 
 		@at-root #{&}__main {
-			font-size: 2.5rem;
+			font-size: 2.3rem;
 			font-family: $font--role-emphasis;
 		}
 
