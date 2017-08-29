@@ -128,6 +128,7 @@
 	import LoadingButton from '../LoadingButton'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 
 	import throttle from 'lodash.throttle'
 
@@ -246,30 +247,32 @@
 				}
 			},
 			scrollTo (postNumber, cb) {
-				let getScrollTopPosition = i => {
-					let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
-					let header = this.$refs.title.getBoundingClientRect().height
-					
-					return window.pageYOffset + postTop - header - 32
-				}
-
-				let scroll = (i) => {
-					let post = this.posts[i]
-					window.scrollTo(0, getScrollTopPosition(i))
-					if(cb) cb(i, post)
-				}
-
-				for(var i = 0; i < this.posts.length; i++) {
-					if(this.posts[i].postNumber === postNumber) {
-						if(this.$refs.posts) {
-							scroll(i)
-						} else {
-							this.$nextTick(_ => scroll(i))
-						}
-
-						break;
+				this.$nextTick(() => {
+					let getScrollTopPosition = i => {
+						let postTop = this.$refs.posts[i].$el.getBoundingClientRect().top
+						let header = this.$refs.title.getBoundingClientRect().height
+						
+						return window.pageYOffset + postTop - header - 32
 					}
-				}
+
+					let scroll = (i) => {
+						let post = this.posts[i]
+						window.scrollTo(0, getScrollTopPosition(i))
+						if(cb) cb(i, post)
+					}
+
+					for(var i = 0; i < this.posts.length; i++) {
+						if(this.posts[i].postNumber === postNumber) {
+							if(this.$refs.posts) {
+								scroll(i)
+							} else {
+								this.$nextTick(_ => scroll(i))
+							}
+
+							break;
+						}
+					}
+				})
 			},
 			highlightPost (postNumber) {
 				this.scrollTo(postNumber, (i) => {
@@ -340,6 +343,8 @@
 				this.showPostNotification(post)
 				this.$store.dispatch('loadNewPostsSinceLoad', post)
 			})
+
+			logger('thread', this.$route.params.id)
 		},
 		destroyed () {
 			socket.emit('leave', 'thread/' + this.$route.params.id)

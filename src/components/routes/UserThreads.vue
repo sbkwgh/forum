@@ -32,6 +32,7 @@
 	import ThreadDisplayPlaceholder from '../ThreadDisplayPlaceholder'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 
 	export default {
 		name: 'userThreads',
@@ -84,6 +85,8 @@
 					this.nextThreadsCount = res.data.meta.nextThreadsCount
 				})
 				.catch(AjaxErrorHandler(this.$store))
+
+			logger('userThreads', this.$route.params.username)
 		}
 	}
 </script>

@@ -45,6 +45,7 @@
 	import LoadingButton from '../LoadingButton'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 	
 	export default {
 		name: 'ThreadNew',
@@ -129,6 +130,7 @@
 		},
 		mounted () {
 			this.$store.dispatch('setTitle', 'new thread')
+			logger('threadNew')
 		},
 		beforeRouteEnter (to, from, next) {
 			next(vm => {

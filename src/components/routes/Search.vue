@@ -48,6 +48,7 @@
 	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 
 	export default {
 		name: 'Search',
@@ -123,6 +124,8 @@
 		mounted () {
 			this.$store.dispatch('setTitle', 'Search | ' + this.$route.params.q)
 			this.getResults()
+
+			logger('search')
 		}
 	}
 </script>

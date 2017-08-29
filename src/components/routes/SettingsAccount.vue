@@ -54,6 +54,7 @@
 	import ConfirmModal from '../ConfirmModal'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 
 	export default {
 		name: 'settingsAccount',
@@ -140,6 +141,8 @@
 		},
 		mounted () {
 			this.$store.dispatch('setTitle', 'account settings')
+
+			logger('settingsAccount')
 		}
 	}
 </script>

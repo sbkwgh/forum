@@ -77,6 +77,7 @@
 	import SelectOptions from '../SelectOptions'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 
 	export default {
 		name: 'index',
@@ -230,6 +231,8 @@
 				this.$store.commit('setAccountTabs', 0)
 				this.$store.commit('setAccountModalState', true)
 			}
+
+			logger('index')
 		},
 		destroyed () {
 			socket.emit('leave', 'index')

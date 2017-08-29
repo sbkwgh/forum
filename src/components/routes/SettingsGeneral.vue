@@ -28,6 +28,7 @@
 	import LoadingButton from '../LoadingButton'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 
 	export default {
 		name: 'settingsGeneral',
@@ -79,6 +80,8 @@
 						AjaxErrorHandler(this.$store)(e)
 					})
 			})
+
+			logger('settingsGeneral')
 		}
 	}
 </script>

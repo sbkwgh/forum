@@ -34,6 +34,7 @@
 	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
+	import logger from '../../assets/js/logger'
 
 	export default {
 		name: 'user',
@@ -90,6 +91,8 @@
 					this.nextPostsCount = res.data.meta.nextPostsCount
 				})
 				.catch(AjaxErrorHandler(this.$store))
+
+			logger('userPosts', this.$route.params.username)
 		}
 	}
 </script>

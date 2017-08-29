@@ -16,7 +16,7 @@
 			@click.stop='toggleSelected'
 		></span>
 
-		<modal-window v-model='showShareModal'>
+		<modal-window v-model='showShareModal' @click.stop='() => {}'>
 			<div style='padding: 0rem 1rem 1rem 1rem;'>
 				<p>Copy this URL to share the post</p>
 				<fancy-input placeholder='Post URL' :value='postURL' width='100%'></fancy-input>
@@ -28,7 +28,10 @@
 
 		<div class='post__meta_data'>
 			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
-			<div class='post__thread' v-if='showThread' @click.stop='goToThread'>{{post.Thread.name}}</div>
+			<div class='post__thread' v-if='showThread' @click.stop='goToThread'>
+				In thread <span class='post__thread__name'>{{post.Thread.name}}</span>
+				&nbsp;&middot;&nbsp;
+			</div>
 			<div class='post__user' v-else>{{username}}</div>
 			<replying-to
 				style='margin-right: 0.5rem;'
@@ -252,12 +255,15 @@
 			margin-right: 0.5rem;
 		}
 		@at-root #{&}__thread {
-			@include text($font--role-default, 1rem, 400);
-			margin-right: 0.5rem;
-			cursor: pointer;
+			color: $color__text--secondary;
+		
+			@at-root #{&}__name {
+				cursor: pointer;
+				@include text($font--role-default, 1rem, 600);
 
-			&:hover {
-				color: $color__darkgray--primary;
+				&:hover {
+					color: $color__darkgray--primary;
+				}
 			}
 		}
 		@at-root #{&}__date {
