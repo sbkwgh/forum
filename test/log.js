@@ -54,10 +54,25 @@ describe('Log', () => {
 					.set('content-type', 'application/json')
 					.send({ category: 'CATEGORY', name: 'thread' })
 
-					await admin
-						.post('/api/v1/post')
-						.set('content-type', 'application/json')
-						.send({ threadId: 1, content: 'post' })
+				await admin
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ category: 'CATEGORY', name: 'thread2' })
+
+				await admin
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ category: 'CATEGORY', name: 'thread3' })
+
+				await admin
+					.post('/api/v1/thread')
+					.set('content-type', 'application/json')
+					.send({ category: 'CATEGORY', name: 'thread4' })
+
+				await admin
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({ threadId: 1, content: 'post' })
 
 				return true
 			} catch (e) {
@@ -195,6 +210,59 @@ describe('Log', () => {
 				})
 		})
 
+	})
+
+	describe('GET /top-threads', () => {
+		before(async () => {
+			try {
+				let requests = []
+
+				for(let i = 0; i < 5; i++) {
+					requests.push(user
+						.post('/api/v1/log')
+						.set('content-type', 'application/json')
+						.send({ route: 'thread', resourceId: 1 }))
+				}
+
+				for(let i = 0; i < 3; i++) {
+					requests.push(user
+						.post('/api/v1/log')
+						.set('content-type', 'application/json')
+						.send({ route: 'thread', resourceId: 2 }))
+				}
+
+				for(let i = 0; i < 7; i++) {
+					requests.push(user
+						.post('/api/v1/log')
+						.set('content-type', 'application/json')
+						.send({ route: 'thread', resourceId: 3 }))
+				}
+
+				requests.push(user
+					.post('/api/v1/log')
+					.set('content-type', 'application/json')
+					.send({ route: 'thread', resourceId: 4 }))
+
+				await Promise.all(requests)
+
+				return true
+			} catch (e) {
+				return e
+			}
+		})
+
+		it('should return top 3 threads', async () => {
+			let res = await user.get('/api/v1/log/top-threads')
+
+			res.body[0].should.have.deep.property('Thread.name', 'thread3')
+			res.body[1].should.have.deep.property('Thread.name', 'thread')
+			res.body[2].should.have.deep.property('Thread.name', 'thread2')
+
+			res.body[0].should.have.property('pageViews', 7)
+			//6 because there was a previous log to the thread in previous test
+			res.body[1].should.have.property('pageViews', 6)
+			res.body[2].should.have.property('pageViews', 3)
+		})
 	})
 
 	after(() => sequelize.sync({ force: true }))

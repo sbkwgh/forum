@@ -61,9 +61,59 @@ router.post('/', async (req, res) => {
 
 			res.status(500)
 			res.json({
-				errors: Errors.unknown
+				errors: [Errors.unknown]
 			})
 		}
+	}
+})
+
+router.get('/top-threads', async (req, res) => {
+	try {
+		let logs = await Log.findAll({
+			where: {
+				createdAt: {
+					$gt: new Date(Date.now() - 1000*60*60*24)
+				},
+				route: 'thread'
+			},
+			include: [Thread]
+		})
+
+		//Sum each log for a thread
+		let pageViewsObj = logs.reduce((obj, log) => {
+			if(!obj[log.Thread.id]) {
+				obj[log.Thread.id] = { Thread: log.Thread, pageViews: 1 }
+			} else {
+				obj[log.Thread.id].pageViews++
+			}
+
+			return obj
+		}, {})
+
+		//Transform to array
+		let pageViewsArr = Object.keys(pageViewsObj).map(id => {
+			return pageViewsObj[id]
+		})
+
+		//Sort by number of page views descending
+		let sortedPageViewsArr = pageViewsArr.sort((a, b) => {
+			if(a.pageViews < b.pageViews) {
+				return 1
+			} else if (a.pageViews > b.pageViews) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+
+		//Return top 3
+		res.json(sortedPageViewsArr.slice(0, 3))
+
+	} catch (e) {
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
 	}
 })
 
