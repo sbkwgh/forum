@@ -257,11 +257,13 @@ describe('Log', () => {
 			res.body[0].should.have.deep.property('Thread.name', 'thread3')
 			res.body[1].should.have.deep.property('Thread.name', 'thread')
 			res.body[2].should.have.deep.property('Thread.name', 'thread2')
+			res.body[3].should.have.deep.property('Thread.name', 'thread4')
 
 			res.body[0].should.have.property('pageViews', 7)
 			//6 because there was a previous log to the thread in previous test
 			res.body[1].should.have.property('pageViews', 6)
 			res.body[2].should.have.property('pageViews', 3)
+			res.body[3].should.have.property('pageViews', 1)
 		})
 
 		it('should return an error if not an admin', done => {

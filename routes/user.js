@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
 router.get('/:username', async (req, res) => {
 	try {
 		let queryObj = {
-			attributes: { exclude: ['hash', 'id'] },
+			attributes: { exclude: ['hash'] },
 			where: { username: req.params.username }
 		}
 
