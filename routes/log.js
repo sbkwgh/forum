@@ -246,4 +246,38 @@ router.get('/categories', async (req, res) => {
 	}
 })
 
+router.get('/new-thread', async (req, res) => {
+	try {
+		let now = Date.now()
+
+		let threadsTodayCount = await Thread.count({
+			where: {
+				createdAt: {
+					$gt: new Date(now - 1000*60*60*24)
+				}
+			}
+		})
+		let threadsYesterdayCount = await Thread.count({
+			where: {
+				createdAt: {
+					$lt: new Date(now - 1000*60*60*24),
+					$gt: new Date(now - 1000*60*60*24*2)
+				}
+			}
+		})
+
+		res.json({
+			count: threadsTodayCount,
+			change: threadsTodayCount - threadsYesterdayCount
+		})
+	} catch (e) {
+		console.log(e)
+
+		res.status(500)
+		res.json({
+			errors: [Errors.unknown]
+		})
+	}
+})
+
 module.exports = router
