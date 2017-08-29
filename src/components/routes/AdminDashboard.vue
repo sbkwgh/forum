@@ -8,7 +8,7 @@
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2'>
 				<new-posts></new-posts>
-				<div class='admin_dashboard__card__title'>New posts in the last 24 hours</div>
+				<div class='admin_dashboard__card__title'>New threads in the last 24 hours</div>
 			</div>
 			<div class='admin_dashboard__card admin_dashboard__card--2'>
 				<categories-chart></categories-chart>
