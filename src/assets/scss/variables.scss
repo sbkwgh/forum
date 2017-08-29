@@ -78,6 +78,12 @@ $color__lightblue--primary: #03A9F4;
 		opacity: 1;
 		pointer-events: all;
 	}
+
+	@at-root #{&}__message {
+		font-size: 1.5rem;
+		color: #fff;
+		font-style: italic;
+	}
 }
 
 @mixin text($family: $font--role-default, $size: 1rem, $weight: 300) {

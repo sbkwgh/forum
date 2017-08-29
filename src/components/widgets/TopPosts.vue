@@ -1,25 +1,32 @@
 <template>
 	<div class='widgets__top_posts'>
-		<div class='widgets__top_posts__overlay' :class='{ "widgets__top_posts__overlay--show" : loading }'>
-			<loading-icon></loading-icon>
-		</div>
+		
 
-		<div
-			class='widgets__top_posts__item'
-			:class='"widgets__top_posts__item--" + $index'
-			v-for='(thread, $index) in data'
-
-			@click='goToThread(thread)'
-		>
-			<div class='widgets__top_posts__item__number' v-if='thread.Thread'>{{$index + 1}}</div>
-			<div class='widgets__top_posts__item__info'>
-				<div class='widgets__top_posts__item__title'>
-					<template v-if='thread.Thread'>{{thread.Thread.name}}</template>
-				</div>
-				<div class='widgets__top_posts__item__views' v-if='thread.Thread'>
-					{{thread.pageViews}} {{thread.pageViews | pluralize('page view')}}
+		<template v-if='data_.length'>
+			<div
+				class='widgets__top_posts__item'
+				:class='"widgets__top_posts__item--" + $index'
+				v-for='(thread, $index) in data'
+				@click='goToThread(thread)'
+			>
+				<div class='widgets__top_posts__item__number' v-if='thread.Thread'>{{$index + 1}}</div>
+				<div class='widgets__top_posts__item__info'>
+					<div class='widgets__top_posts__item__title'>
+						<template v-if='thread.Thread'>{{thread.Thread.name}}</template>
+					</div>
+					<div class='widgets__top_posts__item__views' v-if='thread.Thread'>
+						{{thread.pageViews}} {{thread.pageViews | pluralize('page view')}}
+					</div>
 				</div>
 			</div>
+		</template>
+
+		<div class='widgets__top_posts__overlay widgets__top_posts__overlay--show' v-else>
+			<div class='widgets__top_posts__overlay__message'>No threads today</div>
+		</div>
+
+		<div class='widgets__top_posts__overlay' :class='{ "widgets__top_posts__overlay--show" : loading }'>
+			<loading-icon></loading-icon>
 		</div>
 	</div>
 </template>
@@ -90,7 +97,7 @@
 
 
 		@at-root #{&}__overlay {
-			@include loading-overlay(rgb(160, 160, 160), 0.25rem 0.25rem 0 0);
+			@include loading-overlay($color__gray--darkest, 0.25rem 0.25rem 0 0);
 		}
 
 		@at-root #{&}__item {
