@@ -7,8 +7,10 @@
 			class='widgets__line_chart__tooltip'
 			:class='{ "widgets__line_chart__tooltip--show": tooltipShow }'
 			:style='{ "left": tooltipX, "top": tooltipY }'
+
+			v-if='points.length'
 		>
-			{{data[tooltipItem].pageViews}} {{data[tooltipItem].pageViews | pluralize(tooltip) }}
+			{{points[tooltipItem].pageViews}} {{points[tooltipItem].pageViews | pluralize(tooltip) }}
 		</div>
 		<svg>
 			<g
@@ -53,19 +55,9 @@
 
 	export default {
 		name: 'LineChart',
-		props: ['point', 'background', 'tooltip'],
+		props: ['point', 'background', 'tooltip', 'points'],
 		components: { LoadingIcon },
 		data () {
-			let data = [
-				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 26) },
-				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 27) },
-				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 28) },
-				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 29) },
-				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 5, 30) },
-				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 6, 1) },
-				{ pageViews: Math.floor(Math.random() * 100), date: new Date(2017, 6, 2) }
-			]
-
 			let x = d3
 				.scaleTime()
 				.domain([0, 0])
@@ -86,7 +78,7 @@
 				tooltipShow: false,
 				tooltipItem: 0,
 
-				data, x, y,
+				x, y,
 			}
 		},
 		methods: {
@@ -95,7 +87,7 @@
 
 				this.x = d3
 					.scaleTime()
-					.domain([this.data[0].date, this.data.slice(-1)[0].date])
+					.domain([this.points[0].date, this.points.slice(-1)[0].date])
 					.range([this.padding * 4, width])
 			},
 			setYFunc () {
@@ -103,15 +95,17 @@
 
 				this.y = d3
 					.scaleLinear()
-					.domain([d3.max(this.data.map(d => d.pageViews)), 0])
+					.domain([d3.max(this.points.map(d => d.pageViews)), 0])
 					.range([this.padding*1.5, height - this.padding/2])
 			},
 			updateFuncs () {
+				if(!this.points.length) return
+
 				this.setXFunc()
 				this.setYFunc()
 			
 				d3.select(this.$refs.y_axis).call(d3.axisLeft(this.y.nice()))
-				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0).ticks(this.data.length))
+				d3.select(this.$refs.x_axis).call(d3.axisBottom(this.x).tickSize(0).ticks(this.points.length))
 			},
 			showTooltip (e, i) {
 				this.tooltipShow = true
@@ -131,25 +125,25 @@
 					.x(d => this.x(d.date))
 					.y(d => this.y(d.pageViews))
 
-				return line(this.data)
+				return line(this.points)
 			},
 			circles () {
-				return this.data.map(d => {
+				return this.points.map(d => {
 					return { x: this.x(d.date), y: this.y(d.pageViews) }
 				})
 			}
 		},
 		mounted () {
-			this.updateFuncs()
-
 			window.addEventListener('resize', this.updateFuncs)
-
-			setTimeout(() => {
-				this.loading = false;
-			}, Math.random()*3000)
 		},
 		destroyed () {
 			window.removeEventListener('resize', this.updateFuncs)
+		},
+		watch: {
+			points () {
+				this.loading = false
+				this.updateFuncs()
+			}
 		}
 	}
 </script>
