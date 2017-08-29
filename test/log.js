@@ -36,7 +36,7 @@ describe('Log', () => {
 						admin: true
 					})
 
-				await admin
+				await user
 					.post('/api/v1/user')
 					.set('content-type', 'application/json')
 					.send({
@@ -75,8 +75,8 @@ describe('Log', () => {
 			res.should.be.json
 			res.body.should.have.property('id', 1)
 			res.body.should.have.property('route', 'index')
-			res.body.should.have.property('UserId', null)
-			res.body.should.have.property('ThreadId', null)
+			res.body.should.not.have.property('UserId')
+			res.body.should.not.have.property('ThreadId')
 
 			let log = await Log.findById(res.body.id)
 			log.should.not.be.null
@@ -112,13 +112,13 @@ describe('Log', () => {
 			let res = await chai.request(server)
 				.post('/api/v1/log')
 				.set('content-type', 'application/json')
-				.send({ route: 'thread', resourceId: 1 })
+				.send({ route: 'userPosts', resourceId: 1 })
 
 			res.should.have.status(200)
 			res.should.be.json
 
 			let log = await Log.findById(res.body.id)
-			log.should.have.property('route', 'thread')
+			log.should.have.property('route', 'userPosts')
 			log.should.have.property('UserId', 1)
 		})
 
@@ -166,6 +166,30 @@ describe('Log', () => {
 				.end((err, res) => {
 					res.should.have.status(400)
 					res.body.errors.should.contain.something.with.property('message', 'user does not exist')
+
+					done()
+				})
+		})
+		it('should return an error if not logged in for settingsAccount route', done => {
+			chai.request(server)
+				.post('/api/v1/log')
+				.set('content-type', 'application/json')
+				.send({ route: 'settingsAccount' })
+				.end((err, res) => {
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+					done()
+				})
+		})
+		it('should return an error if not logged in for settingsGeneral route', done => {
+			chai.request(server)
+				.post('/api/v1/log')
+				.set('content-type', 'application/json')
+				.send({ route: 'settingsGeneral' })
+				.end((err, res) => {
+					res.should.have.status(401)
+					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
 					done()
 				})

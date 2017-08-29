@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 			validate: {
 				isIn: {
 					args: [routes],
-					msg: "Route does not exist"
+					msg: "route does not exist"
 				}
 			}
 		}
