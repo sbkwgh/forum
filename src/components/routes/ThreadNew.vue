@@ -99,7 +99,7 @@
 					})
 				}).then(res => {
 					this.loading = false
-					this.$router.push(`/thread/${res.data.Thread.slug}/${res.data.Thread.id}`)
+					this.$router.push(`/thread/${res.data.Thread.slug}/${res.data.Thread.id}/0`)
 				}).catch(e => {
 					this.loading = false
 
