@@ -8,12 +8,16 @@
 			class='widgets__top_posts__item'
 			:class='"widgets__top_posts__item--" + $index'
 			v-for='(thread, $index) in data'
+
+			@click='goToThread(thread)'
 		>
-			<div class='widgets__top_posts__item__number' v-if='thread.title'>{{$index + 1}}</div>
+			<div class='widgets__top_posts__item__number' v-if='thread.Thread'>{{$index + 1}}</div>
 			<div class='widgets__top_posts__item__info'>
-				<div class='widgets__top_posts__item__title'>{{thread.title}}</div>
-				<div class='widgets__top_posts__item__views' v-if='thread.title'>
-					{{thread.views}} {{thread.views | pluralize('page view')}}
+				<div class='widgets__top_posts__item__title'>
+					<template v-if='thread.Thread'>{{thread.Thread.name}}</template>
+				</div>
+				<div class='widgets__top_posts__item__views' v-if='thread.Thread'>
+					{{thread.pageViews}} {{thread.pageViews | pluralize('page view')}}
 				</div>
 			</div>
 		</div>
@@ -23,6 +27,8 @@
 <script>
 	import LoadingIcon from '../LoadingIcon'
 
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
+
 	export default {
 		name: 'TopPosts',
 		components: { LoadingIcon },
@@ -30,11 +36,7 @@
 			return {
 				loading: true,
 
-				data_: [
-					{ title: 'Post title here', views: 20 },
-					{ title: 'Another', views: 18 },
-					{ title: 'Lorem ipsum dolor sit amet loremp', views: 10 }
-				]
+				data_: []
 			}
 		},
 		computed: {
@@ -52,10 +54,25 @@
 				return ret
 			}
 		},
+		methods: {
+			goToThread (thread) {
+				if(thread.Thread) {
+					this.$router.push(
+						'/thread/' +
+						thread.Thread.slug + '/' +
+						thread.Thread.id
+					)
+				}
+			}
+		},
 		created () {
-			setTimeout(() => {
-				this.loading = false;
-			}, Math.random()*3000)
+			this.axios
+				.get('/api/v1/log/top-threads')
+				.then(res => {
+					this.data_ = res.data
+					this.loading = false
+				})
+				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>
