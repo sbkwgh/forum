@@ -416,6 +416,10 @@
 		@include user-select(none);
 		cursor: pointer;
 		background: none;
+
+		&:hover, &:visited, &:active {
+			color: $color__text--primary;
+		}
 	}
 
 	.search {
