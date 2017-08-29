@@ -1,7 +1,7 @@
 <template>
 	<div class='widgets__categories_chart' ref='container'>
 		<div class='widgets__categories_chart__overlay' :class='{ "widgets__categories_chart__overlay--show" : loading }'>
-			<loading-icon></loading-icon>
+			<loading-icon :dark='true'></loading-icon>
 		</div>
 		<div
 			class='widgets__categories_chart__tooltip'
@@ -32,6 +32,8 @@
 <script>
 	import LoadingIcon from '../LoadingIcon'
 
+	import AjaxErrorHandler from '../../assets/js/errorHandler'
+
 	import * as d3 from 'd3'
 	import throttle from 'lodash.throttle'
 
@@ -39,20 +41,6 @@
 		name: 'CategoriesChart',
 		components: { LoadingIcon },
 		data () {
-			let data_ = [
-				{ label: 'category 1', value: 0 },
-				{ label: 'category 2', value: 2 },
-				{ label: 'category 3', value: 3 },
-				{ label: 'category 4', value: 4 },
-				{ label: 'category 5', value: 5 }
-			]
-
-			let colors = d3
-				.scaleLinear()
-				.domain([0, data_.length])
-				.interpolate(d3.interpolateHcl)
-				.range(['#415f9c', '#4bd9ff'])
-
 			return {
 				loading: true,
 				padding: 20,
@@ -62,21 +50,13 @@
 				tooltipShow: false,
 				tooltipItem: 0,
 
-				colors,
-				data_
-			}
-		},
-		computed: {
-			data () {
-				return this.data_.map((d, i) => {
-					d.color = this.colors(i)
-
-					return d
-				})
+				data: []
 			}
 		},
 		methods: {
 			updateFuncs () {
+				if(!this.data.length) return
+
 				let height = this.$refs.container.getBoundingClientRect().height
 
 				let paddedHeight = (height - this.padding) / 2
@@ -96,7 +76,7 @@
 					.append('path')
 					.attr('d', arcGenerator)
 					.attr('data-index', (d, i) => i)
-					.attr('fill', (d, i) => this.colors(i))
+					.attr('fill', (d, i) => this.data[i].color)
 
 				let labels = g.selectAll('text')
 					.data(pieSegments)
@@ -133,12 +113,16 @@
 			}
 		},
 		mounted () {
-			this.updateFuncs()
 			window.addEventListener('resize', this.updateFuncs)
 
-			setTimeout(() => {
-				this.loading = false;
-			}, Math.random()*3000)
+			this.axios
+				.get('/api/v1/log/categories')
+				.then(res => {
+					this.data = res.data
+					this.updateFuncs()
+					this.loading = false
+				})
+				.catch(AjaxErrorHandler(this.$store))
 		},
 		destroyed () {
 			window.removeEventListener('resize', this.updateFuncs)
@@ -150,7 +134,7 @@
 	@import '../../assets/scss/variables.scss';
 
 	.widgets__categories_chart {
-		background-color: rgba(225, 245, 254, 0.5);
+		background-color: #fff;
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
@@ -158,7 +142,7 @@
 		position: relative;
 
 		@at-root #{&}__overlay {
-			@include loading-overlay(rgb(225, 245, 254), 0.25rem 0.25rem 0 0);
+			@include loading-overlay(#fff, 0.25rem 0.25rem 0 0);
 		}
 
 		@at-root #{&}__main {
