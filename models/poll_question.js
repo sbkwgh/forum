@@ -21,9 +21,8 @@ module.exports = (sequelize, DataTypes) => {
 		classMethods: {
 			associate (models) {
 				PollQuestion.belongsTo(models.User)
-				PollQuestion.hasMany(models.PollAnswer, {
-					foreignKey: { name: 'question_id' }
-				})
+				PollQuestion.hasMany(models.PollAnswer)
+				PollQuestion.hasMany(models.PollVote)
 			}
 		}
 	})

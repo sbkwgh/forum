@@ -1,7 +1,7 @@
 let express = require('express')
 let router = express.Router()
 
-let { PollAnswer, PollQuestion, User, Sequelize } = require('../models')
+let { PollAnswer, PollQuestion, PollVote, User, Sequelize } = require('../models')
 const Errors = require('../lib/errors')
 
 router.all('*', (req, res, next) => {
@@ -49,6 +49,50 @@ router.post('/', async (req, res) => {
 
 		res.json(pollQuestion.toJSON())
 
+	} catch (e) {
+		if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
+router.post('/:id', async (req, res) => {
+	try {
+		let previousVote = await PollVote.findOne({
+			where: { PollQuestionId: req.params.id, UserId: req.session.UserId }
+		})
+		if(previousVote) throw Errors.sequelizeValidation(Sequelize, {
+			error: 'you cannot vote twice',
+			value: req.params.id
+		})
+
+		let poll = await PollQuestion.findById(req.params.id, {
+			include: [PollAnswer]
+		})
+		if(!poll) throw Errors.sequelizeValidation(Sequelize, {
+			error: 'invalid poll id',
+			value: req.params.id
+		})
+
+		let pollAnswer = poll.PollAnswers.find(a => a.answer === req.body.answer)
+		if(!pollAnswer) throw Errors.sequelizeValidation(Sequelize, {
+			error: 'invalid answer',
+			value: req.body.answer
+		})
+
+		let pollVote = await PollVote.create({ UserId: req.session.UserId })
+		await pollVote.setPollQuestion(poll)
+		await pollVote.setPollAnswer(pollAnswer)
+
+		res.json(pollVote.toJSON())
 	} catch (e) {
 		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)
