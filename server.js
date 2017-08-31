@@ -41,6 +41,7 @@ app.use('/api/v1/report', require('./routes/report'))
 app.use('/api/v1/ban', require('./routes/ban'))
 app.use('/api/v1/search', require('./routes/search'))
 app.use('/api/v1/log', require('./routes/log'))
+app.use('/api/v1/poll', require('./routes/poll'))
 
 sequelize
 	.sync({ force: true })
