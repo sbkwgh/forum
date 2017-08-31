@@ -81,7 +81,7 @@
 				</div>
 
 				<div>
-					<button class='button button--modal' @click='toggleShowAddNewBanModal'>Cancel</button>
+					<button class='button button--modal button--borderless' @click='toggleShowAddNewBanModal'>Cancel</button>
 					<button class='button button--modal button--green' @click='addBan'>Add ban</button>
 				</div>
 			</div>

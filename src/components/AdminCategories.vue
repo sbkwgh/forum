@@ -15,7 +15,7 @@
 				<fancy-input v-model='add.name' placeholder='Category name'></fancy-input>
 				<input type='color' class='button button--color_input' v-model='add.color' />
 				<div class='admin_categories__modal__buttons'>
-					<button class='button button--modal' @click='toggleAddModal'>Cancel</button>
+					<button class='button button--modal button-borderless' @click='toggleAddModal'>Cancel</button>
 					<button class='button button--modal button--green' @click='addCategory'>Add category</button>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
 				<fancy-input v-model='edit.name' placeholder='Category name'></fancy-input>
 				<input type='color' class='button button--color_input' v-model='edit.color' />
 				<div class='admin_categories__modal__buttons'>
-					<button class='button button--modal' @click='toggleEditModal(null)'>Cancel</button>
+					<button class='button button--modal button--borderless' @click='toggleEditModal(null)'>Cancel</button>
 					<button class='button button--modal button--green' @click='editCategory'>Update category</button>
 				</div>
 			</div>
