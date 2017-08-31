@@ -51,3 +51,6 @@ jspm_packages
 
 # dotenv environment variables file
 .env
+
+# temp directory
+tmp

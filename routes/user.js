@@ -270,8 +270,6 @@ router.all('*', (req, res, next) => {
 
 router.get('/', async (req, res) => {
 	try {
-		console.log('here234')
-
 		if(req.query.admin) {
 			let admins = await User.findAll({
 				where: { admin: true },
