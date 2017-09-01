@@ -26,7 +26,7 @@ describe('Poll', () => {
 		})
 	})
 
-	describe('POST /', () => {
+	describe('Poll', () => {
 		before(async () => {
 			try {
 				let accounts = []
@@ -316,7 +316,83 @@ describe('Poll', () => {
 					done()
 			})
 		})
+
+		describe('GET /poll/:id', () => {
+			let pollId
+
+			before(async () => {
+				try {
+					let pollRes = await admin
+						.post('/api/v1/poll')
+						.set('content-type', 'application/json')
+						.send({
+							question: 'Do you like polls?',
+							answers: ['yes', 'no', 'meh']
+						})
+					pollId = pollRes.body.id
+
+					await user1
+						.post('/api/v1/poll/' + pollId)
+						.set('content-type', 'application/json')
+						.send({ answer: 'yes' })
+
+					await user2
+						.post('/api/v1/poll/' + pollId)
+						.set('content-type', 'application/json')
+						.send({ answer: 'yes' })
+
+					await user3
+						.post('/api/v1/poll/' + pollId)
+						.set('content-type', 'application/json')
+						.send({ answer: 'no' })
+
+					return true
+
+				} catch (e) {
+					console.log(e)
+					return e
+				}
+			})
+
+			it('should get the poll question and accompanying answers and votes', async () => {
+				let res = await user1.get('/api/v1/poll/' + pollId)
+			
+				res.should.be.json
+				res.should.have.status(200)	
+
+				res.body.should.have.property('question', 'Do you like polls?')
+				res.body.PollAnswers.should.have.property('length', 3)
+				res.body.should.have.property('totalVotes', 3)
+
+				res.body.should.have.deep.property('PollAnswers.0.answer', 'yes')
+				res.body.should.have.deep.property('PollAnswers.0.PollVotes.length', 2)
+				res.body.should.have.deep.property('PollAnswers.0.percent', 66.7)
+
+				res.body.should.have.deep.property('PollAnswers.1.answer', 'no')
+				res.body.should.have.deep.property('PollAnswers.1.PollVotes.length', 1)
+				res.body.should.have.deep.property('PollAnswers.1.percent', 33.3)
+
+				res.body.should.have.deep.property('PollAnswers.2.answer', 'meh')
+				res.body.should.have.deep.property('PollAnswers.2.PollVotes.length', 0)
+				res.body.should.have.deep.property('PollAnswers.2.percent', 0)
+			})
+			it('should return an error if invalid id', done => {
+				chai.request(server)
+					.get('/api/v1/poll/' + pollId)
+					.end((err, res) => {
+						res.should.have.status(400)
+						res.body.errors.should.contain.something.with.property(
+							'message',
+							'invalid poll id'
+						)
+					})
+
+					done()
+			})
+		})
 	})
 
-	after(() => sequelize.sync({ force: true }))
+	after(() => {
+		sequelize.sync({ force: true })
+	})
 })

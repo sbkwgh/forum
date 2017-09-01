@@ -4,6 +4,52 @@ let router = express.Router()
 let { PollAnswer, PollQuestion, PollVote, User, Sequelize } = require('../models')
 const Errors = require('../lib/errors')
 
+router.get('/:id', async (req, res) => {
+	try {
+		let id = req.params.id
+		let pollQuestion = await PollQuestion.findById(id, {
+			include: [
+				{ model: User, attributes: { exclude: ['hash'] } },
+				{ model: PollAnswer, include: [PollVote] }
+			]
+		})
+		if(!pollQuestion) throw Errors.sequelizeValidation(Sequelize, {
+			error: 'invalid poll id',
+			value: id
+		})
+
+		let totalVotes = pollQuestion.PollAnswers.reduce((sum, answer) => {
+			return sum + answer.PollVotes.length
+		}, 0)
+
+		let answersWithPercent = pollQuestion.PollAnswers.map(answer => {
+			let jsonAnswer = answer.toJSON()
+			let percent = answer.PollVotes.length / totalVotes
+			jsonAnswer.percent = Math.round(percent*100 * 10) / 10
+
+			return jsonAnswer
+		})
+
+		let jsonPollQuestion = pollQuestion.toJSON()
+		jsonPollQuestion.totalVotes = totalVotes
+		jsonPollQuestion.PollAnswers = answersWithPercent
+
+		res.json(jsonPollQuestion)
+	} catch (e) {
+		if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 router.all('*', (req, res, next) => {
 	if(req.session.loggedIn) {
 		next()
