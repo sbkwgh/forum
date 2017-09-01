@@ -71,6 +71,22 @@ describe('Poll', () => {
 
 				await Promise.all(accounts)
 
+				await admin
+					.post('/api/v1/category')
+					.set('content-type', 'application/json')
+					.send({ name: 'category' })
+
+				let threads = []
+				for(let i = 0; i < 4; i++) {
+					threads.push(
+						user1
+							.post('/api/v1/thread')
+							.set('content-type', 'application/json')
+							.send({ category: 'CATEGORY', name: 'thread' + i })
+					)
+				}
+				await Promise.all(threads)
+
 				return true
 			} catch (e) {
 				return e
@@ -84,7 +100,8 @@ describe('Poll', () => {
 					.set('content-type', 'application/json')
 					.send({
 						question: 'Question here',
-						answers: ['answer 1', 'answer 2', 'answer 3']
+						answers: ['answer 1', 'answer 2', 'answer 3'],
+						threadId: 1
 					})
 
 				res.should.be.json
@@ -110,7 +127,8 @@ describe('Poll', () => {
 					.post('/api/v1/poll')
 					.set('content-type', 'application/json')
 					.send({
-						question: 'Question here'
+						question: 'Question here',
+						threadId: 2
 					})
 					.end((err, res) => {
 						res.should.have.status(400)
@@ -128,7 +146,8 @@ describe('Poll', () => {
 					.set('content-type', 'application/json')
 					.send({
 						question: 'Question here',
-						answers: []
+						answers: [],
+						threadId: 2
 					})
 					.end((err, res) => {
 						res.should.have.status(400)
@@ -146,7 +165,8 @@ describe('Poll', () => {
 					.set('content-type', 'application/json')
 					.send({
 						question: 'Question here',
-						answers: ['answer', 'answer 1', 'answer']
+						answers: ['answer', 'answer 1', 'answer'],
+						threadId: 2
 					})
 					.end((err, res) => {
 						res.should.have.status(400)
@@ -158,12 +178,69 @@ describe('Poll', () => {
 						done()
 					})
 			})
+			it('should return an error if thread invalid', done => {
+				user1
+					.post('/api/v1/poll')
+					.set('content-type', 'application/json')
+					.send({
+						question: 'Question here',
+						answers: ['answer', 'answer 1'],
+						threadId: 404
+					})
+					.end((err, res) => {
+						res.should.have.status(400)
+						res.body.errors.should.contain.something.with.property(
+							'message',
+							'invalid thread id'
+						)
+
+						done()
+					})
+			})
+			it('should return an error if thread already has poll', done => {
+				user1
+					.post('/api/v1/poll')
+					.set('content-type', 'application/json')
+					.send({
+						question: 'Question here',
+						answers: ['answer', 'answer 1'],
+						threadId: 1
+					})
+					.end((err, res) => {
+						res.should.have.status(400)
+						res.body.errors.should.contain.something.with.property(
+							'message',
+							'invalid thread id'
+						)
+
+						done()
+					})
+			})
+			it('should return an error if thread user not same as poll user', done => {
+				admin
+					.post('/api/v1/poll')
+					.set('content-type', 'application/json')
+					.send({
+						question: 'Question here',
+						answers: ['answer', 'answer 1'],
+						threadId: 2
+					})
+					.end((err, res) => {
+						res.should.have.status(401)
+						res.body.errors.should.contain.something.that.deep.equals(
+							Errors.requestNotAuthorized
+						)
+
+						done()
+					})
+			})
 			it('should return an error if question not provided', done => {
 				user1
 					.post('/api/v1/poll')
 					.set('content-type', 'application/json')
 					.send({
-						answers: ['answer 1', 'answer 2']
+						answers: ['answer 1', 'answer 2'],
+						threadId: 2
 					})
 					.end((err, res) => {
 						res.should.have.status(400)
@@ -181,7 +258,8 @@ describe('Poll', () => {
 					.set('content-type', 'application/json')
 					.send({
 						question: 'Question here',
-						answers: ['answer', 'answer 2']
+						answers: ['answer', 'answer 2'],
+						threadId: 2
 					})
 					.end((err, res) => {
 						res.should.have.status(401)
@@ -202,7 +280,8 @@ describe('Poll', () => {
 						.set('content-type', 'application/json')
 						.send({
 							question: 'Poll question',
-							answers: ['poll answer 1', 'poll answer 2', 'poll answer 3']
+							answers: ['poll answer 1', 'poll answer 2', 'poll answer 3'],
+							threadId: 2
 						})
 
 					id = res.body.id
@@ -212,7 +291,8 @@ describe('Poll', () => {
 						.set('content-type', 'application/json')
 						.send({
 							question: 'Poll question',
-							answers: ['poll answer 1', 'poll answer 2', 'poll answer 3']
+							answers: ['poll answer 1', 'poll answer 2', 'poll answer 3'],
+							threadId: 3
 						})
 
 					id2 = res2.body.id
@@ -322,12 +402,13 @@ describe('Poll', () => {
 
 			before(async () => {
 				try {
-					let pollRes = await admin
+					let pollRes = await user1
 						.post('/api/v1/poll')
 						.set('content-type', 'application/json')
 						.send({
 							question: 'Do you like polls?',
-							answers: ['yes', 'no', 'meh']
+							answers: ['yes', 'no', 'meh'],
+							threadId: 4
 						})
 					pollId = pollRes.body.id
 

@@ -1,7 +1,7 @@
 let express = require('express')
 let router = express.Router()
 
-let { PollAnswer, PollQuestion, PollVote, User, Sequelize } = require('../models')
+let { PollAnswer, PollQuestion, PollVote, User, Sequelize, Thread } = require('../models')
 const Errors = require('../lib/errors')
 
 router.get('/:id', async (req, res) => {
@@ -63,6 +63,22 @@ router.all('*', (req, res, next) => {
 
 router.post('/', async (req, res) => {
 	try {
+		let threadId = req.body.threadId
+		let thread = await Thread.findById(req.body.threadId)
+		if(!thread) {
+			throw Errors.sequelizeValidation(Sequelize, {
+				error: 'invalid thread id',
+				value: threadId
+			})
+		} else if(thread.UserId !== req.session.UserId) {
+			throw Errors.requestNotAuthorized
+		} else if(thread.PollQuestionId) {
+			throw Errors.sequelizeValidation(Sequelize, {
+				error: 'invalid thread id',
+				value: threadId
+			})
+		}
+
 		let answers = req.body.answers
 
 		if(!answers || answers.length < 2) {
@@ -76,9 +92,11 @@ router.post('/', async (req, res) => {
 				value: answers
 			})
 		}
-		
-		let user = await User.findById(req.session.UserId)
-		let pollQuestion = await PollQuestion.create({ question: req.body.question })
+	
+		let pollQuestion = await PollQuestion.create({
+			UserId: req.session.UserId,
+			question: req.body.question
+		})
 		let pollAnswers = await Promise.all(
 			answers.map(answer => {
 				return PollAnswer.create({ answer })
@@ -86,7 +104,7 @@ router.post('/', async (req, res) => {
 		)
 
 		//Set associations
-		await pollQuestion.setUser(user)
+		await thread.setPollQuestion(pollQuestion)
 		await Promise.all(
 			pollAnswers.map(pollAnswer => {
 				return pollQuestion.addPollAnswer(pollAnswer)
@@ -99,6 +117,11 @@ router.post('/', async (req, res) => {
 		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)
 			res.json(e)
+		} else if(e === Errors.requestNotAuthorized) {
+			res.status(401)
+			res.json({
+				errors: [e]
+			})
 		} else {
 			console.log(e)
 
