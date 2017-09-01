@@ -76,6 +76,11 @@
 			You can't post in this thread because it has been locked by an administrator
 		</div>
 
+		<thread-poll
+			v-if='$store.state.thread.PollQuestionId'
+			:id='$store.state.thread.PollQuestionId'
+		></thread-poll>
+
 		<div class='posts'>
 			<scroll-load
 				@loadNext='loadNextPosts'
@@ -126,6 +131,7 @@
 	import PostScrubber from '../PostScrubber'
 	import MenuButton from '../MenuButton'
 	import LoadingButton from '../LoadingButton'
+	import ThreadPoll from '../ThreadPoll'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
@@ -142,7 +148,8 @@
 			ThreadPostPlaceholder,
 			PostScrubber,
 			MenuButton,
-			LoadingButton
+			LoadingButton,
+			ThreadPoll
 		},
 		data () {
 			return {

@@ -3,6 +3,7 @@ import AjaxErrorHandler from '../../assets/js/errorHandler'
 const state = {
 	thread: '',
 	threadId: undefined,
+	PollQuestionId: null,
 	posts: [],
 	postNotification: null,
 	locked: false,
@@ -255,6 +256,7 @@ const mutations = {
 	setThread (state, obj) {
 		state.thread = obj.name
 		state.threadId = obj.id
+		state.PollQuestionId = obj.PollQuestionId
 	},
 	setNextURL (state, URL) {
 		state.nextURL = URL
