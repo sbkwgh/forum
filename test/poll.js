@@ -449,6 +449,7 @@ describe('Poll', () => {
 				res.body.should.have.property('question', 'Do you like polls?')
 				res.body.PollAnswers.should.have.property('length', 3)
 				res.body.should.have.property('totalVotes', 3)
+				res.body.should.have.property('hasVoted', true)
 
 				res.body.should.have.deep.property('PollAnswers.0.answer', 'yes')
 				res.body.should.have.deep.property('PollAnswers.0.PollVotes.length', 2)
@@ -461,6 +462,20 @@ describe('Poll', () => {
 				res.body.should.have.deep.property('PollAnswers.2.answer', 'meh')
 				res.body.should.have.deep.property('PollAnswers.2.PollVotes.length', 0)
 				res.body.should.have.deep.property('PollAnswers.2.percent', 0)
+			})
+			it('should set hasVoted to false if user not voted', async () => {
+				let res = await admin.get('/api/v1/poll/' + pollId)
+			
+				res.should.be.json
+				res.should.have.status(200)	
+				res.body.should.have.property('hasVoted', false)
+			})
+			it('should set hasVoted to false if user not logged in', async () => {
+				let res = await chai.request(server).get('/api/v1/poll/' + pollId)
+			
+				res.should.be.json
+				res.should.have.status(200)	
+				res.body.should.have.property('hasVoted', false)
 			})
 			it('should return an error if invalid id', done => {
 				chai.request(server)

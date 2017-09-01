@@ -30,9 +30,17 @@ router.get('/:id', async (req, res) => {
 			return jsonAnswer
 		})
 
+		let hasVoted = await PollVote.findOne({
+			where: {
+				UserId: req.session.UserId,
+				PollQuestionId: id
+			}
+		})
+
 		let jsonPollQuestion = pollQuestion.toJSON()
 		jsonPollQuestion.totalVotes = totalVotes
 		jsonPollQuestion.PollAnswers = answersWithPercent
+		jsonPollQuestion.hasVoted = !!hasVoted
 
 		res.json(jsonPollQuestion)
 	} catch (e) {
