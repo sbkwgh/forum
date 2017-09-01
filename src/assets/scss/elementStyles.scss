@@ -231,3 +231,14 @@ b, strong {
 .fade-enter, .fade-leave-to {
 	opacity: 0;
 }
+
+.slide-enter-active, .slide-leave-active {
+	transition: opacity 0.2s, max-height 0.2s;
+	overflow: hidden;
+}
+.slide-enter, .slide-leave-to {
+	max-height: 0;
+}
+.slide-enter-to, .slide-leave {
+	max-height: 20rem;
+}

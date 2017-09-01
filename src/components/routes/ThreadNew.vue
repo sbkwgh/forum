@@ -1,5 +1,6 @@
 <template>
 	<div class='route_container thread_new'>
+
 		<div class='h1'>Post new thread</div>
 		<div class='thread_meta_info'>
 			<div class='thread_meta_info__text'>Enter the thread title and the category to post it in</div>
@@ -8,10 +9,48 @@
 				placeholder='Thread title'
 				v-model='name'
 				:error='errors.name'
-				style='margin-left: 0.5rem; display: inline-block;'
+				style='margin: 0 0.5rem; display: inline-block;'
 				large='true'
 				width='15rem'
 			></fancy-input>
+			
+			<button class='button button--thin_text' v-if='!showPoll' @click='togglePoll(true)'>Add poll</button>
+			<transition name='slide'>
+				<div class='thread_meta_info__poll' v-if='showPoll'>
+					<div class='thread_meta_info__poll__top_bar'>
+						<fancy-input
+							v-model='pollQuestion'
+							placeholder='Poll question'
+							width='20rem'
+							:large='true'
+						></fancy-input>
+						<button class='button button--thin_text button--borderless' @click='removePoll'>
+							Remove poll
+						</button>
+					</div>
+					<div>
+						<div class='thread_meta_info__poll__answer' v-for='(pollAnswer, $index) in pollAnswers'>
+							<fancy-input
+								v-model='pollAnswer.answer'
+								width='15rem'
+								:large='true'
+								:placeholder='"Answer " + ($index+1)'
+							></fancy-input>
+							<span @click='removePollAnswer($index)' title='Remove answer'>&times;</span>
+						</div>
+						<div>
+							<fancy-input
+								v-model='newPollAnswer'
+								placeholder='Option/answer for poll'
+								style='display: inline-block; margin-right: 0.5rem;'
+								width='15rem'
+								:large='true'
+							></fancy-input>
+							<button class='button button--thin_text' @click='addPollAnswer'>Add answer</button>
+						</div>
+					</div>
+				</div>
+			</transition>
 		</div>
 		<div class='editor' :class='{"editor--focus": focusInput}'>
 			<div class='editor__input'>
@@ -68,7 +107,12 @@
 				errors: {
 					content: '',
 					name: ''
-				}
+				},
+
+				showPoll: false,
+				pollQuestion: '',
+				newPollAnswer: '',
+				pollAnswers: []
 			}
 		},
 		computed: {
@@ -77,7 +121,33 @@
 			}
 		},
 		methods: {
+			togglePoll (val) {
+				if(val !== undefined) {
+					this.showPoll = val
+				} else {
+					this.showPoll = !this.showPoll
+				}
+			},
+			addPollAnswer () {
+				if(!this.newPollAnswer.trim().length) return
+
+				this.pollAnswers.push({ answer: this.newPollAnswer })
+				this.newPollAnswer = ''
+			},
+			removePollAnswer ($index) {
+				this.pollAnswers.splice($index, 1)
+			},
+			removePoll () {
+				this.pollQuestion = ''
+				this.pollAnswers = []
+				this.newPollAnswer = ''
+
+				this.togglePoll()
+			},
+
 			postThread () {
+				let thread
+
 				if(!this.editor.trim().length) {
 					this.errors.content = 'Cannot be blank'
 					return;
@@ -92,14 +162,31 @@
 					name: this.name,
 					category: this.selectedCategory
 				}).then(res => {
-					return this.axios.post('/api/v1/post', {
-						threadId: res.data.id,
-						content: this.editor,
-						mentions: this.mentions
-					})
+					thread = res.data
+
+					let ajax = []
+					ajax.push(
+						this.axios.post('/api/v1/post', {
+							threadId: res.data.id,
+							content: this.editor,
+							mentions: this.mentions
+						})
+					)
+
+					if(this.showPoll) {
+						ajax.push(
+							this.axios.post('/api/v1/poll', {
+								question: this.pollQuestion,
+								answers: this.pollAnswers.map(a => a.answer),
+								threadId: res.data.id
+							})
+						)
+					}
+
+					return Promise.all(ajax)
 				}).then(res => {
 					this.loading = false
-					this.$router.push(`/thread/${res.data.Thread.slug}/${res.data.Thread.id}/0`)
+					this.$router.push(`/thread/${thread.slug}/${thread.id}/0`)
 				}).catch(e => {
 					this.loading = false
 
@@ -159,6 +246,39 @@
 
 		@at-root #{&}__text {
 			margin-bottom: 0.5rem;
+		}
+
+		@at-root #{&}__poll {
+			border-top: thin solid $color__gray--primary;
+			margin-top: 1rem;
+			padding-top: 0.75rem;
+
+			@at-root #{&}__top_bar {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+			}
+
+			@at-root #{&}__answer {
+				display: flex;
+				align-items: baseline;
+
+				& > span {
+					opacity: 0;
+					pointer-events: none;
+					transition: all 0.1s;
+
+					font-size: 1.5rem;
+					margin-left: 0.5rem;
+					cursor: pointer;
+					@include user-select(none);
+				}
+
+				&:hover > span {
+					opacity: 1;
+					pointer-events: all;
+				}
+			}
 		}
 	}
 
