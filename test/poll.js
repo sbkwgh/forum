@@ -312,13 +312,18 @@ describe('Poll', () => {
 				res.should.be.json
 				res.should.have.status(200)
 
+				res.body.should.have.property('question', 'Poll question')
+				res.body.should.have.deep.property('PollAnswers')
+
 				let answer = await PollAnswer.findOne({
 					where: {
 						answer: 'poll answer 1'
 					}
 				})
 
-				let vote = await PollVote.findById(res.body.id)
+				let vote = await PollVote.findById(
+					res.body.PollAnswers[0].PollVotes[0].id
+				)
 				vote.should.not.be.null
 				vote.should.have.property('PollQuestionId', id)
 				vote.should.have.property('PollAnswerId', answer.id)

@@ -161,7 +161,7 @@ router.post('/:id', async (req, res) => {
 		await pollVote.setPollQuestion(poll)
 		await pollVote.setPollAnswer(pollAnswer)
 
-		res.json(pollVote.toJSON())
+		res.redirect('/api/v1/poll/' + req.params.id)
 	} catch (e) {
 		if(e instanceof Sequelize.ValidationError) {
 			res.status(400)
