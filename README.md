@@ -24,11 +24,11 @@ All API routes are prefixed `/api/v1/`
 ### /
 * Method: `GET`
 * Data params:
-  * message <string>
-  * username: <string>
-  * canCreateThreads <boolean>
-  * canCreatePosts <boolean>
-  * ipBanned <boolean>
+  * message \<string>
+  * username: \<string>
+  * canCreateThreads \<boolean>
+  * canCreatePosts \<boolean>
+  * ipBanned \<boolean>
 * Response:
   ```
   {
