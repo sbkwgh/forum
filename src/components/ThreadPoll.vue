@@ -1,6 +1,6 @@
 <template>
 	<div class='poll'>
-		<transition name='fade' mode='out-in'>
+		<transition name='slide' mode='out-in'>
 			<div class='poll__loading' key='loading' v-if='!poll'>
 				<loading-icon :dark='true'></loading-icon>
 			</div>
@@ -49,7 +49,7 @@
 								</span>
 							</div>
 							<div class='poll__result__bar_outer'></div>
-							<div class='poll__result__bar' :style='{ "width": (result.percent || 0 + "%") }'></div>
+							<div class='poll__result__bar' :style='{ "width": (result.percent || 0) + "%" }'></div>
 						</div>
 					</div>
 
