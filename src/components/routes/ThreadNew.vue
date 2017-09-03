@@ -23,6 +23,7 @@
 							placeholder='Poll question'
 							width='20rem'
 							:large='true'
+							:error='errors.pollQuestion'
 						></fancy-input>
 						<button class='button button--thin_text button--borderless' @click='removePoll'>
 							Remove poll
@@ -45,6 +46,7 @@
 								style='display: inline-block; margin-right: 0.5rem;'
 								width='15rem'
 								:large='true'
+								:error='errors.pollAnswer'
 							></fancy-input>
 							<button class='button button--thin_text' @click='addPollAnswer'>Add answer</button>
 						</div>
@@ -106,7 +108,9 @@
 
 				errors: {
 					content: '',
-					name: ''
+					name: '',
+					pollQuestion: '',
+					pollAnswer: ''
 				},
 
 				showPoll: false,
@@ -145,16 +149,44 @@
 				this.togglePoll()
 			},
 
-			postThread () {
-				let thread
-
-				if(!this.editor.trim().length) {
-					this.errors.content = 'Cannot be blank'
-					return;
-				} 
-
+			setErrors (errors) {
+				errors.forEach(error => {
+					this.errors[error.name] = error.error
+				})
+			},
+			clearErrors () {
 				this.errors.content = ''
 				this.errors.name = ''
+				this.errors.pollQuestion = ''
+				this.errors.pollAnswer = ''
+			},
+
+			hasDuplicates (array, cb) {
+				if(cb) array = array.map(cb)
+				
+				return array.length !== (new Set(array)).size
+			},
+
+			postThread () {
+				let thread
+				let errors = []
+
+				this.clearErrors()
+
+				if(!this.editor.trim().length) {
+					errors.push({name: 'content', error: 'Cannot be blank'})
+				} if(!this.name.trim().length) {
+					errors.push({name: 'name', error: 'Cannot be blank'})
+				} if(this.showPoll && !this.pollQuestion.trim().length) {
+					errors.push({name: 'pollQuestion', error: 'Cannot be blank'})
+			 	} if (this.pollAnswers.length < 2) {
+			 		errors.push({name: 'pollAnswer', error: 'You need at least 2 answers'})
+				} if (this.hasDuplicates(this.pollAnswers, i => i.answer)) {
+			 		errors.push({name: 'pollAnswer', error: 'Your answers can\'t contain any duplicates'})
+				} if(errors.length) {
+					this.setErrors(errors)
+					return
+				}
 
 				this.loading = true
 
