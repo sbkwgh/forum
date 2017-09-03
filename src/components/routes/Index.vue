@@ -16,11 +16,11 @@
 				<div class='threads_main__side_bar__title'>
 					categories
 				</div>
-				<div
+				<router-link
 					v-for='category in categories'
 					class='threads_main__side_bar__menu_item'
 					:class='{"threads_main__side_bar__menu_item--selected": category.value === selectedCategory}'
-					@click='selectedCategory = category.value'
+					:to='"/category/" + category.value'
 				>
 					<span
 						class='threads_main__side_bar__menu_item__border'
@@ -32,7 +32,7 @@
 							"color": category.value === selectedCategory ? category.color : undefined
 						}'
 					>{{category.name}}</span>
-				</div>
+				</router-link>
 			</div>
 
 			<transition name='fade' mode='out-in'>
@@ -292,6 +292,10 @@
 			cursor: pointer;
 			margin-top: 0.5rem;
 			position: relative;
+			display: block;
+			text-decoration: none;
+			background-image: none;
+			font-weight: 300;
 
 			#{&}__border {
 				display: inline-block;
@@ -318,7 +322,7 @@
 			
 
 			#{&}--selected {
-				font-weight: 500;
+				font-weight: bold;
 
 				.threads_main__side_bar__menu_item__border {
 					opacity: 1;
