@@ -106,23 +106,7 @@
 						Login
 					</div>
 				</template>
-				<div
-					class='search'
-					tabindex='0'
-					@keydown.enter='goToSearch'
-				>
-					<input
-						class='search__field'
-						placeholder='Search this forum'
-						v-model='searchField'
-					>
-					<button
-						class='search__button'
-						@click='goToSearch'
-					>
-						<span class='fa fa-search'></span>
-					</button>
-				</div>
+				<search-box></search-box>
 			</div>
 		</header>
 		<router-view></router-view>
@@ -135,6 +119,7 @@
 	import FancyInput from './components/FancyInput'
 	import LoadingButton from './components/LoadingButton'
 	import NotificationButton from './components/NotificationButton'
+	import SearchBox from './components/SearchBox'
 	
 	import AjaxErrorHandler from './assets/js/errorHandler'
 
@@ -145,7 +130,8 @@
 			TabView,
 			FancyInput,
 			LoadingButton,
-			NotificationButton
+			NotificationButton,
+			SearchBox
 		},
 		data () {
 			return {
@@ -174,8 +160,7 @@
 					}
 				},
 				loadingLogout: false,
-				ajaxErrorHandler: AjaxErrorHandler(this.$store),
-				searchField: ''
+				ajaxErrorHandler: AjaxErrorHandler(this.$store)
 			}
 		},
 		computed: {
@@ -201,11 +186,6 @@
 			}
 		},
 		methods: {
-			goToSearch () {
-				if(this.searchField.trim().length) {
-					this.$router.push("/search/" + this.searchField)
-				}
-			},
 			showAccountModalTab (index) {
 				this.showAccountModal = true
 				this.showAccountTab = index
@@ -419,33 +399,6 @@
 
 		&:hover, &:visited, &:active {
 			color: $color__text--primary;
-		}
-	}
-
-	.search {
-		border: 1px solid $color__gray--darker;
-		border-radius: 0.25rem;
-		outline: none;
-		overflow: hidden;
-
-		@at-root #{&}__field {
-			outline: none;
-			height: 100%;
-			padding: 0 0.5rem;
-			border: 0;
-
-			@include text;
-			color: $color__text--primary;
-
-			@include placeholder {
-				@include text;
-				color: $color__lightgray--darkest;
-			}
-		}
-		@at-root #{&}__button {
-			@extend .button;
-			border: 0;
-			border-radius: 0 0.125rem 0.125rem 0;
 		}
 	}
 </style>
