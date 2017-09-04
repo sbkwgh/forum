@@ -450,4 +450,14 @@
 			}
 		}
 	}
+
+	@media (max-width: 420px) {
+		.notification_button {
+			position: fixed;
+			right: 0.5rem;
+			width: 2.4rem;
+			top: 0.5rem;
+			border-radius: 0.25rem;
+		}
+	}
 </style>

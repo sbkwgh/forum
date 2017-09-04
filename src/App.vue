@@ -81,20 +81,34 @@
 				</template>
 			</tab-view>
 		</modal-window>
+
 		<header class='header'>
 			<div class='header__group'>
 				<router-link class='logo' to='/'>{{name}}</router-link>
 			</div>
-			<div class='header__group'>
+			<div class='header__group' :class='{ "header__group--show": showMenu }'>
 				<template v-if='$store.state.username'>
 					<notification-button></notification-button>
-					<router-link to='/admin' class='button button--thin_text' v-if='$store.state.admin'>
+					<router-link
+						to='/admin'
+						class='button button--thin_text'
+						v-if='$store.state.admin'
+						@click='toggleMenu'
+					>
 						Admin settings
 					</router-link>
-					<router-link to='/settings' class='button button--thin_text' >
+					<router-link
+						to='/settings'
+						class='button button--thin_text'
+						@click='toggleMenu'
+					>
 						Settings
 					</router-link>
-					<loading-button @click='logout' :loading='loadingLogout' class='button--thin_text'>
+					<loading-button
+						@click='logout'
+						:loading='loadingLogout'
+						class='button--thin_text'
+					>
 						Log out
 					</loading-button>
 				</template>
@@ -106,8 +120,10 @@
 						Login
 					</div>
 				</template>
-				<search-box></search-box>
+				<search-box @keydown.enter='toggleMenu'></search-box>
 			</div>
+			<div class='header__overlay' :class='{ "header__overlay--show": showMenu }' @click='toggleMenu'></div>
+			<span class='fa fa-bars header__menu_button' @click='toggleMenu'></span>
 		</header>
 		<router-view></router-view>
 	</div>
@@ -160,6 +176,7 @@
 					}
 				},
 				loadingLogout: false,
+				showMenu: false,
 				ajaxErrorHandler: AjaxErrorHandler(this.$store)
 			}
 		},
@@ -187,10 +204,15 @@
 		},
 		methods: {
 			showAccountModalTab (index) {
+				this.toggleMenu()
 				this.showAccountModal = true
 				this.showAccountTab = index
 			},
+			toggleMenu () {
+				this.showMenu = !this.showMenu
+			},
 			logout () {
+				this.toggleMenu()
 				this.loadingLogout = true
 
 				this.axios.post(
@@ -389,6 +411,15 @@
 			> *:first-child { margin-left: 0; }
 			> *:last-child { margin-right: 0; }
 		}
+
+		@at-root #{&}__menu_button {
+			position: fixed;
+			left: 1rem;
+			z-index: 1;
+			font-size: 1.5rem;
+			top: 1rem;
+			display: none;
+		}
 	}
 
 	.logo {
@@ -399,6 +430,60 @@
 
 		&:hover, &:visited, &:active {
 			color: $color__text--primary;
+		}
+	}
+
+	@media (max-width: 420px) {
+		.logo {
+			position: relative;
+			z-index: 2;
+		}
+
+		.header__menu_button {
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		.header__overlay {
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1;
+
+			@at-root #{&}--show {
+				pointer-events: all;
+			}
+		}
+
+		.header__group:first-child {
+			margin-left: 1rem;
+		}
+
+		.header__group:nth-child(2) {
+			position: fixed;
+			padding-top: 1.5rem;
+			width: 15rem;
+			display: flex;
+			flex-direction: column;
+			z-index: 2;
+			background: #fff;
+			top: 0;
+			left: calc(-100% - 2rem);
+			height: 100%;
+			box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
+			transition: left 0.2s;
+
+			.button {
+				width: 100%;
+				border-radius: 0;
+				margin-bottom: 1rem;
+			}
+		}
+		.header__group:nth-child(2).header__group--show {
+			left: 0;
 		}
 	}
 </style>
