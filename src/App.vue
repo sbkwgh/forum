@@ -93,14 +93,12 @@
 						to='/admin'
 						class='button button--thin_text'
 						v-if='$store.state.admin'
-						@click='toggleMenu'
 					>
 						Admin settings
 					</router-link>
 					<router-link
 						to='/settings'
 						class='button button--thin_text'
-						@click='toggleMenu'
 					>
 						Settings
 					</router-link>
@@ -120,7 +118,7 @@
 						Login
 					</div>
 				</template>
-				<search-box @keydown.enter='toggleMenu'></search-box>
+				<search-box></search-box>
 			</div>
 			<div class='header__overlay' :class='{ "header__overlay--show": showMenu }' @click='toggleMenu'></div>
 			<span class='fa fa-bars header__menu_button' @click='toggleMenu'></span>
@@ -356,6 +354,11 @@
 					}
 				})
 				.catch(this.ajaxErrorHandler)
+		},
+		watch: {
+			$route () {
+				this.showMenu = false
+			}
 		}
 	}
 </script>
