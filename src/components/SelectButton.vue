@@ -131,4 +131,37 @@
 		}
 
 	}
+
+	@media (max-width: 425px) {
+		.select_button {
+			@at-root #{&}__overlay {
+				transition: all 0.2s;
+
+				@at-root #{&}--show {
+					background-color: hsla(213, 35%, 5%, 0.76);
+				}
+			}
+
+			@at-root #{&}__options {
+				width: 100%;
+				left: 0;
+				bottom: 0;
+				position: fixed;
+				font-size: 1.5rem;
+				opacity: 1;
+				border-radius: 0.25rem 0.25rem 0 0;
+				transition: opacity 0.2s, bottom 0.2s;
+
+				@at-root #{&}--hidden {
+					bottom: -100%;
+					opacity: 0;
+				} 
+
+			}
+			@at-root #{&}__option {
+				padding: 1rem;
+			}
+		}
+	}
 </style>
+
