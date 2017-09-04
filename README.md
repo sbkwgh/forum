@@ -7,6 +7,7 @@ This is the backend (or 'api component') of the forum software to go along with 
 All API routes are prefixed `/api/v1/`
 
 ## /admin_token
+All sub-routes require admin privileges
 
 ### /
 * Method: `POST`
@@ -17,12 +18,12 @@ All API routes are prefixed `/api/v1/`
         token: <string>
     }
   ```
-* Notes: requires admin privileges
 
 ## /ban
+All sub-routes require admin privileges
 
 ### /
-* Method: `GET`
+* Method: `POST`
 * Data params:
   * message \<string>
   * username: \<string>
@@ -45,4 +46,27 @@ All API routes are prefixed `/api/v1/`
         createdAt: <string>
       }
   ```
- * Notes: requires admin privileges
+
+### /
+ * Method: `GET`
+ * Response:
+   ```
+   [{
+       id: <integer>,
+       createdAt: <string>,
+       updatedAt: <string>,
+       canCreatePosts: <boolean>,
+       canCreateThreads: <boolean>,
+       ipBanned: <boolean>,
+       message: <string>,
+       UserId: <integer>
+   }, ...]
+   ```
+   
+### /:id
+ * Method: `DELETE`
+ * URL params: id \<integer>
+ * Response:
+   ```
+   { success: true }
+   ```
