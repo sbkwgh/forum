@@ -71,7 +71,7 @@ All sub-routes require admin privileges
    { success: true }
    ```
 
-### /category
+## /category
 
 ### /
  * Method: `GET`
