@@ -423,6 +423,8 @@
 			top: 1rem;
 			display: none;
 		}
+
+		@at-root #{&}__overlay { display: none; }
 	}
 
 	.logo {
@@ -437,6 +439,12 @@
 	}
 
 	@media (max-width: 420px) {
+		.route_container {
+			width: calc(100% - 2rem);
+			margin: 0 1rem;
+			margin-top: 0rem;
+		}
+
 		.logo {
 			position: relative;
 			z-index: 2;
@@ -450,14 +458,14 @@
 		.header__overlay {
 			width: 100%;
 			height: 100%;
-			pointer-events: none;
+			display: none;
 			position: fixed;
 			top: 0;
 			left: 0;
 			z-index: 1;
 
 			@at-root #{&}--show {
-				pointer-events: all;
+				display: block;
 			}
 		}
 

@@ -6,10 +6,13 @@
 				v-model='selectedFilterOption'
 				class='thread_sorting__filter'
 			></select-options>
-			<router-link
-				class='button button--blue'
-				v-if='$store.state.username' to='/thread/new'
-			>Post new thread</router-link>
+			<div class='thread_sorting__add_and_categories'>
+				<select-button v-model='selectedCategory':options='categories'></select-button>
+				<router-link
+					class='button button--blue'
+					v-if='$store.state.username' to='/thread/new'
+				>Post new thread</router-link>
+			</div>
 		</div>
 		<div class='threads_main'>
 			<div class='threads_main__side_bar'>
@@ -75,6 +78,7 @@
 	import ThreadDisplay from '../ThreadDisplay'
 	import ThreadDisplayPlaceholder from '../ThreadDisplayPlaceholder'
 	import SelectOptions from '../SelectOptions'
+	import SelectButton from '../SelectButton'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
@@ -86,7 +90,8 @@
 			ScrollLoad,
 			ThreadDisplay,
 			ThreadDisplayPlaceholder,
-			SelectOptions
+			SelectOptions,
+			SelectButton
 		},
 		data () {
 			return {
@@ -269,6 +274,12 @@
 			margin-right: 1.25rem;
 			width: 10rem;
 		}
+
+		@at-root #{&}__add_and_categories {
+			.select_button {
+				display: none;
+			}
+		}
 	}
 
 	.threads_main__side_bar {
@@ -389,6 +400,32 @@
 		@at-root #{&}__date {
 			color: $color__text--secondary;
 			display: inline-block;
+		}
+	}
+
+	@media (max-width: 420px) {
+		.thread_sorting {
+			flex-direction: column-reverse;
+			align-items: left;
+
+			@at-root #{&}__add_and_categories {
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 0.5rem;
+
+				.select_button {
+					display: inline-block;
+				}
+			}
+		}
+
+		.threads_main__side_bar {
+			display: none;
+		}
+		.threads_main__threads {
+			width: 100%;
+			margin-left: 0;
 		}
 	}
 </style>
