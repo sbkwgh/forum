@@ -9,16 +9,21 @@
 				placeholder='Thread title'
 				v-model='name'
 				:error='errors.name'
-				style='margin: 0 0.5rem; display: inline-block;'
+				class='thread_meta_info__title'
 				large='true'
 				width='15rem'
 			></fancy-input>
 			
-			<button class='button button--thin_text' v-if='!showPoll' @click='togglePoll(true)'>Add poll</button>
+			<button
+				class='thread_meta_info__add_poll button button--thin_text'
+				v-if='!showPoll'
+				@click='togglePoll(true)'
+			>Add poll</button>
 			<transition name='slide'>
 				<div class='thread_meta_info__poll' v-if='showPoll'>
 					<div class='thread_meta_info__poll__top_bar'>
 						<fancy-input
+							class='thread_meta_info__poll__question'
 							v-model='pollQuestion'
 							placeholder='Poll question'
 							width='20rem'
@@ -276,6 +281,16 @@
 		padding: 1rem;
 		margin: 1rem 0;
 
+		@at-root #{&}__title {
+			margin: 0 0.5rem;
+			margin-top: 0.5rem;
+			display: inline-block;
+		}
+
+		@at-root #{&}__add_poll {
+			margin-top: 0.5rem;
+		}
+
 		@at-root #{&}__text {
 			margin-bottom: 0.5rem;
 		}
@@ -284,6 +299,7 @@
 			border-top: thin solid $color__gray--primary;
 			margin-top: 1rem;
 			padding-top: 0.75rem;
+			position: relative;
 
 			@at-root #{&}__top_bar {
 				display: flex;
@@ -359,6 +375,37 @@
 
 			.input_editor_preview__markdownHTML {
 				height: 14.2rem;
+			}
+		}
+	}
+
+	@media (max-width: 420px) {
+		.thread_meta_info {
+			@at-root #{&}__title.fancy_input {
+				margin: 0;
+				margin-top: 0.5rem;
+			}
+
+			@at-root #{&}__poll__top_bar .button {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+			@at-root #{&}__poll__question {
+				width: 100%;
+
+				> div, input {
+					width: 100% !important;
+				}
+			}
+		}
+
+		.editor {
+			flex-direction: column;
+
+			@at-root #{&}__input, #{&}__preview {
+				border: 0;
+				width: 100%;
 			}
 		}
 	}

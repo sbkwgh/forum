@@ -214,4 +214,10 @@
 			}
 		}
 	}
+
+	@media (max-width: 420px) {
+		.poll {
+			width: 100%;
+		}
+	}
 </style>

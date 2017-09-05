@@ -7,7 +7,21 @@
 			@goToPost='goToPostNotification'
 		></thread-post-notification>
 
-		<div class='thread_side_bar'>
+		<header class='thread_header'>
+			<div
+				class='thread_header__thread_title thread_header__thread_title--app_header'
+				:class='{
+					"thread_header__thread_title--app_header-show": headerTitle
+				}'
+			>
+				{{thread}}
+			</div>
+			<div class='thread_header__thread_title' ref='title'>
+				{{thread}}
+			</div>
+		</header>
+
+				<div class='thread_side_bar'>
 			<loading-button
 				class='button--thin_text'
 				:class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }'
@@ -45,19 +59,7 @@
 				@input='goToPost'
 			></post-scrubber>
 		</div>
-		<header class='thread_header'>
-			<div
-				class='thread_header__thread_title thread_header__thread_title--app_header'
-				:class='{
-					"thread_header__thread_title--app_header-show": headerTitle
-				}'
-			>
-				{{thread}}
-			</div>
-			<div class='thread_header__thread_title' ref='title'>
-				{{thread}}
-			</div>
-		</header>
+
 		<input-editor
 			v-model='editor'
 
@@ -425,5 +427,31 @@
 		background-color: #fff;
 		padding: 0.5rem 1rem;
 		border-radius: 0.25rem;
+	}
+
+
+
+	@media (max-width: 420px) {
+		.thread_side_bar {
+			position: initial;
+			display: flex;
+			flex-direction: row-reverse;
+
+			.post_scrubber {
+				display: none;
+			}
+		}
+
+		.posts {
+			width: 100%;
+			padding: 0.25rem 0.5rem;
+			box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25);
+		}
+		.locked_thread {
+			width: 100%;
+		}
+		.thread_header__thread_title--app_header {
+			display: none;
+		}
 	}
 </style>

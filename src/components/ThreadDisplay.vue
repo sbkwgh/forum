@@ -172,4 +172,20 @@
 			word-break: break-all;
 		}
 	}
+
+	@media (max-width: 420px) {
+		.thread_display {
+			@at-root #{&}__header {
+				flex-direction: column;
+			}
+			@at-root #{&}__meta_bar {
+				font-size: 0.9rem;
+				margin-bottom: 0.25rem;
+			}
+
+			@at-root #{&}__content {
+				display: none;
+			}
+		}
+	}
 </style>

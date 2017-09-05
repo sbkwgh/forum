@@ -196,4 +196,18 @@
 			}
 		}
 	}
+
+	@media (max-width: 420px) {
+		.input_editor {
+			width: 100%;
+			left: 0;
+
+			@at-root #{&}__reply_username {
+				top: auto;
+				bottom: 0.5rem;
+				left: 0.5rem;
+				width: auto;
+			}
+		}
+	}
 </style>
