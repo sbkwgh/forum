@@ -147,7 +147,7 @@
 				left: 0;
 				bottom: 0;
 				position: fixed;
-				font-size: 1.5rem;
+				font-size: 1.25rem;
 				opacity: 1;
 				border-radius: 0.25rem 0.25rem 0 0;
 				transition: opacity 0.2s, bottom 0.2s;

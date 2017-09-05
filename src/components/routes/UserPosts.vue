@@ -110,4 +110,10 @@
 			margin-bottom: 1rem;
 		}
 	}
+
+	@media (max-width: 420px) {
+		.user_posts {
+			margin-top: 1rem;
+		}
+	}
 </style>
