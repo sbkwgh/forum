@@ -2,18 +2,20 @@
 	<div class='route_container route_container--settings'>
 		<div class='settings_menu'>
 			<div class='settings_menu__title'>settings</div>
-			<div
-				class='settings_menu__item'
-				v-for='(item, index) in menuItems'
-				:class="{'settings_menu__item--selected': index === selected}"
-				@click='$router.push("/settings/" + item.route)'
-			>
-				<span class='fa' :class='item.icon'></span>
-				{{item.name}}
+			<div class='settings_menu__items'>
+				<div
+					class='settings_menu__item'
+					v-for='(item, index) in menuItems'
+					:class="{'settings_menu__item--selected': index === selected}"
+					@click='$router.push("/settings/" + item.route)'
+				>
+					<span class='fa' :class='item.icon'></span>
+					{{item.name}}
+				</div>
 			</div>
 		</div>
 		<div class='settings_page'>
-			<router-view style='margin: 1rem 2rem;'></router-view>
+			<router-view></router-view>
 		</div>
 	</div>
 </template>
@@ -149,5 +151,46 @@
 		border-radius: 0.25rem;
 		margin-left: 2rem;
 		@extend .shadow_border;
+	}
+
+	@media (max-width: 420px) {
+		.route_container--settings {
+			flex-direction: column;
+		}
+
+		.settings_menu {
+			width: 100%;
+
+			@at-root #{&}__items {
+				display: flex;
+				align-items: baseline;
+			}
+
+			@at-root #{&}__item {
+				width: 7rem;
+				margin-right: 0.5rem;
+				color: $color__text--primary;
+
+				&:first-child, &:last-child {
+					margin-bottom: 0;
+					margin-top: 0;
+				}
+
+				&::before {
+					height: 0.2rem;
+					width: 100%;
+					left: 0;
+					border-radius: 0 0 1rem 1rem;
+					top: auto;
+					bottom: 0;
+				}
+			}
+		}
+
+		.settings_page {
+			width: auto;
+			margin: 0;
+			margin-top: 1rem;
+		}
 	}
 </style>

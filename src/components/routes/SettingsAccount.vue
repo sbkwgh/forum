@@ -148,5 +148,9 @@
 </script>
 
 <style lang='scss' scoped>
-	@import '../../assets/scss/variables.scss';
+	@media (max-width: 420px) {
+		.h1 {
+			display: none;
+		}
+	}
 </style>
