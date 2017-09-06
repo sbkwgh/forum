@@ -102,6 +102,7 @@
 			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.12);
 			transition: max-height 0.4s ease-out;
 			border-radius: 0.2rem;			
+			@include user-select(none);
 
 			@at-root #{&}--hidden {
 				max-height: 0;
@@ -138,7 +139,7 @@
 				transition: all 0.2s;
 
 				@at-root #{&}--show {
-					background-color: hsla(213, 35%, 5%, 0.76);
+					background-color: hsla(213, 35%, 5%, 0.5);
 				}
 			}
 
@@ -147,10 +148,11 @@
 				left: 0;
 				bottom: 0;
 				position: fixed;
-				font-size: 1.25rem;
+				font-size: 1.125rem;
 				opacity: 1;
 				border-radius: 0.25rem 0.25rem 0 0;
 				transition: opacity 0.2s, bottom 0.2s;
+				background-color: rgba(255, 255, 255, 0.97);
 
 				@at-root #{&}--hidden {
 					bottom: -100%;
@@ -159,7 +161,7 @@
 
 			}
 			@at-root #{&}__option {
-				padding: 1rem;
+				padding: 0.75rem;
 			}
 		}
 	}

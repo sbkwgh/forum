@@ -21,7 +21,7 @@
 			</div>
 		</header>
 
-				<div class='thread_side_bar'>
+		<div class='thread_side_bar'>
 			<loading-button
 				class='button--thin_text'
 				:class='{ "button--disabled" : !$store.state.thread.selectedPosts.length }'
@@ -433,9 +433,14 @@
 
 	@media (max-width: 420px) {
 		.thread_side_bar {
-			position: initial;
 			display: flex;
-			flex-direction: row-reverse;
+			position: initial;
+			flex-direction: row;
+			align-items: flex-end;
+
+			> * {
+				margin: 0 0.5rem;
+			}
 
 			.post_scrubber {
 				display: none;
@@ -446,6 +451,7 @@
 			width: 100%;
 			padding: 0.25rem 0.5rem;
 			box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25);
+			overflow: hidden;
 		}
 		.locked_thread {
 			width: 100%;

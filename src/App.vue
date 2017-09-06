@@ -487,7 +487,7 @@
 			box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
 			transition: left 0.2s;
 
-			.button {
+			> .button {
 				width: 100%;
 				border-radius: 0;
 				margin-bottom: 1rem;

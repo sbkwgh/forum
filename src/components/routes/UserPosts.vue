@@ -114,6 +114,7 @@
 	@media (max-width: 420px) {
 		.user_posts {
 			margin-top: 1rem;
+			overflow: hidden;
 		}
 	}
 </style>

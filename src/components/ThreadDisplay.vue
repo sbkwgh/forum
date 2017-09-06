@@ -165,6 +165,8 @@
 			}
 			@at-root #{&}__replies {
 				cursor: default;
+				width: 4rem;
+				text-align: right;
 			}
 	
 		@at-root #{&}__content {
