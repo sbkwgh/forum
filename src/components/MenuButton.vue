@@ -94,4 +94,17 @@
 			&:active { background-color: $color__lightgray--darker; }
 		}
 	}
+
+	@media (max-width: 420px) {
+		.menu_button {
+			@at-root #{&}__options {
+				box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 3px 6px rgba(0, 0, 0, 0.24);
+			}
+
+			@at-root #{&}__option {
+				padding: 0.75rem;
+				font-size: 1.125rem;
+			}
+		}
+	}
 </style>

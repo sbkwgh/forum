@@ -148,6 +148,11 @@ b, strong {
 		@include filled_button($color__red--primary, $color__red--darker);
 	}
 }
+@media (max-width: 420px) {
+	.button {
+		user-select: none;
+	}
+}
 
 .input {
 	border: 1px solid $color__gray--primary;
