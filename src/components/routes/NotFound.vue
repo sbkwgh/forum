@@ -7,7 +7,7 @@
 				The page you're looking for <strong>{{$route.fullPath}}</strong> doesn't exist.
 			</p>
 			<p>
-				<router-link to='/' class='button'>Click to go home</router-link> or
+				<router-link to='/' class='button'>Click to go home</router-link> <span>or</span>
 				<search-box
 					class='not_found__search_box'
 					placeholder='Try a search'
@@ -55,6 +55,26 @@
 
 		@at-root #{&}__search_box {
 			margin-left: 0.5rem
+		}
+	}
+
+	@media (max-width: 420px) {
+		.not_found {
+			@at-root #{&}__title {
+				font-size: 2.5rem;
+			}
+
+			@at-root #{&}__box {
+				p:nth-child(2) {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+
+					span {
+						margin: 0.5rem 0;
+					}
+				}
+			}
 		}
 	}
 </style>
