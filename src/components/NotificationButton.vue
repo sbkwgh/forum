@@ -337,7 +337,7 @@
 			}
 
 			@at-root #{&}__item {
-				@at-root #{&}--no_border &:last-child {
+				@at-root #{&}--no_border:last-child {
 					border: none;
 				}
 
@@ -458,6 +458,29 @@
 			width: 2.4rem;
 			top: 0.5rem;
 			border-radius: 0.25rem;
+
+			@at-root #{&}__menu_group {
+				left: calc(3.5rem - 100vw);
+				width: calc(100vw - 0.25rem);
+			}
+
+			@at-root #{&}__menu {
+				width: 100%;
+				left: unset;
+
+				@at-root #{&}__empty {
+					font-weight: normal;
+				}
+			}
+
+			@at-root #{&}__small_triangle {
+				left: unset;
+				right: 1.5rem;
+			}
+			@at-root #{&}__big_triangle {
+				left: unset;
+				right: 1.55rem;
+			}
 		}
 	}
 </style>
