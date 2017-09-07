@@ -1,5 +1,5 @@
 <template>
-	<div class='select_button'>
+	<div class='select_button' :class='{"select_button--touch": !touchDisabled}'>
 		<div
 			class='select_button__overlay'
 			:class='{ "select_button__overlay--show": !hideMenu }'
@@ -29,7 +29,7 @@
 <script>
 	export default {
 		name: 'SelectButton',
-		props: ['options', 'value', 'name'],
+		props: ['options', 'value', 'name', 'touch-disabled'],
 		methods: {
 			toggleMenu () {
 				this.hideMenu = !this.hideMenu;
@@ -134,34 +134,41 @@
 	}
 
 	@media (max-width: 425px) {
-		.select_button {
-			@at-root #{&}__overlay {
-				transition: all 0.2s;
+		.select_button__option {
+			font-size: 1.125rem;
+			padding: 0.5rem 0.75rem;
+		}
 
-				@at-root #{&}--show {
-					background-color: hsla(213, 35%, 5%, 0.5);
+		.select_button--touch {
+			.select_button {
+				#{&}__overlay {
+					transition: all 0.2s;
+
+					@at-root #{&}--show {
+						background-color: hsla(213, 35%, 5%, 0.5);
+					}
 				}
-			}
 
-			@at-root #{&}__options {
-				width: 100%;
-				left: 0;
-				bottom: 0;
-				position: fixed;
-				font-size: 1.125rem;
-				opacity: 1;
-				border-radius: 0.25rem 0.25rem 0 0;
-				transition: opacity 0.2s, bottom 0.2s;
-				background-color: rgba(255, 255, 255, 0.97);
+				@at-root #{&}__options {
+					width: 100%;
+					left: 0;
+					bottom: 0;
+					position: fixed;
+					font-size: 1.125rem;
+					opacity: 1;
+					border-radius: 0.25rem 0.25rem 0 0;
+					transition: opacity 0.2s, bottom 0.2s;
+					background-color: rgba(255, 255, 255, 0.97);
 
-				@at-root #{&}--hidden {
-					bottom: -100%;
-					opacity: 0;
-				} 
+					@at-root #{&}--hidden {
+						bottom: -100%;
+						opacity: 0;
+					} 
 
-			}
-			@at-root #{&}__option {
-				padding: 0.75rem;
+				}
+				@at-root #{&}__option {
+					padding: 0.75rem;
+				}
 			}
 		}
 	}

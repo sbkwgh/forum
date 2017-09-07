@@ -12,7 +12,7 @@
 			<div class='report_post_modal__modal'>
 				<h3>Report this post</h3>
 				<div class='report_post_modal--margin'>Select a reason for reporting this post below:</div>
-				<select-button :options='reportOptions' v-model='selectedOption' class='report_post_modal--margin'></select-button>
+				<select-button :options='reportOptions' v-model='selectedOption' class='report_post_modal--margin' :touch-disabled='true'></select-button>
 				<div >
 					<button class='button button--modal' @click.stop='setShowModal(false)'>Cancel</button>
 					<button class='button button--modal' @click.stop='submitReport'>Submit</button>
