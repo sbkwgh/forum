@@ -490,11 +490,25 @@
 			> .button {
 				width: 100%;
 				border-radius: 0;
+				margin: 0;
 				margin-bottom: 1rem;
+			}
+
+			&::before {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 0.3rem;
+				content: '';
+				background: linear-gradient(to right, hsl(200, 98%, 43%), hsla(193, 98%, 48%, 1));
 			}
 		}
 		.header__group:nth-child(2).header__group--show {
 			left: 0;
+		}
+		.search_box {
+			margin: 0;
 		}
 	}
 </style>
