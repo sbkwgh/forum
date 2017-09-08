@@ -477,7 +477,6 @@
 
 			@at-root #{&}__button {
 				border: none;
-				padding: 1px;
 
 				&::before {
 					opacity: 1;
@@ -491,6 +490,14 @@
 			width: 2.4rem;
 			top: 0.5rem;
 			border-radius: 0.25rem;
+
+			@at-root #{&}__button {
+				border: none;
+
+				span {
+					top: 0.5rem;
+				}
+			}
 
 			@at-root #{&}__menu_group {
 				left: calc(3.5rem - 100vw);
