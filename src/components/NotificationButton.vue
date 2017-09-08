@@ -404,6 +404,7 @@
 			position: relative;
 			height: 2.5rem;
 			width: 2.5rem;
+			transition: border 0.4s, padding 0.4s;
 
 			@at-root #{&}--shake {
 				animation-name: shake;
@@ -452,6 +453,38 @@
 	}
 
 	@media (max-width: 420px) {
+		//Because the notification button is
+		//actually a child of the hamburger menu
+		//it 'pops up' when the overlay is showing
+		//so we cover it with its own overlay
+		//hacky but it works...
+		.notification_button__button::before {
+		 	content: '';
+		 	position: absolute;
+		 	top: 0;
+		 	left: 0;
+		 	pointer-events: none;
+		 	opacity: 0;
+		 	width: 100%;
+		 	border-radius: 0.25rem;
+		 	height: 100%;
+		 	background-color: hsla(215, 13%, 25%, 0.5);
+		 	transition: all 0.4s;
+		}
+		.header__group--show .notification_button {
+			cursor: default;
+			pointer-events: none;
+
+			@at-root #{&}__button {
+				border: none;
+				padding: 1px;
+
+				&::before {
+					opacity: 1;
+				}
+			}
+		}
+
 		.notification_button {
 			position: fixed;
 			right: 0.5rem;

@@ -424,7 +424,18 @@
 			display: none;
 		}
 
-		@at-root #{&}__overlay { display: none; }
+		@at-root #{&}__overlay {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			pointer-events: none;
+			opacity: 0;
+			background-color: hsla(215, 13%, 25%, 0.5);
+			transition: all 0.4s;
+		}
 	}
 
 	.logo {
@@ -455,18 +466,9 @@
 			cursor: pointer;
 		}
 
-		.header__overlay {
-			width: 100%;
-			height: 100%;
-			display: none;
-			position: fixed;
-			top: 0;
-			left: 0;
-			z-index: 1;
-
-			@at-root #{&}--show {
-				display: block;
-			}
+		.header__overlay--show {
+			pointer-events: all;
+			opacity: 1;
 		}
 
 		.header__group:first-child {
