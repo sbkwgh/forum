@@ -402,6 +402,7 @@
 
 		.editor {
 			flex-direction: column;
+			overflow-x: hidden;
 
 			@at-root #{&}__input, #{&}__preview {
 				border: 0;
