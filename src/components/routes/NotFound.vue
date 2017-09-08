@@ -65,6 +65,8 @@
 			}
 
 			@at-root #{&}__box {
+				word-wrap: break-word;
+
 				p:nth-child(2) {
 					display: flex;
 					flex-direction: column;
