@@ -11,7 +11,7 @@
 		<div
 			slot='display'
 			class='replying_to__display'
-			@click='$emit("click")'
+			@click.stop='$emit("click")'
 		>
 			<span class='fa fa-reply replying_to__icon'></span>
 			{{username || '[deleted]'}}

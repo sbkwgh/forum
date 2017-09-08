@@ -38,7 +38,7 @@
 				v-if='post.replyingToUsername'
 				:replyId='post.replyId'
 				:username='post.replyingToUsername'
-				@click.stop='$emit("goToPost", post.replyId, true)'
+				@click='$emit("goToPost", post.replyId, true)'
 			></replying-to>
 			<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		</div>
@@ -58,7 +58,7 @@
 						:post='reply'
 						:hover='hover'
 						:first='index === 0'
-						@click.stop='$emit("goToPost", reply.postNumber)'
+						@click='$emit("goToPost", reply.postNumber)'
 					></post-reply>
 				</div>
 				

@@ -10,7 +10,7 @@
 		<div
 			slot='display'
 			class='post_reply__display'
-			@click='$emit("click")'
+			@click.stop='$emit("click")'
 		>
 			<div
 				class='post_reply__letter'
