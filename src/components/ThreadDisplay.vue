@@ -28,7 +28,7 @@
 					@click='goToPost'
 				>
 					<span class='fa fa-reply fa-fw'></span>
-					Latest reply by
+					<span class='thread_display__latest_reply__text'>Latest reply by</span>
 					<span class='thread_display__username'>{{replyUsername}}</span>
 					&middot;
 					<span class='thread_display__date'>{{thread.Posts[1].createdAt | formatDate}}</span>
@@ -187,6 +187,22 @@
 
 			@at-root #{&}__content {
 				display: none;
+			}
+
+			@at-root #{&}__replies_bar {
+				position: relative;
+				left: -3.25rem;
+				width: calc(100% + 3.25rem);
+			}
+
+			@at-root #{&}__latest_reply {
+				.fa {
+					margin-right: 0.25rem;
+				}
+
+				@at-root #{&}__text {
+					display: none;
+				}
 			}
 		}
 	}

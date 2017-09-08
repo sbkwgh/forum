@@ -42,6 +42,7 @@
 			></replying-to>
 			<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		</div>
+		<div class='post__date post__date--mobile'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		<div class='post__content' v-html='post.content'></div>
 		<div class='post__footer' :class='{ "post__footer--show": hover }'>
 			<div
@@ -269,14 +270,18 @@
 		@at-root #{&}__date {
 			color: $color__gray--darkest;
 			margin-right: 0.5rem;
+
+			@at-root #{&}--mobile {
+				display: none;
+			}
 		}
 		@at-root #{&}__content {
-			padding: 0.5rem 0 0.5rem 4rem;
+			padding: 0 0.5rem 0 4rem;
 		}
 		@at-root #{&}__footer {
 			padding: 0.5rem 0 0.75rem 0.5rem;
 			display: flex;
-			align-items: baseline;
+			align-items: center;
 			justify-content: space-between;
 			opacity: 0.6;
 			transition: opacity 0.2s;
@@ -313,6 +318,20 @@
 
 			&:hover {
 				color: $color__darkgray--darkest;
+			}
+		}
+	}
+
+	@media (max-width: 420px) {
+		.post {
+			@at-root #{&}__date {
+				display: none;
+
+				@at-root #{&}--mobile {
+					display: block;
+					padding-left: 4rem;
+					font-size: 0.9rem;
+				}
 			}
 		}
 	}
