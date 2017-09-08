@@ -476,7 +476,7 @@
 		.header__group:nth-child(2) {
 			position: fixed;
 			padding-top: 1.5rem;
-			width: 15rem;
+			width: 17rem;
 			display: flex;
 			flex-direction: column;
 			z-index: 2;
@@ -484,8 +484,8 @@
 			top: 0;
 			left: calc(-100% - 2rem);
 			height: 100%;
-			box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
-			transition: left 0.2s;
+			box-shadow: none;
+			transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease-in;
 
 			> .button {
 				width: 100%;
@@ -506,9 +506,11 @@
 		}
 		.header__group:nth-child(2).header__group--show {
 			left: 0;
+			box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
 		}
 		.search_box {
 			margin: 0;
+			display: inline-block;
 		}
 	}
 </style>
