@@ -12,8 +12,10 @@
 		<div class='widgets__categories_chart__main'>
 			<svg>
 				<g ref='g'></g>
+				<text class='widgets__categories_chart__empty' x='50%' y='53%' v-if='!anyThreadsExist'>No threads yet</text>
 			</svg>
 			<div class='widgets__categories_chart__main__legend'>
+				<div class='widgets__categories_chart__title'>categories</div>
 				<div
 					v-for='(category, $index) in data'
 					class='widgets__categories_chart__label'
@@ -51,6 +53,13 @@
 				tooltipItem: 0,
 
 				data: []
+			}
+		},
+		computed: {
+			anyThreadsExist () {
+				return this.data.reduce((sum, category) => {
+					return sum + category.value
+				}, 0)
 			}
 		},
 		methods: {
@@ -145,6 +154,13 @@
 			@include loading-overlay(#fff, 0.25rem 0.25rem 0 0);
 		}
 
+		@at-root #{&}__empty {
+			font-style: italic;
+			text-anchor: middle;
+			font-size: 1.25rem;
+			alignment-baseline: central;
+		}
+
 		@at-root #{&}__main {
 			display: flex;
 			flex-direction: row;
@@ -164,6 +180,12 @@
 			@at-root #{&}__legend {
 				padding: 10px 0;
 			}
+		}
+
+		@at-root #{&}__title {
+			font-variant: small-caps;
+			font-size: 1.125rem;
+			margin-left: -0.4rem;
 		}
 
 		@at-root #{&}__label {
