@@ -68,6 +68,10 @@
 			border: 0;
 			border-right: thin solid $color__gray--darker;
 			border-radius: 0 0.125rem 0.125rem 0;
+
+			&:hover, &:active {
+				border-color: $color__gray--darker;
+			}
 		}
 	}
 </style>
