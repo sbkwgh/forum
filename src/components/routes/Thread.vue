@@ -91,16 +91,19 @@
 				<thread-post-placeholder
 					v-if='!posts.length'
 					v-for='n in 3'
+					:key='n'
 					:class='{"post--last": n === 2}'
 				></thread-post-placeholder>
 
 				<thread-post-placeholder
 					v-if='$store.state.thread.loadingPosts === "previous"'
 					v-for='n in $store.state.thread.previousPostsCount'
+					:key='n'
 				>
 				</thread-post-placeholder>
 				<thread-post
 					v-for='(post, index) in posts'
+					:key='post.index'
 
 					@reply='replyUser'
 					@goToPost='goToPost'
@@ -117,6 +120,7 @@
 				<thread-post-placeholder
 					v-if='$store.state.thread.loadingPosts === "next"'
 					v-for='n in $store.state.thread.nextPostsCount'
+					:key='n'
 				>
 				</thread-post-placeholder>
 			</scroll-load>

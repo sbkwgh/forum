@@ -21,6 +21,8 @@
 				</div>
 				<router-link
 					v-for='category in categories'
+					:key='category.value'
+
 					class='threads_main__side_bar__menu_item'
 					:class='{"threads_main__side_bar__menu_item--selected": category.value === selectedCategory}'
 					:to='"/category/" + category.value'
@@ -55,12 +57,12 @@
 					:loading='loading'
 					@loadNext='getThreads'
 				>
-					<thread-display-placeholder v-for='n in newThreads' v-if='loadingNewer'></thread-display-placeholder>
+					<thread-display-placeholder v-for='n in newThreads' v-if='loadingNewer' :key='n'></thread-display-placeholder>
 					<div class='threads_main__load_new' v-if='newThreads' @click='getNewerThreads'>
 						Load {{newThreads}} new {{newThreads | pluralize('thread')}}</span>
 					</div>
-					<thread-display v-for='thread in filteredThreads' :thread='thread'></thread-display>
-					<thread-display-placeholder v-for='n in nextThreadsCount' v-if='loading'></thread-display-placeholder>
+					<thread-display v-for='thread in filteredThreads' :thread='thread' :key='thread.id'></thread-display>
+					<thread-display-placeholder v-for='n in nextThreadsCount' :key='n' v-if='loading'></thread-display-placeholder>
 				</scroll-load>
 
 				<div key='no threads' v-else class='threads_main__threads overlay_message'>

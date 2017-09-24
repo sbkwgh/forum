@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-module.exports = function (route, resourceId) {
+export default function (route, resourceId) {
 	//In which case resourceId is really the username
 	if(route === 'userPosts' || route === 'userThreads') {
 		axios

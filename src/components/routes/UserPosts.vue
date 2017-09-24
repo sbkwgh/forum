@@ -14,6 +14,8 @@
 		>
 			<thread-post
 				v-for='(post, index) in posts'
+				:key='post.id'
+
 				:post='post'
 				:show-thread='true'
 				:click-for-post='true'
@@ -22,6 +24,7 @@
 			<thread-post-placeholder
 				v-if='loadingPosts'
 				v-for='n in nextPostsCount'
+				:key='n'
 			></thread-post-placeholder>
 		</scroll-load>
 		<template v-else>This user hasn't posted anything yet</template>
