@@ -1,13 +1,13 @@
 {
 	"development": {
-		"username": "admin",
+		"username": "root",
 		"password": "password",
 		"database": "forum_dev",
 		"host": "localhost",
 		"dialect": "mysql"
 	},
 	"test": {
-		"username": "admin",
+		"username": "root",
 		"password": "password",
 		"database": "forum_test",
 		"host": "localhost",
