@@ -39,7 +39,7 @@ b, strong {
 }
 
 .button {
-	border: 1px solid $color__gray--primary;
+	border: 1px solid $color__gray--darker;
 	display: inline-block;
 	border-radius: 0.25rem;
 	text-align: center;
@@ -55,7 +55,7 @@ b, strong {
 
 	&:hover {
 		background-color: $color__lightgray--primary;
-		border-color: $color__gray--darker;
+		border-color: $color__gray--darkest;
 	}
 	&:active {
 		background-color: $color__lightgray--darker;
@@ -155,16 +155,13 @@ b, strong {
 }
 
 .input {
-	border: 1px solid $color__gray--primary;
+	border: 1px solid $color__gray--darker;
 	border-radius: 0.25rem;
 	@include text;
 	padding: 0.25rem;
 	outline: none;
 
-	&:hover {
-		border-color: $color__gray--darker;
-	}
-	&:focus {
+	&:hover, &:focus {
 		border-color: $color__gray--darkest;
 	}
 }
