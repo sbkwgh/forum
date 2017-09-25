@@ -310,7 +310,7 @@
 			background-image: none;
 			font-weight: 300;
 
-			#{&}__border {
+			@at-root #{&}__border {
 				display: inline-block;
 				height: 0.75rem;
 				width: 0.75rem;
@@ -329,13 +329,13 @@
 				filter: brightness(0.8);
 			}
 
-			#{&}__text {
+			@at-root #{&}__text {
 				filter: saturate(0.75), brightness(0.75);
 			}
 			
 
-			#{&}--selected {
-				font-weight: bold;
+			@at-root #{&}--selected {
+				font-weight: normal;
 
 				.threads_main__side_bar__menu_item__border {
 					opacity: 1;
