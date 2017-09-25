@@ -1,0 +1,69 @@
+<template>
+	<div class='modal_window__overlay' :class='{"modal_window--show": value}' @click.self='closeModal'>
+		<div class='modal_window' :class='{"modal_window--show": value}' :style='{"width": width || "20rem"}'>
+			<slot></slot>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default {
+		name: 'ModalWindow',
+		props: ['value', 'width'],
+		methods: {
+			closeModal () {
+				this.$emit('input', false)
+			}
+		}
+	}
+</script>
+
+<style lang='scss' scoped>
+	@import '../assets/scss/variables.scss';
+
+	.modal_window__overlay {
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		z-index: 3;
+		top: 0;
+		left: 0;
+
+		opacity: 0;
+		pointer-events: none;
+		transition:  opacity 0.3s;
+
+		@at-root #{&}--show {
+			opacity: 1;
+			pointer-events: all;
+			transition: opacity 0.3s;
+		}
+	}
+	.modal_window {
+		box-shadow: 0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.10);
+		background-color: #fff;
+		//margin-top: -3rem;
+		opacity: 0;
+		position: relative;
+		border: 0.125rem solid $color__gray--darkest;
+		border-radius: 0.25rem;
+		pointer-events: none;
+
+		transform: scale(1.1);
+
+		transition: margin-top 0.3s, opacity 0.3s, transform 0.3s;
+
+		@at-root #{&}--show {
+			margin-top: 0;
+			transform: scale(1);
+			opacity: 1;
+			pointer-events: all;
+
+			transition: all 0.3s;
+		}
+	}
+</style>

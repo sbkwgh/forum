@@ -1,0 +1,254 @@
+@import './variables.scss';
+
+body {
+	background-color: rgba(245, 245, 245, 0.5);
+}
+
+pre {
+	background-color: $color__gray--primary;
+	padding: 0.5rem;
+}
+
+a {
+	font-weight: 700;
+	color: $color__darkgray--darker;
+	position: relative;
+	    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=) repeat-x 100% 100%;
+	    text-decoration: none;
+
+
+ 	&:hover, &:visited {
+ 		color: $color__darkgray--primary;
+ 	}
+ 	&:active {
+ 		color: $color__darkgray--darker;
+ 	}
+}
+
+blockquote {
+	background-color: $color__gray--primary;
+	border-left: thick solid $color__gray--darkest;
+
+	& * {
+		padding: 0.5rem;
+	}
+}
+
+b, strong {
+	font-weight: 700;
+}
+
+.button {
+	border: 1px solid $color__gray--darker;
+	display: inline-block;
+	border-radius: 0.25rem;
+	text-align: center;
+	@include text($font--role-default, 1rem, bold);
+	padding: 0.5rem;
+	cursor: pointer;
+	letter-spacing: 0.25px;
+	background: none;
+	background-color: #fff;
+	color: lighten($color__text--primary, 30%) !important;
+	transition: background-color 0.2s, border-color 0.2s, filter 0.2s;
+	outline: none;
+
+	&:hover {
+		background-color: $color__lightgray--primary;
+		border-color: $color__gray--darkest;
+	}
+	&:active {
+		background-color: $color__lightgray--darker;
+		border-color: $color__gray--darkest;
+	}
+
+	@at-root #{&}--borderless {
+		color: $color__text--secondary;
+		border-color: transparent;
+	}
+
+	@at-root #{&}--thin_text {
+		font-weight: 400;
+	}
+
+	@at-root #{&}--margin {
+		margin-right: 0.5rem;
+	}
+
+	@at-root #{&}--modal {
+		float: right;
+		margin-bottom: 1rem;
+
+		&:last-child {
+			margin-right: 0.5rem;
+		}
+	}
+
+	@at-root #{&}--color_input {
+		width: 10rem;
+		margin-bottom: 1rem;
+		height: 31px;
+		padding: 0.25rem;
+	}
+
+	@at-root #{&}--disabled {
+		position: relative;
+		pointer-events: none;
+
+		@include user-select(none);
+
+		&::after {
+			content: '';
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+			background-color: rgba(240, 240, 240, 0.4);
+		}
+	}
+
+	@at-root #{&}--orange {
+		border-color: $color__orange--primary;
+		&:hover { border-color: $color__orange--darker; }
+		&:active { border-color: $color__orange--darkest; }
+	}
+	@at-root #{&}--lightblue {
+		border-color: $color__lightblue--primary;
+		&:hover { border-color: $color__blue--primary; }
+		&:active { border-color: $color__blue--darker; }
+	}
+
+	@mixin filled_button($background, $border, $text: #fff) {
+		background-color: $background;
+		border-color: $border;
+		color: $text !important;
+		
+		&:hover {
+			background-color: darken($background, 5%);
+			border-color: rgba($border, 0.6);
+			color: darken(#fff, 5%) !important;
+		}
+		&:active {
+			background-color: darken($background, 10%);
+			border-color: rgba($border, 0.6);
+			color: darken(#fff, 10%) !important;
+		}
+	}
+	@at-root #{&}--blue {
+		@include filled_button(
+			$color__blue--primary,
+			$color__blue--darker
+		);
+	}
+	@at-root #{&}--green {
+		@include filled_button($color__green--primary, $color__green--darker);
+	}
+	@at-root #{&}--red {
+		@include filled_button($color__red--primary, $color__red--darker);
+	}
+}
+@media (max-width: 420px) {
+	.button {
+		user-select: none;
+	}
+}
+
+.input {
+	border: 1px solid $color__gray--darker;
+	border-radius: 0.25rem;
+	@include text;
+	padding: 0.25rem;
+	outline: none;
+
+	&:hover, &:focus {
+		border-color: $color__gray--darkest;
+	}
+}
+
+.h1 {
+	@include text($font--role-default, 3rem);
+}
+.h3 {
+	@include text($font--role-default, 1.5rem);
+	font-weight: 500;
+
+	@at-root #{&}--margin_top {
+		margin-top: 1.5rem;
+	}
+}
+
+.p--condensed {
+	margin-top: 0.25rem;
+}
+
+.category_widget {
+	@at-root #{&}__box {
+		background-color: #fff;
+		padding: 1.5rem;
+		border-radius: 0.25rem;
+		margin-bottom: 1rem;
+
+		@extend .shadow_border;
+	}
+
+	@at-root #{&}__text {
+		margin-bottom: 1rem;
+
+		@at-root #{&}__title {
+			margin-bottom: 0.5rem;
+			font-weight: bold;
+			font-size: 1.25rem;
+		}
+	}
+}
+
+.overlay_message {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding-right: 5rem;
+	font-size: 2rem;
+	user-select: none;
+	cursor: default;
+	transition: none;
+	color: $color__gray--darkest;
+
+	span {
+		font-size: 4rem;
+		color: $color__gray--darker;
+	}
+
+	@at-root #{&}__loading {
+		margin-top: 2rem;
+		margin-bottom: 0.5rem;
+	}
+}
+@media (max-width: 420px) {
+	div.overlay_message {
+		width: 100%;
+		text-align: center;
+		padding: 0;
+		margin-top: 5rem;
+	}
+}
+
+//Vue transition class
+.fade-enter-active, .fade-leave-active {
+	transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to {
+	opacity: 0;
+}
+
+.slide-enter-active, .slide-leave-active {
+	transition: opacity 0.2s, max-height 0.2s;
+	overflow: hidden;
+}
+.slide-enter, .slide-leave-to {
+	max-height: 0;
+}
+.slide-enter-to, .slide-leave {
+	max-height: 20rem;
+}

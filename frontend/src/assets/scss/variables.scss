@@ -1,0 +1,177 @@
+
+$font--role-default: 'Lato', sans-serif;
+$font--role-emphasis: 'Montserrat', sans-serif;
+
+$color__text--primary: rgba(0, 0, 0, 0.87);
+$color__text--secondary: rgba(0, 0, 0, 0.54);
+
+$color__lightgray--primary: #F5F5F5;
+$color__lightgray--darker: #EEEEEE;
+$color__lightgray--darkest: #E0E0E0;
+
+$color__gray--primary: #EEEEEE;
+$color__gray--darker: #E0E0E0;
+$color__gray--darkest: #BDBDBD;
+
+$color__darkgray--primary: #757575;
+$color__darkgray--darker: #525252;
+$color__darkgray--darkest: #424242;
+
+$color__orange--primary: #F57C00;
+$color__orange--darker: #EF6C00;
+$color__orange--darkest: #de621c;
+
+$color__green--primary: rgba(76, 175, 80, 0.86);
+$color__green--darker: #349238;
+$color__green--darkest: #1B5E20;
+
+$color__blue--primary: #1E88E5;
+$color__blue--darker: #1565C0;
+$color__blue--darkest: #0D47A1;
+
+$color__red--primary: #e74860;
+$color__red--darker: #B71C1C;
+
+$color__lightblue--primary: #03A9F4;
+
+@keyframes flash {
+	0% {
+		background-color: $color__gray--darker;
+	}
+	50% {
+		background-color: $color__lightgray--darkest;
+	}
+	75% {
+		background-color: $color__gray--primary;
+	}
+	to {
+		background-color: $color__gray--darker;
+	}
+}
+
+@mixin flash {
+	animation-name: flash;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@mixin loading-overlay($background-color: #fff, $border-radius: 0.25rem) {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background-color: $background-color;
+	z-index: 1;
+	top: 0;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	pointer-events: none;
+	transition: all 0.2s;
+	@include user-select(none);
+	cursor: default;
+	border-radius: $border-radius;
+
+	@at-root #{&}--show {
+		opacity: 1;
+		pointer-events: all;
+	}
+
+	@at-root #{&}__message {
+		font-size: 1.5rem;
+		color: #fff;
+		font-style: italic;
+	}
+}
+
+@mixin text($family: $font--role-default, $size: 1rem, $weight: 300) {
+	font-family: $family;
+	font-size: $size;
+	font-weight: $weight;
+}
+
+@mixin optional-at-root($sel) {
+	@at-root #{if(not &, $sel, selector-append(&, $sel))} {
+		@content;
+	}
+}
+
+@mixin placeholder {
+	@include optional-at-root('::-webkit-input-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root(':-moz-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root('::-moz-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root(':-ms-input-placeholder') {
+		@content;
+	}
+}
+
+@mixin user-select($select) {
+	@each $pre in -webkit-, -moz-, -ms-, -o- {
+		#{$pre + user-select}: #{$select};
+	}
+	#{user-select}: #{$select};
+}
+
+.shadow_border {
+	box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25);
+}
+.shadow_border--hover {
+	box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25), 0 0.2rem 0.35rem rgba(175, 175, 175, 0.25);
+}
+
+
+.tab_button {
+	padding: 0.5rem 0.75rem;
+	border-radius: 3rem;
+	cursor: pointer;
+	transition: all 0.2s;
+	margin-right: 0.5rem;
+	display: inline-block;
+	position: relative;
+	top: -0.1rem; 
+
+	@include user-select(none);
+
+	&:hover {
+		background-color: $color__lightgray--darker;
+	}
+	&:active {
+		background-color: #dcdcdc;
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		background-color: $color__blue--primary;
+		width: calc(100% - 1rem);
+		left: 0.5rem;
+		bottom: -0.3rem;
+		height: 0.2rem;
+		opacity: 0;
+		transition: opacity 0.2s;
+	}
+
+	@at-root #{&}--selected {
+		cursor: default;
+		font-weight: bold;
+
+		&:active, &:hover {
+			background-color: transparent;
+		}
+
+		&::after {
+			opacity: 1;
+		}
+	}
+}
