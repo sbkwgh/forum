@@ -59,7 +59,7 @@
 
 			@include placeholder {
 				@include text;
-				color: $color__lightgray--darkest;
+				color: $color__darkgray--primary;
 			}
 		}
 		@at-root #{&}__button {
