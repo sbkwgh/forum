@@ -136,7 +136,7 @@ router.get('/:category', async (req, res) => {
 })
 
 router.all('*', (req, res, next) => {
-	if(!req.session.loggedIn || !req.session.admin) {
+	if(!req.session.admin) {
 		res.status(401)
 		res.json({
 			errors: [Errors.requestNotAuthorized]
