@@ -43,6 +43,7 @@
 
 	.search_box {
 		border: thin solid $color__gray--darker;
+		border-right: 0;
 		border-radius: 0.25rem;
 		outline: none;
 		display: inline-block;
@@ -63,8 +64,14 @@
 		}
 		@at-root #{&}__button {
 			@extend .button;
+
 			border: 0;
+			border-right: thin solid $color__gray--darker;
 			border-radius: 0 0.125rem 0.125rem 0;
+
+			&:hover, &:active {
+				border-color: $color__gray--darker;
+			}
 		}
 	}
 </style>

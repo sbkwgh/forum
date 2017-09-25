@@ -184,9 +184,9 @@
 					errors.push({name: 'name', error: 'Cannot be blank'})
 				} if(this.showPoll && !this.pollQuestion.trim().length) {
 					errors.push({name: 'pollQuestion', error: 'Cannot be blank'})
-			 	} if (this.pollAnswers.length < 2) {
+			 	} if (this.showPoll && this.pollAnswers.length < 2) {
 			 		errors.push({name: 'pollAnswer', error: 'You need at least 2 answers'})
-				} if (this.hasDuplicates(this.pollAnswers, i => i.answer)) {
+				} if (this.showPoll && this.hasDuplicates(this.pollAnswers, i => i.answer)) {
 			 		errors.push({name: 'pollAnswer', error: 'Your answers can\'t contain any duplicates'})
 				} if(errors.length) {
 					this.setErrors(errors)
