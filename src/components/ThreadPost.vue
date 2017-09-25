@@ -55,6 +55,8 @@
 					<span class='post__footer_sub_group__text post__footer_sub_group__text--replies'>replies</span>
 					<post-reply
 						v-for='(reply, index) in post.Replies'
+						:key='reply.postNumber'
+
 						:post='reply'
 						:hover='hover'
 						:first='index === 0'

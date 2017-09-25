@@ -9,7 +9,10 @@
 				>
 					<thread-post
 						class='search__post'
+
 						v-for='post in posts'
+						:key='post.id'
+
 						:post='post'
 						:show-thread='true'
 						:click-for-post='true'
@@ -18,6 +21,7 @@
 						class='search__post'
 						v-if='loading'
 						v-for='n in next'
+						:key='n'
 					></thread-post-placeholder>
 				</scroll-load>
 			</div>
