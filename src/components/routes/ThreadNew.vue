@@ -61,7 +61,7 @@
 		</div>
 		<div class='editor' :class='{"editor--focus": focusInput}'>
 			<div class='editor__input'>
-				<div class='editor__format_bar'>
+				<div class='editor__format_bar editor__format_bar--editor'>
 					editor
 				</div>
 				<input-editor-core
@@ -355,6 +355,13 @@
 			justify-content: flex-end;
 			align-items: center;
 			font-variant: small-caps;
+
+			@at-root #{&}--preview {
+				border-radius: 0 0.25rem 0 0;
+			}
+			@at-root #{&}--editor {
+				border-radius: 0.25rem 0 0 0;
+			}
 		}
 
 		@at-root #{&}__input {
