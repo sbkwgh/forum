@@ -79,6 +79,7 @@
 		@at-root #{&}__main {
 			font-size: 2.3rem;
 			font-family: $font--role-emphasis;
+			text-align: center;
 		}
 
 		@at-root #{&}__message {
