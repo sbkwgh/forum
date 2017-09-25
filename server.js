@@ -1,6 +1,7 @@
 let express = require('express')
 let app = express()
 
+let sequelize = require('./models').sequelize
 let sockets = require('./lib/sockets')
 
 let config = require('./config/server.js')
@@ -42,14 +43,21 @@ app.use('/api/v1/log', require('./routes/log'))
 app.use('/api/v1/poll', require('./routes/poll'))
 app.use('/api/v1/backup', require('./routes/backup'))
 
+function main () {
+	let server = app.listen(config.port, () => {
+		console.log('Listening on ' + config.port)
 
-let server = app.listen(config.port, () => {
-	console.log('Listening on ' + config.port)
+		app.locals.appStarted = true
+		app.emit('appStarted')
+	})
 
-	app.locals.appStarted = true
-	app.emit('appStarted')
-})
+	sockets.init(app, server, session)
+}
 
-sockets.init(app, server, session)
+if(process.env.NODE_ENV === 'test') {
+	sequelize.sync({ force: true }).then(main)
+} else {
+	main()
+}
 
 module.exports = app
