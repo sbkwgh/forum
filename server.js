@@ -3,8 +3,6 @@ let app = express()
 
 let sockets = require('./lib/sockets')
 
-let sequelize = require('./models').sequelize
-
 let config = require('./config/server.js')
 
 //Middle-ware
@@ -43,20 +41,14 @@ app.use('/api/v1/search', require('./routes/search'))
 app.use('/api/v1/log', require('./routes/log'))
 app.use('/api/v1/poll', require('./routes/poll'))
 
-sequelize
-	.sync({ force: true })
-	.then(() => {
-		let server = app.listen(config.port, () => {
-			console.log('Listening on ' + config.port)
 
-			app.locals.appStarted = true
-			app.emit('appStarted')
-		})
+let server = app.listen(config.port, () => {
+	console.log('Listening on ' + config.port)
 
-		sockets.init(app, server, session)
-	})
-	.catch((err) => {
-		console.log(err)
-	})
+	app.locals.appStarted = true
+	app.emit('appStarted')
+})
+
+sockets.init(app, server, session)
 
 module.exports = app

@@ -12,7 +12,7 @@ module.exports = {
       updatedAt: Sequelize.DATE,
       
       content: {
-        Sequelize.TEXT,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       postNumber: Sequelize.INTEGER,

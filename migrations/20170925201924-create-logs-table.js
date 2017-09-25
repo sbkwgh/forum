@@ -11,7 +11,7 @@ module.exports = {
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
 
-      route: DataTypes.ENUM([
+      route: Sequelize.ENUM([
         'index',
         'search',
         'settingsAccount',
