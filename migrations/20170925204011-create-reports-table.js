@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('categories', {
+    return queryInterface.createTable('reports', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -10,21 +10,18 @@ module.exports = {
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
+      
+      reason: {
+        type: Sequelize.ENUM,
+        values: ['spam', 'inappropriate', 'harassment']
+      },
 
-      name: {
-        type: Sequelize.STRING,
-        unique: true,
-        allowNull: false,
-      },
-      value: {
-        type: Sequelize.STRING,
-        unique: true
-      },
-      color: Sequelize.STRING
+      FlaggedByUserId: Sequelize.INTEGER,
+      PostId: Sequelize.INTEGER
     })
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('categories');
+    return queryInterface.dropTable('reports');
   }
 };

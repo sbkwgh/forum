@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('categories', {
+    return queryInterface.createTable('pollquestions', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -10,21 +10,16 @@ module.exports = {
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
-
-      name: {
+      
+      question: {
         type: Sequelize.STRING,
-        unique: true,
-        allowNull: false,
+        allowNull: false
       },
-      value: {
-        type: Sequelize.STRING,
-        unique: true
-      },
-      color: Sequelize.STRING
+      UserId: Sequelize.INTEGER
     })
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('categories');
+    return queryInterface.dropTable('pollquestions');
   }
 };
