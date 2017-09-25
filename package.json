@@ -4,8 +4,8 @@
   "description": "Backend for forum",
   "main": "server.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test && node ./node_modules/mocha/bin/mocha  --harmony --timeout 30000",
-    "start": "cross-env NODE_ENV=development && node --harmony server.js"
+    "test": "cross-env NODE_ENV=test && sequelize db:migrate --env test && node ./node_modules/mocha/bin/mocha  --harmony --timeout 30000",
+    "start": "cross-env NODE_ENV=development && sequelize db:migrate && node --harmony server.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +20,7 @@
     "mysql": "^2.13.0",
     "randomcolor": "^0.4.4",
     "sequelize": "^3.30.0",
-    "sequelize-cli": "^2.5.1",
+    "sequelize-cli": "^2.8.0",
     "slug": "^0.9.1",
     "socket.io": "^1.7.3"
   },
