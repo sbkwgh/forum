@@ -11,27 +11,27 @@ import VueAxios from 'vue-axios'
 import App from './App'
 import store from './store/index'
 
-import Index from './components/routes/Index'
-import P from './components/routes/P'
-import Start from './components/routes/Start'
-import Thread from './components/routes/Thread'
-import ThreadNew from './components/routes/ThreadNew'
-import Search from './components/routes/Search'
+const Index = () => import('./components/routes/Index')
+const P = () => import('./components/routes/P')
+const Start = () => import('./components/routes/Start')
+const Thread = () => import('./components/routes/Thread')
+const ThreadNew = () => import('./components/routes/ThreadNew')
+const Search = () => import('./components/routes/Search')
 
-import User from './components/routes/User'
-import UserPosts from './components/routes/UserPosts'
-import UserThreads from './components/routes/UserThreads'
+const User = () => import('./components/routes/User')
+const UserPosts = () => import('./components/routes/UserPosts')
+const UserThreads = () => import('./components/routes/UserThreads')
 
-import Settings from './components/routes/Settings'
-import SettingsGeneral from './components/routes/SettingsGeneral'
-import SettingsAccount from './components/routes/SettingsAccount'
+const Settings = () => import('./components/routes/Settings')
+const SettingsGeneral = () => import('./components/routes/SettingsGeneral')
+const SettingsAccount = () => import('./components/routes/SettingsAccount')
 
-import Admin from './components/routes/Admin'
-import AdminDashboard from './components/routes/AdminDashboard'
-import AdminModerationReports from './components/routes/AdminModerationReports'
-import AdminModerationBannedUsers from './components/routes/AdminModerationBannedUsers'
-import AdminGeneral from './components/routes/AdminGeneral'
-import AdminBackup from './components/routes/AdminBackup'
+const Admin = () => import('./components/routes/Admin')
+const AdminDashboard = () => import('./components/routes/AdminDashboard')
+const AdminModerationReports = () => import('./components/routes/AdminModerationReports')
+const AdminModerationBannedUsers = () => import('./components/routes/AdminModerationBannedUsers')
+const AdminGeneral = () => import('./components/routes/AdminGeneral')
+const AdminBackup = () => import('./components/routes/AdminBackup')
 
 import NotFound from './components/routes/NotFound'
 
