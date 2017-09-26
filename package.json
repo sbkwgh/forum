@@ -12,6 +12,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.16.0",
+    "compression": "^1.7.0",
     "cross-env": "^3.1.4",
     "express": "^4.14.1",
     "express-session": "^1.15.1",

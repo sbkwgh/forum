@@ -10,6 +10,9 @@ let config = require('./config/server.js')
 let bodyParser = require('body-parser')
 let morgan = require('morgan')
 let expressSession = require('express-session')
+let compression = require('compression')
+
+let path = require('path')
 
 let session = expressSession({
 	secret: config.sessionSecret,
@@ -17,6 +20,7 @@ let session = expressSession({
 	saveUninitialized: true
 })
 
+app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session)
@@ -42,6 +46,11 @@ app.use('/api/v1/search', require('./routes/search'))
 app.use('/api/v1/log', require('./routes/log'))
 app.use('/api/v1/poll', require('./routes/poll'))
 app.use('/api/v1/backup', require('./routes/backup'))
+
+app.use('/static', express.static(path.join(__dirname, 'frontend', 'dist', 'static')))
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
+})
 
 function main () {
 	let server = app.listen(config.port, () => {
