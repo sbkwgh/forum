@@ -6,13 +6,17 @@ const config = require('../config/config.json');
 const env = process.env.NODE_ENV || 'development';
 const db = {};
 
-let sequelize = new Sequelize(
-	config[env].database, config[env].username, config[env].password, {
-		host: config[env].host,
-		dialect: config[env].dialect,
-		logging: false
-	}
-);
+if(env === 'production') {
+	var sequelize = new Sequelize(process.env.DATABASE_URL)
+} else {
+	var sequelize = new Sequelize(
+		config[env].database, config[env].username, config[env].password, {
+			host: config[env].host,
+			dialect: config[env].dialect,
+			logging: false
+		}
+	);
+}
 
 fs
 	.readdirSync(__dirname)

@@ -8,7 +8,6 @@ let config = require('./config/server.js')
 
 //Middle-ware
 let bodyParser = require('body-parser')
-let morgan = require('morgan')
 let expressSession = require('express-session')
 let compression = require('compression')
 
@@ -26,12 +25,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session)
 
 if(process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
-	app.use(morgan('dev'))
+	app.use(require('morgan')('dev'))
 }
-if(process.env.NODE_ENV === 'production') {
+/*if(process.env.NODE_ENV === 'production') {
 	app.set('trust proxy', 1);
-	session.cookie.secure = true
-}
+
+	console.log(session)
+	session.cookie.secure = 'auto'
+}*/
 
 app.use('/api/v1/user', require('./routes/user'))
 app.use('/api/v1/admin_token', require('./routes/admin_token'))

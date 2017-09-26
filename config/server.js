@@ -1,4 +1,4 @@
 module.exports = {
 	port: process.env.PORT || 3000,
-	sessionSecret: 'session secret'
+	sessionSecret: process.env.SESSION_SECRET || 'session secret'
 }
