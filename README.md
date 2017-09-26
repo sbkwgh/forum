@@ -1,161 +1,21 @@
-# forum-backend
+# Vue Forum
 
-This is the backend (or 'api component') of the forum software to go along with the corresponding [frontend project](//github.com/sbkwgh/forum-frontend).
+Simple and beautiful forum software - created using Express, Vue, and Sequelize.
 
-# API Documentation
+To install on Heroku:
 
-All API routes are prefixed `/api/v1/`
+ 1. `git clone https://github.com/sbkwgh/forum.git`
+ 2. `heroku login`
+ 3. `heroku git:remote -a <app-name>`
+ 4. `heroku config:set NODE_ENV=production`
+ 5. `heroku config:set SESSION_SECRET=<session-secret>`
+ 6. Add database add-on, get database URL
+ 7. `heroku config:set DATABASE_URL=<database-url>`
+ 8. `cd frontend && npm install`
+ 9. `npm run build`
+ 10. Remove the line `dist/` from `.gitignore`
+ 11. `cd .. && git add -A && git commit -m "Update .gitignore"`
+ 12. `git push heroku master`
+ 13. Visit the URL of the app and complete the on-screen instructions
 
-## /admin_token
-All sub-routes require admin privileges
-
-### /
-* Method: `POST`
-* Response:
-  ```
-    {
-        id: <integer>,
-        token: <string>
-    }
-  ```
-
-## /ban
-All sub-routes require admin privileges
-
-### /
-* Method: `POST`
-* Data params:
-  * `message <string>`
-  * `username <string>`
-  * `canCreateThreads <boolean>`
-  * `canCreatePosts <boolean>`
-  * `ipBanned <boolean>`
-* Response:
-  ```
-  {
-      id: <integer>,
-      message: <string>,
-      canCreateThreads: <boolean>,
-      canCreatePosts: <boolean>,
-      ipBanned: <boolean>,
-      User: {
-          id: <integer>,
-          username: <string>,
-          description: <null | string>,
-          color: <string>,
-          createdAt: <string>
-      }
-  ```
-
-### /
- * Method: `GET`
- * Response:
-   ```
-   [{
-       id: <integer>,
-       createdAt: <string>,
-       updatedAt: <string>,
-       canCreatePosts: <boolean>,
-       canCreateThreads: <boolean>,
-       ipBanned: <boolean>,
-       message: <string>,
-       UserId: <integer>
-   }, ...]
-   ```
-   
-### /:id
- * Method: `DELETE`
- * URL params: `id <integer>`
- * Response:
-   ```
-   { success: true }
-   ```
-
-## /category
-
-### /
- * Method: `GET`
- * Reponse:
-   ```
-   [{
-       color: <string>,
-       createdAt: <string>,
-       id: <integer>,
-       name: <string>,
-       updatedAt: <string>,
-       value: <string>
-   }, ...]
-   ```
-
-### /:category
- * Method: `GET`
- * URL params: `category <string>`
- * Query params:
-   * `username <string, optional>`
-   * `from <integer, optional>`
-   * `limit <integer, optional>`
-* Response:
-  ```
-  {
-      name: <string>,
-      value: <string>,
-      color: <string>,
-      [id: <integer>],
-      [createdAt: <string>],
-      [updatedAt: <string>],
-      Threads: [ ... ],
-      meta: {
-         nextURL: <string | null>,
-         nextThreadsCount: <integer>
-      }
-  }
-  ```
-  
-### /
-* Method: `POST`
-* Data params:
-  * `name <string>`
-  * `color <string, optional>`
-* Response:
-  ```
-  {
-      color: <string>,
-      createdAt: <string>,
-      id: <integer>,
-      name: <string>,
-      updatedAt: <string>,
-      value: <string>
-  }
-  ```
-* Notes: requires admin privileges
-
-### /:id
-* Method: `PUT`
-* URL params: `id <integer>`	
-* Data params:
-  * `name <string, optional>`
-  * `color <string, optional>`
-* Response:
-  ```
-  {
-      color: <string>,
-      createdAt: <string>,
-      id: <integer>,
-      name: <string>,
-      updatedAt: <string>,
-      value: <string>
-  }
-  ```
-* Notes: requires admin privileges
-
-### /
-* Method: `DELETE`
-* URL params: `id <integer>`
-* Response:
-  ```
-  {
-      success: true,
-      otherCategoryCreated: <category object | null>
-  }
-  ```
-* Notes: requires admin privileges
+N.B. the database here is assumed to be MySQL - to use Postgres or another you must install the corresponding driver on npm
