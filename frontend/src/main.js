@@ -31,7 +31,6 @@ const AdminDashboard = () => import('./components/routes/AdminDashboard')
 const AdminModerationReports = () => import('./components/routes/AdminModerationReports')
 const AdminModerationBannedUsers = () => import('./components/routes/AdminModerationBannedUsers')
 const AdminGeneral = () => import('./components/routes/AdminGeneral')
-const AdminBackup = () => import('./components/routes/AdminBackup')
 
 import NotFound from './components/routes/NotFound'
 
@@ -62,8 +61,7 @@ const router = new VueRouter({
 			{ path: 'general', component: AdminGeneral },
 			{ path: 'moderation', redirect: '/admin/moderation/reports' },
 			{ path: 'moderation/reports', component: AdminModerationReports },
-			{ path: 'moderation/bans', component: AdminModerationBannedUsers },
-			{ path: 'backup', component: AdminBackup }
+			{ path: 'moderation/bans', component: AdminModerationBannedUsers }
 		] },
 		{ path: '*', component: NotFound }
 	],
