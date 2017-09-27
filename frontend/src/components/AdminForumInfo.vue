@@ -61,7 +61,7 @@
 
 				let settingsReq = this.axios.put('/api/v1/settings', {
 					forumName: this.name,
-					forumDescription: this.description,
+					forumDescription: this.description || '',
 					showDescription: this.showDescription
 				})
 

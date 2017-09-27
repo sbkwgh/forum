@@ -45,7 +45,7 @@ router.put('/', async (req, res) => {
 		if(req.body.forumName) {
 			params.forumName = req.body.forumName
 		}
-		if(req.body.forumDescription) {
+		if(req.body.forumDescription !== undefined) {
 			params.forumDescription = req.body.forumDescription
 		}
 		if(req.body.showDescription !== undefined) {

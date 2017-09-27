@@ -1,6 +1,9 @@
 <template>
 	<div class='route_container'>
-		<div class='forum_description' v-if='$store.state.meta.showDescription'>
+		<div class='forum_description' v-if='
+			$store.state.meta.showDescription &&
+			$store.state.meta.description
+		'>
 			{{$store.state.meta.description}}
 		</div>
 		<div class='thread_sorting'>
