@@ -380,8 +380,9 @@
 			border-left: 1px solid $color__gray--darker;
 			width: 50%;
 
-			.input_editor_preview__markdownHTML {
-				height: 14.2rem;
+			div.input_editor_preview__markdownHTML {
+				height: 14.1rem;
+				word-break: break-all;
 			}
 		}
 	}
