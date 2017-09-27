@@ -205,7 +205,7 @@
 
 				settingsReq.then(res => {
 					this.loading = false
-					this.$store.commit('setForumName', res.data.forumName)
+					this.$store.commit('setSettings', res.data)
 					this.panel = 3
 				}).catch(this.errorCallback)
 			},

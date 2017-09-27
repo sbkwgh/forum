@@ -39,7 +39,7 @@
 			return {
 				name: '',
 				description: '',
-				showDescription: true,
+				showDescription: false,
 				loading: false,
 				errors: {
 					forumName: '',
@@ -61,12 +61,14 @@
 
 				let settingsReq = this.axios.put('/api/v1/settings', {
 					forumName: this.name,
-					forumDescription: this.description
+					forumDescription: this.description,
+					showDescription: this.showDescription
 				})
 
 				settingsReq.then(res => {
 					this.loading = false
-					this.$store.commit('setForumName', res.data.forumName)
+					
+					this.$store.commit('setSettings', res.data)
 				}).catch(e => {
 					this.loading = false
 
@@ -86,6 +88,7 @@
 				.then(res => {
 					this.name = res.data.forumName || ''
 					this.description = res.data.forumDescription || ''
+					this.showDescription = res.data.showDescription
 				})
 				.catch(AjaxErrorHandler(this.$store))
 		}

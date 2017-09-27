@@ -326,9 +326,7 @@
 		created () {
 			this.axios.get('/api/v1/settings')
 				.then(res => {
-					this.$store.commit('setForumName', res.data.forumName)
-					this.$store.commit('setForumDescription', res.data.forumDescription)
-
+					this.$store.commit('setSettings', res.data)
 					this.$store.dispatch('setTitle', this.$store.state.meta.title)
 				}).catch(err => {
 					if(err.response.data.errors[0].name === 'noSettings') {
