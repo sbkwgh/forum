@@ -48,13 +48,13 @@ router.put('/', async (req, res) => {
 		if(req.body.forumDescription) {
 			params.forumDescription = req.body.forumDescription
 		}
+		if(req.body.showDescription !== undefined) {
+			params.showDescription = req.body.showDescription
+		}
 
 		let updatedSettings = await Settings.set(params)
 
-		res.json({
-			forumName: req.body.forumName,
-			forumDescription: req.body.forumDescription
-		})
+		res.json(params)
 		
 	} catch (e) {
 		if(e instanceof Sequelize.ValidationError) {

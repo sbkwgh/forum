@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
 					}
 				}
 			}
+		},
+		showDescription: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
 		}
 	}, {
 		classMethods: {
