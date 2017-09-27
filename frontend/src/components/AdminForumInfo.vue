@@ -13,6 +13,10 @@
 			v-model='description'
 			:error='errors.forumDescription'
 		></fancy-input>
+		<div class='admin_forum_info__label'>
+			<toggle-switch v-model='showDescription'></toggle-switch>
+			<span>Show forum description on homepage</span>
+		</div>
 		<loading-button :loading='loading' @click='save'>Save settings</loading-button>
 	</div>
 </template>
@@ -20,6 +24,7 @@
 <script>
 	import FancyInput from './FancyInput'
 	import LoadingButton from './LoadingButton'
+	import ToggleSwitch from './ToggleSwitch'
 
 	import AjaxErrorHandler from '../assets/js/errorHandler'
 
@@ -27,12 +32,14 @@
 		name: 'AdminForumInfo',
 		components: {
 			FancyInput,
-			LoadingButton
+			LoadingButton,
+			ToggleSwitch
 		},
 		data () {
 			return {
 				name: '',
 				description: '',
+				showDescription: true,
 				loading: false,
 				errors: {
 					forumName: '',
@@ -89,6 +96,15 @@
 	@import '../assets/scss/variables.scss';
 
 	.admin_forum_info {
-	
+		@at-root #{&}__label {
+			display: flex;
+			align-items: center;
+			margin-bottom: 0.5rem;
+
+			& > span {
+				font-size: 0.9rem;
+				margin-left: 0.5rem;
+			}
+		}
 	}
 </style>
