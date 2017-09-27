@@ -53,7 +53,7 @@
 				<div
 					class='admin_categories__category'
 					v-for='(category, $index) in categories'
-					:key='category'		
+					:key='category.id'		
 				>
 					<div class='admin_categories__category__actions_holder'>
 						<div class='admin_categories__category__actions'>
