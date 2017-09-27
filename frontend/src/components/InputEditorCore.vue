@@ -7,6 +7,12 @@
 			<div class='input_editor_core__format_bar'>
 				<div
 					class='input_editor_core__format_button'
+					title='Emoji'
+				>
+					<emoji-selector></emoji-selector>
+				</div>
+				<div
+					class='input_editor_core__format_button'
 					title='Bold (ctrl + b)'
 					@click='replaceSelectedText("__", "__")'
 				>
@@ -79,6 +85,7 @@
 	import FancyInput from './FancyInput'
 	import TabView from './TabView'
 	import ErrorTooltip from './ErrorTooltip'
+	import EmojiSelector from './EmojiSelector'
 
 	let usernames = {}
 
@@ -88,7 +95,8 @@
 		components: {
 			ModalWindow,
 			FancyInput,
-			ErrorTooltip
+			ErrorTooltip,
+			EmojiSelector
 		},
 		data () {
 			return {
