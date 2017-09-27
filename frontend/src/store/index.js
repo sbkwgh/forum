@@ -92,11 +92,10 @@ export default new Vuex.Store({
 		setAdmin (state, value) {
 			state.admin = value
 		},
-		setForumName (state, value) {
-			state.meta.name = value
-		},
-		setForumDescription (state, value) {
-			state.meta.description = value
+		setSettings (state, value) {
+			state.meta.name = value.forumName
+			state.meta.description = value.forumDescription
+			state.meta.showDescription = value.showDescription
 		},
 		addCategories (state, value) {
 			if(Array.isArray(value)) {
