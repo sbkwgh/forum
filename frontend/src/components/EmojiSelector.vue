@@ -6,29 +6,31 @@
 			@click='$emit("input", false)'
 		></div>
 
-		<div
-			class='emoji_selector__tooltip'
-			@scroll='setStickyIndex'
-			ref='tooltip'
-			:class='{
-				"emoji_selector__tooltip--show" : value,
-				"emoji_selector__tooltip--right" : rightAlign
-			}'
-		>
-			<template v-for='(row, $index) in emojis'>
-				<div
-					class='emoji_selector__title'
-					:class='{ "emoji_selector__title--sticky" : stickyIndex === $index }'
-					ref='title'
-				>{{row.title}}</div>
-				<div class='emoji_selector__row' ref='emoji_row'>
-					<span
-						class='emoji_selector__emoji'
-						v-for='emoji in row.emojis'
-						@click='emitEmoji(emoji)'
-					>{{emoji}}</span>
-				</div>
-			</template>
+		<div class='emoji_selector__context'>
+			<div
+				class='emoji_selector__tooltip'
+				@scroll='setStickyIndex'
+				ref='tooltip'
+				:class='{
+					"emoji_selector__tooltip--show" : value,
+					"emoji_selector__tooltip--right" : rightAlign
+				}'
+			>
+				<template v-for='(row, $index) in emojis'>
+					<div
+						class='emoji_selector__title'
+						:class='{ "emoji_selector__title--sticky" : stickyIndex === $index }'
+						ref='title'
+					>{{row.title}}</div>
+					<div class='emoji_selector__row' ref='emoji_row'>
+						<span
+							class='emoji_selector__emoji'
+							v-for='emoji in row.emojis'
+							@click='emitEmoji(emoji)'
+						>{{emoji}}</span>
+					</div>
+				</template>
+			</div>
 		</div>
 	</div>
 </template>
@@ -90,7 +92,12 @@
 	.emoji_selector {
 		display: inline-block;
 		position: absolute;
-		transform: translateZ(0);
+		
+		@at-root #{&}__context {
+			transform: translateZ(0);
+			position: relative;
+			z-index: 4;
+		}
 
 		@at-root #{&}__overlay {
 			pointer-events: none;
