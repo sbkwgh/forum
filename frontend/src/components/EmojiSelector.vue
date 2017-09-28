@@ -6,7 +6,13 @@
 			@click='$emit("input", false)'
 		></div>
 
-		<div class='emoji_selector__tooltip' title='' :class='{ "emoji_selector__tooltip--show" : value }'>
+		<div
+			class='emoji_selector__tooltip'
+			:class='{
+				"emoji_selector__tooltip--show" : value,
+				"emoji_selector__tooltip--right" : rightAlign
+			}'
+		>
 			<template v-for='row in emojis'>
 				<div class='emoji_selector__title'>{{row.title}}</div>
 				<div class='emoji_selector__row'>
@@ -24,7 +30,7 @@
 <script>
 	export default {
 		name: 'EmojiSelector',
-		props: ['value'],
+		props: ['value', 'right-align'],
 		data () {
 			return {
 				emojis: [
@@ -54,7 +60,7 @@
 
 	.emoji_selector {
 		display: inline-block;
-		position: relative;
+		position: absolute;
 
 		@at-root #{&}__overlay {
 			pointer-events: none;
@@ -73,7 +79,7 @@
 		@at-root #{&}__tooltip {
 			pointer-events: none;
 			opacity: 0;
-			bottom: calc(100% + 4rem);
+			bottom: calc(100% + 3rem);
 			transition: all 0.2s;
 
 			position: absolute;
@@ -93,7 +99,10 @@
 			@at-root #{&}--show {
 				pointer-events: all;
 				opacity: 1;
-				bottom: calc(100% + 3rem);
+				bottom: calc(100% + 2rem);
+			}
+			@at-root #{&}--right {
+				left: 22.5rem;
 			}
 		}
 		@at-root #{&}__row {

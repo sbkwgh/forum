@@ -4,7 +4,11 @@
 	>
 		<error-tooltip :error='error'></error-tooltip>
 		<div>
-			<emoji-selector v-model='emojiSelectorVisible' @emoji='addEmoji'></emoji-selector>
+			<emoji-selector
+				v-model='emojiSelectorVisible'
+				@emoji='addEmoji'
+				:right-align='rightAlignEmoji'
+			></emoji-selector>
 
 			<div class='input_editor_core__format_bar'>
 				<div
@@ -94,7 +98,7 @@
 
 	export default {
 		name: 'InputEditorCore',
-		props: ['value', 'error'],
+		props: ['value', 'error', 'right-align-emoji'],
 		components: {
 			ModalWindow,
 			FancyInput,
