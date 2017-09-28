@@ -146,7 +146,7 @@
 			text-align: left;
 			color: $color__text--primary;
 			padding-left: 0.375rem;
-			transition: all 0.2s;
+			transition: all 0.1s;
 
 			@at-root #{&}--sticky {
 				margin-top: -1.125rem;
