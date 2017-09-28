@@ -34,6 +34,8 @@
 </template>
 
 <script>
+	import throttle from 'lodash.throttle'
+
 	export default {
 		name: 'EmojiSelector',
 		props: ['value', 'right-align'],
@@ -58,7 +60,7 @@
 				this.$emit('input', false)
 				this.$emit('emoji', emoji)
 			},
-			setStickyIndex (e) {
+			setStickyIndex: throttle(function (e) {
 				let tooltipRect = this.$refs.tooltip.getBoundingClientRect();
 				let sortedRows = this.$refs.emoji_row.sort((a, b) => {
 					a.rect = a.getBoundingClientRect()
@@ -74,7 +76,7 @@
 				let topRowInView = emojiRowsInView[0]
 				
 				this.stickyIndex = sortedRows.indexOf(topRowInView)
-			}
+			}, 100)
 		},
 		mounted () {
 			this.setStickyIndex()
