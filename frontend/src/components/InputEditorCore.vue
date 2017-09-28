@@ -12,7 +12,7 @@
 
 			<div class='input_editor_core__format_bar'>
 				<div
-					class='input_editor_core__format_button'
+					class='input_editor_core__format_button input_editor_core__format_button--emoji'
 					title='Emoji'
 					@click='emojiSelectorVisible = true'
 				>
@@ -378,6 +378,12 @@
 				border-bottom: 0.3rem solid transparent;
 				border-right: 0.3rem solid #D32F2F;
 			}
+		}
+	}
+
+	@media (max-width: 420px) {
+		.input_editor_core__format_button--emoji {
+			display: none;
 		}
 	}
 </style>

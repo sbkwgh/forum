@@ -131,4 +131,10 @@
 			}
 		}
 	}
+
+	@media (max-width: 420px) {
+		.emoji_selector {
+			display: none;
+		}
+	}
 </style>
