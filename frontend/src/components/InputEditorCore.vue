@@ -4,12 +4,15 @@
 	>
 		<error-tooltip :error='error'></error-tooltip>
 		<div>
+			<emoji-selector v-model='emojiSelectorVisible' @emoji='addEmoji'></emoji-selector>
+
 			<div class='input_editor_core__format_bar'>
 				<div
 					class='input_editor_core__format_button'
 					title='Emoji'
+					@click='emojiSelectorVisible = true'
 				>
-					<emoji-selector></emoji-selector>
+					<span class='fa fa-smile-o'></span>
 				</div>
 				<div
 					class='input_editor_core__format_button'
@@ -104,6 +107,7 @@
 				linkURL: '',
 				linkModalVisible: false,
 				imageModalVisible: false,
+				emojiSelectorVisible: false
 			}
 		},
 		methods: {
@@ -226,6 +230,22 @@
 				}, 0);
 
 				this.setModalState('link', false);
+			},
+			addEmoji (emoji) {
+				var selectionData = this.getSelectionData();
+				var el = this.$refs.textarea;
+
+				this.setEditor(
+					this.value.slice(0, selectionData.start) +
+					emoji +
+					this.value.slice(selectionData.end)
+				);
+				el.focus();
+
+				setTimeout(function() {
+					el.selectionStart = selectionData.start + emoji.length;
+					el.selectionEnd = selectionData.start + emoji.length;
+				}, 0);
 			},
 			formatCode (e) {
 				e.preventDefault()
