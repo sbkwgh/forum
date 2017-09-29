@@ -675,6 +675,22 @@ describe('Thread and post', () => {
 		})
 	})
 
+	describe('POST utf8', () => {
+		it('should allow emojis', async () => {
+			let res = await userAgent
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({
+					content: '😂😀',
+					threadId: 1
+				})
+
+			res.should.be.json
+			res.should.have.status(200)
+			res.body.should.have.property('content', '<p>😂😀</p>\n')
+		})
+	})
+
 	describe('DELETE /post/:id', () => {
 		let threadId
 		let postId
