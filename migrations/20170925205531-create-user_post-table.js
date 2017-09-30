@@ -8,6 +8,8 @@ module.exports = {
       
       PostId: Sequelize.INTEGER,
       UserId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

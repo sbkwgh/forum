@@ -18,6 +18,8 @@ module.exports = {
 
       FlaggedByUserId: Sequelize.INTEGER,
       PostId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

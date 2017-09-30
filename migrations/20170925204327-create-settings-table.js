@@ -13,6 +13,8 @@ module.exports = {
       
       forumName: Sequelize.STRING,
       forumDescription: Sequelize.STRING
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

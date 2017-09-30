@@ -21,6 +21,8 @@ module.exports = {
         unique: true
       },
       color: Sequelize.STRING
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

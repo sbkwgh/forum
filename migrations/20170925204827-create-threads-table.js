@@ -28,6 +28,8 @@ module.exports = {
       CategoryId: Sequelize.INTEGER,
       UserId: Sequelize.INTEGER,
       PollQuestionId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

@@ -14,6 +14,8 @@ module.exports = {
       UserId: Sequelize.INTEGER,
       PostId: Sequelize.INTEGER,
       NotificationId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

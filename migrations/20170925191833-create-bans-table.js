@@ -24,6 +24,8 @@ module.exports = {
       UserId: Sequelize.INTEGER,
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

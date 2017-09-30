@@ -12,6 +12,8 @@ module.exports = {
       updatedAt: Sequelize.DATE,
 
       ip: Sequelize.STRING(45)
+    }, {
+      charset: 'utf8mb4'
     })
   },
 
