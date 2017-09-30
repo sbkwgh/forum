@@ -25,6 +25,8 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       }
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

@@ -21,6 +21,8 @@ module.exports = {
       },
       type: Sequelize.ENUM('mention', 'thread update', 'reply'),
       UserId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

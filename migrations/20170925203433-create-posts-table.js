@@ -25,6 +25,8 @@ module.exports = {
       UserId: Sequelize.INTEGER,
       ThreadId: Sequelize.INTEGER,
       replyId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

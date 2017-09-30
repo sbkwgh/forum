@@ -16,6 +16,8 @@ module.exports = {
         allowNull: false
       },
       PollQuestionId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 

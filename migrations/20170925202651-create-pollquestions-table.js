@@ -16,6 +16,8 @@ module.exports = {
         allowNull: false
       },
       UserId: Sequelize.INTEGER
+    }, {
+      charset: 'utf8mb4'
     })
   },
 
