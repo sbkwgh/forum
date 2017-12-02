@@ -78,6 +78,22 @@ describe('Thread', () => {
 						threadId: 1
 					})
 
+				await user
+					.post('/api/v1/report')
+					.set('content-type', 'application/json')
+					.send({
+						postId: 1,
+						reason: 'inappropriate'
+					})
+
+				await user
+					.post('/api/v1/report')
+					.set('content-type', 'application/json')
+					.send({
+						postId: 2,
+						reason: 'inappropriate'
+					})
+
 				return true
 			} catch (e) {
 				return e
@@ -95,9 +111,11 @@ describe('Thread', () => {
 					ThreadId: 1
 				}
 			})
+			let reports = await admin.get('/api/v1/report')
 
 			expect(thread).to.be.null
 			expect(posts).to.have.property('length', 0)
+			expect(reports.body).to.have.property('length', 0)
 		})
 		it('should return an error if thread does not exist', done => {
 			admin
