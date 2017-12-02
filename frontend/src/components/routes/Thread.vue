@@ -1,5 +1,10 @@
 <template>
 	<div class='route_container'>
+		<confirm-modal v-model='showConfirmModal' @confirm='deleteThread' text='Delete' color='red'>
+			Are you sure you want to delete this thread?
+			<br>This <b>cannot</b> be undone
+		</confirm-modal>
+
 		<thread-post-notification
 			v-if='$store.state.thread.postNotification'
 			:post='$store.state.thread.postNotification'
@@ -36,10 +41,12 @@
 				v-if='$store.state.admin'
 				:options='[
 					{ event: "lock_thread", value: $store.state.thread.locked ? "Unlock thread" : "Lock thread" },
+					{ event: "delete_thread", value: "Delete thread" },
 					{ event: "remove_posts", value: "Remove posts" }
 				]'
 				@lock_thread='setThreadLockedState'
 				@remove_posts='setThreadSelectState'
+				@delete_thread='showConfirmModal = true'
 			>
 				<button class='button button--thin_text'>
 					<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
@@ -138,6 +145,7 @@
 	import MenuButton from '../MenuButton'
 	import LoadingButton from '../LoadingButton'
 	import ThreadPoll from '../ThreadPoll'
+	import ConfirmModal from '../ConfirmModal'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
@@ -155,13 +163,15 @@
 			PostScrubber,
 			MenuButton,
 			LoadingButton,
-			ThreadPoll
+			ThreadPoll,
+			ConfirmModal
 		},
 		data () {
 			return {
 				headerTitle: false,
 				highlightedPostIndex: null,
-				postNotification: null
+				postNotification: null,
+				showConfirmModal: false
 			}
 		},
 		computed: {
@@ -183,6 +193,9 @@
 			editorState () { return this.$store.state.thread.editor.show }
 		},
 		methods: {
+			deleteThread () {
+				this.$store.dispatch("deleteThread", this)
+			},
 			removePosts () {
 				this.$store.dispatch("removePostsAsync", this)
 			},

@@ -37,6 +37,14 @@ const getters = {
 }
 
 const actions = {
+	deleteThread ({ state, commit }, vue) {
+		vue.axios
+			.delete('/api/v1/thread/' + state.threadId)
+			.then(() => {
+				vue.$router.push('/')
+			})
+			.catch(AjaxErrorHandler(vue.$store))
+	},
 	removePostsAsync ({ state, commit }, vue) {
 		commit('setRemovePostsButtonLoading', true)
 
