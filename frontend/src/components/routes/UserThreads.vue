@@ -86,7 +86,17 @@
 					this.nextURL = res.data.meta.nextURL
 					this.nextThreadsCount = res.data.meta.nextThreadsCount
 				})
-				.catch(AjaxErrorHandler(this.$store))
+				.catch(e => {
+					let invalidId = e.response.data.errors.find(error => {
+						return error.name === 'accountDoesNotExist'
+					})
+
+					if(invalidId) {
+						this.$store.commit('set404Page', true)
+					} else {
+						AjaxErrorHandler(this.$store)(e)
+					}
+				})
 
 			logger('userThreads', this.$route.params.username)
 		}

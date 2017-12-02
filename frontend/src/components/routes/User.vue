@@ -71,7 +71,17 @@
 			this.axios
 				.get(`/api/v1/user/${this.$route.params.username}`)
 				.then(res => this.user = res.data)
-				.catch(AjaxErrorHandler(this.$store))
+				.catch(e => {
+					let invalidId = e.response.data.errors.find(error => {
+						return error.name === 'accountDoesNotExist'
+					})
+
+					if(invalidId) {
+						this.$store.commit('set404Page', true)
+					} else {
+						AjaxErrorHandler(this.$store)(e)
+					}
+				})
 		}
 	}
 </script>
