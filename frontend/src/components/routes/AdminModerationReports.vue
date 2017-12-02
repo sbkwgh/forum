@@ -6,6 +6,10 @@
 			Are you sure you want to remove this post?
 		</confirm-modal>
 
+		<confirm-modal v-model='removePostObj.showThreadDeleteModal' @confirm='deleteThread' text='Delete' color='red'>
+			Are you sure you want to delete the thread containing this post?
+		</confirm-modal>
+
 		<transition name='fade' mode='out-in'>
 			<loading-message v-if='!reports' key='loading'></loading-message>
 
@@ -49,6 +53,7 @@
 						<menu-button
 							@delete='deleteReport(report.id, $index)'
 							@ban='banUser(report, $index)'
+							@deleteThread='deleteThread(report, $index)'
 							:options='reportMenuOptions'
 						>
 							<button class='button'>More options&hellip;</button>
@@ -96,12 +101,13 @@
 				reportMenuOptions: [
 					{ value: "Delete report", event: 'delete' },
 					{ value: "Ban or block user", event: 'ban' },
-					{ value: "Remove thread" }
+					{ value: "Delete thread", event: 'deleteThread' }
 				],
 				reports: null,
 
 				removePostObj: {
 					showConfirmModal: false,
+					showThreadDeleteModal: false,
 					report: null,
 					index: null
 				}
@@ -109,12 +115,27 @@
 		},
 		methods: {
 			deleteReport (id, index) {
-				this.axios
+				return this.axios
 					.delete('/api/v1/report/' + id)
 					.then(_ => {
 						this.reports.splice(index, 1)
 					})
 					.catch(AjaxErrorHandler(this.$store))
+			},
+			deleteThread (report, index) {
+				if(report) {
+					this.removePostObj.report = report
+					this.removePostObj.index = index
+
+					this.removePostObj.showThreadDeleteModal = true
+				} else {
+					this.axios
+						.delete('/api/v1/thread/' + this.removePostObj.report.Post.Thread.id)
+						.then(() => {
+							return this.deleteReport(this.removePostObj.report.id, this.removePostObj.index)
+						})
+						.catch(AjaxErrorHandler(this.$store))
+				}
 			},
 			removePost (report, index) {
 				if(report) {
