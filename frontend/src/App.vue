@@ -123,7 +123,8 @@
 			<div class='header__overlay' :class='{ "header__overlay--show": showMenu }' @click='toggleMenu'></div>
 			<span class='fa fa-bars header__menu_button' @click='toggleMenu'></span>
 		</header>
-		<router-view></router-view>
+		<not-found v-show='$store.state.show404Page'></not-found>
+		<router-view v-show='!$store.state.show404Page'></router-view>
 	</div>
 </template>
 
@@ -134,6 +135,8 @@
 	import LoadingButton from './components/LoadingButton'
 	import NotificationButton from './components/NotificationButton'
 	import SearchBox from './components/SearchBox'
+
+	import NotFound from './components/routes/NotFound'
 	
 	import AjaxErrorHandler from './assets/js/errorHandler'
 
@@ -145,7 +148,8 @@
 			FancyInput,
 			LoadingButton,
 			NotificationButton,
-			SearchBox
+			SearchBox,
+			NotFound
 		},
 		data () {
 			return {

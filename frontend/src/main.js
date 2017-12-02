@@ -68,6 +68,11 @@ const router = new VueRouter({
 	mode: 'history'
 })
 
+router.beforeEach((to, from, next) => {
+	next()
+	router.app.$store.commit('set404Page', false)
+})
+
 Vue.filter('formatDate', function (value, format = '', join = ' ') {
 	if(typeof value !== 'object') {
 		value = new Date(value)

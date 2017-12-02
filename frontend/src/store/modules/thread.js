@@ -132,7 +132,17 @@ const actions = {
 					vue.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
 					vue.highlightPost(+postNumber)
 				}
-			}).catch(AjaxErrorHandler(vue.$store))
+			}).catch(e => {
+				let invalidId = e.response.data.errors.find(error => {
+					return error.name === 'invalidParameter' && error.parameter === 'id'
+				})
+
+				if(invalidId) {
+					commit('set404Page', true)
+				} else {
+					AjaxErrorHandler(vue.$store)(e)
+				}
+			})
 	},
 	loadPostsAsync ({ state, commit, rootState }, { vue, previous }) {
 		let URL

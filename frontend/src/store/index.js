@@ -23,6 +23,8 @@ export default new Vuex.Store({
 
 		token: null,
 
+		show404Page: false,
+
 		ajaxErrors: [],
 		ajaxErrorsModal: false
 	},
@@ -70,6 +72,9 @@ export default new Vuex.Store({
 	mutations: {
 		setToken (state, token) {
 			state.token = token
+		},
+		set404Page (state, value) {
+			state.show404Page = value
 		},
 		setAccountTabs (state, index) {
 			state.accountTabs = index;
