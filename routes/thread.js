@@ -111,6 +111,40 @@ router.all('*', (req, res, next) => {
 	}
 })
 
+router.delete('/:thread_id', async (req, res) => {
+	try {
+		let thread = await Thread.findById(req.params.thread_id)
+
+		if(!thread) {
+			throw Errors.sequelizeValidation(Sequelize, {
+				error: 'invalid thread id',
+				value: req.params.thread_id
+			})
+		} else {
+			await Post.destroy({
+				where: {
+					ThreadId: thread.id
+				}
+			})
+			await thread.destroy()
+
+			res.json({ success: true })
+		}
+	} catch (e) {
+		if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+			
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 router.put('/:thread_id', async (req, res) => {
 	try {
 		let thread = await Thread.findById(req.params.thread_id)
