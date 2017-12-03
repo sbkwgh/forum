@@ -95,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
 				Thread.belongsTo(models.User)
 				Thread.belongsTo(models.Category)
 				Thread.belongsTo(models.PollQuestion)
-				Thread.hasMany(models.Post)
+				Thread.hasMany(models.Post, { foreignKeyConstraint: true, onDelete: 'CASCADE' })
 			},
 			includeOptions (from, limit) {
 				let models = sequelize.models

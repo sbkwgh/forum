@@ -46,6 +46,8 @@ module.exports = (sequelize, DataTypes) => {
 				Post.belongsTo(models.Thread)
 				Post.hasMany(models.Post, { as: 'Replies', foreignKey: 'replyId' })
 				Post.belongsToMany(models.User, { as: 'Likes', through: 'user_post' })
+
+				Post.hasMany(models.Report, { foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true })
 			},
 			includeOptions () {
 				let models = sequelize.models

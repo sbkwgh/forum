@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 const Errors = require('../lib/errors.js')
-let { User, Thread, Category, Post, Ban, Sequelize } = require('../models')
+let { User, Thread, Category, Post, Ban, Report, Sequelize } = require('../models')
 let pagination = require('../lib/pagination.js')
 
 router.get('/:thread_id', async (req, res) => {
@@ -121,11 +121,22 @@ router.delete('/:thread_id', async (req, res) => {
 				value: req.params.thread_id
 			})
 		} else {
-			await Post.destroy({
+			//Find all posts with reports and get reports
+			//Then delete those reports
+			//Temporary fix because cascade is not working
+			let posts = await Post.findAll({
 				where: {
 					ThreadId: thread.id
-				}
+				},
+				include: [Report]
 			})
+			let reports = posts
+				.map(post => post.Reports)
+				.reduce((a, b) => a.concat(b), [])
+			
+			let destroyPromises = reports.map(report => report.destroy())
+
+			await Promise.all(destroyPromises)
 			await thread.destroy()
 
 			res.json({ success: true })
