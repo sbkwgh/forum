@@ -31,7 +31,11 @@
 				</div>
 				<div class='profile_picture_modal__buttons'>
 					<button class='button button--modal button--borderless' @click='hideProflePictureModal'>Cancel</button>
-					<button class='button button--modal button--green' :class='{ "button--disabled": !dataURL }'>Upload picture</button>
+					<button
+						class='button button--modal button--green'
+						:class='{ "button--disabled": !dataURL }'
+						@click='uploadProfilePicture'
+					>Upload picture</button>
 				</div>
 			</div>
 		</modal-window>
@@ -115,12 +119,30 @@
 						})
 					})
 			},
+			uploadProfilePicture () {
+				this.profilePictureModalLoading = true
+
+				this.axios
+					.post('/api/v1/user/' + this.$store.state.username + '/picture', {
+						picture: this.dataURL
+					})
+					.then(res => {
+						this.hideProflePictureModal()
+					})
+					.catch(e => {
+						this.profilePictureModalLoading = false
+
+						AjaxErrorHandler(this.$store)(e)
+					})
+
+			},
 			hideProflePictureModal () {
 				this.showProfilePictureModal = false
 				
 				//Wait for transition to complete
 				setTimeout(() => {
 					this.dataURL = null
+					this.profilePictureModalLoading = false
 				}, 200)
 			},	
 			handleDragOver (e) {
