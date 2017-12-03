@@ -1,6 +1,6 @@
 <template>
 	<div class='route_container'>
-		<modal-window v-model='showProfilePictureModal' width='25rem'>
+		<modal-window v-model='showProfilePictureModal' width='25rem' @input='hideProflePictureModal'>
 			<div
 				class='profile_picture_modal'
 				:class='{ "profile_picture_modal--dragging": dragging  }'
