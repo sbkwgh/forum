@@ -129,10 +129,17 @@
 
 					this.removePostObj.showThreadDeleteModal = true
 				} else {
+					let threadId = this.removePostObj.report.Post.Thread.id
+
 					this.axios
-						.delete('/api/v1/thread/' + this.removePostObj.report.Post.Thread.id)
+						.delete('/api/v1/thread/' + threadId)
 						.then(() => {
-							return this.deleteReport(this.removePostObj.report.id, this.removePostObj.index)
+							//Get reports with id of deleted thread
+							//and remove them locally
+							this.reports = this.reports.filter(report => {
+								return report.Post.Thread.id !== threadId
+							})
+
 						})
 						.catch(AjaxErrorHandler(this.$store))
 				}
