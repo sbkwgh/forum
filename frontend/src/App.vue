@@ -6,7 +6,7 @@
 				<button class='button button--modal' @click='showAjaxErrorsModal = false'>OK</button>
 			</div>
 		</modal-window>
-		<modal-window v-model='showAccountModal'>
+		<modal-window v-model='showAccountModal' @input='closeAccountModal'>
 			<tab-view :tabs='["Sign up", "Login"]' v-model="showAccountTab" padding='true'>
 				<template slot='Sign up'>
 					<p style='margin-top: 0;' v-if='$store.state.token'>
