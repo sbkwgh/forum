@@ -219,7 +219,7 @@
 			}
 
 			@at-root #{&}__post {
-				width: 40%;
+				width: 35%;
 
 				@at-root #{&}__header {
 					display: flex;
@@ -252,7 +252,7 @@
 				}
 			}
 			@at-root #{&}__actions {
-				width: 25%;
+				width: 30%;
 				display: flex;
 				align-items: center;
 
