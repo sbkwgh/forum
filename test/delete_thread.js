@@ -77,6 +77,13 @@ describe('Thread', () => {
 						content: 'post 2',
 						threadId: 1
 					})
+				await user
+					.post('/api/v1/post')
+					.set('content-type', 'application/json')
+					.send({
+						content: 'post 3',
+						threadId: 1
+					})
 
 				await user
 					.post('/api/v1/report')
