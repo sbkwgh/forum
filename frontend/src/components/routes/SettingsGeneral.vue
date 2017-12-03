@@ -1,19 +1,38 @@
 <template>
 	<div class='route_container'>
 		<modal-window v-model='showProfilePictureModal' width='25rem'>
-			<div class='profile_picture_modal'>
+			<div
+				class='profile_picture_modal'
+				:class='{ "profile_picture_modal--dragging": dragging  }'
+				@dragover='handleDragOver'
+				@drkagend='dragging = false'
+				@drkgleave='dragging = false'
+				@drop='handleFileDrop'
+			>
 				<div class='h3'>Add a profile picture</div>
 				<p class='p--condensed'>
 					Drag and drop an image or
 					<label class='button profile_picture_modal__upload_button'>
-						<input type='file'>
+						<input type='file' @change='processImage($event.target.files[0])'>
 						upload a file
 					</label>
 				</p>
 				<div class='profile_picture_modal__drag_area'>
-					<span class='fa fa-cloud-upload profile_picture_modal__drag_area__icon'></span>
+					<span
+						v-if='!dataURL'
+						class='fa fa-cloud-upload profile_picture_modal__drag_area__icon'
+						:class='{ "profile_picture_modal__drag_area__icon--dragging": dragging }' 
+					></span>
+					<div
+						class='profile_picture_modal__drag_area__image'
+						:style='{ "background-image": "url(" + dataURL + ")" }'
+						v-else
+					></div>
 				</div>
-				<button class='button button--green button--disabled'>Upload picture</button>
+				<div class='profile_picture_modal__buttons'>
+					<button class='button button--modal button--borderless' @click='hideProflePictureModal'>Cancel</button>
+					<button class='button button--modal button--green' :class='{ "button--disabled": !dataURL }'>Upload picture</button>
+				</div>
 			</div>
 		</modal-window>
 
@@ -70,7 +89,9 @@
 					error: ''
 				},
 
-				showProfilePictureModal: false
+				showProfilePictureModal: false,
+				dragging: false,
+				dataURL: null
 			}
 		},
 		computed: {},
@@ -93,6 +114,39 @@
 							this.description.error = error.message
 						})
 					})
+			},
+			hideProflePictureModal () {
+				this.showProfilePictureModal = false
+				
+				//Wait for transition to complete
+				setTimeout(() => {
+					this.dataURL = null
+				}, 200)
+			},	
+			handleDragOver (e) {
+				e.preventDefault()
+				this.dragging = true
+			},
+			handleFileDrop (e) {
+				e.preventDefault()
+				this.dragging = false
+				
+				if(e.dataTransfer && e.dataTransfer.items) {
+					let file = e.dataTransfer.items[0]
+
+					if(file.type.match('^image/')) {
+						this.processImage(file.getAsFile())
+					}
+				}
+			},
+			processImage (file) {
+				let reader = new FileReader()
+
+				reader.readAsDataURL(file)
+
+				reader.addEventListener('load', () => {
+					this.dataURL = reader.result
+				})
 			}
 		},
 		created () {
@@ -119,6 +173,11 @@
 
 	.profile_picture_modal {
 		padding: 1rem;
+		transition: all 0.2s;
+
+		@at-root #{&}--dragging {
+			//background-color: $color__lightgray--primary;
+		}
 
 		@at-root #{&}__upload_button input[type="file"] {
 			display: none;
@@ -128,9 +187,26 @@
 			padding: 1rem;
 			text-align: center;
 
+			@at-root #{&}__image {
+				width: 5rem;
+				height: 5rem;
+				display: inline-block;
+				background-position: center center;
+				background-size: cover;
+				background-repeat: no-repeat;
+				border-radius: 100%;
+				margin-top: -1rem;
+			}
+
 			@at-root #{&}__icon {
 				font-size: 6rem;
 				color: $color__gray--darker;
+				transition: all 0.2s;
+
+				@at-root #{&}--dragging {
+					transform: translateY(-0.5rem) scale(1.1);
+					color: $color__gray--darkest;
+				}
 			}
 		}
 	}
