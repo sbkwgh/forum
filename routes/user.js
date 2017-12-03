@@ -183,6 +183,36 @@ router.all('*', (req, res, next) => {
 	}
 })
 
+router.post('/:username/picture', async (req, res) => {
+	try {
+		if(req.session.username !== req.params.username) {
+			throw Errors.requestNotAuthorized
+		} else {
+			let user = await User.findById(req.session.UserId)
+			await user.update({ picture: req.body.picture })
+
+			res.json(user.toJSON())
+		}
+	} catch (e) {
+		if(e === Errors.requestNotAuthorized) {
+			res.status(401)
+			res.json({
+				errors: [e]
+			})
+		} else if(e instanceof Sequelize.ValidationError) {
+			res.status(400)
+			res.json(e)
+		} else {
+			console.log(e)
+
+			res.status(500)
+			res.json({
+				errors: [Errors.unknown]
+			})
+		}
+	}
+})
+
 router.put('/:username', async (req, res) => {
 	try {
 		if(req.session.username !== req.params.username) {

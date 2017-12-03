@@ -59,6 +59,23 @@ module.exports = (sequelize, DataTypes) => {
 		admin: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
+		},
+		picture: {
+			type: DataTypes.STRING,
+			validate: {
+				isString (val) {
+					if(typeof val !== 'string') {
+						throw new sequelize.ValidationError('password must be a string')
+					}
+				},
+				isValidBase64 (val) {
+					let base64Regexp = /^data:image\/(png|jpeg|jpg|gif);base64,[A-Za-z0-9+\/=]+$/g
+
+					if(!val.match(base64Regexp)) {
+						throw new sequelize.ValidationError('image must be valid base64')
+					}
+				}
+			}
 		}
 	}, {
 		instanceMethods: {
