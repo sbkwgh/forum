@@ -13,7 +13,7 @@
 				<p class='p--condensed'>
 					Drag and drop an image or
 					<label class='button profile_picture_modal__upload_button'>
-						<input type='file' @change='processImage($event.target.files[0])'>
+						<input type='file' accept='image/*' @change='processImage($event.target.files[0])'>
 						upload a file
 					</label>
 				</p>
