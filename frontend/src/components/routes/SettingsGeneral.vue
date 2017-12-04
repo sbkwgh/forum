@@ -2,6 +2,14 @@
 	<div class='route_container'>
 		<modal-window v-model='picture.showProfilePictureModal' width='25rem' @input='hideProflePictureModal'>
 			<div
+				class='profile_picture_modal__overlay'
+				:class='{
+					"profile_picture_modal__overlay--show": picture.loading
+				}'
+			>
+				<loading-icon></loading-icon>
+			</div>
+			<div
 				class='profile_picture_modal'
 				:class='{ "profile_picture_modal--picture.dragging": picture.dragging  }'
 				@dragover='handleDragOver'
@@ -80,6 +88,7 @@
 <script>
 	import FancyTextarea from '../FancyTextarea'
 	import LoadingButton from '../LoadingButton'
+	import LoadingIcon from '../LoadingIcon'
 	import ModalWindow from '../ModalWindow'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
@@ -90,6 +99,7 @@
 		components: {
 			FancyTextarea,
 			LoadingButton,
+			LoadingIcon,
 			ModalWindow
 		},
 		data () {
@@ -104,7 +114,8 @@
 					current: null,
 					showProfilePictureModal: false,
 					dragging: false,
-					dataURL: null
+					dataURL: null,
+					loading: false
 				}
 			}
 		},
@@ -130,7 +141,7 @@
 					})
 			},
 			uploadProfilePicture () {
-				this.profilePictureModalLoading = true
+				this.picture.loading = true
 
 				this.axios
 					.post('/api/v1/user/' + this.$store.state.username + '/picture', {
@@ -141,7 +152,7 @@
 						this.picture.current = this.picture.dataURL
 					})
 					.catch(e => {
-						this.profilePictureModalLoading = false
+						this.picture.loading = false
 
 						AjaxErrorHandler(this.$store)(e)
 					})
@@ -153,7 +164,7 @@
 				//Wait for transition to complete
 				setTimeout(() => {
 					this.picture.dataURL = null
-					this.profilePictureModalLoading = false
+					this.picture.loading = false
 				}, 200)
 			},	
 			handleDragOver (e) {
@@ -216,6 +227,10 @@
 
 		@at-root #{&}--picture.dragging {
 			//background-color: $color__lightgray--primary;
+		}
+
+		@at-root #{&}__overlay {
+			@include loading-overlay(rgba(0, 0, 0, 0.5), 0.125rem);
 		}
 
 		@at-root #{&}__upload_button input[type="file"] {
