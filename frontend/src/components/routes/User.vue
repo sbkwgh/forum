@@ -2,10 +2,13 @@
 	<div class='route_container user_route'>
 		<div class='user_header'>
 			<div
-				class='user_header__icon'
-				:style='{ "background-color": (user || {}).color }'
+				class='user_header__icon picture_circle'
+				:style='{
+					"background-color": userColor,
+					"background-image": userPicture,
+				}'
 			>
-				{{username[0]}}
+				{{userPicture ? '' : username[0]}}
 			</div>
 			<div class='user_header__info'>
 				<span class='user_header__username'>{{username}}</span>
@@ -49,6 +52,22 @@
 		watch: {
 			$route (to, from) {
 				this.selected = this.getIndexFromRoute(to.path)
+			}
+		},
+		computed: {
+			userColor () {
+				if(this.user) {
+					return this.user.color
+				} else {
+					return null
+				}
+			},
+			userPicture () {
+				if(this.user && this.user.picture) {
+					return 'url(' + this.user.picture + ')'
+				} else {
+					return null
+				}
 			}
 		},
 		methods: {
@@ -107,7 +126,6 @@
 			line-height: 4rem;
 			@include text($font--role-emphasis, 3rem)
 			text-align: center;
-			border-radius: 100%;
 			background-color: $color__gray--darkest;
 			color: #fff;
 		}

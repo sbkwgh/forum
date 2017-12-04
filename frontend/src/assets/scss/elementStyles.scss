@@ -38,6 +38,25 @@ b, strong {
 	font-weight: 700;
 }
 
+.picture_circle {
+	border-radius: 100%;
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative;
+
+	&:after {
+		content: '';
+		position: absolute;
+		width: calc(100% - 0.25rem);
+		height: calc(100% - 0.25rem);
+		left: 0;
+		top: 0;
+		border: 0.125rem solid rgba(150,150,150,0.5);
+		border-radius: 100%;
+	}
+}
+
 .button {
 	border: 1px solid $color__gray--darker;
 	display: inline-block;

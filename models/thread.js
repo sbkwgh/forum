@@ -101,7 +101,7 @@ module.exports = (sequelize, DataTypes) => {
 				let models = sequelize.models
 
 				return [
-					{ model: models.User, attributes: ['username', 'createdAt', 'color', 'updatedAt', 'id'] }, 
+					{ model: models.User, attributes: ['username', 'createdAt', 'color', 'picture', 'updatedAt', 'id'] }, 
 					models.Category,
 					{ 
 						model: models.Post, 
@@ -110,11 +110,11 @@ module.exports = (sequelize, DataTypes) => {
 						limit,
 						include: [
 							{ model: models.Thread, attributes: ['slug'] }, 
-							{ model: models.User, as: 'Likes', attributes: ['username', 'createdAt', 'id', 'color'] },
-							{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
+							{ model: models.User, as: 'Likes', attributes: ['username', 'createdAt', 'id', 'color', 'picture'] },
+							{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color', 'picture'] }, 
 							{
 								model: models.Post, as: 'Replies', include:
-								[{ model: models.User, attributes: ['username', 'id', 'color'] }]	
+								[{ model: models.User, attributes: ['username', 'id', 'color', 'picture'] }]	
 							}
 						]
 					}

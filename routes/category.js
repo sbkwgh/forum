@@ -37,7 +37,7 @@ router.get('/:category', async (req, res) => {
 				where: {},
 				include: [
 					Category,
-					{ model: User, attributes: ['username', 'createdAt', 'id', 'color'] }, 
+					{ model: User, attributes: ['username', 'createdAt', 'id', 'color', 'picture'] }, 
 					{
 						model: Post, limit: 1, order: [['id', order]], include:
 						[{ model: User, attributes: ['username', 'id'] }]
