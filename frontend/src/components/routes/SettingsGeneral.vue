@@ -1,5 +1,14 @@
 <template>
 	<div class='route_container'>
+		<confirm-modal
+			v-model='picture.showRemoveProfilePictureModal'
+			@confirm='removeProfilePicture'
+			color='red'
+			text='Yes, remove it'
+		>
+			Are you sure you want to remove your profile picture?
+		</confirm-modal>
+
 		<modal-window v-model='picture.showProfilePictureModal' width='25rem' @input='hideProflePictureModal'>
 			<div
 				class='profile_picture_modal__overlay'
@@ -81,6 +90,14 @@
 			<button class='button' @click='picture.showProfilePictureModal = true'>
 				{{picture.current ? "Change" : "Add" }} profile picture
 			</button>
+			<button
+				v-if='picture.current'
+				class='button'
+				style='margin-left: 0.5rem;'
+				@click='picture.showRemoveProfilePictureModal = true'
+			>
+				Remove
+			</button>
 		</p>
 	</div>
 </template>
@@ -90,6 +107,7 @@
 	import LoadingButton from '../LoadingButton'
 	import LoadingIcon from '../LoadingIcon'
 	import ModalWindow from '../ModalWindow'
+	import ConfirmModal from '../ConfirmModal'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
@@ -100,7 +118,8 @@
 			FancyTextarea,
 			LoadingButton,
 			LoadingIcon,
-			ModalWindow
+			ModalWindow,
+			ConfirmModal
 		},
 		data () {
 			return {
@@ -113,6 +132,7 @@
 				picture: {
 					current: null,
 					showProfilePictureModal: false,
+					showRemoveProfilePictureModal: false,
 					dragging: false,
 					dataURL: null,
 					loading: false
@@ -157,6 +177,16 @@
 						AjaxErrorHandler(this.$store)(e)
 					})
 
+			},
+			removeProfilePicture () {
+				this.axios
+					.post('/api/v1/user/' + this.$store.state.username + '/picture', {
+						picture: null
+					})
+					.then(res => {
+						this.picture.current = null
+					})
+					.catch(AjaxErrorHandler(this.$store))
 			},
 			hideProflePictureModal () {
 				this.picture.showProfilePictureModal = false
