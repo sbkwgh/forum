@@ -138,6 +138,20 @@ describe('User', () => {
 					done()
 				})
 		})
+
+		it('should remove a picture if picture is null', async () => {
+			let res = await user
+				.post('/api/v1/user/useraccount1/picture')
+				.set('content-type', 'application/json')
+				.send({ picture: null })
+
+			res.should.be.json
+			res.should.have.status(200)
+
+			let foundUser = await User.findById(1)
+			foundUser.should.have.property('picture', null)
+		})
+
 		//it('should not add a picture if too large file size')
 
 	})
