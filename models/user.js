@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: false
 		},
 		picture: {
-			type: DataTypes.STRING,
+			type: DataTypes.TEXT,
 			validate: {
 				isString (val) {
 					if(typeof val !== 'string') {
