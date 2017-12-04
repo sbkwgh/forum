@@ -5,7 +5,10 @@
 				<div class='avatar_icon__header'>
 					<div
 						class='avatar_icon__icon avatar_icon__icon--small'
-						:style='{ "background-color": user.color }'
+						:style='{
+							"background-color": user.color,
+							"background-image": user.picture ? "url(" + user.picture + ")" : null,
+						}'
 						@click='goToUser'
 					>
 						{{userLetter}}
@@ -25,7 +28,7 @@
 			slot='display'
 			class='avatar_icon__icon'
 			:class='{"avatar_icon__icon--small": size === "small"}'
-			:style='{ "background-color": userColor }'
+			:style='{ "background-color": userColor, "background-image": userPicture, }'
 			@click.stop='goToUser'
 		>
 			{{userLetter}}
@@ -49,7 +52,11 @@
 		computed: {
 			userLetter () {
 				if(this.user) {
-					return this.user.username[0].toLowerCase()
+					if(this.userPicture) {
+						return ''
+					} else {
+						return this.user.username[0].toLowerCase()
+					}
 				} else {
 					return ''
 				}
@@ -57,6 +64,13 @@
 			userColor () {
 				if(this.user) {
 					return this.user.color
+				} else {
+					return null
+				}
+			},
+			userPicture () {
+				if(this.user && this.user.picture) {
+					return "url(" + this.user.picture + ")"
 				} else {
 					return null
 				}
@@ -107,6 +121,9 @@
 			border-radius: 100%;
 			background-color: $color__gray--darkest;
 			color: #fff;
+			background-position: center center;
+			background-size: cover;
+			background-repeat: no-repeat;
 
 			@at-root #{&}--small {
 				height: 2.5rem;
