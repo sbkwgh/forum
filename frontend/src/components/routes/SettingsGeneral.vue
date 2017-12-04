@@ -1,12 +1,12 @@
 <template>
 	<div class='route_container'>
-		<modal-window v-model='showProfilePictureModal' width='25rem' @input='hideProflePictureModal'>
+		<modal-window v-model='picture.showProfilePictureModal' width='25rem' @input='hideProflePictureModal'>
 			<div
 				class='profile_picture_modal'
-				:class='{ "profile_picture_modal--dragging": dragging  }'
+				:class='{ "profile_picture_modal--picture.dragging": picture.dragging  }'
 				@dragover='handleDragOver'
-				@drkagend='dragging = false'
-				@drkgleave='dragging = false'
+				@drkagend='picture.dragging = false'
+				@drkgleave='picture.dragging = false'
 				@drop='handleFileDrop'
 			>
 				<div class='h3'>Add a profile picture</div>
@@ -19,13 +19,13 @@
 				</p>
 				<div class='profile_picture_modal__drag_area'>
 					<span
-						v-if='!dataURL'
+						v-if='!picture.dataURL'
 						class='fa fa-cloud-upload profile_picture_modal__drag_area__icon'
-						:class='{ "profile_picture_modal__drag_area__icon--dragging": dragging }' 
+						:class='{ "profile_picture_modal__drag_area__icon--picture.dragging": picture.dragging }' 
 					></span>
 					<div
-						class='profile_picture_modal__drag_area__image'
-						:style='{ "background-image": "url(" + dataURL + ")" }'
+						class='profile_picture_modal__drag_area__image picture_circle'
+						:style='{ "background-image": "url(" + picture.dataURL + ")" }'
 						v-else
 					></div>
 				</div>
@@ -33,7 +33,7 @@
 					<button class='button button--modal button--borderless' @click='hideProflePictureModal'>Cancel</button>
 					<button
 						class='button button--modal button--green'
-						:class='{ "button--disabled": !dataURL }'
+						:class='{ "button--disabled": !picture.dataURL }'
 						@click='uploadProfilePicture'
 					>Upload picture</button>
 				</div>
@@ -65,7 +65,14 @@
 			<p class='p--condensed'>
 				This will be displayed by your posts on the site
 			</p>
-			<button class='button' @click='showProfilePictureModal = true'>Add profile picture</button>
+			<p
+				class='p--condensed profile_picture_preview picture_circle'
+				:style='{ "background-image": "url(" + picture.current + ")" }'
+				v-if='picture.current'
+			></p>
+			<button class='button' @click='picture.showProfilePictureModal = true'>
+				{{picture.current ? "Change" : "Add" }} profile picture
+			</button>
 		</p>
 	</div>
 </template>
@@ -93,9 +100,12 @@
 					error: ''
 				},
 
-				showProfilePictureModal: false,
-				dragging: false,
-				dataURL: null
+				picture: {
+					current: null,
+					showProfilePictureModal: false,
+					dragging: false,
+					dataURL: null
+				}
 			}
 		},
 		computed: {},
@@ -124,10 +134,11 @@
 
 				this.axios
 					.post('/api/v1/user/' + this.$store.state.username + '/picture', {
-						picture: this.dataURL
+						picture: this.picture.dataURL
 					})
 					.then(res => {
 						this.hideProflePictureModal()
+						this.picture.current = this.picture.dataURL
 					})
 					.catch(e => {
 						this.profilePictureModalLoading = false
@@ -137,21 +148,21 @@
 
 			},
 			hideProflePictureModal () {
-				this.showProfilePictureModal = false
+				this.picture.showProfilePictureModal = false
 				
 				//Wait for transition to complete
 				setTimeout(() => {
-					this.dataURL = null
+					this.picture.dataURL = null
 					this.profilePictureModalLoading = false
 				}, 200)
 			},	
 			handleDragOver (e) {
 				e.preventDefault()
-				this.dragging = true
+				this.picture.dragging = true
 			},
 			handleFileDrop (e) {
 				e.preventDefault()
-				this.dragging = false
+				this.picture.dragging = false
 				
 				if(e.dataTransfer && e.dataTransfer.items) {
 					let file = e.dataTransfer.items[0]
@@ -167,7 +178,7 @@
 				reader.readAsDataURL(file)
 
 				reader.addEventListener('load', () => {
-					this.dataURL = reader.result
+					this.picture.dataURL = reader.result
 				})
 			}
 		},
@@ -179,6 +190,7 @@
 					.get('/api/v1/user/' + this.$store.state.username)
 					.then(res => {
 						this.description.value = res.data.description || ''
+						this.picture.current = res.data.picture
 					})
 					.catch(e => {
 						AjaxErrorHandler(this.$store)(e)
@@ -193,11 +205,16 @@
 <style lang='scss' scoped>
 	@import '../../assets/scss/variables.scss';
 
+	.profile_picture_preview {
+		height: 5rem;
+		width: 5rem;
+	}
+
 	.profile_picture_modal {
 		padding: 1rem;
 		transition: all 0.2s;
 
-		@at-root #{&}--dragging {
+		@at-root #{&}--picture.dragging {
 			//background-color: $color__lightgray--primary;
 		}
 
@@ -213,10 +230,6 @@
 				width: 5rem;
 				height: 5rem;
 				display: inline-block;
-				background-position: center center;
-				background-size: cover;
-				background-repeat: no-repeat;
-				border-radius: 100%;
 				margin-top: -1rem;
 			}
 
@@ -225,7 +238,7 @@
 				color: $color__gray--darker;
 				transition: all 0.2s;
 
-				@at-root #{&}--dragging {
+				@at-root #{&}--picture.dragging {
 					transform: translateY(-0.5rem) scale(1.1);
 					color: $color__gray--darkest;
 				}

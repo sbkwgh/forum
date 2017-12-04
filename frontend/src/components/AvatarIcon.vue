@@ -4,7 +4,7 @@
 			<template v-if='ajaxUser'>
 				<div class='avatar_icon__header'>
 					<div
-						class='avatar_icon__icon avatar_icon__icon--small'
+						class='avatar_icon__icon avatar_icon__icon--small picture_circle'
 						:style='{
 							"background-color": user.color,
 							"background-image": user.picture ? "url(" + user.picture + ")" : null,
@@ -26,7 +26,7 @@
 		</template>
 		<div
 			slot='display'
-			class='avatar_icon__icon'
+			class='avatar_icon__icon picture_circle'
 			:class='{"avatar_icon__icon--small": size === "small"}'
 			:style='{ "background-color": userColor, "background-image": userPicture, }'
 			@click.stop='goToUser'
@@ -121,9 +121,6 @@
 			border-radius: 100%;
 			background-color: $color__gray--darkest;
 			color: #fff;
-			background-position: center center;
-			background-size: cover;
-			background-repeat: no-repeat;
 
 			@at-root #{&}--small {
 				height: 2.5rem;

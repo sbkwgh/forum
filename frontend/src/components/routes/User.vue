@@ -2,7 +2,7 @@
 	<div class='route_container user_route'>
 		<div class='user_header'>
 			<div
-				class='user_header__icon'
+				class='user_header__icon picture_circle'
 				:style='{
 					"background-color": userColor,
 					"background-image": userPicture,
@@ -126,7 +126,6 @@
 			line-height: 4rem;
 			@include text($font--role-emphasis, 3rem)
 			text-align: center;
-			border-radius: 100%;
 			background-color: $color__gray--darkest;
 			color: #fff;
 		}
