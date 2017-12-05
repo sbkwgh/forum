@@ -53,37 +53,49 @@
 				<h2>Ban or block a user</h2>
 				<p>Search for the user to ban, then select the relevant ban type for the user</p>
 
-				<div>
-					<fancy-input
-						placeholder='Username to ban'
-						v-model='$store.state.moderation.username'
-						width='15rem'
-						:large='true'
-					></fancy-input>
-				</div>
+				<form @submit.prevent='addBan'>
+					<div>
+						<fancy-input
+							placeholder='Username to ban'
+							v-model='$store.state.moderation.username'
+							width='15rem'
+							:large='true'
+						></fancy-input>
+					</div>
 
-				<div>
-					<fancy-input
-						placeholder='Message to user (optional)'
-						v-model='$store.state.moderation.message'
-						width='15rem' 
-						:large='true'
-					></fancy-input>
-				</div>
+					<div>
+						<fancy-input
+							placeholder='Message to user (optional)'
+							v-model='$store.state.moderation.message'
+							width='15rem' 
+							:large='true'
+						></fancy-input>
+					</div>
 
-				<div>
-					<select-button
-						:options='$store.state.moderation.options'
-						name='test'
-						v-model='$store.state.moderation.selectedOption'
-					>
-					</select-button>
-				</div>
+					<div>
+						<select-button
+							:options='$store.state.moderation.options'
+							name='test'
+							v-model='$store.state.moderation.selectedOption'
+						>
+						</select-button>
+					</div>
 
-				<div>
-					<button class='button button--modal button--borderless' @click='toggleShowAddNewBanModal'>Cancel</button>
-					<button class='button button--modal button--green' @click='addBan'>Add ban</button>
-				</div>
+					<div>
+						<div
+							class='button button--modal button--borderless'
+							@click='toggleShowAddNewBanModal'
+						>
+							Cancel
+						</div>
+						<button
+							class='button button--modal button--green'
+							type='submit'
+						>
+							Add ban
+						</button>
+					</div>
+				</form>
 			</div>
 		</modal-window>
 	</div>
@@ -152,7 +164,7 @@
 			},
 			addBan () {
 				let store = this.$store.state.moderation
-
+				
 				let obj = { username: store.username }
 				if(store.message.trim().length) {
 					obj.message = store.message
