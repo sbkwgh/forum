@@ -1,5 +1,5 @@
 <template>
-	<div
+	<button
 		class='button loading_button'
 		:class='{"loading_button--loading": loading}'
 		@click='event("click")'
@@ -9,7 +9,7 @@
 		<div class='loading_button__slot'>
 			<slot></slot>
 		</div>
-	</div>
+	</button>
 </template>
 
 <script>

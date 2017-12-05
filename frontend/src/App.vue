@@ -16,68 +16,81 @@
 						Sign up to create and post in threads.
 						<br/>It only takes a few seconds
 					</p>
-					<fancy-input
-						v-model='signup.username'
-						:error='signup.errors.username'
-						placeholder='Username'
-						width='100%'
-					>
-					</fancy-input>
-					<fancy-input
-						v-model='signup.password'
-						:error='signup.errors.hash'
-						placeholder='Password'
-						type='password'
-						width='100%'
-					>
-					</fancy-input>
-					<fancy-input
-						v-model='signup.confirmPassword'
-						:error='signup.errors.confirmPassword'
-						placeholder='Confirm password'
-						type='password'
-						width='100%'
-					>
-					</fancy-input>
 
-					<div style='margin-top: 0.5rem;'>
-						<loading-button class='button--green button--margin' :loading='signup.loading' @click='createAccount'>
-							Sign up
-						</loading-button>
-						<button class='button' @click='closeAccountModal'>
-							Cancel
-						</button>
-					</div>
+					<form @submit.prevent='createAccount'>
+
+						<fancy-input
+							v-model='signup.username'
+							:error='signup.errors.username'
+							placeholder='Username'
+							width='100%'
+						>
+						</fancy-input>
+						<fancy-input
+							v-model='signup.password'
+							:error='signup.errors.hash'
+							placeholder='Password'
+							type='password'
+							width='100%'
+						>
+						</fancy-input>
+						<fancy-input
+							v-model='signup.confirmPassword'
+							:error='signup.errors.confirmPassword'
+							placeholder='Confirm password'
+							type='password'
+							width='100%'
+						>
+						</fancy-input>
+
+						<div style='margin-top: 0.5rem;'>
+							<loading-button
+								class='button--green button--margin'
+								:loading='signup.loading'
+								@click='createAccount'
+							>
+								Sign up
+							</loading-button>
+							<div class='button' @click='closeAccountModal'>
+								Cancel
+							</div>
+						</div>
+					</form>
 				</template>
 				<template slot='Login'>
 					<p style='margin-top: 0;'>
 						Login to create and post in threads.
 					</p>
-					<fancy-input
-						v-model='login.username'
-						:error='login.errors.username'
-						placeholder='Username'
-						width='100%'
-					>
-					</fancy-input>
-					<fancy-input
-						v-model='login.password'
-						:error='login.errors.hash'
-						placeholder='Password'
-						type='password'
-						width='100%'
-					>
-					</fancy-input>
+					<form @submit.prevent='doLogin'>
+						<fancy-input
+							v-model='login.username'
+							:error='login.errors.username'
+							placeholder='Username'
+							width='100%'
+						>
+						</fancy-input>
+						<fancy-input
+							v-model='login.password'
+							:error='login.errors.hash'
+							placeholder='Password'
+							type='password'
+							width='100%'
+						>
+						</fancy-input>
 
-					<div style='margin-top: 0.5rem;'>
-						<loading-button class='button button--green button--margin' :loading='login.loading' @click='doLogin'>
-							<span class='fa fa-unlock-alt' style='margin-right:0.25rem'></span> Log in
-						</loading-button>
-						<button class='button' @click='closeAccountModal'>
-							Cancel
-						</button>
-						
-					</div>
+						<div style='margin-top: 0.5rem;'>
+							<loading-button
+								class='button button--green button--margin'
+								:loading='login.loading'
+								@click='doLogin'
+							>
+								<span class='fa fa-unlock-alt' style='margin-right:0.25rem'></span> Log in
+							</loading-button>
+							<div class='button' @click='closeAccountModal'>
+								Cancel
+							</div>
+						</div>
+					</form>
 				</template>
 			</tab-view>
 		</modal-window>
