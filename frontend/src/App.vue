@@ -3,7 +3,13 @@
 		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100' width='25rem'>
 			<div style='padding: 0rem 1rem 1rem 1rem; border-radius: 0.25rem;'>
 				<p v-for='error in this.$store.state.ajaxErrors'>{{error}}</p>
-				<button class='button button--modal' @click='showAjaxErrorsModal = false'>OK</button>
+				<button
+					class='button button--modal'
+					@click='showAjaxErrorsModal = false'
+					ref='ajaxErrorsModalButton'
+				>
+					OK
+				</button>
 			</div>
 		</modal-window>
 		<modal-window v-model='showAccountModal' @input='closeAccountModal'>
@@ -373,6 +379,11 @@
 		watch: {
 			$route () {
 				this.showMenu = false
+			},
+			'$store.state.ajaxErrorsModal': function(val) {
+				if(val) {
+					this.$refs.ajaxErrorsModalButton.focus()
+				}
 			}
 		}
 	}
