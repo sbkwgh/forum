@@ -41,55 +41,28 @@
 					@click='click(notification)'
 				>
 
-					<template v-if='notification.type === "mention"'>
-						<div class='notification_button__menu__item__header'>
-							<span>New mention</span>
-							<span>
-								<span class='notification_button__menu__item__header__date'>{{notification.createdAt | formatDate }}</span>
-								<span
-									class='notification_button__menu__item__header__close'
-									@click.stop='deleteNotification(notification.id)'
-								>&times;</span>
-							</span>
-						</div>
-						<div>
-							<span class='notification_button__menu__item__link'>
-								<template v-if='notification.PostNotification.User'>
-									{{notification.PostNotification.User.username}}
-								</template>
-								<template v-else>
-									[deleted]
-								</template>
-							</span>
-							wrote
-							"{{notification.PostNotification.Post.content | stripTags | truncate(50)}}"
-						</div>
-					</template>
+				<div class='notification_button__menu__item__header'>
+					<span v-if='notification.type === "mention"'>New mention</span>
+					<span v-else-if='notification.type === "reply"'>Reply to your post</span>
+					<span>
+						<span class='notification_button__menu__item__header__date'>{{notification.createdAt | formatDate }}</span>
+						<span
+							class='notification_button__menu__item__header__close'
+							@click.stop='deleteNotification(notification.id)'
+						>&times;</span>
+					</span>
+				</div>
+				<div>
+					<span v-if='isYouOrDeleted(notification.PostNotification.User)'>
+						{{ notification.PostNotification.User ? 'You' : '[deleted]' }}
+					</span>
+					<span class='notification_button__menu__item__link' v-else>
+						{{notification.PostNotification.User.username}}
+					</span>
 
-					<template v-if='notification.type === "reply"'>
-						<div class='notification_button__menu__item__header'>
-							<span>Reply to your post</span>
-							<span>
-								<span class='notification_button__menu__item__header__date'>{{notification.createdAt | formatDate }}</span>
-								<span
-									class='notification_button__menu__item__header__close'
-									@click.stop='deleteNotification(notification.id)'
-								>&times;</span>
-							</span>
-						</div>
-						<div>
-							<span class='notification_button__menu__item__link'>
-								<template v-if='notification.PostNotification.User'>
-									{{notification.PostNotification.User.username}}
-								</template>
-								<template v-else>
-									[deleted]
-								</template>
-							</span>
-							replied
-							"{{notification.PostNotification.Post.content | stripTags | truncate(50)}}"
-						</div>
-					</template>
+					wrote
+					"{{notification.PostNotification.Post.content | stripTags | truncate(50)}}"
+				</div>
 
 				</div>
 				<div class='notification_button__menu__empty' v-if='!notifications.length'>
@@ -127,6 +100,9 @@
 			}
 		},
 		methods: {
+			isYouOrDeleted (user) {
+				return !user || user.username === this.$store.state.username
+			},
 			setShowMenu (val) {
 				this.showMenu = val
 
