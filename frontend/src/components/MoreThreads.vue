@@ -1,13 +1,23 @@
 <template>
 	<div class='more_threads'>
 		<div class='more_threads__header'>More threads in category '{{category.name}}'</div>
-		<div class='more_threads__thread' v-for='thread in threads' @click='goToThread(thread)'>
-			<div class='more_threads__name' >{{thread.name}}</div>
-			<div class='more_threads__date_created'>{{ thread.createdAt | formatDate }}</div>
-		</div>
+		
 		<div class='more_threads__empty overlay_message' v-if='empty'>
 			No more threads to show
 		</div>
+
+		<template v-else>
+			<div class='more_threads__thread more_threads__thread--header'>
+				<div class='more_threads__name'>Thread</div>
+				<div class='more_threads__date_created'>Date created</div>
+			</div>
+
+			<div class='more_threads__thread' v-for='thread in threads' @click='goToThread(thread)'>
+				<div class='more_threads__name' >{{thread.name}}</div>
+				<div class='more_threads__date_created'>{{ thread.createdAt | formatDate }}</div>
+			</div>
+		</template>
+		
 	</div>
 </template>
 
@@ -54,34 +64,34 @@
 		@at-root #{&}__header {
 			font-size: 1.5rem;
 			font-weight: 500;
-			padding-left: 0.5rem;
+			padding-left: 0.25rem;
 		}
 
 		@at-root #{&}__thread {
 			display: flex;
 			justify-content: space-between;
-			font-size: 1.25rem;
+			font-size: 1rem;
 			cursor: pointer;
-			margin: 0.5rem;
-			padding: 0.25rem 0.5rem;
+			padding: 0.6rem;
 			align-items: center;
-			border-radius: 0.25rem;
-			position: relative;
+			border-bottom: thin solid $color__gray--darker;
 			transition: all 0.2s;
 
 			&:hover {
 				background-color: $color__lightgray--primary;
 			}
-
-			&::after {
-				content: '';
-				width: 100%;
-				position: absolute;
-				border-bottom: thin solid $color__gray--primary;
-				bottom: -0.25rem;
-				left: 0;
+			&:active {
+				background-color: $color__lightgray--darker;
 			}
 
+			@at-root #{&}--header {
+				cursor: default;
+				font-size: 1rem;
+				font-weight: 500;
+				border-bottom: 0.125rem solid $color__gray--darker;
+
+				&:hover { background-color: #fff; }
+			}
 		}
 		@at-root #{&}__date_created {
 			color: $color__text--secondary;
