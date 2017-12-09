@@ -190,18 +190,23 @@ router.get('/:username/picture', async (req, res) => {
 			}
 		})
 
-		res.writeHead(200, {
-			'Content-Type': picture.mimetype,
-			'Content-disposition': 'attachment;filename=profile',
-			'Content-Length': picture.file.length
-		});
-		res.end(new Buffer(picture.file, 'binary'));
-	} catch (e) {
-		if(err === Errors.accountDoesNotExist) {
-			res.status(400)
-			res.json({ errors: [err] })
+		if(!picture) {
+			res.status(404)
+			res.end('')
 		} else {
-			console.log(err)
+			res.writeHead(200, {
+				'Content-Type': picture.mimetype,
+				'Content-disposition': 'attachment;filename=profile',
+				'Content-Length': picture.file.length
+			})
+			res.end(new Buffer(picture.file, 'binary'))
+		}
+	} catch (e) {
+		if(e === Errors.accountDoesNotExist) {
+			res.status(400)
+			res.json({ errors: [e] })
+		} else {
+			console.log(e)
 			res.status(500)
 			res.json({
 				errors: [Errors.unknown]
