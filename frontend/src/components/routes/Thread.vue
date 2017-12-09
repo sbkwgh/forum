@@ -1,5 +1,5 @@
 <template>
-	<div class='route_container' :style='posts.length ? "padding-bottom: 17.5rem;" : null'>
+	<div class='route_container' :style='posts.length ? "padding-bottom: 8.5rem;" : null'>
 		<confirm-modal v-model='showConfirmModal' @confirm='deleteThread' text='Delete' color='red'>
 			Are you sure you want to delete this thread?
 			<br>This <b>cannot</b> be undone
@@ -132,6 +132,12 @@
 				</thread-post-placeholder>
 			</scroll-load>
 		</div>
+
+		<more-threads
+			:category='$store.state.thread.category'
+			:threadId='$store.state.thread.threadId'
+			v-if='$store.state.thread.category'
+		></more-threads>
 	</div>
 </template>
 
@@ -146,6 +152,7 @@
 	import LoadingButton from '../LoadingButton'
 	import ThreadPoll from '../ThreadPoll'
 	import ConfirmModal from '../ConfirmModal'
+	import MoreThreads from '../MoreThreads'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
@@ -164,7 +171,8 @@
 			MenuButton,
 			LoadingButton,
 			ThreadPoll,
-			ConfirmModal
+			ConfirmModal,
+			MoreThreads
 		},
 		data () {
 			return {
