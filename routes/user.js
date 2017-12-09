@@ -250,7 +250,7 @@ router.post('/:username/picture', upload.single('picture'), async (req, res) => 
 					picture: '/api/v1/user/' + req.session.username + '/picture'
 				})
 			} else {
-				await ProfilePicture.update(pictureObj)
+				await picture.update(pictureObj)
 			}
 
 			res.json(user.toJSON())
