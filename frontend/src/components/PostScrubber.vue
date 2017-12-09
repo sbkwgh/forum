@@ -1,5 +1,5 @@
 <template>
-	<div class='post_scrubber'>
+	<div class='post_scrubber' v-if='posts - 1'>
 		<div class='post_scrubber__label post_scrubber__label--first' @click='$emit("input", 0)'>First post</div>
 		<div class='post_scrubber__line' ref='line' @click='lineClick'></div>
 		<div

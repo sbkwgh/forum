@@ -1,5 +1,5 @@
 <template>
-	<div class='route_container' style='padding-bottom: 17.5rem;'>
+	<div class='route_container' :style='posts.length ? "padding-bottom: 17.5rem;" : null'>
 		<confirm-modal v-model='showConfirmModal' @confirm='deleteThread' text='Delete' color='red'>
 			Are you sure you want to delete this thread?
 			<br>This <b>cannot</b> be undone
