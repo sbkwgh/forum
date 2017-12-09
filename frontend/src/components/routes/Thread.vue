@@ -335,6 +335,9 @@
 				this.$store.commit('thread/setPostNotification', null)
 			}
 		},
+		watch: {
+			'$route.params.id': 'loadInitialPosts'
+		},
 		mounted () {
 			let self = this;
 			let setHeader = function() {

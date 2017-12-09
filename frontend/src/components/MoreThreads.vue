@@ -89,6 +89,7 @@
 		}
 		@at-root #{&}__empty {
 			padding: 1rem;
+			font-size: 1.5rem;
 		}
 	}
 </style>
