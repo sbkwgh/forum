@@ -28,6 +28,7 @@
     "randomcolor": "^0.4.4",
     "sequelize": "^3.30.0",
     "sequelize-cli": "^2.8.0",
+    "sharp": "^0.18.4",
     "slug": "^0.9.1",
     "socket.io": "^1.7.3"
   },
