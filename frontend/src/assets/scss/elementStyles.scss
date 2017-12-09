@@ -48,11 +48,11 @@ b, strong {
 	&:after {
 		content: '';
 		position: absolute;
-		width: calc(100% - 0.25rem);
-		height: calc(100% - 0.25rem);
+		width: calc(100% - 4px);
+		height: calc(100% - 4px);
 		left: 0;
 		top: 0;
-		border: 0.125rem solid rgba(150,150,150,0.5);
+		border: 2px solid rgba(150, 150, 150, 0.25);
 		border-radius: 100%;
 	}
 }
