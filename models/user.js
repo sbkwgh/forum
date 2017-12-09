@@ -67,13 +67,6 @@ module.exports = (sequelize, DataTypes) => {
 					if(typeof val !== 'string') {
 						throw new sequelize.ValidationError('password must be a string')
 					}
-				},
-				isValidBase64OrNull (val) {
-					let base64Regexp = /^data:image\/(png|jpeg|jpg|gif);base64,[A-Za-z0-9+\/=]+$/g
-
-					if(!val.match(base64Regexp) && val !== null) {
-						throw new sequelize.ValidationError('image must be valid base64')
-					}
 				}
 			}
 		}
