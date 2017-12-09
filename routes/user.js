@@ -246,12 +246,14 @@ router.post('/:username/picture', upload.single('picture'), async (req, res) => 
 			if(!picture) {
 				picture = await ProfilePicture.create(pictureObj)
 				await picture.setUser(user)
-				await user.update({
-					picture: '/api/v1/user/' + req.session.username + '/picture'
-				})
 			} else {
 				await picture.update(pictureObj)
 			}
+
+			//Add random query to end to force browser to reload background images
+			await user.update({
+				picture: '/api/v1/user/' + req.session.username + '/picture?rand=' + Date.now()
+			})
 
 			res.json(user.toJSON())
 		}
