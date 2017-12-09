@@ -175,7 +175,7 @@
 					})
 					.then(res => {
 						this.hideProflePictureModal()
-						this.picture.current = this.picture.dataURL
+						this.picture.current = res.data.picture
 					})
 					.catch(e => {
 						this.picture.loading = false
@@ -186,9 +186,7 @@
 			},
 			removeProfilePicture () {
 				this.axios
-					.post('/api/v1/user/' + this.$store.state.username + '/picture', {
-						picture: null
-					})
+					.delete('/api/v1/user/' + this.$store.state.username + '/picture')
 					.then(res => {
 						this.picture.current = null
 					})
