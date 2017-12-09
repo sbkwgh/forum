@@ -1,5 +1,5 @@
 <template>
-	<div class='route_container'>
+	<div class='route_container' style='padding-bottom: 17.5rem;'>
 		<confirm-modal v-model='showConfirmModal' @confirm='deleteThread' text='Delete' color='red'>
 			Are you sure you want to delete this thread?
 			<br>This <b>cannot</b> be undone
@@ -346,7 +346,7 @@
 				let topPostInView = posts.find(post => {
 					let rect = post.$el.getBoundingClientRect()
 
-					return (rect.top >= 0) && (rect.bottom <= window.innerHeight)
+					return (rect.top >= 74) && (rect.bottom <= window.innerHeight)
 				})
 
 				let postIndex = posts.indexOf(topPostInView)
