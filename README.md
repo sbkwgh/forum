@@ -2,6 +2,18 @@
 
 Simple and beautiful forum software - created using Express, Vue, and Sequelize.
 
+## Features
+* Mobile ready single-page application
+* Real-time notification system
+* Profile pictures
+* Markdown editor
+* Admin dashboard for forum analytics
+* Multiple admin users
+* Moderation built in, including:
+  * Locking or deleteing threads and posts
+  * Blocking user IP address
+  * Suspending users from creating posts or starting threads
+
 ![forum-screenshot](https://user-images.githubusercontent.com/5166028/30886924-15a8bff8-a311-11e7-9833-981d60e0cd41.png)
 
 To install on Heroku:
