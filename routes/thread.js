@@ -137,6 +137,7 @@ router.delete('/:thread_id', async (req, res) => {
 			let destroyPromises = reports.map(report => report.destroy())
 
 			await Promise.all(destroyPromises)
+			await Post.destroy({ where: { ThreadId: thread.id } })
 			await thread.destroy()
 
 			res.json({ success: true })
