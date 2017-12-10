@@ -486,7 +486,8 @@
 		}
 
 		.thread_header__thread_title {
-			font-size: 2.5rem;
+			font-size: 2rem;
+			width: 100%;
 
 			@at-root #{&}--app_header {
 				display: none;
