@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
 					if(typeof val !== 'string') {
 						throw new sequelize.ValidationError('username must be a string')
 					}
+				},
+				containsNoBlankCharacters (val) {
+					if(/\s/g.test(val)) {
+						throw new sequelize.ValidationError('username can\'t contain blank characters')
+					}
 				}
 			}
 		},

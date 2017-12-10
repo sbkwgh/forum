@@ -278,6 +278,23 @@ describe('User', () => {
 					done()
 				})
 		})
+		it('should give an error if an username has blank character', (done) => {
+			chai.request(server)
+				.post('/api/v1/user')
+				.set('content-type', 'application/json')
+				.send({
+					username: 'username with space',
+					password: 'password'
+				})
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.should.be.json
+					res.body.should.have.property('errors')
+					res.body.errors.should.include.something.that.has.property('message', 'username can\'t contain blank characters')
+
+					done()
+				})
+		})
 
 	})
 
