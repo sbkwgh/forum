@@ -484,8 +484,13 @@
 		.locked_thread {
 			width: 100%;
 		}
-		.thread_header__thread_title--app_header {
-			display: none;
+
+		.thread_header__thread_title {
+			font-size: 2.5rem;
+
+			@at-root #{&}--app_header {
+				display: none;
+			}
 		}
 	}
 </style>
