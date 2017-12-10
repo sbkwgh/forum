@@ -22,7 +22,7 @@ Simple and beautiful forum software - created using Express, Vue, and Sequelize.
 
 To install on Heroku:
 
- 1. `git clone https://github.com/sbkwgh/forum.git`
+ 1. `git clone https://github.com/sbkwgh/forum.git && cd forum`
  2. `heroku login`
  3. `heroku git:remote -a <app-name>`
  4. `heroku config:set NODE_ENV=production`
