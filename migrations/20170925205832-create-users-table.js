@@ -12,7 +12,7 @@ module.exports = {
       updatedAt: Sequelize.DATE,
 
       username: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(191),
         unique: true,
       },
       description: Sequelize.TEXT,

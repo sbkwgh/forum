@@ -12,12 +12,12 @@ module.exports = {
       updatedAt: Sequelize.DATE,
 
       name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(191),
         unique: true,
         allowNull: false,
       },
       value: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(191),
         unique: true
       },
       color: Sequelize.STRING

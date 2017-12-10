@@ -7,7 +7,7 @@ const Errors = require('../lib/errors.js')
 module.exports = (sequelize, DataTypes) => {
 	let User = sequelize.define('User', {
 		username: {
-			type: DataTypes.STRING,
+			type: DataTypes.STRING(191),
 			unique: true,
 			validate: {
 				len: {
