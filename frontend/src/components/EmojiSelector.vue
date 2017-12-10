@@ -9,19 +9,15 @@
 		<div class='emoji_selector__context'>
 			<div
 				class='emoji_selector__tooltip'
-				@scroll='setStickyIndex'
-				ref='tooltip'
 				:class='{
 					"emoji_selector__tooltip--show" : value,
 					"emoji_selector__tooltip--right" : rightAlign
 				}'
 			>
 				<template v-for='(row, $index) in emojis'>
-					<div
-						class='emoji_selector__title'
-						:class='{ "emoji_selector__title--sticky" : stickyIndex === $index }'
-						ref='title'
-					>{{row.title}}</div>
+					<div class='emoji_selector__title'>
+						{{row.title}}
+					</div>
 					<div class='emoji_selector__row' ref='emoji_row'>
 						<span
 							class='emoji_selector__emoji'
@@ -36,8 +32,6 @@
 </template>
 
 <script>
-	import throttle from 'lodash.throttle'
-
 	export default {
 		name: 'EmojiSelector',
 		props: ['value', 'right-align'],
@@ -61,27 +55,7 @@
 			emitEmoji (emoji) {
 				this.$emit('input', false)
 				this.$emit('emoji', emoji)
-			},
-			setStickyIndex: throttle(function (e) {
-				let tooltipRect = this.$refs.tooltip.getBoundingClientRect();
-				let sortedRows = this.$refs.emoji_row.sort((a, b) => {
-					a.rect = a.getBoundingClientRect()
-					b.rect = b.getBoundingClientRect()
-
-					return a.rect - b.rect
-				})
-				let emojiRowsInView = sortedRows.filter(row => {
-					let rowRect = row.rect
-
-					return rowRect.top < tooltipRect.bottom && rowRect.bottom > tooltipRect.top;
-				})
-				let topRowInView = emojiRowsInView[0]
-				
-				this.stickyIndex = sortedRows.indexOf(topRowInView)
-			}, 100)
-		},
-		mounted () {
-			this.setStickyIndex()
+			}
 		}
 	}
 </script>
@@ -131,7 +105,6 @@
 			cursor: default;
 			overflow-y: auto;
 			padding: 0 0.375rem;
-			padding-top: 1.15rem;
 			z-index: 4;
 
 			@at-root #{&}--show {
@@ -155,16 +128,6 @@
 			text-align: left;
 			color: $color__text--primary;
 			padding-left: 0.375rem;
-
-			@at-root #{&}--sticky {
-				margin-top: -1.125rem;
-				width: 13.25rem;
-				background: rgba(255, 255, 255, 0.97);
-				position: fixed;
-				padding-bottom: 0.125rem;
-				top: -7.75rem;
-				pointer-events: none;
-			}
 		}
 		@at-root #{&}__emoji {
 			padding: 0.25rem;
