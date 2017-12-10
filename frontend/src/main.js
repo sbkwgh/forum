@@ -1,6 +1,15 @@
 import IO from 'socket.io-client'
 window.socket = IO()
 
+socket.on('disconnect', () => {
+	socket.connect('http://localhost:3000', {
+		reconnection: true,
+		reconnectionDelay: 1000,
+		reconnectionDelayMax : 5000,
+		reconnectionAttempts: Infinity
+	} );
+})
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'

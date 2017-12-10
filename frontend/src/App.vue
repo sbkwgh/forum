@@ -245,6 +245,8 @@
 					this.$store.commit('setUsername', '')
 					this.$store.commit('setAdmin', res.data.admin)
 
+					socket.emit('accountEvent')
+
 					this.$router.push('/')
 				}).catch(err => {
 					this.loadingLogout = false
@@ -301,7 +303,7 @@
 						this.$store.commit('setAdmin', res.data.admin)
 						this.closeAccountModal()
 
-						socket.emit('login')
+						socket.emit('accountEvent')
 					}).catch(e => {
 						this.signup.loading = false
 
@@ -333,7 +335,7 @@
 					this.$store.commit('setAdmin', res.data.admin)
 					this.closeAccountModal()
 
-					socket.emit('login')
+					socket.emit('accountEvent')
 				}).catch(e => {
 					this.login.loading = false
 					this.ajaxErrorHandler(e, (error) => {
