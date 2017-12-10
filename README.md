@@ -6,6 +6,7 @@ Simple and beautiful forum software - created using Express, Vue, and Sequelize.
 * Mobile ready single-page application
 * Real-time notification system
 * Profile pictures
+* Infinite-scroll loading of posts and threads
 * @ mentions
 * Polls
 * Markdown editor
