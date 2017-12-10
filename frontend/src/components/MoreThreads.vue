@@ -102,4 +102,15 @@
 			font-size: 1.5rem;
 		}
 	}
+
+	@media (max-width: 420px) {
+		.more_threads {
+			width: 100%;
+			margin-bottom: -6.5rem;
+
+			@at-root #{&}__empty {
+				margin-top: 0;
+			}
+		}
+	} 
 </style>
