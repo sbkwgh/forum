@@ -16,7 +16,7 @@
 		},
 		methods: {
 			onScroll (e) {
-				if(document.body.scrollHeight - document.body.scrollTop - 300 <= document.body.clientHeight) {
+				if((window.innerHeight + window.pageYOffset) + 300 >= document.body.scrollHeight) {
 					if(!this.loading) {
 						this.$emit('loadNext')
 					}
