@@ -200,7 +200,8 @@
 		position: relative;
 		border-bottom: thin solid $color__gray--primary;
 		transition: background-color 0.5s;
-		margin: 0.5rem 0;
+		margin: 0.5rem -0.5rem;
+		padding: 0 0.5rem;
 		border-radius: 0.25rem;
 
 		@at-root #{&}--highlighted {
@@ -285,7 +286,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			opacity: 0.6;
+			//opacity: 0.6;
 			transition: opacity 0.2s;
 
 			@at-root #{&}--show {
