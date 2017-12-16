@@ -1,6 +1,11 @@
 <template>
 	<div class='modal_window__overlay' :class='{"modal_window--show": value}' @click.self='closeModal'>
 		<div class='modal_window' :class='{"modal_window--show": value}' :style='{"width": width || "20rem"}'>
+			<span
+				class='modal_window__close fa fa-times'
+				@click='closeModal'
+				v-if='closeButton'
+			></span>
 			<slot></slot>
 		</div>
 	</div>
@@ -9,7 +14,7 @@
 <script>
 	export default {
 		name: 'ModalWindow',
-		props: ['value', 'width'],
+		props: ['value', 'width', 'close-button'],
 		methods: {
 			closeModal () {
 				this.$emit('input', false)
@@ -56,6 +61,19 @@
 		transform: scale(1.1);
 
 		transition: margin-top 0.3s, opacity 0.3s, transform 0.3s;
+
+		@at-root #{&}__close {
+			position: absolute;
+			right: 0.7rem;
+			top: 0.5rem;
+			transition: color 0.2s;
+			cursor: pointer;
+			color: $color__gray--darkest;
+
+			&:hover {
+				color: $color__darkgray--primary;
+			}
+		}
 
 		@at-root #{&}--show {
 			margin-top: 0;
