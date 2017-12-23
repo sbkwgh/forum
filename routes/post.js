@@ -4,7 +4,7 @@ let router = express.Router()
 const Errors = require('../lib/errors')
 let { User, Thread, Post, Notification, Ban, Sequelize, sequelize } = require('../models')
 
-router.get('/:post_id', async (req, res) => {
+router.get('/:post_id', async (req, res, next) => {
 	try {
 		let post = await Post.findById(req.params.post_id, { include: Post.includeOptions() })
 		if(!post) throw Errors.sequelizeValidation(Sequelize, {
@@ -13,17 +13,7 @@ router.get('/:post_id', async (req, res) => {
 		})
 
 		res.json(post.toJSON())
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -38,7 +28,7 @@ router.all('*', (req, res, next) => {
 })
 
 
-router.put('/:post_id/like', async (req, res) => {
+router.put('/:post_id/like', async (req, res, next) => {
 	try {
 		let post = await Post.findById(req.params.post_id)
 		let user = await User.findOne({ where: { username: req.session.username }})
@@ -50,24 +40,10 @@ router.put('/:post_id/like', async (req, res) => {
 
 		res.json({ success: true })
 
-	} catch (e) {
-		if(e.name in Errors) {
-			res.status(400)
-			res.json({
-				errors: [e]
-			})
-		} else{
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.delete('/:post_id/like', async (req, res) => {
+router.delete('/:post_id/like', async (req, res, next) => {
 	try {
 		let post = await Post.findById(req.params.post_id)
 		let user = await User.findOne({ where: { username: req.session.username }})
@@ -78,24 +54,10 @@ router.delete('/:post_id/like', async (req, res) => {
 
 		res.json({ success: true })
 
-	} catch (e) {
-		if(e.name === 'invalidParameter') {
-			res.status(400)
-			res.json({
-				errors: [e]
-			})
-		} else{
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	let thread, replyingToPost, post, uniqueMentions = []
 
 	try {
@@ -174,23 +136,7 @@ router.post('/', async (req, res) => {
 			username: user.username
 		})
 
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else if(e.name in Errors) {
-			res.status(400)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -204,7 +150,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.delete('/:post_id', async (req, res) => {
+router.delete('/:post_id', async (req, res, next) => {
 	try {
 		let post = await Post.findById(req.params.post_id)
 		if(!post) throw Errors.sequelizeValidation(Sequelize, {
@@ -215,19 +161,7 @@ router.delete('/:post_id', async (req, res) => {
 		await post.update({ content: '[This post has been removed by an administrator]', removed: true })
 
 		res.json({ success: true })
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router

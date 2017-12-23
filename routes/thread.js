@@ -5,7 +5,7 @@ const Errors = require('../lib/errors.js')
 let { User, Thread, Category, Post, Ban, Report, Sequelize } = require('../models')
 let pagination = require('../lib/pagination.js')
 
-router.get('/:thread_id', async (req, res) => {
+router.get('/:thread_id', async (req, res, next) => {
 	try {
 		let { from, limit } = pagination.getPaginationProps(req.query)
 		let thread = await Thread.findById(req.params.thread_id, {
@@ -17,20 +17,7 @@ router.get('/:thread_id', async (req, res) => {
 
 		res.json(Object.assign( thread.toJSON(), { meta } ))
 		
-	} catch (e) {
-		if(e.name === 'invalidParameter') {
-			res.status(400)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 //Only logged in routes
@@ -45,7 +32,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	let validationErrors = []
 
 	try {
@@ -80,23 +67,7 @@ router.post('/', async (req, res) => {
 			value: category.value
 		})
 
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else if(e === Errors.invalidCategory) {
-			res.status(400)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			}) 
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 //Only admin routes
@@ -111,7 +82,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.delete('/:thread_id', async (req, res) => {
+router.delete('/:thread_id', async (req, res, next) => {
 	try {
 		let thread = await Thread.findById(req.params.thread_id)
 
@@ -142,22 +113,10 @@ router.delete('/:thread_id', async (req, res) => {
 
 			res.json({ success: true })
 		}
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-			
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.put('/:thread_id', async (req, res) => {
+router.put('/:thread_id', async (req, res, next) => {
 	try {
 		let thread = await Thread.findById(req.params.thread_id)
 
@@ -175,13 +134,7 @@ router.put('/:thread_id', async (req, res) => {
 
 			res.json({ success: true })
 		}
-	} catch (e) {
-		console.log(e)
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router
