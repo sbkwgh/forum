@@ -1,7 +1,7 @@
 let express = require('express')
 let app = express()
 
-let sequelize = require('./models').sequelize
+let { sequelize } = require('./models')
 let sockets = require('./lib/sockets')
 
 let config = require('./config/server.js')
@@ -18,6 +18,10 @@ let session = expressSession({
 	resave: true,
 	saveUninitialized: true
 })
+if(process.env.NODE_ENV === 'production') {
+	app.set('trust proxy', 1);
+	session.cookie.secure = 'auto'
+}
 
 app.use(compression())
 app.use(bodyParser.json({ limit: '5mb' }))
@@ -27,12 +31,7 @@ app.use(session)
 if(process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
 	app.use(require('morgan')('dev'))
 }
-/*if(process.env.NODE_ENV === 'production') {
-	app.set('trust proxy', 1);
 
-	console.log(session)
-	session.cookie.secure = 'auto'
-}*/
 
 app.use('/api/v1/user', require('./routes/user'))
 app.use('/api/v1/admin_token', require('./routes/admin_token'))
@@ -51,6 +50,8 @@ app.use('/static', express.static(path.join(__dirname, 'frontend', 'dist', 'stat
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
 })
+
+app.use(require('./lib/errorHandler'))
 
 function main () {
 	let server = app.listen(config.port, () => {
