@@ -76,7 +76,7 @@ describe('User', () => {
 					admin: true
 				})
 				.end((err, res) => {
-					res.should.have.status(401)
+					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
 					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('token'))
@@ -631,7 +631,7 @@ describe('User', () => {
 				})
 				.end((err, res) => {
 					res.should.be.json
-					res.should.have.status(400)
+					res.should.have.status(401)
 					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
 					done()
@@ -713,7 +713,7 @@ describe('User', () => {
 					newPassword: 'azertyuiop'
 				})
 				.end((err, res) => {
-					res.should.have.status(400)
+					res.should.have.status(401)
 					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 
 					done()
@@ -728,7 +728,7 @@ describe('User', () => {
 					newPassword: 'azertyuiop'
 				})
 				.end((err, res) => {
-					res.should.have.status(400)
+					res.should.have.status(401)
 					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidLoginCredentials)
 
 					done()

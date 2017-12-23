@@ -22,7 +22,7 @@ function setUserSession(req, res, username, UserId, admin) {
 
 	if(admin) { req.session.admin = true }
 }
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	try {
 		await Ban.isIpBanned(req.ip)
 
@@ -41,26 +41,10 @@ router.post('/', async (req, res) => {
 
 		setUserSession(req, res, user.username, user.id, userParams.admin)
 		res.json(user.toJSON())
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else if (e.name in Errors) {
-			res.status(401)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.get('/:username', async (req, res) => {
+router.get('/:username', async (req, res, next) => {
 	try {
 		let queryObj = {
 			attributes: { exclude: ['hash'] },
@@ -104,21 +88,10 @@ router.get('/:username', async (req, res) => {
 		}
 
 		
-	} catch (err) {
-		if(err === Errors.accountDoesNotExist) {
-			res.status(400)
-			res.json({ errors: [err] })
-		} else {
-			console.log(err)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (err) { next(err) }
 })
 
-router.post('/:username/login', async (req, res) => {
+router.post('/:username/login', async (req, res, next) => {
 	try {
 		await Ban.isIpBanned(req.ip, req.params.username)
 
@@ -149,20 +122,7 @@ router.post('/:username/login', async (req, res) => {
 			})
 		}
 
-	} catch (err) {
-		if(err instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(err)
-		} else {
-			console.log(err)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-
-	}
+	} catch (err) { next(err) }
 })
 
 router.post('/:username/logout', async (req, res) => {
@@ -175,7 +135,7 @@ router.post('/:username/logout', async (req, res) => {
 	})
 })
 
-router.get('/:username/picture', async (req, res) => {
+router.get('/:username/picture', async (req, res, next) => {
 	try {
 		let user = await User.findOne({
 			where: {
@@ -201,18 +161,7 @@ router.get('/:username/picture', async (req, res) => {
 			})
 			res.end(new Buffer(picture.file, 'binary'))
 		}
-	} catch (e) {
-		if(e === Errors.accountDoesNotExist) {
-			res.status(400)
-			res.json({ errors: [e] })
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -227,7 +176,7 @@ router.all('*', (req, res, next) => {
 })
 
 let upload = multer({ storage: multer.memoryStorage() })
-router.post('/:username/picture', upload.single('picture'), async (req, res) => {
+router.post('/:username/picture', upload.single('picture'), async (req, res, next) => {
 	try {
 		if(req.session.username !== req.params.username) {
 			throw Errors.requestNotAuthorized
@@ -257,27 +206,10 @@ router.post('/:username/picture', upload.single('picture'), async (req, res) => 
 
 			res.json(user.toJSON())
 		}
-	} catch (e) {
-		if(e === Errors.requestNotAuthorized) {
-			res.status(401)
-			res.json({
-				errors: [e]
-			})
-		} else if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.delete('/:username/picture', async (req, res) => {
+router.delete('/:username/picture', async (req, res, next) => {
 	try {
 		if(req.session.username !== req.params.username) {
 			throw Errors.requestNotAuthorized
@@ -294,25 +226,11 @@ router.delete('/:username/picture', async (req, res) => {
 
 			res.json(user.toJSON())
 		}
-	} catch (e) {
-		if(e === Errors.requestNotAuthorized) {
-			res.status(401)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 
-router.put('/:username', async (req, res) => {
+router.put('/:username', async (req, res, next) => {
 	try {
 		if(req.session.username !== req.params.username) {
 			throw Errors.requestNotAuthorized
@@ -339,23 +257,10 @@ router.put('/:username', async (req, res) => {
 		} else {
 			res.json({ success: false })
 		}
-	} catch (e) {
-		if(e.name in Errors) {
-			res.status(400)
-			res.json({ errors: [e] })
-		} else if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({errors: Errors.unknown })
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.delete('/:username', async (req, res) => {
+router.delete('/:username', async (req, res, next) => {
 	try {
 		if(req.session.username !== req.params.username) {
 			throw Errors.requestNotAuthorized
@@ -373,17 +278,7 @@ router.delete('/:username', async (req, res) => {
 			res.json({ success: true })
 		})
 
-	} catch (e) {
-		if(e.name in Errors) {
-			res.status(400)
-			res.json({ errors: [e] })
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({errors: Errors.unknown })
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -397,7 +292,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 	try {
 		if(req.query.admin) {
 			let admins = await User.findAll({
@@ -411,12 +306,7 @@ router.get('/', async (req, res) => {
 		} else {
 			res.json({})
 		}
-	} catch (e) {
-		console.log(e)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router
