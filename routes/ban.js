@@ -15,7 +15,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	try {
 		let user = await User.findOne({ where: { username: req.body.username } })
 		if(!user) throw Errors.sequelizeValidation(Sequelize, {
@@ -39,39 +39,20 @@ router.post('/', async (req, res) => {
 		})
 		
 		res.json(ret.toJSON())
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 	try {
 		let bans = await Ban.findAll({
 			include: [User]
 		})
 
 		res.json(bans.map(b => b.toJSON()))
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
-router.delete('/:ban_id', async (req, res) => {
+router.delete('/:ban_id', async (req, res, next) => {
 	try {
 		let ban = await Ban.findById(req.params.ban_id)
 		if(!ban) throw Errors.sequelizeValidation(Sequelize, {
@@ -82,19 +63,7 @@ router.delete('/:ban_id', async (req, res) => {
 		await ban.destroy()
 		res.json({ success: true })
 
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router

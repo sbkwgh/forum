@@ -15,7 +15,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 	try {
 		let Notifications = await Notification.findAll({
 			where: {
@@ -34,18 +34,10 @@ router.get('/', async (req, res) => {
 
 		res.json({ Notifications, unreadCount })
 
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
-	
+	} catch (e) { next(e) }
 })
 
-router.put('/', async (req, res) => {
+router.put('/', async (req, res, next) => {
 	try {
 		await Notification.update({ read: true }, {
 			where: {
@@ -56,18 +48,10 @@ router.put('/', async (req, res) => {
 
 		res.json({ success: true })
 
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
-	
+	} catch (e) { next(e) }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
 	try {
 		let updatedRows = await Notification.update({ interacted: true, read: true }, {
 			where: {
@@ -84,18 +68,10 @@ router.put('/:id', async (req, res) => {
 		} else {
 			res.json({ success: true })
 		}
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
-	
+	} catch (e) { next(e) }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
 	try {
 		let deleted = await Notification.destroy({
 			where: {
@@ -112,15 +88,7 @@ router.delete('/:id', async (req, res) => {
 				errors: [Errors.invalidParameter('id', 'invalid notification id')]
 			})
 		}
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
-	
+	} catch (e) { next(e) }
 })
 
 module.exports = router

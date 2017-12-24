@@ -4,7 +4,7 @@ let router = express.Router()
 let { PollAnswer, PollQuestion, PollVote, User, Sequelize, Thread } = require('../models')
 const Errors = require('../lib/errors')
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
 	try {
 		let id = req.params.id
 		let pollQuestion = await PollQuestion.findById(id, {
@@ -43,19 +43,7 @@ router.get('/:id', async (req, res) => {
 		jsonPollQuestion.hasVoted = !!hasVoted
 
 		res.json(jsonPollQuestion)
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -69,7 +57,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	try {
 		let threadId = req.body.threadId
 		let thread = await Thread.findById(req.body.threadId)
@@ -121,27 +109,10 @@ router.post('/', async (req, res) => {
 
 		res.json(pollQuestion.toJSON())
 
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else if(e === Errors.requestNotAuthorized) {
-			res.status(401)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
-router.post('/:id', async (req, res) => {
+router.post('/:id', async (req, res, next) => {
 	try {
 		let previousVote = await PollVote.findOne({
 			where: { PollQuestionId: req.params.id, UserId: req.session.UserId }
@@ -170,19 +141,7 @@ router.post('/:id', async (req, res) => {
 		await pollVote.setPollAnswer(pollAnswer)
 
 		res.redirect('/api/v1/poll/' + req.params.id)
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router

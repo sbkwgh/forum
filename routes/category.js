@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.get('/:category', async (req, res) => {
+router.get('/:category', async (req, res, next) => {
 	try {
 		let threads, threadsLatestPost, resThreads, user
 		let { from, limit } = pagination.getPaginationProps(req.query, true)
@@ -119,20 +119,7 @@ router.get('/:category', async (req, res) => {
 
 		res.json(resThreads)
 
-	} catch (e) {
-		if(e.name === 'invalidParameter') {
-			res.status(400)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -146,7 +133,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	try {
 		let category = await Category.create({
 			name: req.body.name,
@@ -160,21 +147,13 @@ router.post('/', async (req, res) => {
 			res.json({
 				errors: [Errors.categoryAlreadyExists]
 			})
-		} else if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
 		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
+			next(e)
 		}
 	}
 })
 
-router.put('/:category_id', async (req, res) => {
+router.put('/:category_id', async (req, res, next) => {
 	try {
 		let id = req.params.category_id
 		let obj = {}
@@ -195,22 +174,10 @@ router.put('/:category_id', async (req, res) => {
 			let ret = await Category.findById(id)
 			res.json(ret.toJSON())
 		}
-	} catch(e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch(e) { next(e) }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
 	try {
 		let category = await Category.findById(req.params.id)
 		if(!category) throw Errors.sequelizeValidation(Sequelize, {
@@ -233,18 +200,7 @@ router.delete('/:id', async (req, res) => {
 			success: true,
 			otherCategoryCreated: otherCategory[1] ? otherCategory[0] : null
 		})
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router

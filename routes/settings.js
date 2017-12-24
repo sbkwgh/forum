@@ -4,26 +4,14 @@ let router = express.Router()
 const Errors = require('../lib/errors')
 let { Settings, Sequelize } = require('../models')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 	try {
 		let settings = await Settings.get()
 
 		if(!settings) throw Errors.noSettings
 
 		res.json(settings.toJSON())
-	} catch (e) {
-		if(e === Errors.noSettings) {
-			res.status(500)
-			res.json({
-				errors: [e]
-			})
-		} else {
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 	
 })
 
@@ -38,7 +26,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.put('/', async (req, res) => {
+router.put('/', async (req, res, next) => {
 	try {
 		let params = {}
 
@@ -56,18 +44,7 @@ router.put('/', async (req, res) => {
 
 		res.json(params)
 		
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router

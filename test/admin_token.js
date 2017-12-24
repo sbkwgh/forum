@@ -66,10 +66,10 @@ describe('AdminToken', () => {
 			try {
 				let res = await chai.request(server).post('/api/v1/admin_token')
 
-				res.should.have.status(403)
+				res.should.have.status(401)
 				res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 			} catch(res) {
-				res.should.have.status(403)
+				res.should.have.status(401)
 				JSON.parse(res.response.text).errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
 			}
 

@@ -4,7 +4,7 @@ let router = express.Router()
 let { Post, Thread, Sequelize } = require('../models')
 const Errors = require('../lib/errors')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 	try {
 		let q = req.query.q
 		let offset = +req.query.offset || 0
@@ -48,13 +48,7 @@ router.get('/', async (req, res) => {
 			next
 		})
 
-	} catch (e) {
-		console.log(e)
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router

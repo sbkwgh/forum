@@ -14,7 +14,7 @@ router.all('*', (req, res, next) => {
 		})
 	}
 })
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	try {
 		let post = await Post.findById(req.body.postId)
 
@@ -31,19 +31,7 @@ router.post('/', async (req, res) => {
 		res.json({
 			success: true
 		})
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -56,7 +44,7 @@ router.all('*', (req, res, next) => {
 		})
 	}
 })
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 	try {
 		let reports = await Report.findAll({
 			include: [
@@ -66,35 +54,16 @@ router.get('/', async (req, res) => {
 		})
 
 		res.json(reports)
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
 	try {
 		let report = await Report.findById(req.params.id)
 		if(!report) throw Report.InvalidPostId(req.params.id)
 
 		await report.destroy()
 		res.json({ success: true })
-	} catch (e) {
-		if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router

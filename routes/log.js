@@ -53,7 +53,7 @@ function processLogsForLineChart (logs) {
 	return pageViewsSorted
 }
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
 	try {
 		let thread, user
 		if(req.body.route === 'thread') {
@@ -96,24 +96,7 @@ router.post('/', async (req, res) => {
 
 		res.json(log.toJSON())
 
-	} catch (e) {
-		if(e.name in Errors) {
-			res.status(401)
-			res.json({
-				errors: [e]
-			})
-		} else if(e instanceof Sequelize.ValidationError) {
-			res.status(400)
-			res.json(e)
-		} else {
-			console.log(e)
-
-			res.status(500)
-			res.json({
-				errors: [Errors.unknown]
-			})
-		}
-	}
+	} catch (e) { next(e) }
 })
 
 router.all('*', (req, res, next) => {
@@ -127,7 +110,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-router.get('/top-threads', async (req, res) => {
+router.get('/top-threads', async (req, res, next) => {
 	try {
 		let logs = await Log.findAll({
 			where: {
@@ -169,15 +152,10 @@ router.get('/top-threads', async (req, res) => {
 		//Return top 3
 		res.json(sortedPageViewsArr.slice(0, 4))
 
-	} catch (e) {
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
-router.get('/page-views', async (req, res) => {
+router.get('/page-views', async (req, res, next) => {
 	try {
 		let logs = await Log.findAll({
 			where: {
@@ -189,17 +167,10 @@ router.get('/page-views', async (req, res) => {
 		})
 
 		res.json(processLogsForLineChart(logs))
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
-router.get('/new-users', async (req, res) => {
+router.get('/new-users', async (req, res, next) => {
 	try {
 		let users = await User.findAll({
 			where: {
@@ -211,17 +182,10 @@ router.get('/new-users', async (req, res) => {
 		})
 
 		res.json(processLogsForLineChart(users))
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
-router.get('/categories', async (req, res) => {
+router.get('/categories', async (req, res, next) => {
 	try {
 		let categories = await Category.findAll()
 		let categoryThreadCount = []
@@ -236,17 +200,10 @@ router.get('/categories', async (req, res) => {
 		}))
 
 		res.json(categoryThreadCount)
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
-router.get('/new-thread', async (req, res) => {
+router.get('/new-thread', async (req, res, next) => {
 	try {
 		let now = Date.now()
 
@@ -270,14 +227,7 @@ router.get('/new-thread', async (req, res) => {
 			count: threadsTodayCount,
 			change: threadsTodayCount - threadsYesterdayCount
 		})
-	} catch (e) {
-		console.log(e)
-
-		res.status(500)
-		res.json({
-			errors: [Errors.unknown]
-		})
-	}
+	} catch (e) { next(e) }
 })
 
 module.exports = router
