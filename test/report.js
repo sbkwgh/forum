@@ -114,6 +114,34 @@ describe('Report', () => {
 				})
 
 			res.should.have.status(200)
+			res.should.be.json 
+
+			let report1 = await Report.findById(1, {
+				include: [{ model: User, as: 'FlaggedByUser' }]
+			})
+			report1.should.not.be.null
+			report1.should.have.deep.property('FlaggedByUser.username', 'useraccount')
+			report1.should.have.property('reason', 'spam')
+
+			let report2 = await Report.findById(2, {
+				include: [{ model: User, as: 'FlaggedByUser' }]
+			})
+
+			report2.should.not.be.null
+			report2.should.have.deep.property('FlaggedByUser.username', 'useraccount')
+			report2.should.have.property('reason', 'inappropriate')
+		})
+
+		it('should be fine with multiple reports from different users', async () => {
+			let res = await adminAccount
+				.post('/api/v1/report')
+				.set('content-type', 'application/json')
+				.send({
+					postId: 1,
+					reason: 'inappropriate'
+				})
+
+			res.should.have.status(200)
 			res.should.be.json
 
 			let report1 = await Report.findById(1, {
@@ -123,12 +151,12 @@ describe('Report', () => {
 			report1.should.have.deep.property('FlaggedByUser.username', 'useraccount')
 			report1.should.have.property('reason', 'spam')
 
-			let report2 = await Report.findById(res.body.id, {
+			let report2 = await Report.findById(3, {
 				include: [{ model: User, as: 'FlaggedByUser' }]
 			})
 
 			report2.should.not.be.null
-			report2.should.have.deep.property('FlaggedByUser.username', 'useraccount')
+			report2.should.have.deep.property('FlaggedByUser.username', 'adminaccount')
 			report2.should.have.property('reason', 'inappropriate')
 		})
 
