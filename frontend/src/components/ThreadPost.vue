@@ -5,8 +5,8 @@
 			"post--highlighted": highlight,
 			"post--selected": selected
 		}'
-		@mouseenter='setPostFooterState(true)'
-		@mouseleave='setPostFooterState(false)'
+		@mouseenter='hover = true'
+		@mouseleave='hover = false'
 
 		@click='goToPost'
 	>
@@ -27,24 +27,26 @@
 		<report-post-modal v-model='showReportPostModal' :post-id='post.id'></report-post-modal>
 
 		<div class='post__meta_data'>
-			<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
-			<div class='post__thread' v-if='showThread' @click.stop='goToThread'>
-				In thread <span class='post__thread__name'>{{post.Thread.name}}</span>
-				&nbsp;&middot;&nbsp;
+			<div style='display: inline-flex;'>
+				<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
+				<div class='post__thread' v-if='showThread' @click.stop='goToThread'>
+					In thread <span class='post__thread__name'>{{post.Thread.name}}</span>
+					&nbsp;&middot;&nbsp;
+				</div>
+				<div class='post__user' v-else>{{username}}</div>
+				<replying-to
+					style='margin-right: 0.5rem;'
+					v-if='post.replyingToUsername'
+					:replyId='post.replyId'
+					:username='post.replyingToUsername'
+					@click='$emit("goToPost", post.replyId, true)'
+				></replying-to>
 			</div>
-			<div class='post__user' v-else>{{username}}</div>
-			<replying-to
-				style='margin-right: 0.5rem;'
-				v-if='post.replyingToUsername'
-				:replyId='post.replyId'
-				:username='post.replyingToUsername'
-				@click='$emit("goToPost", post.replyId, true)'
-			></replying-to>
 			<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		</div>
 		<div class='post__date post__date--mobile'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		<div class='post__content' v-html='post.content'></div>
-		<div class='post__footer' :class='{ "post__footer--show": hover }'>
+		<div class='post__footer'>
 			<div
 				class='post__footer_group'
 			>
@@ -66,23 +68,27 @@
 				
 			</div>
 			<div
-				class='post__footer_group'>
-				<div class='post__action post__share' @click.stop='setShareModalState(true)'>Share</div>
+				class='post__footer_group post__actions'
+				:class='{ "post__actions--show": showActions }'
+			>
+				<div class='post__action post__share' @click.stop='setShareModalState(true)'>share</div>
 				<div
 					class='post__action'
 					@click.stop='setShowReportPostModal(true)'
 					v-if='$store.state.username && !post.removed'
 				>
-					Report
+					report
 				</div>
 				<div
 					class='post__action post__reply'
 					v-if='$store.state.username && showReply'
 					@click.stop='$emit("reply", post.id, username)'
 				>
-					Reply
+					reply
 				</div>
 			</div>
+		</div>
+		<div class='post__replies'>
 		</div>
 	</div>
 </template>
@@ -135,12 +141,12 @@
 				} else {
 					return '[deleted]'
 				}
+			},
+			showActions () {
+				return this.hover || this.showShareModal || this.showReportPostModal
 			}
 		},
 		methods: {
-			setPostFooterState (state) {
-				this.hover = state
-			},
 			setShareModalState (val) {
 				this.showShareModal = val
 			},
@@ -198,7 +204,7 @@
 
 	.post {
 		position: relative;
-		border-bottom: thin solid $color__gray--primary;
+		border-bottom: thin solid $color__gray--darker;
 		transition: background-color 0.5s;
 		margin: 0.5rem -0.5rem;
 		padding: 0 0.5rem;
@@ -246,6 +252,7 @@
 
 		@at-root #{&}__meta_data {
 			display: flex;
+			justify-content: space-between;
 			padding-top: 0.75rem;
 			position: relative;
 			margin-left: 4rem;
@@ -271,8 +278,6 @@
 			}
 		}
 		@at-root #{&}__date {
-			color: $color__gray--darkest;
-			margin-right: 0.5rem;
 
 			@at-root #{&}--mobile {
 				display: none;
@@ -286,13 +291,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			//opacity: 0.6;
 			transition: opacity 0.2s;
-
-			@at-root #{&}--show {
-				opacity: 1;
-				transition: opacity 0.2s;
-			}
 
 			@at-root #{&}_sub_group {
 				display: flex;
@@ -303,6 +302,9 @@
 					font-variant: small-caps;
 					margin: 0 0.25rem;
 					margin-left: 0;
+					font-size: 0.9rem;
+					position: relative;
+					bottom: 0.1rem;
 				}
 			}
 
@@ -316,6 +318,10 @@
 			color: $color__darkgray--primary;
 			cursor: pointer;
 			margin-right: 0.75rem;
+			font-size: 0.9rem;
+			font-variant: small-caps;
+			position: relative;
+			bottom: 0.1rem;
 
 			transition: all 0.2s;
 
@@ -323,10 +329,26 @@
 				color: $color__darkgray--darkest;
 			}
 		}
+		@at-root #{&}__actions {
+			opacity: 0;
+
+			@at-root #{&}--show {
+				opacity: 1;
+				transition: opacity 0.2s;
+			}
+		}
 	}
 
 	@media (max-width: 420px) {
 		.post {
+			@at-root #{&}__actions {
+				opacity: 1;
+			}
+
+			@at-root #{&}__content {
+				padding: 0 0.5rem;
+			}
+
 			@at-root #{&}__date {
 				display: none;
 

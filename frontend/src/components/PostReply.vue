@@ -90,7 +90,6 @@
 		@at-root #{&}__display {
 			display: inline-flex;
 			align-items: baseline;
-			border: 0.125rem solid $color__gray--darkest;
 			justify-content: center;
 			position: relative;
 			border-radius: 1rem;
@@ -103,9 +102,10 @@
 		@at-root #{&}__letter {
 			height: 1.25rem;
 			width: 1.25rem;
-			line-height: 1.25rem;
-			@include text($font--role-emphasis, 0.9rem)
-			text-align: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			@include text($font--role-emphasis, 1rem)
 			border-radius: 100%;
 			background-color: $color__gray--darkest;
 			color: #fff;

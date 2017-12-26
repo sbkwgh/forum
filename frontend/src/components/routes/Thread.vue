@@ -390,7 +390,7 @@
 	}
 </script>
 
-<style lang='scss' >
+<style lang='scss' scoped>
 	@import '../../assets/scss/variables.scss';
 
 	.thread_side_bar {
@@ -455,16 +455,24 @@
 		background-color: #fff;
 		padding: 0.5rem 1rem;
 		border-radius: 0.25rem;
+		border: thin solid $color__gray--darker;
 	}
 
 
 
 	@media (max-width: 420px) {
+		.route_container {
+			width: 100%;
+			margin: 0;
+		}
+
 		.thread_side_bar {
 			display: flex;
 			position: initial;
 			flex-direction: row;
 			align-items: flex-end;
+
+			padding-left: 1rem;
 
 			> * {
 				margin: 0 0.5rem;
@@ -478,7 +486,9 @@
 		.posts {
 			width: 100%;
 			padding: 0.25rem 0.5rem;
-			box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.25);
+			border-radius: 0;
+			border-left: 0;
+			border-right: 0;
 			overflow: hidden;
 		}
 		.locked_thread {
@@ -487,6 +497,7 @@
 
 		.thread_header__thread_title {
 			font-size: 2rem;
+			padding-left: 1rem;
 			width: 100%;
 
 			@at-root #{&}--app_header {

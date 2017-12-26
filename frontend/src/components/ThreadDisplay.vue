@@ -104,7 +104,7 @@
 		border-radius: 0.25rem;
 		transition: background-color 0.2s, box-shadow 0.2s;
 		position: relative;
-		@extend .shadow_border;
+		border: thin solid $color__gray--darker;
 
 		&:hover {
 			@extend .shadow_border--hover;

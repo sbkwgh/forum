@@ -293,11 +293,11 @@
 	.threads_main__side_bar {
 		width: 12rem;
 		height: 0%;
-		@extend .shadow_border;
 		background: #fff;
 		margin-top: 0.15rem;
 		margin-right: 1rem;
 		border-radius: 0.25rem;
+		border: thin solid $color__gray--darker;
 		padding: 0.5rem 0 1rem 1rem;
 
 		@at-root #{&}__title {

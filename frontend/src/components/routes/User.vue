@@ -119,6 +119,7 @@
 		background-color: #fff;
 		padding: 1rem;
 		border-radius: 0.25rem;
+		border: thin solid $color__gray--darker;
 
 		@at-root #{&}__icon {
 			height: 6rem;

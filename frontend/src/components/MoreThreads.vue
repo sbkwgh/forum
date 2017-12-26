@@ -60,6 +60,7 @@
 		width: 80%;
 		padding: 1rem;
 		margin-top: 1.5rem;
+		border: thin solid $color__gray--darker;
 
 		@at-root #{&}__header {
 			font-size: 1.5rem;
@@ -100,6 +101,7 @@
 		@at-root #{&}__empty {
 			padding: 1rem;
 			font-size: 1.5rem;
+			color: $color__text--primary;
 		}
 	}
 
@@ -107,6 +109,9 @@
 		.more_threads {
 			width: 100%;
 			margin-bottom: -6.5rem;
+			border-radius: 0;
+			border-left: 0;
+			border-right: 0;
 
 			@at-root #{&}__empty {
 				margin-top: 0;

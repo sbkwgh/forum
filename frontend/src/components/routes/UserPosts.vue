@@ -117,6 +117,7 @@
 		background: #fff;
 		border-radius: 0.25rem;
 		padding: 1rem;
+		border: thin solid $color__gray--darker;
 		
 		@at-root #{&}__title {
 			font-size: 1.5rem;

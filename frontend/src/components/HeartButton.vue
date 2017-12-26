@@ -163,9 +163,10 @@
 		@at-root #{&}__count {
 			@include user-select(none);
 
-			position: relative;
-			bottom: 0.0625rem;
 			cursor: default;
+			font-size: 0.85rem;
+			position: relative;
+			bottom: 0.1rem;
 		}
 
 		@at-root #{&}__heart {
@@ -174,7 +175,7 @@
 			cursor: pointer;
 			color: $color__gray--darkest;
 			transition: transform 0.2s, text-shadow 0.2s, color 0.2s, filter 0.2s;
-			font-size: 1.125rem;
+			font-size: 1rem;
 
 			&:hover {
 				filter: brightness(0.9);
