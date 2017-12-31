@@ -206,8 +206,7 @@ b, strong {
 		padding: 1.5rem;
 		border-radius: 0.25rem;
 		margin-bottom: 1rem;
-
-		@extend .shadow_border;
+		border: thin solid $color__gray--darker;
 	}
 
 	@at-root #{&}__text {

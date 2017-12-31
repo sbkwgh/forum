@@ -258,7 +258,7 @@
 			border-radius: 0.25rem;
 			border-collapse: collapse;
 
-			@extend .shadow_border;
+			border: thin solid $color__gray--darker;
 			
 			td, th {
 				padding: 0.5rem;

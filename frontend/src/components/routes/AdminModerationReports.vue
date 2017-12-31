@@ -194,7 +194,7 @@
 
 		@at-root #{&}__reports {
 			margin-top: 1rem;
-			@extend .shadow_border;
+			border: thin solid $color__gray--darker;
 
 			border-radius: 0.25rem;
 			&> :first-child {
