@@ -276,7 +276,7 @@
 
 	.thread_meta_info {
 		background-color: #fff;
-		@extend .shadow_border;
+		border: thin solid $color__gray--darker;
 		border-radius: 0.25rem;
 		padding: 1rem;
 		margin: 1rem 0;
@@ -338,12 +338,12 @@
 		display: flex;
 		background-color: #fff;
 		border-radius: 0.25rem;
-		box-shadow: 0 0 0.3rem rgba(175, 175, 175, 0.5);
+		border: thin solid $color__gray--darker;
 
 		transition: all 0.2s;
 
 		@at-root #{&}--focus {
-			box-shadow: 0 0 0.3rem rgba(175, 175, 175, 1);
+			border: thin solid $color__gray--darkest;
 		}
 
 		@at-root #{&}__format_bar {

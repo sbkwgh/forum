@@ -33,7 +33,7 @@
 		margin-bottom: 1rem;
 		transition: background-color 0.2s;
 		position: relative;
-		@extend .shadow_border;
+		border: thin solid $color__gray--darker;
 
 		@at-root #{&}__bar {
 			@include flash;

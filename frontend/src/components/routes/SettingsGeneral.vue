@@ -260,8 +260,8 @@
 		padding: 1rem;
 		transition: all 0.2s;
 
-		@at-root #{&}--picture.dragging {
-			//background-color: $color__lightgray--primary;
+		@at-root #{&}--picture .dragging {
+			background-color: $color__lightgray--primary;
 		}
 
 		@at-root #{&}__overlay {

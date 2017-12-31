@@ -80,7 +80,7 @@
 
 	.settings_menu {
 		width: 15rem;
-		@extend .shadow_border;
+		border: thin solid $color__gray--darker;
 		background-color: #fff;
 		padding: 1rem;
 		border-radius: 0.25rem;
@@ -102,7 +102,6 @@
 			cursor: pointer;
 			position: relative;
 			border-radius: 0.25rem;
-			color: $color__text--secondary;
 
 			&:first-child { margin-top: 0.5rem; }
 			&:last-child { margin-bottom: 0.5rem; }
@@ -150,7 +149,7 @@
 		background-color: #fff;
 		border-radius: 0.25rem;
 		margin-left: 2rem;
-		@extend .shadow_border;
+		border: thin solid $color__gray--darker;
 	}
 
 	@media (max-width: 420px) {
