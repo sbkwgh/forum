@@ -10,6 +10,14 @@ socket.on('disconnect', () => {
 	} );
 })
 
+window.onload = () => {
+	let div = document.createElement('div');
+	div.innerHTML = 
+		`<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/default.min.css">`;
+
+    document.head.append(...div.children);
+}
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
