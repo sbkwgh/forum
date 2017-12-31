@@ -7,6 +7,7 @@ const Errors = require('../lib/errors')
 router.get('/', async (req, res, next) => {
 	try {
 		let q = req.query.q
+		let qRegexp = new RegExp(q, 'g')
 		let offset = +req.query.offset || 0
 
 		let count = await Post.count({
@@ -27,7 +28,7 @@ router.get('/', async (req, res, next) => {
 
 		let retPosts = posts.map(p => {
 			let ret = p.toJSON()
-			ret.content = ret.content.replace(q, '<b>' + q + '</b>')
+			ret.content = ret.content.replace(qRegexp, '<b>' + q + '</b>')
 
 			return ret
 		})
