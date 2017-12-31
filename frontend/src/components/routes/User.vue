@@ -8,7 +8,7 @@
 					"background-image": userPicture,
 				}'
 			>
-				{{userPicture ? '' : username[0]}}
+				{{userPicture ? '' : username[0].toUpperCase()}}
 			</div>
 			<div class='user_header__info'>
 				<span class='user_header__username'>{{username}}</span>
@@ -124,7 +124,7 @@
 		@at-root #{&}__icon {
 			height: 6rem;
 			width: 6rem;
-			line-height: 5rem;
+			line-height: 5.5rem;
 			@include text($font--role-emphasis, 5rem)
 			text-align: center;
 			background-color: $color__gray--darkest;

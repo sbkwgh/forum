@@ -55,7 +55,7 @@
 					if(this.userPicture) {
 						return ''
 					} else {
-						return this.user.username[0].toLowerCase()
+						return this.user.username[0].toUpperCase()
 					}
 				} else {
 					return ''
@@ -125,8 +125,8 @@
 			@at-root #{&}--small {
 				height: 2.5rem;
 				width: 2.5rem;
-				font-size: 2rem;
-				line-height: 2.25rem;
+				font-size: 1.75rem;
+				line-height: 2.5rem;
 			}
 		}
 		@at-root #{&}__header_info {
