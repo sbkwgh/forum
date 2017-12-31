@@ -10,6 +10,7 @@ let config = require('./config/server.js')
 let bodyParser = require('body-parser')
 let expressSession = require('express-session')
 let compression = require('compression')
+let helmet = require('helmet')
 
 let path = require('path')
 
@@ -20,9 +21,9 @@ let session = expressSession({
 })
 if(process.env.NODE_ENV === 'production') {
 	app.set('trust proxy', 1);
-	session.cookie.secure = 'auto'
 }
 
+app.use(helmet())
 app.use(compression())
 app.use(bodyParser.json({ limit: '5mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
