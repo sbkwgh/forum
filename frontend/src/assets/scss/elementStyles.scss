@@ -129,11 +129,9 @@ b, strong {
 
 	@at-root #{&}--lightblue {
 		border-color: $color__blue--primary;
-		box-shadow: 0 0 0px 1px $color__blue--primary inset;
 
 		&:hover, &:active {
 			border-color: $color__blue--darker;
-			box-shadow: 0 0 0px 1px $color__blue--darker inset;
 		}
 	}
 

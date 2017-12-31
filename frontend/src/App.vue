@@ -57,7 +57,7 @@
 							>
 								Sign up
 							</loading-button>
-							<div class='button' @click='closeAccountModal'>
+							<div class='button button--borderless' @click='closeAccountModal'>
 								Cancel
 							</div>
 						</div>
@@ -92,7 +92,7 @@
 							>
 								<span class='fa fa-unlock-alt' style='margin-right:0.25rem'></span> Log in
 							</loading-button>
-							<div class='button' @click='closeAccountModal'>
+							<div class='button button--borderless' @click='closeAccountModal'>
 								Cancel
 							</div>
 						</div>
