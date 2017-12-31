@@ -12,7 +12,7 @@
 			</div>
 			<div class='user_header__info'>
 				<span class='user_header__username'>{{username}}</span>
-				<span class='user_header__date' v-if='user'>Account created {{user.createdAt | formatDate('date') }}</span>
+				<span class='user_header__date' v-if='user'>User since {{user.createdAt | formatDate('date') }}</span>
 				<div class='user_description' v-if='user && user.description && user.description.length' v-html='user.description'></div>
 			</div>
 		</div>
@@ -142,7 +142,7 @@
 			font-weight: bold
 		}
 		@at-root #{&}__date {
-			color: $color__gray--darkest;
+			color: $color__darkgray--primary;
 			font-size: 1.5rem;
 		}
 	}

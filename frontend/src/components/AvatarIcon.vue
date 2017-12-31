@@ -15,7 +15,7 @@
 					</div>
 					<div class='avatar_icon__header_info'>
 						<span class='avatar_icon__username' @click.stop='goToUser'>{{ajaxUser.username}}</span>
-						<span class='avatar_icon__date'>Created: {{ajaxUser.createdAt | formatDate('date') }}</span>
+						<span class='avatar_icon__date'>User since {{ajaxUser.createdAt | formatDate('date') }}</span>
 					</div>
 				</div>
 				<div class='avatar_icon__description' v-if='ajaxUser.description'>
@@ -138,7 +138,7 @@
 			cursor: pointer;
 		}
 		@at-root #{&}__date {
-			color: $color__gray--darkest;
+			color: $color__darkgray--primary;
 			font-size: 0.9rem;
 		}
 		@at-root #{&}__description {
