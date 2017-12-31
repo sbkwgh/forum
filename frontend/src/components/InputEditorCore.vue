@@ -73,12 +73,15 @@
 				</p>
 				<fancy-input placeholder='Text for link' width='100%' v-model='linkText'></fancy-input>
 				<fancy-input placeholder='Web address for link' width='100%' v-model='linkURL'></fancy-input>
-				<button class='button' @click='addLink'>
-					OK
-				</button>
-				<button class='button' @click='setModalState("link", false)'>
-					Cancel
-				</button>
+
+				<div>
+					<button class='button button--modal button--borderless' @click='setModalState("link", false)'>
+						Cancel
+					</button>
+					<button class='button button--green button--modal' @click='addLink'>
+						Add link
+					</button>
+				</div>
 			</div>
 		</modal-window>
 

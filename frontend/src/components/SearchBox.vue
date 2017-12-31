@@ -42,7 +42,7 @@
 	@import '../assets/scss/elementStyles.scss';
 
 	.search_box {
-		border: thin solid $color__gray--darker;
+		border: thin solid $color__gray--darkest;
 		border-right: 0;
 		border-radius: 0.25rem;
 		outline: none;
@@ -66,11 +66,11 @@
 			@extend .button;
 
 			border: 0;
-			border-right: thin solid $color__gray--darker;
+			border-right: thin solid $color__gray--darkest;
 			border-radius: 0 0.125rem 0.125rem 0;
 
 			&:hover, &:active {
-				border-color: $color__gray--darker;
+				border-color: $color__gray--darkest;
 			}
 		}
 	}

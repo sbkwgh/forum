@@ -58,7 +58,7 @@ b, strong {
 }
 
 .button {
-	border: 1px solid $color__gray--darker;
+	border: 1px solid $color__gray--darkest;
 	display: inline-block;
 	border-radius: 0.25rem;
 	text-align: center;
@@ -127,15 +127,14 @@ b, strong {
 		}
 	}
 
-	@at-root #{&}--orange {
-		border-color: $color__orange--primary;
-		&:hover { border-color: $color__orange--darker; }
-		&:active { border-color: $color__orange--darkest; }
-	}
 	@at-root #{&}--lightblue {
-		border-color: $color__lightblue--primary;
-		&:hover { border-color: $color__blue--primary; }
-		&:active { border-color: $color__blue--darker; }
+		border-color: $color__blue--primary;
+		box-shadow: 0 0 0px 1px $color__blue--primary inset;
+
+		&:hover, &:active {
+			border-color: $color__blue--darker;
+			box-shadow: 0 0 0px 1px $color__blue--darker inset;
+		}
 	}
 
 	@mixin filled_button($background, $border, $text: #fff) {
