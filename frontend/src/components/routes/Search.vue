@@ -142,9 +142,8 @@
 			background-color: #fff;
 			padding-left: 0.75rem;
 			margin-bottom: 1rem;
-			border: none;
+			border: thin solid $color__gray--darker;
 			transition: box-shadow 0.2s;
-			@extend .shadow_border;
 
 			&:hover {
 				@extend .shadow_border--hover;
