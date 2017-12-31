@@ -13,14 +13,6 @@
 		></thread-post-notification>
 
 		<header class='thread_header'>
-			<div
-				class='thread_header__thread_title thread_header__thread_title--app_header'
-				:class='{
-					"thread_header__thread_title--app_header-show": headerTitle
-				}'
-			>
-				{{thread}}
-			</div>
 			<div class='thread_header__thread_title' ref='title'>
 				{{thread}}
 			</div>
@@ -176,7 +168,6 @@
 		},
 		data () {
 			return {
-				headerTitle: false,
 				highlightedPostIndex: null,
 				postNotification: null,
 				showConfirmModal: false
@@ -340,15 +331,6 @@
 		},
 		mounted () {
 			let self = this;
-			let setHeader = function() {
-				if(!self.$refs.title) return;
-
-				if(self.$refs.title.getBoundingClientRect().top <= 32) {
-					self.headerTitle = true;
-				} else {
-					self.headerTitle = false;
-				}
-			};
 
 			let postInView = function() {
 				let posts = self.$refs.posts
@@ -367,10 +349,6 @@
 					self.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
 				}
 			};
-
-			setHeader();
-			document.addEventListener('scroll', throttle(setHeader, 200));
-
 			document.addEventListener('scroll', throttle(postInView, 200));
 
 			this.loadInitialPosts()
@@ -416,24 +394,6 @@
 			@include text($font--role-default, 3rem, 400);
 			width: calc(100% - 8rem);
 			margin-bottom: 1rem;
-
-			@at-root #{&}--app_header {
-				position: fixed;
-				width: 80%;
-				z-index: 2;
-				text-align: center;
-				left: 0;
-				font-size: 2rem;
-				top: 0.5rem;
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 0.2s;
-
-				@at-root #{&}-show {
-					opacity: 1;
-					transition: opacity 0.2s;
-				}
-			}
 		}
 	}
 
@@ -499,10 +459,6 @@
 			font-size: 2rem;
 			padding-left: 1rem;
 			width: 100%;
-
-			@at-root #{&}--app_header {
-				display: none;
-			}
 		}
 	}
 </style>
