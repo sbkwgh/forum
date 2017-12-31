@@ -412,6 +412,7 @@
 
 	.route_container {
 		width: 80%;
+		max-width: 1250px;
 		margin: 0 auto;
 		margin-top: 2rem;
 		padding-bottom: 2rem;
