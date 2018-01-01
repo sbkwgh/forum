@@ -125,6 +125,7 @@
 		position: relative;
 		margin-bottom: 2rem;
 		border-radius: 0.25rem;
+		border: thin solid $color__gray--darker;
 
 		@at-root #{&}__loading {
 			@include loading-overlay();
