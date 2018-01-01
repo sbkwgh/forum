@@ -144,6 +144,7 @@
 			margin-bottom: 1rem;
 			border: thin solid $color__gray--darker;
 			transition: box-shadow 0.2s;
+			overflow: hidden;
 
 			&:hover {
 				@extend .shadow_border--hover;
