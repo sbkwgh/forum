@@ -408,6 +408,7 @@
 		margin-bottom: 1rem;
 		width: 80%;
 		border-radius: 0.25rem;
+		border: thin solid $color__gray--darker;
 	}
 
 	.posts {
