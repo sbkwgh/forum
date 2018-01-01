@@ -263,8 +263,7 @@
 		margin-bottom: 2rem;
 		background-color: #fff;
 		border-radius: 0.25rem;
-		
-		@extend .shadow_border;
+		border: thin solid $color__gray--darker;
 	}
 
 	.threads_main {
