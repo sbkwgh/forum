@@ -141,7 +141,7 @@
 
 		.select_button--touch {
 			.select_button {
-				#{&}__overlay {
+				@at-root #{&}__overlay {
 					transition: all 0.2s;
 
 					@at-root #{&}--show {
