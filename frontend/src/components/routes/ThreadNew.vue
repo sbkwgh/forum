@@ -4,21 +4,25 @@
 		<div class='h1'>Post new thread</div>
 		<div class='thread_meta_info'>
 			<div class='thread_meta_info__text'>Enter the thread title and the category to post it in</div>
-			<select-button v-model='selectedCategory' :options='categories'></select-button>
-			<fancy-input
-				placeholder='Thread title'
-				v-model='name'
-				:error='errors.name'
-				class='thread_meta_info__title'
-				large='true'
-				width='15rem'
-			></fancy-input>
-			
-			<button
-				class='thread_meta_info__add_poll button button--thin_text'
-				v-if='!showPoll'
-				@click='togglePoll(true)'
-			>Add poll</button>
+
+			<div class='thread_meta_info__form'>
+				<select-button v-model='selectedCategory' :options='categories'></select-button>
+				<fancy-input
+					placeholder='Thread title'
+					v-model='name'
+					:error='errors.name'
+					class='thread_meta_info__title'
+					large='true'
+					width='15rem'
+				></fancy-input>
+				
+				<button
+					class='thread_meta_info__add_poll button button--thin_text'
+					v-if='!showPoll'
+					@click='togglePoll(true)'
+				>Add poll</button>
+			</div>
+
 			<transition name='slide'>
 				<div class='thread_meta_info__poll' v-if='showPoll'>
 					<div class='thread_meta_info__poll__top_bar'>
@@ -44,7 +48,7 @@
 							></fancy-input>
 							<span @click='removePollAnswer($index)' title='Remove answer'>&times;</span>
 						</div>
-						<div>
+						<div class='thread_meta_info__form'>
 							<fancy-input
 								v-model='newPollAnswer'
 								placeholder='Option/answer for poll'
@@ -59,14 +63,20 @@
 				</div>
 			</transition>
 		</div>
-		<div class='editor' :class='{"editor--focus": focusInput}'>
+
+		<div
+			class='editor'
+			:class='{
+				"editor--focus": focusInput,
+				"editor--error": errors.content
+			}'
+		>
 			<div class='editor__input'>
 				<div class='editor__format_bar editor__format_bar--editor'>
 					editor
 				</div>
 				<input-editor-core
 					v-model='editor'
-					:error='errors.content'
 					@mentions='setMentions'
 					@focus='setFocusInput(true)'
 					@blur='setFocusInput(false)'
@@ -79,6 +89,8 @@
 				<input-editor-preview :value='editor' :mentions='mentions'></input-editor-preview>
 			</div>
 		</div>
+		<error-tooltip :error='errors.content' class='editor_error'></error-tooltip>
+
 		<loading-button class='button--green submit' :loading='loading' @click='postThread'>Post thread</loading-button>
 	</div>
 </template>
@@ -89,6 +101,7 @@
 	import FancyInput from '../FancyInput'
 	import SelectButton from '../SelectButton'
 	import LoadingButton from '../LoadingButton'
+	import ErrorTooltip from '../ErrorTooltip'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
@@ -100,7 +113,8 @@
 			InputEditorPreview,
 			SelectButton,
 			FancyInput,
-			LoadingButton
+			LoadingButton,
+			ErrorTooltip
 		},
 		data () {
 			return {
@@ -179,7 +193,7 @@
 				this.clearErrors()
 
 				if(!this.editor.trim().length) {
-					errors.push({name: 'content', error: 'Cannot be blank'})
+					errors.push({name: 'content', error: 'Post content cannot be blank'})
 				} if(!this.name.trim().length) {
 					errors.push({name: 'name', error: 'Cannot be blank'})
 				} if(this.showPoll && !this.pollQuestion.trim().length) {
@@ -287,6 +301,11 @@
 			display: inline-block;
 		}
 
+		@at-root #{&}__form {
+			display: flex;
+			align-items: baseline;
+		}
+
 		@at-root #{&}__add_poll {
 			margin-top: 0.5rem;
 		}
@@ -339,11 +358,15 @@
 		background-color: #fff;
 		border-radius: 0.25rem;
 		border: thin solid $color__gray--darker;
+		overflow: hidden;
 
 		transition: all 0.2s;
 
 		@at-root #{&}--focus {
 			border: thin solid $color__gray--darkest;
+		}
+		@at-root #{&}--error {
+			border: thin solid $color__red--primary;
 		}
 
 		@at-root #{&}__format_bar {
@@ -387,8 +410,25 @@
 		}
 	}
 
+	.editor_error {
+		width: 100%;
+		background: #fff;
+		margin-top: 0.5rem;
+		border-radius: 0.2rem;
+		border: thin solid $color__red--primary;
+		
+		&.error_tooltip--show {
+			max-height: 4rem;
+			padding: 0.5rem;
+		}
+	}
+
 	@media (max-width: 420px) {
 		.thread_meta_info {
+			@at-root #{&}__form {
+				flex-direction: column;
+			}
+
 			@at-root #{&}__title.fancy_input {
 				margin: 0;
 				margin-top: 0.5rem;

@@ -4,7 +4,6 @@
 		 style='position: relative; display: inline-block;'
 		 v-bind:style='{width: width || "20rem"}'
 		>
-			<error-tooltip :error='error'></error-tooltip>
 			<div
 				class='fancy_textarea__placeholder'
 				:class='{"fancy_textarea__placeholder--active": active || value.length}'
@@ -21,6 +20,7 @@
 			>
 			</textarea>
 		</div>
+		<error-tooltip :error='error'></error-tooltip>
 	</div>
 </template>
 

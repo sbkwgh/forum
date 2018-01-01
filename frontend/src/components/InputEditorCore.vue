@@ -2,7 +2,6 @@
 	<div
 		class='input_editor_core'
 	>
-		<error-tooltip :error='error'></error-tooltip>
 		<div>
 			<emoji-selector
 				v-model='emojiSelectorVisible'
