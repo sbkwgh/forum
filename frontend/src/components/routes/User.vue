@@ -194,6 +194,20 @@
 		.user__view_holder {
 			flex-direction: column;
 		}
+		.user_header {
+			@at-root #{&}__icon {
+				height: 3rem;
+				width: 3rem;
+				line-height: 3rem;
+				font-size: 2rem;
+			}
+			@at-root #{&}__username {
+				font-size: 1.75rem;
+			}
+			@at-root #{&}__date {
+				font-size: 1.25rem;
+			}
+		}
 		.user__links {
 			display: flex;
 			flex-direction: row;

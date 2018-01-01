@@ -47,6 +47,7 @@
 		border-radius: 0.25rem;
 		outline: none;
 		display: inline-block;
+		overflow: hidden;
 
 		@at-root #{&}__field {
 			outline: none;

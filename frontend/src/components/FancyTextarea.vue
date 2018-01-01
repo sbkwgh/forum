@@ -1,8 +1,9 @@
 <template>
 	<div class='fancy_textarea'>
-		<div 
-		 style='position: relative; display: inline-block;'
-		 v-bind:style='{width: width || "20rem"}'
+		<div
+			class='fancy_textarea__container'
+			style='position: relative; display: inline-block;'
+			v-bind:style='{width: width || "20rem"}'
 		>
 			<div
 				class='fancy_textarea__placeholder'
@@ -13,7 +14,6 @@
 			<textarea
 				class='input fancy_textarea__textarea'
 				v-bind:value='value'
-				v-bind:style='{width: width || "20rem"}'
 				v-on:input='updateValue($event.target.value)'
 				@focus='addActive'
 				@blur='removeActive'
@@ -62,6 +62,7 @@
 
 		@at-root #{&}__textarea {
 			height: 5rem;
+			width: 100%;
 		}
 
 		@at-root #{&}__placeholder {
@@ -114,6 +115,14 @@
 				border-left: 0.3rem solid transparent;
 				border-right: 0.3rem solid transparent;
 				border-top: 0.3rem solid #D32F2F;
+			}
+		}
+	}
+
+	@media (max-width: 420px) {
+		.fancy_textarea {
+			@at-root #{&}__container {
+				width: 100% !important;
 			}
 		}
 	}
