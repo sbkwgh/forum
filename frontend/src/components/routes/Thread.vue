@@ -420,6 +420,12 @@
 	}
 
 
+	@media (min-width: 1500px) {
+		.thread_side_bar {
+			right: calc((100% - 1200px) / 2);
+		}
+	}
+
 
 	@media (max-width: $breakpoint--phone-thread) {
 		.route_container {
@@ -467,6 +473,10 @@
 	}
 
 	@media (max-width: $breakpoint--tablet-thread) {
+		.route_container {
+			padding-bottom: 2rem !important; 
+		}
+
 		.thread_side_bar {
 			display: flex;
 			position: initial;

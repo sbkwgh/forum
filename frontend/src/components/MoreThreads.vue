@@ -107,7 +107,7 @@
 
 	@include thread_mobile_breakpoint ('.more_threads');
 	@media (max-width: $breakpoint--tablet) {
-		@at-root #{&}__empty {
+		.more_threads__empty {
 			margin-top: 0;
 		}
 	} 
