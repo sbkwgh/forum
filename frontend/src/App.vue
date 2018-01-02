@@ -137,7 +137,7 @@
 						Login
 					</div>
 				</template>
-				<search-box></search-box>
+				<search-box header-bar='true'></search-box>
 			</div>
 			<div class='header__overlay' :class='{ "header__overlay--show": showMenu }' @click='toggleMenu'></div>
 			<span class='fa fa-bars header__menu_button' @click='toggleMenu'></span>
@@ -472,13 +472,18 @@
 		@include user-select(none);
 		cursor: pointer;
 		background: none;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 20rem;
+
 
 		&:hover, &:visited, &:active {
 			color: $color__text--primary;
 		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: 870px) {
 		.route_container {
 			width: calc(100% - 2rem);
 			margin: 0 1rem;
@@ -488,6 +493,7 @@
 		.logo {
 			position: relative;
 			z-index: 2;
+			max-width: calc(100vw - 7rem);
 		}
 
 		.header__menu_button {

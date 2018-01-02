@@ -187,9 +187,10 @@
 		width: 0;
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: $breakpoint--tablet) {
 		.user_route {
 			width: inherit;
+			overflow-x: hidden;
 		}
 		.user__view_holder {
 			flex-direction: column;

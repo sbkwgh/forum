@@ -296,7 +296,7 @@
 		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: $breakpoint--tablet) {
 		.h1 {
 			display: none;
 		}

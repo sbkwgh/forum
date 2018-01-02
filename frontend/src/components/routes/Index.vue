@@ -410,7 +410,7 @@
 		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: $breakpoint--tablet) {
 		.thread_sorting {
 			flex-direction: column-reverse;
 			align-items: left;
@@ -433,6 +433,12 @@
 		.threads_main__threads {
 			width: 100%;
 			margin-left: 0;
+		}
+	}
+
+	@media (max-width: $breakpoint--tablet) and (min-width: $breakpoint--phone) {
+		.route_container {
+			padding: 1rem 2rem;
 		}
 	}
 </style>

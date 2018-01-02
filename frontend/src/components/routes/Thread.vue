@@ -421,19 +421,59 @@
 
 
 
-	@media (max-width: 420px) {
+	@media (max-width: $breakpoint--phone-thread) {
 		.route_container {
 			width: 100%;
 			margin: 0;
 		}
 
 		.thread_side_bar {
+			margin-left: 1rem;
+		}
+
+		.posts {
+			padding: 0.25rem 0.5rem;
+			border-radius: 0;
+			border-left: 0;
+			border-right: 0;
+		}
+
+		div.thread_header__thread_title {
+			padding-left: 1rem;
+		}
+
+	}
+
+	@media (max-width: $breakpoint--large_screen-thread) {
+		.posts {
+			width: calc(80% - 5rem);
+		}
+	}
+	@media (min-width: $breakpoint--phone-thread) and (max-width: $breakpoint--tablet-thread) {
+		div.posts {
+			margin-left: 2rem;
+			margin-right: 2rem;
+			width: calc(100% - 4rem);
+		}
+
+		div.thread_header__thread_title {
+			font-size: 2rem;
+			padding-left: 2.25rem;
+			width: 100%;
+		}
+		div.thread_side_bar {
+			padding-left: 2.25rem;
+		}
+	}
+
+	@media (max-width: $breakpoint--tablet-thread) {
+		.thread_side_bar {
 			display: flex;
 			position: initial;
 			flex-direction: row;
 			align-items: flex-end;
 
-			padding-left: 1rem;
+			padding-left: 0.25rem;
 
 			> * {
 				margin: 0 0.5rem;
@@ -446,10 +486,6 @@
 
 		.posts {
 			width: 100%;
-			padding: 0.25rem 0.5rem;
-			border-radius: 0;
-			border-left: 0;
-			border-right: 0;
 			overflow: hidden;
 		}
 		.locked_thread {
@@ -458,7 +494,7 @@
 
 		.thread_header__thread_title {
 			font-size: 2rem;
-			padding-left: 1rem;
+			padding-left: 0.25rem;
 			width: 100%;
 		}
 	}

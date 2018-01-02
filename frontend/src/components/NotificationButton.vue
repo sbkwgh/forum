@@ -428,7 +428,20 @@
 		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: 600px) {
+		.notification_button__menu_group {
+			left: calc(3.5rem - 100vw);
+			width: calc(100vw - 0.25rem);
+		}
+		.notification_button__menu {
+			width: 100%;
+			left: unset;
+			right: unset !important;
+
+		}
+	}
+
+	@media (max-width: 870px) {
 		//Because the notification button is
 		//actually a child of the hamburger menu
 		//it 'pops up' when the overlay is showing
@@ -481,8 +494,8 @@
 			}
 
 			@at-root #{&}__menu {
-				width: 100%;
 				left: unset;
+				right: 0.5rem;
 
 				@at-root #{&}__empty {
 					font-weight: normal;

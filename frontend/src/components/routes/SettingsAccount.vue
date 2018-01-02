@@ -148,7 +148,9 @@
 </script>
 
 <style lang='scss' scoped>
-	@media (max-width: 420px) {
+	@import '../../assets/scss/variables.scss';
+	
+	@media (max-width: $breakpoint--tablet) {
 		.h1 {
 			display: none;
 		}

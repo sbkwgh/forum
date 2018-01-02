@@ -32,6 +32,51 @@ $color__red--primary: #e74860;
 $color__red--darker: #B71C1C;
 
 
+//Breakpoints
+$breakpoint--large_screen: 1200px;
+$breakpoint--tablet: 870px;
+$breakpoint--phone: 550px;
+
+//Breakpoints
+$breakpoint--large_screen-thread: 1150px;
+$breakpoint--tablet-thread: 850px;
+$breakpoint--phone-thread: 500px;
+
+@mixin thread_mobile_breakpoint ($selector) {
+	@media (max-width: 1150px) and (min-width: $breakpoint--tablet-thread) {
+		#{selector} {
+			width: calc(80% - 5rem);
+		}
+	}
+	@media (max-width: $breakpoint--phone-thread) {
+		#{$selector} {
+			border-radius: 0;
+			border-left: 0;
+			border-right: 0;
+		}
+	}
+	@media (min-width: $breakpoint--tablet-thread) and (max-width: 1150px) {
+		#{$selector} {
+			width: calc(80% - 5rem);
+		}
+	}
+	@media (min-width: $breakpoint--phone-thread) and (max-width: $breakpoint--tablet-thread) {
+		#{$selector} {
+			margin-left: 2rem;
+			margin-riɡht: 2rem;
+			width: calc(100% - 4rem);
+		}
+	}
+	@media (max-width: $breakpoint--phone-thread) {
+		#{$selector} {
+			width: 100%;
+			border-left: 0;
+			border-right: 0;
+			border-radius: 0;
+		}
+	}
+}
+
 @keyframes flash {
 	0% {
 		background-color: $color__gray--darker;

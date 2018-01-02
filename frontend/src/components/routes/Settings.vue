@@ -152,7 +152,15 @@
 		border: thin solid $color__gray--darker;
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: $breakpoint--tablet) and (min-width: $breakpoint--phone) {
+		div.settings_menu, div.settings_page {
+			width: calc(100% - 4rem);
+			margin: 0.5rem 2rem;
+			padding: 1rem;
+		}
+	}
+
+	@media (max-width: $breakpoint--tablet) {
 		.route_container--settings {
 			flex-direction: column;
 		}
@@ -187,7 +195,7 @@
 		}
 
 		.settings_page {
-			width: auto;
+			width: 100%;
 			margin: 0;
 			margin-top: 1rem;
 		}

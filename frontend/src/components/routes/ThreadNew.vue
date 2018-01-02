@@ -423,7 +423,7 @@
 		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: 600px) {
 		.thread_meta_info {
 			@at-root #{&}__form {
 				flex-direction: column;

@@ -216,9 +216,5 @@
 		}
 	}
 
-	@media (max-width: 420px) {
-		.poll {
-			width: 100%;
-		}
-	}
+	@include thread_mobile_breakpoint ('.poll');
 </style>

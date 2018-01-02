@@ -125,7 +125,7 @@
 		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: $breakpoint--tablet) {
 		.user_posts {
 			margin-top: 1rem;
 			overflow: hidden;

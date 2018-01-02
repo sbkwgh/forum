@@ -6,6 +6,7 @@
 	>
 		<input
 			class='search_box__field'
+			:class='{ "search_box__field--header": headerBar }'
 			:placeholder='placeholder || "Search this forum"'
 			v-model='searchField'
 		>
@@ -21,7 +22,7 @@
 <script>
 	export default {
 		name: 'SearchBox',
-		props: ['placeholder'],
+		props: ['placeholder', 'header-bar'],
 		data () {
 			return {
 				searchField: ''
@@ -54,6 +55,7 @@
 			height: 100%;
 			padding: 0 0.5rem;
 			border: 0;
+			transition: width 0.2s;
 
 			@include text;
 			color: $color__text--primary;
@@ -73,6 +75,12 @@
 			&:hover, &:active {
 				border-color: $color__gray--darkest;
 			}
+		}
+	}
+
+	@media (max-width: 950px) and (min-width: $breakpoint--tablet) {
+		.search_box__field--header {
+			width: 4rem;
 		}
 	}
 </style>
