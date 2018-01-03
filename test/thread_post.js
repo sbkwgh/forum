@@ -5,7 +5,7 @@ let server = require('../server')
 let should = chai.should()
 let expect = chai.expect
 
-let { sequelize } = require('../models')
+let { sequelize, Thread } = require('../models')
 
 const Errors = require('../lib/errors.js')
 let PAGINATION_THREAD_ID
@@ -95,6 +95,21 @@ describe('Thread and post', () => {
 			res.body.should.have.property('slug', 'thread123')
 			res.body.should.have.deep.property('User.username', 'username')
 			res.body.should.have.deep.property('Category.name', 'category with spaces')
+		})
+		it('should give the slug _ if otherwise empty', async () => {
+			let res = await userAgent
+				.post('/api/v1/thread')
+				.set('content-type', 'application/json')
+				.send({
+					name: ',,,,,,,,,,,,,,,,,',
+					category: 'CATEGORY_WITH_SPACES'
+				})
+
+			res.should.have.status(200)
+			res.should.be.json
+			res.body.should.have.property('slug', '_')
+
+			await Thread.destroy({ where: { name: '_' } })
 		})
 		it('should add a slug from the thread name', async () => {
 			let res = await userAgent

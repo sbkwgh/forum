@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.TEXT,
 			set (val) {
 				this.setDataValue('name', val)
-				if(val) this.setDataValue('slug', slug(val).toLowerCase())
+				if(val) this.setDataValue('slug', slug(val).toLowerCase() || '_')
 			},
 			allowNull: false,
 			validate: {
