@@ -133,7 +133,21 @@
 
 	}
 
-	@media (max-width: 425px) {
+	@media (max-width: $breakpoint--tablet) and (min-width: $breakpoint--phone) {
+		.select_button__options {
+				width: 60%;
+				left: 20%;
+		}
+	}
+
+	@media (max-width: $breakpoint--phone) {
+		.select_button__options {
+			width: 100%;
+			left: 0;
+		}
+	}
+
+	@media (max-width: $breakpoint--tablet) {
 		.select_button__option {
 			font-size: 1.125rem;
 			padding: 0.5rem 0.75rem;
@@ -150,8 +164,6 @@
 				}
 
 				@at-root #{&}__options {
-					width: 100%;
-					left: 0;
 					bottom: 0;
 					position: fixed;
 					font-size: 1.125rem;
