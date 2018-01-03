@@ -171,6 +171,8 @@
 					border-radius: 0.25rem 0.25rem 0 0;
 					transition: opacity 0.2s, bottom 0.2s;
 					background-color: rgba(255, 255, 255, 0.97);
+					max-height: calc(100% - 5rem);
+					overflow-y: auto;
 
 					@at-root #{&}--hidden {
 						bottom: -100%;
