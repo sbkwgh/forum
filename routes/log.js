@@ -124,6 +124,9 @@ router.get('/top-threads', async (req, res, next) => {
 
 		//Sum each log for a thread
 		let pageViewsObj = logs.reduce((obj, log) => {
+			//E.g. if thread deleted
+			if(!log.Thread) return obj;
+
 			if(!obj[log.Thread.id]) {
 				obj[log.Thread.id] = { Thread: log.Thread, pageViews: 1 }
 			} else {
