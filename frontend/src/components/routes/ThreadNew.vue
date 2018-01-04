@@ -358,8 +358,7 @@
 		background-color: #fff;
 		border-radius: 0.25rem;
 		border: thin solid $color__gray--darker;
-		overflow: hidden;
-
+		
 		transition: all 0.2s;
 
 		@at-root #{&}--focus {
