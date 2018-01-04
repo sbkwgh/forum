@@ -9,15 +9,18 @@ let config = require('./config/server.js')
 //Middle-ware
 let bodyParser = require('body-parser')
 let expressSession = require('express-session')
+let SequelizeStore = require('connect-session-sequelize')(expressSession.Store)
 let compression = require('compression')
 let helmet = require('helmet')
 
 let path = require('path')
 
+
 let session = expressSession({
 	secret: config.sessionSecret,
 	resave: true,
-	saveUninitialized: true
+	saveUninitialized: true,
+	store: new SequelizeStore({ db: sequelize })
 })
 if(process.env.NODE_ENV === 'production') {
 	app.set('trust proxy', 1);
