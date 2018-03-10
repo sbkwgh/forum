@@ -41,8 +41,12 @@
 			</div>
 		</transition>
 
-		<modal-window v-model='$store.state.moderation.showAddNewBanModal' width='30rem'>
-			<div class='admin_moderation__add_new_ban_modal'>
+		<modal-window
+			v-model='$store.state.moderation.showAddNewBanModal'
+			width='30rem'
+			:no-padding='true'
+		>
+			<div class='admin_moderation__add_new_ban_modal' slot='main'>
 				<div
 					class='admin_moderation__add_new_ban_modal__overlay'
 					:class='{ "admin_moderation__add_new_ban_modal__overlay--show": loading }'
@@ -81,21 +85,22 @@
 						</select-button>
 					</div>
 
-					<div>
-						<div
-							class='button button--modal button--borderless'
-							@click='toggleShowAddNewBanModal'
-						>
-							Cancel
-						</div>
-						<button
-							class='button button--modal button--green'
-							type='submit'
-						>
-							Add ban
-						</button>
-					</div>
+					<input type='submit' style='display: none;' />
 				</form>
+			</div>
+			<div slot='footer'>
+				<button
+					class='button button--modal button--green'
+					@click='addBan'
+				>
+					Add ban
+				</button>
+				<button
+					class='button button--modal'
+					@click='toggleShowAddNewBanModal'
+				>
+					Cancel
+				</button>
 			</div>
 		</modal-window>
 	</div>

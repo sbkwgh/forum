@@ -66,25 +66,23 @@
 		</div>
 
 		<modal-window v-model='linkModalVisible'>
-			<div style='padding: 1rem;'>
-				<p style='margin-top: 0;'>
+			<div slot='main'>
+				<p>
 					Enter the web address in the input box below
 				</p>
 				<fancy-input placeholder='Text for link' width='100%' v-model='linkText'></fancy-input>
 				<fancy-input placeholder='Web address for link' width='100%' v-model='linkURL'></fancy-input>
+			</div>
 
-				<div>
-					<button class='button button--modal button--borderless' @click='setModalState("link", false)'>
-						Cancel
-					</button>
-					<button class='button button--green button--modal' @click='addLink'>
-						Add link
-					</button>
-				</div>
+			<div slot='footer'>
+				<button class='button button--green button--modal' @click='addLink'>
+					Add link
+				</button>
+				<button class='button button--modal' @click='setModalState("link", false)'>
+					Cancel
+				</button>
 			</div>
 		</modal-window>
-
-		<modal-window v-model='imageModalVisible'></modal-window>
 
 	</div>
 </template>

@@ -1,19 +1,25 @@
 <template>
 	<div id='app'>
-		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100' width='25rem'>
-			<div style='padding: 0rem 1rem 1rem 1rem; border-radius: 0.25rem;'>
-				<p v-for='error in this.$store.state.ajaxErrors'>{{error}}</p>
-				<button
-					class='button button--modal'
-					@click='showAjaxErrorsModal = false'
-					ref='ajaxErrorsModalButton'
-				>
-					OK
-				</button>
+		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100' width='25rem' :no-padding='true'>
+			<div slot='main'>
+				<p v-for='error in this.$store.state.ajaxErrors' style='margin: 1rem;'>{{error}}</p>
 			</div>
+			<button
+				slot='footer'
+				class='button button--modal'
+				@click='showAjaxErrorsModal = false'
+				ref='ajaxErrorsModalButton'
+			>
+				OK
+			</button>
 		</modal-window>
-		<modal-window v-model='showAccountModal' @input='closeAccountModal'>
-			<tab-view :tabs='["Sign up", "Login"]' v-model="showAccountTab" padding='true'>
+		<modal-window
+			v-model='showAccountModal'
+			@input='closeAccountModal'
+			:no-padding='true'
+			:hide-footer='true'
+		>
+			<tab-view :tabs='["Sign up", "Login"]' v-model="showAccountTab" padding='true' slot='main'>
 				<template slot='Sign up'>
 					<p style='margin-top: 0;' v-if='$store.state.token'>
 						<strong>Providing the token is still valid, this will create an admin account</strong>

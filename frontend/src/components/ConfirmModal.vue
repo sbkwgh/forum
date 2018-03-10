@@ -1,11 +1,11 @@
 <template>
 	<modal-window :value='showModal' @input='setShowModal'>
-		<div class='confirm_modal'>
+		<div slot='main' style='padding-top: 1rem;'>
 			<slot></slot>
-			<div class='confirm_modal__buttons'>
-				<button class='button button--modal button--borderless' @click='setShowModal(false)'>Cancel</button>
-				<button class='button button--modal' :class='buttonColor' @click='confirm'>{{text || 'OK'}}</button>
-			</div>
+		</div>
+		<div slot='footer'>
+			<button class='button button--modal' :class='buttonColor' @click='confirm'>{{text || 'OK'}}</button>
+			<button class='button button--modal' @click='setShowModal(false)'>Cancel</button>
 		</div>
 	</modal-window>
 </template>
@@ -53,13 +53,3 @@
 		}
 	}
 </script>
-
-<style lang='scss' scoped>
-	.confirm_modal {
-		padding: 1rem;
-
-		@at-root #{&}__buttons {
-			margin-top: 1rem;
-		}
-	}
-</style>

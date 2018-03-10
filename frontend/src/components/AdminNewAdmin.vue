@@ -1,15 +1,21 @@
 <template>
 	<div class='admin_new_admin'>
 		<modal-window v-model='showModal'>
-			<div class='admin_new_admin__modal'>
+			<div slot='main' style='padding-top: 1rem;'>
 				<fancy-input
 					:value='link'
 					placeholder='Admin login link'
-					width='12.5rem'
+					width='100%'
 					style='margin-bottom: 0.5rem;'
 				></fancy-input>
-				<button class='button button--modal' @click='toggleModal'>OK</button>
 			</div>
+			<button
+				class='button button--modal'
+				slot='footer'
+				@click='toggleModal'
+			>
+				OK
+			</button>
 		</modal-window>
 
 		<div class='category_widget__box'>

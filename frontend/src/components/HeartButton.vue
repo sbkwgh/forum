@@ -1,7 +1,12 @@
 <template>
 	<div class='heart_button'>
-		<modal-window v-model='showModal' :close-button='true'>
-			<div class='heart_button__modal'>
+		<modal-window
+			v-model='showModal'
+			:close-button='true'
+			:hide-footer='true'
+			:no-padding='true'
+		>
+			<div class='heart_button__modal' slot='main'>
 				<div class='heart_button__modal__header'>Likes</div>
 				<div
 					class='heart_button__modal__user'

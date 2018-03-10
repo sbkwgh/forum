@@ -17,11 +17,11 @@
 		></span>
 
 		<modal-window v-model='showShareModal' @click.stop='() => {}'>
-			<div style='padding: 0rem 1rem 1rem 1rem;'>
+			<div slot='main'>
 				<p>Copy this URL to share the post</p>
 				<fancy-input placeholder='Post URL' :value='postURL' width='100%'></fancy-input>
-				<button class='button button--modal' @click.stop='setShareModalState(false)'>OK</button>
 			</div>
+			<button slot='footer' class='button button--modal' @click.stop='setShareModalState(false)'>OK</button>
 		</modal-window>
 
 		<report-post-modal v-model='showReportPostModal' :post-id='post.id'></report-post-modal>

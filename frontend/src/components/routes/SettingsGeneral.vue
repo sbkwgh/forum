@@ -9,16 +9,14 @@
 			Are you sure you want to remove your profile picture?
 		</confirm-modal>
 
-		<modal-window v-model='picture.showProfilePictureModal' width='25rem' @input='hideProflePictureModal'>
+		<modal-window
+			v-model='picture.showProfilePictureModal'
+			:loading='picture.loading'
+			width='25rem'
+			@input='hideProflePictureModal'
+		>
 			<div
-				class='profile_picture_modal__overlay'
-				:class='{
-					"profile_picture_modal__overlay--show": picture.loading
-				}'
-			>
-				<loading-icon></loading-icon>
-			</div>
-			<div
+				slot='main'
 				class='profile_picture_modal'
 				:class='{ "profile_picture_modal--picture.dragging": picture.dragging  }'
 				@dragover='handleDragOver'
@@ -46,14 +44,16 @@
 						v-else
 					></div>
 				</div>
-				<div class='profile_picture_modal__buttons'>
-					<button class='button button--modal button--borderless' @click='hideProflePictureModal'>Cancel</button>
-					<button
-						class='button button--modal button--green'
-						:class='{ "button--disabled": !picture.dataURL }'
-						@click='uploadProfilePicture'
-					>Upload picture</button>
-				</div>
+			</div>
+			<div class='profile_picture_modal__buttons' slot='footer'>
+				<button
+					class='button button--modal button--green'
+					:class='{ "button--disabled": !picture.dataURL }'
+					@click='uploadProfilePicture'
+				>
+					Upload picture
+				</button>
+				<button class='button button--modal' @click='hideProflePictureModal'>Cancel</button>
 			</div>
 		</modal-window>
 
@@ -257,7 +257,7 @@
 	}
 
 	.profile_picture_modal {
-		padding: 1rem;
+		padding-top: 1rem;
 		transition: all 0.2s;
 
 		@at-root #{&}--picture .dragging {

@@ -1,44 +1,26 @@
 <template>
 	<div class='admin_categories'>
-		<modal-window v-model='showAddModal'>
-			<div
-				class='admin_categories__modal__overlay'
-				:class='{
-					"admin_categories__modal__overlay--show": loading
-				}'
-			>
-				<loading-icon></loading-icon>
-			</div>
-
-			<div class='admin_categories__modal'>
-				<p class='admin_categories__modal__text'>Add a category</p>
+		<modal-window v-model='showAddModal' :loading='loading'>
+			<div slot='main'>
+				<p>Add a category</p>
 				<fancy-input v-model='add.name' placeholder='Category name'></fancy-input>
 				<input type='color' class='button button--color_input' v-model='add.color' />
-				<div class='admin_categories__modal__buttons'>
-					<button class='button button--modal button-borderless' @click='toggleAddModal'>Cancel</button>
-					<button class='button button--modal button--green' @click='addCategory'>Add category</button>
-				</div>
+			</div>
+			<div slot='footer'>
+				<button class='button button--modal button--green' @click='addCategory'>Add category</button>
+				<button class='button button--modal' @click='toggleAddModal'>Cancel</button>
 			</div>
 		</modal-window>
 
-		<modal-window v-model='showEditModal'>
-			<div
-				class='admin_categories__modal__overlay'
-				:class='{
-					"admin_categories__modal__overlay--show": loading
-				}'
-			>
-				<loading-icon></loading-icon>
-			</div>
-
-			<div class='admin_categories__modal'>
-				<p class='admin_categories__modal__text'>Edit this category</p>
+		<modal-window v-model='showEditModal' :loading='loading'>
+			<div slot='main'>
+				<p>Edit this category</p>
 				<fancy-input v-model='edit.name' placeholder='Category name'></fancy-input>
 				<input type='color' class='button button--color_input' v-model='edit.color' />
-				<div class='admin_categories__modal__buttons'>
-					<button class='button button--modal button--borderless' @click='toggleEditModal(null)'>Cancel</button>
-					<button class='button button--modal button--green' @click='editCategory'>Update category</button>
-				</div>
+			</div>
+			<div slot='footer'>
+				<button class='button button--modal button--green' @click='editCategory'>Update category</button>
+				<button class='button button--modal' @click='toggleEditModal(null)'>Cancel</button>
 			</div>
 		</modal-window>
 
@@ -209,18 +191,6 @@
 	}
 
 	.admin_categories {
-
-		@at-root #{&}__modal {
-			padding: 1rem;
-
-			@at-root #{&}__text {
-				margin-top: -0.5rem;
-				margin-bottom: 1rem;
-			}
-			@at-root #{&}__buttons {
-				margin-top: 0.5rem;
-			}
-		}
 
 
 		@at-root #{&}__category {
