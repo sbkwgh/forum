@@ -349,7 +349,7 @@
 					self.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
 				}
 			};
-			document.addEventListener('scroll', throttle(postInView, 200));
+			document.addEventListener('scroll', throttle(postInView, 20));
 
 			this.loadInitialPosts()
 			

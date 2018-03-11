@@ -21,7 +21,7 @@
 				"top": draggerYCoord + "px"
 			}'
 		>
-			Post <strong>{{currentPost}}</strong> out of {{posts}}
+			Post <strong>{{currentPost || 0}}</strong> out of {{posts}}
 		</div>
 		<div
 			class='post_scrubber__label post_scrubber__label--last'
@@ -39,40 +39,55 @@
 		data () {
 			return {
 				clientY: 0,
-				lineTop: 0,
-				lineHeight: 0,
 				dragging: false
 			}
 		},
 		computed: {
 			draggerYCoord () {
-				if(!this.clientY || !this.lineTop) return 0
+				let lineTop = this.getLineTop()
+				let lineHeight = this.getLineHeight()
 
-				let top = this.clientY - this.lineTop
+				if(!this.clientY || !lineTop) return 0
+
+				let top = this.clientY - lineTop
 
 				if(top < 0) {
 					return 0
-				} else if(top > this.lineHeight) {
-					return this.lineHeight
+				} else if(top > lineHeight) {
+					return lineHeight
 				} else {
 					return top
 				}
 			},
 			currentPost () {
-					let postDivision = this.lineHeight / this.posts
-					let postNumber = Math.floor(this.draggerYCoord/ postDivision)
-					let retPostNumber
+				let postDivision = this.getLineHeight() / this.posts
+				let postNumber = Math.floor(this.draggerYCoord / postDivision)
+				let retPostNumber
 
-					if(postNumber === this.posts) {
-						retPostNumber = postNumber
-					} else {
-						retPostNumber = postNumber + 1
-					}
+				if(postNumber === this.posts) {
+					retPostNumber = postNumber
+				} else {
+					retPostNumber = postNumber + 1
+				}
 
-					return retPostNumber
+				return retPostNumber
 			}
 		},
 		methods: {
+			getLineHeight () {
+				let line = this.$refs.line
+				if(!line) return 0
+
+				let lineRect = line.getBoundingClientRect()
+				return lineRect.height
+			},
+			getLineTop () {
+				let line = this.$refs.line
+				if(!line) return 0
+
+				let lineRect = line.getBoundingClientRect()
+				return lineRect.top
+			},
 			setDragging (val) {
 				this.dragging = val
 
@@ -84,13 +99,15 @@
 				this.clientY = e.clientY
 			},
 			setCurrentPost () {
+				let lineTop = this.getLineTop()
+				let lineHeight = this.getLineHeight()
 				let postNumber = +this.value
-				let postDivision = this.lineHeight / this.posts
+				let postDivision = lineHeight / this.posts
 
 				if(postNumber+1 === this.posts) {
-					this.clientY = this.lineTop + this.lineHeight
+					this.clientY = lineTop + lineHeight
 				} else {
-					this.clientY = this.lineTop + postDivision * postNumber
+					this.clientY = lineTop + postDivision * postNumber
 				}
 			}
 		},
@@ -98,10 +115,6 @@
 			value: 'setCurrentPost'
 		},
 		mounted () {
-			let lineRect = this.$refs.line.getBoundingClientRect()
-			this.lineTop = lineRect.top
-			this.lineHeight = lineRect.height
-
 			this.setCurrentPost()
 
 			window.addEventListener('mousemove', e => {
