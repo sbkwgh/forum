@@ -167,7 +167,7 @@ describe('User', () => {
 					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-					res.body.errors.should.contain.something.that.has.property('message', 'username must be unique')
+					res.body.errors.should.contain.something.that.has.property('message', 'username already taken - try another')
 					
 					done()
 				})

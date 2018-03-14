@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
 	let User = sequelize.define('User', {
 		username: {
 			type: DataTypes.STRING(191),
-			unique: true,
+			unique: {
+				msg: 'username already taken - try another',
+				fields: ['username']
+			},
 			validate: {
 				len: {
 					args: [6, 50],
