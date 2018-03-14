@@ -81,6 +81,8 @@ b, strong {
 		border-color: $color__gray--darkest;
 	}
 
+	&::-moz-focus-inner { border: 0; }
+
 	@at-root #{&}--borderless {
 		color: $color__text--secondary;
 		border-color: transparent;
