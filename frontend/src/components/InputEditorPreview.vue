@@ -1,5 +1,12 @@
 <template>
 	<div class='input_editor_preview__markdownHTML'>
+		<!--
+			A hack to call the getHTML() function, not sure why
+			the value watcher function is not working, as it does
+			in the ThreadNew page
+		!-->
+		<div style='display: none;'>{{valueWatch}}</div>
+
 		<div v-html='HTML' style='margin-top: -0.5rem;'></div>
 		<div v-if='!value.trim().length' class='input_editor_preview__markdownHTML--empty'>
 			Nothing to preview
@@ -18,8 +25,6 @@
 		sanitize: true
 	});
 
-	let usernames = {}
-
 	export default {
 		name: 'InputEditorPreview',
 		props: ['value', 'mentions'],
@@ -30,6 +35,12 @@
 		},
 		watch: {
 			value: 'getHTML'
+		},
+		computed: {
+			valueWatch () {
+				this.getHTML();
+				return '';
+			}
 		},
 		methods: {
 			getHTML () {
