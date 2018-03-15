@@ -65,7 +65,7 @@
 
 	.input_editor_preview {
 		@at-root #{&}__markdownHTML {
-			height: 8.2rem;
+			height: 8.125rem;
 			overflow: auto;
 			word-break: break-word;
 			padding: 0.5rem;
