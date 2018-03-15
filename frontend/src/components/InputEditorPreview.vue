@@ -59,25 +59,13 @@
 							return `https://${countryVersion}.wikipedia.org/api/rest_v1/page/summary/${page}?redirect=true`;
 						},
 						getContent (link, data) {
-							let content = `
-								<h2>
-									<a
-										href='${data.content_urls.desktop.page}'
-										target='_blank'
-										rel='noopener noreferrer'
-									>
-										${data.titles.display}
-									</a>
-									<span>from ${link.hostname}</span>
-								</h2>
-								${data.extract.slice(0, 500).trim()}
-							`;
+							let content = data.extract.slice(0, 500).trim();
 
-							if(data.extract.length > 500) {
-								content += '...';
+							return {
+								title: data.titles.display,
+								URL: data.content_urls.desktop.page,
+								content: content.length > 500 ? content + '...' : content
 							}
-
-							return content;
 						}
 					},
 					'github': {
@@ -86,21 +74,11 @@
 							return 'https://api.github.com/repos' + link.pathname;
 						},
 						getContent (link, data) {
-							let content = `
-								<h2>
-									<a
-										href='${data.html_url}'
-										target='_blank'
-										rel='noopener noreferrer'
-									>
-										${data.full_name}
-									</a>
-									<span>from ${link.hostname}</span>
-								</h2>
-								${data.description}
-							`;
-
-							return content;
+							return {
+								title: data.full_name,
+								URL: data.html_url,
+								content: data.description
+							}
 						}
 					}
 				};
@@ -142,9 +120,24 @@
 						this.axios
 							.get(URL)
 							.then(res => {
-								let div = document.createElement('div');
+								let content = expandPattern.getContent(link, res.data);
+								let h = document.createElement.bind(document);
+								
+								let div = h('div');
+								let h2 = h('h2');
+								let a = h('a');
+								let span = h('span');
+								let textNode = document.createTextNode(content.content);
 
-								div.innerHTML = expandPattern.getContent(link, res.data);
+								a.textContent = content.title;
+								a.href = content.URL;
+								span.textContent = 'from ' + link.hostname;
+
+								h2.appendChild(a);
+								h2.appendChild(span);
+								div.appendChild(h2)
+								div.appendChild(textNode)
+
 								div.classList.add('input_editor_preview__expandable');
 								link.parentNode.replaceChild(div, link);
 
