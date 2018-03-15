@@ -67,7 +67,6 @@
 		@at-root #{&}__markdownHTML {
 			height: 8.125rem;
 			overflow: auto;
-			word-break: break-word;
 			padding: 0.5rem;
 
 			@at-root #{&}--empty {

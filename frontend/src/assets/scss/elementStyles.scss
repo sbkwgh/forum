@@ -259,6 +259,17 @@ b, strong {
 	}
 }
 
+blockquote.twitter-tweet {
+	padding: 1rem;
+	padding-top: 0;
+	background-color: unset;
+	border: thick solid $color__gray--primary;
+
+	* {
+		padding: 0;
+	}
+}
+
 //Vue transition class
 .fade-enter-active, .fade-leave-active {
 	transition: opacity 0.2s;

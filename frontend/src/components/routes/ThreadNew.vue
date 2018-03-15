@@ -404,7 +404,6 @@
 
 			div.input_editor_preview__markdownHTML {
 				height: 14.1rem;
-				word-break: break-all;
 			}
 		}
 	}

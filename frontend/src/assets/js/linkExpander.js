@@ -40,6 +40,16 @@ export default {
 							content: data.description
 						}
 					}
+				},
+				'twitter': {
+					hostnameRegExp: /twitter\.com/,
+					pathnameRegExp: /\/.+\/status\/\d+/,
+					getURL (link) {
+						return '/api/v1/link_expansion/twitter?url=' + link.href;
+					},
+					getContent (link, data) {
+						return data.html;
+					}
 				}
 			};
 
@@ -85,25 +95,30 @@ export default {
 						.then(res => {
 							let content = expandPattern.getContent(link, res.data);
 							let h = document.createElement.bind(document);
-							
 							let div = h('div');
-							let h2 = h('h2');
-							let a = h('a');
-							let span = h('span');
-							let textNode = document.createTextNode(content.content);
 
-							a.textContent = content.title;
-							a.href = content.URL;
-							a.setAttribute('target', '_blank');
-							a.setAttribute('rel', 'noopener noreferrer');
-							span.textContent = 'from ' + link.hostname;
+							if(typeof content === 'string') {
+								div.innerHTML = content;
+							} else {
+								let h2 = h('h2');
+								let a = h('a');
+								let span = h('span');
+								let textNode = document.createTextNode(content.content);
 
-							h2.appendChild(a);
-							h2.appendChild(span);
-							div.appendChild(h2)
-							div.appendChild(textNode)
+								a.textContent = content.title;
+								a.href = content.URL;
+								a.setAttribute('target', '_blank');
+								a.setAttribute('rel', 'noopener noreferrer');
+								span.textContent = 'from ' + link.hostname;
 
-							div.classList.add('expanded_link');
+								h2.appendChild(a);
+								h2.appendChild(span);
+								div.appendChild(h2)
+								div.appendChild(textNode)
+
+								div.classList.add('expanded_link');
+							}
+
 							link.parentNode.replaceChild(div, link);
 
 							completedAPICall();
