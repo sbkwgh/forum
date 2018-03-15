@@ -25,6 +25,8 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+import linkExpander from './assets/js/linkExpander'
+
 import App from './App'
 import store from './store/index'
 
@@ -54,6 +56,7 @@ import NotFound from './components/routes/NotFound'
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
+Vue.use(linkExpander)
 
 const router = new VueRouter({
 	routes: [
