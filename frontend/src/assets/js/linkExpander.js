@@ -103,7 +103,7 @@ export default {
 							div.appendChild(h2)
 							div.appendChild(textNode)
 
-							div.classList.add('input_editor_preview__expandable');
+							div.classList.add('expanded_link');
 							link.parentNode.replaceChild(div, link);
 
 							completedAPICall();

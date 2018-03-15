@@ -64,24 +64,6 @@
 	@import '../assets/scss/variables.scss';
 
 	.input_editor_preview {
-		@at-root #{&}__expandable {
-			border: thick solid $color__gray--primary;
-			padding: 0.5rem;
-
-			h2 {
-				margin: 0;
-				margin-bottom: 0.5rem;
-				font-size: 1.25rem;
-			}
-
-			span {
-				margin-left: 0.25rem;
-				font-size: 1rem;
-				font-weight: 400;
-				color: $color__darkgray--primary;
-			}
-		}
-
 		@at-root #{&}__markdownHTML {
 			height: 8.2rem;
 			overflow: auto;

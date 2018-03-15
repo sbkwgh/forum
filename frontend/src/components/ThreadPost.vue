@@ -45,7 +45,7 @@
 			<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		</div>
 		<div class='post__date post__date--mobile'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
-		<div class='post__content' v-html='post.content'></div>
+		<div class='post__content' v-html='postContentHTML'></div>
 		<div class='post__footer'>
 			<div
 				class='post__footer_group'
@@ -131,7 +131,9 @@
 				showShareModal: false,
 				showReportPostModal: false,
 				postURL: `${location.origin}/p/${post.id}`,
-				selected: false
+				selected: false,
+
+				postContentHTML: post.content
 			}
 		},
 		computed: {
@@ -180,6 +182,9 @@
 
 				this.selected = false
 			}
+		},
+		mounted () {
+			this.$linkExpander(this.post.content, v => this.postContentHTML = v);
 		}
 	}
 </script>

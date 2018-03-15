@@ -241,6 +241,24 @@ b, strong {
 	}
 }
 
+.expanded_link {
+	border: thick solid $color__gray--primary;
+	padding: 0.5rem;
+
+	h2 {
+		margin: 0;
+		margin-bottom: 0.5rem;
+		font-size: 1.25rem;
+	}
+
+	span {
+		margin-left: 0.25rem;
+		font-size: 1rem;
+		font-weight: 400;
+		color: $color__darkgray--primary;
+	}
+}
+
 //Vue transition class
 .fade-enter-active, .fade-leave-active {
 	transition: opacity 0.2s;
