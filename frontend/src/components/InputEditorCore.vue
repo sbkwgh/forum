@@ -337,7 +337,6 @@
 				align-content: center;
 				@include user-select(none);
 				cursor: default;
-				color: $color__gray--darker;
 			}
 		}
 
