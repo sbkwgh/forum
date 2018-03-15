@@ -52,6 +52,7 @@
 				let expandPatterns = {
 					'wikipedia': {
 						hostnameRegExp: /[a-z]+\.wikipedia\.org/,
+						pathnameRegExp: /\/wiki\/.+/,
 						getURL (link) {
 							let page = link.pathname.split('/').slice(-1)[0];
 							let countryVersion = link.hostname.split('.')[0];
@@ -70,6 +71,7 @@
 					},
 					'github': {
 						hostnameRegExp: /github\.com/,
+						pathnameRegExp: /\/.+\/.+/,
 						getURL (link) {
 							return 'https://api.github.com/repos' + link.pathname;
 						},
@@ -99,7 +101,10 @@
 					for(let expandName in expandPatterns) {
 						let expand = expandPatterns[expandName];
 
-						if(expand.hostnameRegExp.test(link.hostname)) {
+						if(
+							expand.hostnameRegExp.test(link.hostname) &&
+							expand.pathnameRegExp.test(link.pathname)
+						) {
 							if(!expandableLinks[expandName]) {
 								expandableLinks[expandName] = [];
 							}
