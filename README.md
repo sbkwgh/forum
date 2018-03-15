@@ -10,6 +10,7 @@ Simple and beautiful forum software - created using Express, Vue, and Sequelize.
 * @ mentions
 * Polls
 * Markdown editor
+* Inline link expansions for Twitter, GitHub, Wikipedia, and more to come
 * Admin dashboard for forum analytics
 * Multiple admin users
 * Moderation built in, including:
