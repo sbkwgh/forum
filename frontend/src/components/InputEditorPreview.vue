@@ -136,6 +136,8 @@
 
 								a.textContent = content.title;
 								a.href = content.URL;
+								a.setAttribute('target', '_blank');
+								a.setAttribute('rel', 'noopener noreferrer');
 								span.textContent = 'from ' + link.hostname;
 
 								h2.appendChild(a);
