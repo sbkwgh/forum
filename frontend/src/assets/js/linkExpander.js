@@ -1,12 +1,35 @@
-import debounce from 'lodash.debounce'
+let cache = {};
 
 export default {
 	install (Vue) {
 		//Takes a HTML string then parses it and replaces appropriate
 		//links with the relevant expansion
 		//Returns a callback with the 'expanded' HTML string
-		Vue.prototype.$linkExpander = debounce(function (HTML, cb) {
-			console.log(cb)
+		Vue.prototype.$linkExpander = function (HTML, cb) {
+			let completed = 0;
+			let completedAPICall = () => {
+				completed++;
+
+				if(completed === links.length) {
+					cb(parsed.innerHTML);
+				}
+			};
+
+			let replaceLink = (html, link) => {
+				if(html.length) {
+					let div = document.createElement('div');
+					div.innerHTML = html;
+
+					link.parentNode.replaceChild(
+						div.children[0],
+						link
+					);
+				}
+
+				completedAPICall();
+			};
+
+
 			let parsed = document.createElement('div');
 			parsed.innerHTML = HTML;
 
@@ -21,32 +44,20 @@ export default {
 				});
 
 			links.forEach(link => {
-				Vue.axios
-					.get('/api/v1/link_preview?url=' + link.href)
-					.then(res => {
-						if(res.data.length) {
-							let div = document.createElement('div');
-							div.innerHTML = res.data;
+				let cached = cache[link.href];
 
-							link.parentNode.replaceChild(
-								div.children[0],
-								link
-							);
-						}
-
-						completedAPICall();
-					})
-					.catch(completedAPICall);
-			})
-
-			let completed = 0;
-			let completedAPICall = () => {
-				completed++;
-
-				if(completed === links.length) {
-					cb(parsed.innerHTML);
+				if(cached) {
+					replaceLink(cached, link);
+				} else {
+					Vue.axios
+						.get('/api/v1/link_preview?url=' + link.href)
+						.then(res => {
+							cache[link.href] = res.data;
+							replaceLink(res.data, link);
+						})
+						.catch(completedAPICall);
 				}
-			}
-		}, 1000);
+			})
+		}
 	}
 }
