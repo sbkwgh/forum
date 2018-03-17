@@ -1,9 +1,12 @@
+import debounce from 'lodash.debounce'
+
 export default {
 	install (Vue) {
 		//Takes a HTML string then parses it and replaces appropriate
 		//links with the relevant expansion
 		//Returns a callback with the 'expanded' HTML string
-		Vue.prototype.$linkExpander = function (HTML, cb) {
+		Vue.prototype.$linkExpander = debounce(function (HTML, cb) {
+			console.log(cb)
 			let parsed = document.createElement('div');
 			parsed.innerHTML = HTML;
 
@@ -44,6 +47,6 @@ export default {
 					cb(parsed.innerHTML);
 				}
 			}
-		}
+		}, 1000);
 	}
 }
