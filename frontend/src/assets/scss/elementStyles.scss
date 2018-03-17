@@ -241,21 +241,31 @@ b, strong {
 	}
 }
 
-.expanded_link {
+.link_preview {
 	border: thick solid $color__gray--primary;
-	padding: 0.5rem;
+	padding: 1rem;
 
-	h2 {
+	h1, h2, p {
 		margin: 0;
-		margin-bottom: 0.5rem;
-		font-size: 1.25rem;
 	}
 
-	span {
-		margin-left: 0.25rem;
+	h1 {
+		font-size: 1.25rem;
+	}
+	h2 {
 		font-size: 1rem;
-		font-weight: 400;
+		font-weight: normal;
 		color: $color__darkgray--primary;
+	}
+	p {
+		font-weight: 300;
+		display: flex;
+		margin-top: 0.5rem;
+	}
+	img {
+		max-width: 100px;
+		max-height: 100px;
+		margin-right: 0.5rem;
 	}
 }
 

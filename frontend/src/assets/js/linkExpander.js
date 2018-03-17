@@ -7,52 +7,6 @@ export default {
 			let parsed = document.createElement('div');
 			parsed.innerHTML = HTML;
 
-			let expandPatterns = {
-				'wikipedia': {
-					hostnameRegExp: /[a-z]+\.wikipedia\.org/,
-					pathnameRegExp: /\/wiki\/.+/,
-					getURL (link) {
-						let page = link.pathname.split('/').slice(-1)[0];
-						let countryVersion = link.hostname.split('.')[0];
-						
-						return `https://${countryVersion}.wikipedia.org/api/rest_v1/page/summary/${page}?redirect=true`;
-					},
-					getContent (link, data) {
-						let content = data.extract.slice(0, 500).trim();
-
-						return {
-							title: data.titles.display,
-							URL: data.content_urls.desktop.page,
-							content: content.length > 500 ? content + '...' : content
-						}
-					}
-				},
-				'github': {
-					hostnameRegExp: /github\.com/,
-					pathnameRegExp: /\/.+\/.+/,
-					getURL (link) {
-						return 'https://api.github.com/repos' + link.pathname;
-					},
-					getContent (link, data) {
-						return {
-							title: data.full_name,
-							URL: data.html_url,
-							content: data.description
-						}
-					}
-				},
-				'twitter': {
-					hostnameRegExp: /twitter\.com/,
-					pathnameRegExp: /\/.+\/status\/\d+/,
-					getURL (link) {
-						return '/api/v1/link_expansion/twitter?url=' + link.href;
-					},
-					getContent (link, data) {
-						return data.html;
-					}
-				}
-			};
-
 			let links = Array
 				.from(parsed.querySelectorAll('p a[href]'))
 				.filter(a => {
@@ -63,69 +17,24 @@ export default {
 					)
 				});
 
-			let expandableLinks = {};
-
 			links.forEach(link => {
-				for(let expandName in expandPatterns) {
-					let expand = expandPatterns[expandName];
+				Vue.axios
+					.get('/api/v1/link_preview?url=' + link.href)
+					.then(res => {
+						if(res.data.length) {
+							let div = document.createElement('div');
+							div.innerHTML = res.data;
 
-					if(
-						expand.hostnameRegExp.test(link.hostname) &&
-						expand.pathnameRegExp.test(link.pathname)
-					) {
-						if(!expandableLinks[expandName]) {
-							expandableLinks[expandName] = [];
+							link.parentNode.replaceChild(
+								div.children[0],
+								link
+							);
 						}
 
-						expandableLinks[expandName].push(link);
-
-						break;
-					}
-				}
-			});
-
-			for(let expandName in expandableLinks) {
-				let expandPattern = expandPatterns[expandName];
-
-				expandableLinks[expandName].forEach(link => {
-					let URL = expandPattern.getURL(link);
-
-					Vue.axios
-						.get(URL)
-						.then(res => {
-							let content = expandPattern.getContent(link, res.data);
-							let h = document.createElement.bind(document);
-							let div = h('div');
-
-							if(typeof content === 'string') {
-								div.innerHTML = content;
-							} else {
-								let h2 = h('h2');
-								let a = h('a');
-								let span = h('span');
-								let textNode = document.createTextNode(content.content);
-
-								a.textContent = content.title;
-								a.href = content.URL;
-								a.setAttribute('target', '_blank');
-								a.setAttribute('rel', 'noopener noreferrer');
-								span.textContent = 'from ' + link.hostname;
-
-								h2.appendChild(a);
-								h2.appendChild(span);
-								div.appendChild(h2)
-								div.appendChild(textNode)
-
-								div.classList.add('expanded_link');
-							}
-
-							link.parentNode.replaceChild(div, link);
-
-							completedAPICall();
-						})
-						.catch(completedAPICall);
-				});
-			}
+						completedAPICall();
+					})
+					.catch(completedAPICall);
+			})
 
 			let completed = 0;
 			let completedAPICall = () => {
