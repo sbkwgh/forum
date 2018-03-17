@@ -267,6 +267,10 @@ b, strong {
 		max-height: 100px;
 		margin-right: 0.5rem;
 	}
+
+	#{&}__partial {
+		margin-top: 0.5rem;
+	}
 }
 
 blockquote.twitter-tweet {
