@@ -87,7 +87,16 @@ describe('link_expansion', () => {
 			let HTML = await linkPreview('https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election');
 
 			(typeof HTML).should.equal('string');
+			HTML.length.should.be.above(0);
 		});
+
+		it('should get a HTML string from a custom pattern', async () => {
+			let HTML = await linkPreview('https://en.wikipedia.org/wiki/google');
+
+			(typeof HTML).should.equal('string');
+			HTML.length.should.be.above(0);
+		});
+
 		it('should return an empty string from an invalid site', async () => {
 			let HTML = await linkPreview('http://blank.org');
 
