@@ -33,9 +33,6 @@
 				HTML: ''
 			}
 		},
-		watch: {
-			value: 'getHTML'
-		},
 		computed: {
 			valueWatch () {
 				this.getHTML();

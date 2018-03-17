@@ -29,7 +29,6 @@ export default {
 				completedAPICall();
 			};
 
-
 			let parsed = document.createElement('div');
 			parsed.innerHTML = HTML;
 
