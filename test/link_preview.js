@@ -12,6 +12,7 @@ let linkPreview = require('../lib/linkPreview');
 let github = require('../lib/linkPreview/patterns/github');
 let wikipedia = require('../lib/linkPreview/patterns/wikipedia');
 let twitter = require('../lib/linkPreview/patterns/twitter');
+let amazon = require('../lib/linkPreview/patterns/amazon');
 
 const Errors = require('../lib/errors.js');
 
@@ -148,6 +149,43 @@ describe('link_expansion', () => {
 
 			(typeof HTML).should.equal('string');
 			HTML.should.have.length.above(0);
+		});
+	});
+
+	describe('Amazon', () => {
+		it('should match a valid Amazon url', () => {
+			amazon.matches('https://www.amazon.co.uk/gp/product/0199858616').should.not.be.null;
+			amazon.matches('https://smile.amazon.co.uk/gp/product/0199858616').should.not.be.null;
+			amazon.matches('https://www.amazon.co.uk/Betron-Isolating-Earphones-Headphones-Microphone-Black/dp/B01N1X4910').should.not.be.null;
+			amazon.matches('http://amazon.co.uk/Sony-5-5-Inch-Android-SIM-Free-Smartphone-Gold/dp/B0792GT5T4/ref=dfg').should.not.be.null;
+			
+			expect(amazon.matches('https://www.amazon.co.uk/gp/dmusic/promotions/AmazonMusicUnlimited')).to.be.null;
+			expect(amazon.matches('https://www.amazon.co.uk/')).to.be.null;
+		});
+
+		it('should return a correct data object', async () => {
+			let data = await amazon.getPreviewData(
+				`https://www.amazon.co.uk/gp/product/B005G39HUK/ref=s9u_ri_gw_i2?ie=UTF8&fpl=fresh&pd_rd_i=B005G39HUK&pd_rd_r=4edec2c7-2abc-11e8-9a21-019e4b2648c4&pd_rd_w=jtpWg&pd_rd_wg=lyBTu&pf_rd_m=A3P5ROKL5A1OLE&pf_rd_s=&pf_rd_r=8G2NPHM6AE411J2M0V6Z&pf_rd_t=36701&pf_rd_p=81d63d24-31ce-4958-9c19-bb66b139bc25&pf_rd_i=desktop`
+			);
+
+			data.should.have.property(
+				'description',
+				"Fruit of the Loom Men's Super Premium Short Sleeve T-Shirt: Free UK Shipping on Orders Over £10 and Free 30-Day Returns on Selected Fashion Items sold or fulfilled by Amazon."
+			);
+			data.should.have.property(
+				'url',
+				'https://www.amazon.co.uk/gp/product/B005G39HUK'
+			);
+			data.should.have.property(
+				'title',
+				"Fruit of the Loom Men's Super Premium Short Sleeve T-Shirt"
+			);
+			data.should.have.property(
+				'image',
+				'https://images-na.ssl-images-amazon.com/images/I/91q6n9sLPsL._UL1500_.jpg'
+			);
+			data.partial.includes('4.4 out of 5 stars').should.be.true;
+			data.partial.includes('£1.20 - £19.99').should.be.true;
 		});
 	});
 })
