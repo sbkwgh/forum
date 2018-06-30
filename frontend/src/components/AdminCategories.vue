@@ -4,7 +4,7 @@
 			<div slot='main'>
 				<p>Add a category</p>
 				<fancy-input v-model='add.name' placeholder='Category name'></fancy-input>
-				<input type='color' class='button button--color_input' v-model='add.color' />
+				<colour-picker v-model='add.color'></colour-picker>
 			</div>
 			<div slot='footer'>
 				<button class='button button--modal button--green' @click='addCategory'>Add category</button>
@@ -16,7 +16,7 @@
 			<div slot='main'>
 				<p>Edit this category</p>
 				<fancy-input v-model='edit.name' placeholder='Category name'></fancy-input>
-				<input type='color' class='button button--color_input' v-model='edit.color' />
+				<colour-picker v-model='edit.color'></colour-picker>
 			</div>
 			<div slot='footer'>
 				<button class='button button--modal button--green' @click='editCategory'>Update category</button>
@@ -74,6 +74,7 @@
 	import ModalWindow from './ModalWindow'
 	import FancyInput from './FancyInput'
 	import LoadingIcon from './LoadingIcon'
+	import ColourPicker from './ColourPicker'
 
 	import AjaxErrorHandler from '../assets/js/errorHandler'
 
@@ -82,7 +83,8 @@
 		components: {
 			ModalWindow,
 			FancyInput,
-			LoadingIcon
+			LoadingIcon,
+			ColourPicker
 		},
 		data () {
 			return {
