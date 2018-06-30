@@ -32,6 +32,7 @@
 			<div class='notification_button__menu'>
 				<div
 					v-for='(notification, index) in notifications'
+					v-if='notification.PostNotification.Post'
 					class='notification_button__menu__item'
 					:class='{
 						"notification_button__menu__item--uninteracted": !notification.interacted,
