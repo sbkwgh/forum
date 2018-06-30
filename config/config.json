@@ -3,14 +3,14 @@
 		"username": "root",
 		"password": "password",
 		"database": "forum_dev",
-		"host": "localhost",
+		"host": "127.0.0.1",
 		"dialect": "mysql"
 	},
 	"test": {
 		"username": "root",
 		"password": "password",
 		"database": "forum_test",
-		"host": "localhost",
+		"host": "127.0.0.1",
 		"dialect": "mysql"
 	},
 	"production": {
