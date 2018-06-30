@@ -1,8 +1,6 @@
-let linkPreview = require('../lib/linkPreview');
+let linkPreview = require('preview-link');
 let express = require('express');
 let router = express.Router();
-
-const Errors = require('../lib/errors.js');
 
 router.get('/', async (req, res, next) => {
 	try {
