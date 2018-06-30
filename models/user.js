@@ -109,7 +109,7 @@ module.exports = (sequelize, DataTypes) => {
 					meta.nextPostsCount = 0
 				} else {
 					meta.nextURL =
-						`/api/v1/user/${user.username}?posts=true&limit=${limit}&from=${nextId - 1}`
+						`/api/v1/user/${this.username}?posts=true&limit=${limit}&from=${nextId - 1}`
 
 					meta.nextPostsCount = await pagination.getNextCount(
 						Post, this.Posts, limit,
