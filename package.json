@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test && node ./node_modules/mocha/bin/mocha  --harmony --timeout 30000",
     "dev": "cross-env NODE_ENV=development && sequelize db:migrate && node --harmony server.js",
-    "start": "sequelize db:migrate && node server.js"
+    "start": "sequelize db:migrate && node server.js",
+    "postinstall": "cd frontend && npm run build"
   },
   "engines": {
     "node": ">= 7.6.0"
