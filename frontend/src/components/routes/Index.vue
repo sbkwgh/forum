@@ -300,9 +300,9 @@
 		padding: 0.5rem 0 1rem 1rem;
 
 		@at-root #{&}__title {
+			color: $color__darkgray--darker;
 			cursor: default;
 			font-weight: 500;
-			font-variant: small-caps;
 			font-size: 1.125rem;
 		}
 
@@ -310,28 +310,22 @@
 			cursor: pointer;
 			margin-top: 0.5rem;
 			position: relative;
-			display: block;
+			display: grid;
+			grid-template-columns: 0.75rem auto;
+			grid-column-gap: 1rem;
 			text-decoration: none;
 			background-image: none;
-			font-weight: 300;
+			font-weight: normal;
 
 			@at-root #{&}__border {
+				align-self: center;
 				display: inline-block;
-				height: 0.75rem;
-				width: 0.75rem;
+				height: 0.9rem;
+				width: 0.9rem;
 				border-radius: 0.25rem;
-				opacity: 0.5;
+				margin-top: 0.25rem;
 				background-color: $color__gray--darkest;
-				position: relative;
-				top: 0.05rem;
 				transition: all 0.2s;
-			}
-
-			&:hover #{&}__border {
-				opacity: 1;
-			}
-			&:active #{&}__border {
-				filter: brightness(0.8);
 			}
 
 			@at-root #{&}__text {
@@ -340,14 +334,7 @@
 			
 
 			@at-root #{&}--selected {
-				font-weight: normal;
-
-				.threads_main__side_bar__menu_item__border {
-					opacity: 1;
-					&:active {
-						filter: brightness(1);
-					}
-				}
+				font-weight: 600;
 			}
 		}
 	}
