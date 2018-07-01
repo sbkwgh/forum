@@ -293,11 +293,12 @@
 		width: 12rem;
 		height: 0%;
 		background: #fff;
-		margin-top: 0.15rem;
 		margin-right: 1rem;
 		border-radius: 0.25rem;
 		border: thin solid $color__gray--darker;
 		padding: 0.5rem 0 1rem 1rem;
+		position: sticky;
+		top: 4.5rem;
 
 		@at-root #{&}__title {
 			color: $color__darkgray--darker;
@@ -339,8 +340,6 @@
 		}
 	}
 	.threads_main__threads {
-		border-collapse: collapse;
-		margin-top: 0.25rem;
 		margin-left: 1rem;
 		width: calc(100% - 11rem);
 	}
