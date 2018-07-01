@@ -256,7 +256,7 @@
 					if(this.posts.find(post => post.postNumber === postNumber)) {
 						this.highlightPost(postNumber)
 					} else {
-						this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+						this.$router.replace({ name: 'thread-post', params: { post_number: postNumber } })
 						this.loadInitialPosts()
 					}
 				}
@@ -302,7 +302,7 @@
 			highlightPost (postNumber) {
 				this.scrollTo(postNumber, (i) => {
 					this.highlightedPostIndex = i
-					this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+					this.$router.replace({ name: 'thread-post', params: { post_number: postNumber } })
 					
 					if(this.highlightedPostIndex === i) {
 						setTimeout(() => this.highlightedPostIndex = null, 3000)
@@ -346,7 +346,7 @@
 
 				if(postIndex > -1) {
 					let postNumber = self.posts[postIndex].postNumber
-					self.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+					self.$router.replace({ name: 'thread-post', params: { post_number: postNumber } })
 				}
 			};
 			document.addEventListener('scroll', throttle(postInView, 20));
