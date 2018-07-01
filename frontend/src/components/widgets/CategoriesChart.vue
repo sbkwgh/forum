@@ -183,8 +183,7 @@
 		}
 
 		@at-root #{&}__title {
-			font-variant: small-caps;
-			font-size: 1.125rem;
+			font-weight: normal;
 			margin-left: -0.4rem;
 		}
 
