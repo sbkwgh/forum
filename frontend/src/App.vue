@@ -474,7 +474,7 @@
 	}
 
 	.logo {
-		@include text($font--role-emphasis, 2rem, normal);
+		@include text($font--role-emphasis, 2rem, 600);
 		@include user-select(none);
 		cursor: pointer;
 		background: none;
@@ -485,6 +485,7 @@
 
 
 		&:hover, &:visited, &:active {
+			outline: none;
 			color: $color__text--primary;
 		}
 	}
