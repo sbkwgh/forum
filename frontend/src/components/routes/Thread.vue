@@ -102,7 +102,7 @@
 				</thread-post-placeholder>
 				<thread-post
 					v-for='(post, index) in posts'
-					:key='post.index'
+					:key='post.id'
 
 					@reply='replyUser'
 					@goToPost='goToPost'
@@ -333,8 +333,10 @@
 			let self = this;
 
 			let postInView = function() {
-				let posts = self.$refs.posts
-				if(!posts) return;
+				if(!self.$refs.posts) return;
+				let posts = self.$refs.posts.sort((a, b) => {
+					return a.post.postNumber - b.post.postNumber;
+				});
 
 				let topPostInView = posts.find(post => {
 					let rect = post.$el.getBoundingClientRect()
