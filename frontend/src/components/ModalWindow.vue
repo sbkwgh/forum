@@ -1,11 +1,17 @@
 <template>
-	<div class='modal_window__overlay' :class='{"modal_window--show": value}' @click.self='closeModal'>
-		<div class='modal_window' :class='{"modal_window--show": value}' :style='{"width": width || "20rem"}'>
+	<div
+		class='modal_window__overlay'
+		:class='{"modal_window__overlay--show": value}'
+		@click.self='closeModal'
+	>
+		<div
+			class='modal_window'
+			:class='{"modal_window--show": value}'
+			:style='{"width": width || "20rem"}'
+		>
 			<div
 				class='modal_window__loading_overlay'
-				:class='{
-					"modal_window__loading_overlay--show": loading
-				}'
+				:class='{"modal_window__loading_overlay--show": loading}'
 			>
 				<loading-icon></loading-icon>
 			</div>
@@ -15,7 +21,10 @@
 				@click='closeModal'
 				v-if='closeButton'
 			></span>
-			<div class='modal_window__main' :class='{ "modal_window__main--no_padding": noPadding }'>
+			<div
+				class='modal_window__main'
+				:class='{"modal_window__main--no_padding": noPadding}'
+			>
 				<slot name='main'></slot>
 			</div>
 			<div class='modal_window__footer' v-if='!hideFooter'>
@@ -30,7 +39,9 @@
 
 	export default {
 		name: 'ModalWindow',
-		props: ['value', 'width', 'close-button', 'hide-footer', 'no-padding', 'loading'],
+		props: [
+			'value', 'width', 'close-button', 'hide-footer', 'no-padding', 'loading'
+		],
 		components: { LoadingIcon },
 		methods: {
 			closeModal () {
@@ -44,39 +55,43 @@
 	@import '../assets/scss/variables.scss';
 
 	.modal_window__overlay {
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
-		display: flex;
 		align-items: center;
+		background-color: rgba(0, 0, 0, 0.5);;
+		display: grid;
+		grid-template-rows: auto 2rem;
+		height: 100%;
 		justify-content: center;
-		position: fixed;
-		z-index: 3;
-		top: 0;
 		left: 0;
-
+		padding-top: 2rem;
 		opacity: 0;
+		overflow-y: auto;
 		pointer-events: none;
-		transition:  opacity 0.3s;
+		position: fixed;
+		top: 0;
+		transition: opacity 0.2s;
+		width: 100%;
+		z-index: 4;
+
+		&::after {
+			content: '';
+			height: 2rem;
+		}
 
 		@at-root #{&}--show {
 			opacity: 1;
 			pointer-events: all;
-			transition: opacity 0.3s;
 		}
 	}
 	.modal_window {
-		box-shadow: 0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.10);
 		background-color: #fff;
-		//margin-top: -3rem;
-		opacity: 0;
-		position: relative;
 		border-radius: 0.25rem;
-		pointer-events: none;
-
 		transform: scale(1.1);
+		transition: transform 0.2s, box-shadow 0.2s;
 
-		transition: margin-top 0.3s, opacity 0.3s, transform 0.3s;
+		@at-root #{&}--show {
+			transform: scale(1);
+			box-shadow: 0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.10);
+		}
 
 		@at-root #{&}__loading_overlay {
 			position: absolute;
@@ -101,20 +116,25 @@
 		}
 
 		@at-root #{&}__main {
-			padding: 0 1rem 1rem 1rem;
-			border-radius: 0.25rem;
-			overflow: hidden;
+			font-weight: 300;
+			padding: 1rem;
 
 			@at-root #{&}--no_padding {
 				padding: 0;
 			}
 		}
 		@at-root #{&}__footer {
+			align-items: center;
 			background-color: $color__lightgray--darkest;
 			border-radius: 0 0 0.25rem 0.25rem;
 			display: flex;
 			justify-content: flex-end;
-			padding: 0.35rem 1rem;
+			padding: 0.5rem 1rem;
+			width: 100%;
+
+			button {
+				margin-left: 0.5rem;
+			}
 		}
 
 		@at-root #{&}__close {
@@ -128,15 +148,6 @@
 			&:hover {
 				color: $color__darkgray--primary;
 			}
-		}
-
-		@at-root #{&}--show {
-			margin-top: 0;
-			transform: scale(1);
-			opacity: 1;
-			pointer-events: all;
-
-			transition: all 0.3s;
 		}
 	}
 </style>
