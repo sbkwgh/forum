@@ -102,7 +102,7 @@
 				</thread-post-placeholder>
 				<thread-post
 					v-for='(post, index) in posts'
-					:key='post.index'
+					:key='post.id'
 
 					@reply='replyUser'
 					@goToPost='goToPost'
@@ -256,7 +256,7 @@
 					if(this.posts.find(post => post.postNumber === postNumber)) {
 						this.highlightPost(postNumber)
 					} else {
-						this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+						this.$router.replace({ name: 'thread-post', params: { post_number: postNumber } })
 						this.loadInitialPosts()
 					}
 				}
@@ -302,7 +302,7 @@
 			highlightPost (postNumber) {
 				this.scrollTo(postNumber, (i) => {
 					this.highlightedPostIndex = i
-					this.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+					this.$router.replace({ name: 'thread-post', params: { post_number: postNumber } })
 					
 					if(this.highlightedPostIndex === i) {
 						setTimeout(() => this.highlightedPostIndex = null, 3000)
@@ -333,8 +333,10 @@
 			let self = this;
 
 			let postInView = function() {
-				let posts = self.$refs.posts
-				if(!posts) return;
+				if(!self.$refs.posts) return;
+				let posts = self.$refs.posts.sort((a, b) => {
+					return a.post.postNumber - b.post.postNumber;
+				});
 
 				let topPostInView = posts.find(post => {
 					let rect = post.$el.getBoundingClientRect()
@@ -346,7 +348,7 @@
 
 				if(postIndex > -1) {
 					let postNumber = self.posts[postIndex].postNumber
-					self.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
+					self.$router.replace({ name: 'thread-post', params: { post_number: postNumber } })
 				}
 			};
 			document.addEventListener('scroll', throttle(postInView, 20));
