@@ -11,6 +11,7 @@
 		<div
 			class='menu_tooltip__menu'
 			:class='{ "menu_tooltip__menu--show": value }'
+			:style='{ "margin-top": top }'
 		>
 			<div class='menu_tooltip__menu__inner'>
 				<slot name='menu'></slot>
@@ -22,7 +23,7 @@
 <script>
 	export default {
 		name: 'MenuTooltip',
-		props: ['value']
+		props: ['value', 'top']
 	}
 </script>
 
