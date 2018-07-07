@@ -11,6 +11,15 @@
 		</button>
 
 		<template slot='menu'>
+			<fancy-input
+				class='select_filter__search'
+
+				v-if='searchPlaceholder'
+				:placeholder='searchPlaceholder'
+				width='100%'
+				v-model='search'
+			></fancy-input>
+
 			<div
 				class='select_filter__item select_filter__item--select_all'
 				@click='toggleSelectAll'
@@ -38,17 +47,20 @@
 </template>
 
 <script>
+	import FancyInput from './FancyInput';
 	import MenuTooltip from './MenuTooltip';
 
 	export default {
 		name: 'SelectFilter',
-		props: ['name', 'options', 'value'],
+		props: ['name', 'options', 'value', 'search-placeholder'],
 		components: {
+			FancyInput,
 			MenuTooltip
 		},
 		data () {
 			return {
 				menuOpen: false,
+				search: '',
 				selected: []
 			}
 		},
@@ -78,6 +90,9 @@
 				});
 
 				this.$emit('value', selectedItems);
+			},
+			search () {
+				this.$emit('search', this.search);
 			}
 		},
 		mounted () {
@@ -109,6 +124,9 @@
 			@at-root #{&}--selected {
 				color: $color__blue--darker !important;
 			}
+		}
+
+		@at-root #{&}__search {
 		}
 
 		@at-root #{&}__item {

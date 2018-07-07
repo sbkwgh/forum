@@ -110,7 +110,6 @@
 					background-color: rgba(255, 255, 255, 0.97);
 					border-radius: 0.25rem 0.25rem 0 0;
 					font-size: 1.125rem;
-					max-height: 20rem;
 					opacity: 0;
 					overflow-y: auto;
 					position: fixed;
@@ -119,7 +118,7 @@
 					transition: opacity 0.2s, bottom 0.2s;
 
 					@at-root #{&}__inner {
-						max-height: 100%;
+						max-height: 20rem;
 					}
 
 					@at-root #{&}--show {

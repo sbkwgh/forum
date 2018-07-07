@@ -7,6 +7,7 @@
 					name='Username'
 					:options='usernameOptions'
 					v-model='usernameSelected'
+					search-placeholder='Filter users'
 				>
 				</select-filter>
 				<select-filter
