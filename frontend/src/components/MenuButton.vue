@@ -1,5 +1,10 @@
 <template>
-	<menu-tooltip v-model='menuOpen' top='0' width='10rem'>
+	<menu-tooltip
+		v-model='menuOpen'
+		top='0'
+		width='10rem'
+		touch-disabled='true'
+	>
 		<div class='menu_button__icon' @click='menuOpen = true' slot='button'>
 			<slot></slot>
 		</div>

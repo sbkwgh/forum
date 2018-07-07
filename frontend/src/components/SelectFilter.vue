@@ -154,4 +154,12 @@
 			}
 		}
 	}
+
+
+	@media (max-width: $breakpoint--tablet) {
+		.select_filter__item {
+			font-size: 1.125rem;
+			padding: 0.5rem 0.75rem;
+		}
+	}
 </style>
