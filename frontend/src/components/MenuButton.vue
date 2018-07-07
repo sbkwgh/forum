@@ -1,5 +1,5 @@
 <template>
-	<menu-tooltip v-model='menuOpen' top='-4rem'>
+	<menu-tooltip v-model='menuOpen' top='0' width='10rem'>
 		<div class='menu_button__icon' @click='menuOpen = true' slot='button'>
 			<slot></slot>
 		</div>
@@ -45,9 +45,10 @@
 
 	.menu_button {
 		@at-root #{&}__option {
-			padding: 0.5rem;
-			font-size: 0.9rem;
+			border-radius: 0.25rem;
 			cursor: default;
+			font-size: 0.9rem;
+			padding: 0.5rem;
 			transition: all 0.2s;
 
 			&:hover { background-color: $color__lightgray--primary;  }

@@ -11,7 +11,7 @@
 		<div
 			class='menu_tooltip__menu'
 			:class='{ "menu_tooltip__menu--show": value }'
-			:style='{ "margin-top": top }'
+			:style='{ "top": top, "width": width }'
 		>
 			<div class='menu_tooltip__menu__inner'>
 				<slot name='menu'></slot>
@@ -23,7 +23,7 @@
 <script>
 	export default {
 		name: 'MenuTooltip',
-		props: ['value', 'top']
+		props: ['value', 'top', 'width']
 	}
 </script>
 
@@ -32,6 +32,7 @@
 
 	.menu_tooltip {
 		display: inline-block;
+		position: relative;
 
 		@at-root #{&}__overlay {
 			height: 100%;
@@ -57,6 +58,7 @@
 			overflow-y: hidden;
 			position: absolute;
 			pointer-events: none;
+			top: calc(100% + 0.125rem);
 			transform: translateY(-0.25rem);
 			transition: transform 0.2s, opacity 0.2s;
 			width: 15rem;
@@ -65,7 +67,7 @@
 			@at-root #{&}--show {
 				opacity: 1;
 				pointer-events: all;
-				transform: translateY(0.125rem);
+				transform: translateY(0);
 			}
 
 			@at-root #{&}__inner {
