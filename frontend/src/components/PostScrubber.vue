@@ -140,6 +140,7 @@
 		height: 10rem;
 		position: relative;
 		margin-top: 2rem;
+		margin-left: 0.25rem;
 
 		@at-root #{&}--no_top_transition {
 			transition: background-color 0.2s !important;

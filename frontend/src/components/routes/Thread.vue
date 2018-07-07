@@ -27,7 +27,7 @@
 				@click='removePosts'
 				v-if='$store.state.thread.showRemovePostsButton'
 			>
-				Remove selected posts ({{$store.state.thread.selectedPosts.length}})
+				Remove posts ({{$store.state.thread.selectedPosts.length}})
 			</loading-button>
 			<menu-button
 				v-if='$store.state.admin'
@@ -374,17 +374,16 @@
 	@import '../../assets/scss/variables.scss';
 
 	.thread_side_bar {
+		align-items: flex-start;
+		display: flex;
+		flex-direction: column;
+		min-width: 10rem;
 		position: fixed;
 		right: 10%;
-		top: 7.25rem;
-		min-width: 10rem;
 
 		.button {
 			margin-bottom: 0.75rem;
 			height: 3rem;
-		}
-		& > .button, .menu_button {
-			margin-left: -0.25rem;
 		}
 	}
 
