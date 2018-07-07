@@ -1,6 +1,7 @@
 <template>
 	<menu-tooltip
 		v-model='menuOpen'
+		class='select_button'
 		:class='{"select_button--touch": !touchDisabled}'
 	>
 		<template slot='button'>

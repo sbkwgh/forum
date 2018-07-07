@@ -1,5 +1,5 @@
 <template>
-	<menu-tooltip v-model='menuOpen'>
+	<menu-tooltip v-model='menuOpen' class='select_filter'>
 		<button
 			slot='button'
 			class='button select_filter__button'

@@ -1,6 +1,7 @@
 <template>
 	<menu-tooltip
 		v-model='menuOpen'
+		class='menu_button'
 		top='0'
 		width='10rem'
 		touch-disabled='true'
