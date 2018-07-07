@@ -108,10 +108,6 @@
 			}
 			@at-root #{&}--selected {
 				color: $color__blue--darker !important;
-
-				span.fa {
-					transform: rotate(180deg) translateY(0rem);
-				}
 			}
 		}
 
