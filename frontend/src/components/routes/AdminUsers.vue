@@ -2,7 +2,7 @@
 	<div class='admin_users'>
 		<h1 class='admin_users__header'>Users</h1>
 		<div class='category_widget__box'>
-			<div class='admin_users__search'>
+			<div class='admin_users__filters'>
 				<select-filter
 					name='Username'
 					:options='usernameOptions'
@@ -19,12 +19,34 @@
 			</div>
 			<table>
 				<tr>
-					<th>Username</th>
-					<th>Role</th>
-					<th>Account creation date</th>
-					<th>Posts</th>
-					<th>Threads</th>
+					<th>
+						<sort-menu v-model='tableSort' column='username'></sort-menu>
+					</th>
+					<th>
+						<sort-menu v-model='tableSort' column='role'></sort-menu>
+					</th>
+					<th>
+						<sort-menu v-model='tableSort' column='date'></sort-menu>
+					</th>
+					<th>
+						<sort-menu v-model='tableSort' column='posts'></sort-menu>
+					</th>
+					<th>
+						<sort-menu v-model='tableSort' column='threads'></sort-menu>
+					</th>
 				</tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
+				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
 			</table>
 		</div>
 	</div>
@@ -32,12 +54,14 @@
 
 <script>
 	import SelectFilter from '../SelectFilter.vue';
+	import SortMenu from '../SortMenu.vue';
 	import FancyInput from '../FancyInput.vue';
 	export default {
 		name: 'AdminUsers',
 		components: {
 			FancyInput,
-			SelectFilter
+			SelectFilter,
+			SortMenu
 		},
 		data () {
 			return {
@@ -53,16 +77,13 @@
 					{ name: 'User1', value: 'admin' },
 					{ name: 'User1', value: 'admin' },
 					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User2', value: 'admin' }
 				],
-				usernameSelected: null
+				usernameSelected: null,
+
+				tableSort: {
+					column: 'username',
+					sort: 'descending'
+				}
 			}
 		}
 	}
@@ -78,14 +99,32 @@
 			margin: 0.5rem 0 1rem 0;
 		}
 
+		@at-root #{&}__filters {
+			margin-bottom: 0.5rem;
+
+			.select_filter {
+				margin-right: 0.5rem;
+			}
+		}
+
 		table {
 			border-collapse: collapse;
 			width: 100%;
 
 			th {
 				border-bottom: 0.125rem solid $color__gray--darker;
-				padding: 0.25rem;
+				padding: 0.5rem 0.75rem;
 				text-align: left;
+			}
+
+			tr {
+				&:nth-child(even) {
+					background-color: $color__gray--primary;
+				}
+			}
+
+			td {
+				padding: 0.75rem;
 			}
 		}
 	}

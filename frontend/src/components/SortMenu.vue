@@ -1,0 +1,102 @@
+<template>
+	<menu-tooltip v-model='menuOpen' width='10rem'>
+		<div
+			slot='button'
+			class='sort_menu__button'
+			:class='{ "sort_menu__button--selected": menuOpen }'
+			@click='menuOpen = true'
+		>
+			{{column}}
+			<span class='fa fa-fw' :class='iconName'></span>
+		</div>
+
+		<template slot='menu'>
+			<div
+				v-for='sort in ["ascending", "descending"]'
+				
+				class='sort_menu__item'
+				:class='{
+					"sort_menu__item--selected": sort == value.sort && value.column == column
+				}'
+				@click='setSelected(sort)'
+			>
+				{{sort}}
+			</div>
+		</template>
+	</menu-tooltip>
+</template>
+
+<script>
+	import MenuTooltip from './MenuTooltip';
+
+	export default {
+		name: 'SortMenu',
+		props: ['value', 'column'],
+		components: { MenuTooltip },
+		data () {
+			return {
+				menuOpen: false
+			}
+		},
+		computed: {
+			iconName () {
+				if(this.value.column !== this.column) {
+					return 'fa-chevron-down';
+				} else if(this.value.sort === 'ascending') {
+					return 'fa-sort-amount-up';
+				} else if(this.value.sort === 'descending') {
+					return 'fa-sort-amount-down';
+				}
+			}
+		},
+		methods: {
+			setSelected (val) {
+				this.$emit('input', {
+					column: this.column,
+					sort: val
+				})
+
+				this.menuOpen = false;
+			}
+		}
+	}
+</script>
+
+<style lang='scss' scoped>
+	@import '../assets/scss/variables.scss';
+
+	.sort_menu {
+		@at-root #{&}__button {
+			cursor: pointer;
+			text-transform: capitalize;
+
+			.fa {
+				font-size: 0.8rem;
+			}
+
+			@at-root #{&}--selected {
+				color: $color__blue--darker;
+			}
+		}
+
+		@at-root #{&}__item {
+			background-color: #fff;
+			border-radius: 0.25rem;
+			cursor: default;
+			font-size: 0.9rem;
+			font-weight: normal;
+			margin: 0.125rem 0;
+			padding: 0.125rem 0.25rem;
+			user-select: none;
+			transition: background-color 0.2s;
+
+			@at-root #{&}--selected {
+				background-color: $color__lightgray--darker;
+			}
+
+			&:hover {
+				background-color: $color__lightgray--darker;
+			}
+		}
+	}
+</style>
