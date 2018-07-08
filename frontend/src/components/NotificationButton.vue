@@ -10,7 +10,7 @@
 			:class='{ "notification_button__button--shake": shake }'
 			@click='setShowMenu(!showMenu)'
 		>
-			<span class='fa fa-bell-o notification_button__button__icon'></span>
+			<span class='fa fa-bell notification_button__button__icon'></span>
 			<span
 				class='notification_button__button__count'
 				:class='{
