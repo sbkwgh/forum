@@ -7,6 +7,7 @@
 		<template slot='button'>
 			<div
 				class='button button--thin_text'
+				:class='{ "select_button__button--selected": menuOpen }'
 				@click='menuOpen = true'
 				v-if='options.length'
 			>
@@ -24,7 +25,10 @@
 				v-for='(option, index) in options'
 				@click='select(index, option.disabled)'
 				class='select_button__option'
-				:class='{"select_button__option--disabled": option.disabled}'
+				:class='{
+					"select_button__option--disabled": option.disabled,
+					"select_button__option--selected": index === selectedIndex
+				}'
 			>
 				{{option.name}}
 			</div>
@@ -88,14 +92,23 @@
 			top: -0.1rem;
 		}
 
+		@at-root #{&}__button--selected {
+			color: $color__blue--darker !important;
+		}
+
 		@at-root #{&}__option {
 			background-color: #fff;
 			border-radius: 0.25rem;
 			cursor: default;
 			font-size: 0.9rem;
-			padding: 0.25rem 0.25rem;
+			margin: 0.125rem 0;
+			padding: 0.125rem 0.25rem;
 			user-select: none;
 			transition: background-color 0.2s;
+
+			@at-root #{&}--selected {
+				background-color: $color__lightgray--darker;
+			}
 
 			&:hover {
 				background-color: $color__lightgray--darker;
