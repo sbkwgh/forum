@@ -38,12 +38,12 @@
 		position: relative;
 
 		@at-root #{&}__overlay {
-			height: 100%;
-			left: 0;
+			height: 100vh;
+			left: calc(50% - 50vw);
 			pointer-events: none;
 			position: fixed;
-			top: 0;
-			width: 100%;
+			top: calc(50% - 50vh);
+			width: 100vw;
 			z-index: 2;
 
 			@at-root #{&}--show {
@@ -114,7 +114,7 @@
 					overflow-y: auto;
 					position: fixed;
 					top: unset;
-					bottom: -100%;
+					bottom: -100vh;
 					transition: opacity 0.2s, bottom 0.2s;
 
 					@at-root #{&}__inner {
@@ -122,7 +122,7 @@
 					}
 
 					@at-root #{&}--show {
-						bottom: 0;
+						bottom: calc(50% - 50vh);
 						opacity: 1;
 					} 
 
