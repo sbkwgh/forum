@@ -16,8 +16,10 @@
 				<select-button v-model='selectedCategory':options='categories'></select-button>
 				<router-link
 					class='button button--blue'
-					v-if='$store.state.username' to='/thread/new'
-				>Post new thread</router-link>
+					to='/thread/new'
+				>
+					{{postNewThreadText}}
+				</router-link>
 			</div>
 		</div>
 		<div class='threads_main'>
@@ -164,6 +166,13 @@
 				},
 				get () {
 					return this.$store.state.category.selectedCategory
+				}
+			},
+			postNewThreadText () {
+				if(this.$store.state.username) {
+					return 'Post new thread'
+				} else {
+					return 'Login to post'
 				}
 			}
 		},
