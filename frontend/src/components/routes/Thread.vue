@@ -48,9 +48,9 @@
 			<button
 				class='button button--thin_text'
 				@click='replyThread'
-				v-if='$store.state.username && !$store.state.thread.locked'
+				v-if='!$store.state.thread.locked'
 			>
-					Reply to thread
+				{{replyThreadButton}}
 			</button>
 			<post-scrubber
 				:posts='$store.state.thread.totalPostsCount'
@@ -189,7 +189,14 @@
 					this.$store.commit('setThreadEditorValue', val)
 				}
 			},
-			editorState () { return this.$store.state.thread.editor.show }
+			editorState () { return this.$store.state.thread.editor.show },
+			replyThreadButton () {
+				if(this.$store.state.username) {
+					return 'Reply to thread';
+				} else {
+					return 'Login to reply'
+				}
+			}
 		},
 		methods: {
 			deleteThread () {
@@ -225,8 +232,13 @@
 				});
 			},
 			replyThread () {
-				this.clearReply();
-				this.showEditor();
+				if(this.$store.state.username) {
+					this.clearReply();
+					this.showEditor();
+				} else {
+					this.$store.commit('setAccountTabs', 1);
+					this.$store.commit('setAccountModalState', true);
+				}
 			},
 			replyUser (id, username) {
 				this.$store.commit({
