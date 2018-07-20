@@ -19,7 +19,12 @@
 			:no-padding='true'
 			:hide-footer='true'
 		>
-			<tab-view :tabs='["Sign up", "Login"]' v-model="showAccountTab" padding='true' slot='main'>
+			<tab-view
+				:tabs='["Sign up", "Login"]'
+				v-model="showAccountTab"
+				padding='true'
+				slot='main'
+			>
 				<template slot='Sign up'>
 					<p style='margin-top: 0;' v-if='$store.state.token'>
 						<strong>Providing the token is still valid, this will create an admin account</strong>
