@@ -15,7 +15,7 @@
 					title='Emoji'
 					@click='emojiSelectorVisible = true'
 				>
-					<span class='fa fa-smile-o'></span>
+					<span class='fa fa-smile'></span>
 				</div>
 				<div
 					class='input_editor_core__format_button'
@@ -40,6 +40,7 @@
 				</div>
 				<div
 					class='input_editor_core__format_button'
+					style='margin-left: 0.25rem;'
 					title='Code (ctrl + k)'
 					@click='formatCode'
 				>
@@ -308,7 +309,6 @@
 			color: $color__darkgray--primary;
 			border: thin solid $color__gray--primary;
 			transition: background-color 0.2s;
-			margin: 0 0.25rem;
 
 			&:hover {
 				background-color: $color__gray--darker;
