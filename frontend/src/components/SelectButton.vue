@@ -27,7 +27,7 @@
 				class='select_button__option'
 				:class='{
 					"select_button__option--disabled": option.disabled,
-					"select_button__option--selected": index === selectedIndex
+					"select_button__option--selected": index === selectedIndex && !option.disabled
 				}'
 			>
 				{{option.name}}
@@ -101,8 +101,8 @@
 			border-radius: 0.25rem;
 			cursor: default;
 			font-size: 0.9rem;
-			margin: 0.125rem 0;
-			padding: 0.125rem 0.25rem;
+			margin: 0.25rem 0;
+			padding: 0.25rem 0.25rem;
 			user-select: none;
 			transition: background-color 0.2s;
 

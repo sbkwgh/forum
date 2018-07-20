@@ -85,8 +85,8 @@
 			cursor: default;
 			font-size: 0.9rem;
 			font-weight: normal;
-			margin: 0.125rem 0;
-			padding: 0.125rem 0.25rem;
+			margin: 0.25rem 0;
+			padding: 0.25rem 0.25rem;
 			user-select: none;
 			transition: background-color 0.2s;
 
