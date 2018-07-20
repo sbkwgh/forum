@@ -61,6 +61,7 @@
 
 	.tab_view {
 		border-radius: 0.25rem;
+		overflow: hidden;
 
 		@at-root #{&}__tabs {
 			display: flex;

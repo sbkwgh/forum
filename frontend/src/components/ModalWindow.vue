@@ -68,12 +68,10 @@
 	.modal_window {
 		box-shadow: 0 14px 28px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.10);
 		background-color: #fff;
-		//margin-top: -3rem;
 		opacity: 0;
 		position: relative;
 		border-radius: 0.25rem;
 		pointer-events: none;
-
 		transform: scale(1.1);
 
 		transition: margin-top 0.3s, opacity 0.3s, transform 0.3s;
@@ -103,7 +101,6 @@
 		@at-root #{&}__main {
 			padding: 0 1rem 1rem 1rem;
 			border-radius: 0.25rem;
-			overflow: hidden;
 
 			@at-root #{&}--no_padding {
 				padding: 0;
