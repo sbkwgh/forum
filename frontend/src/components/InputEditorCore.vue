@@ -15,7 +15,7 @@
 					title='Emoji'
 					@click='emojiSelectorVisible = true'
 				>
-					<span class='fa fa-smile'></span>
+					<span class='far fa-smile'></span>
 				</div>
 				<div
 					class='input_editor_core__format_button'
