@@ -24,11 +24,7 @@
 			class='notification_button__menu_group'
 			:class='{ "notification_button__menu_group--show" : showMenu}'
 		>
-			<div class='notification_button__big_triangle'></div>
-			<div
-				class='notification_button__small_triangle'
-				:class='{ "notification_button__small_triangle--empty": !notifications.length}'
-			></div>
+			<div class='notification_button__triangle'></div>
 			<div class='notification_button__menu'>
 				<div
 					v-for='(notification, index) in notifications'
@@ -254,28 +250,17 @@
 			}
 		}
 
-		@at-root #{&}__big_triangle {
+		@at-root #{&}__triangle {
 			width: 1rem;
 			height: 1rem;
 			background-color: #fafafa;
 			transform: rotate(45deg);
 			position: absolute;
-			box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.75);
-			top: 2.4rem;
+			top: 40px;
 			border-radius: 0.125rem 0 0 0;
-			border: 0.125rem solid $color__gray--primary;
+			border: 1.5px solid $color__gray--darkest;
 			left: calc(50% - 1rem /2);
-			z-index: 6;
-		}
-		@at-root #{&}__small_triangle {
-			width: 0;
-			left: calc(50% - 1rem / 2 - .125rem);
-			height: 0;
-			border-left: 0.625rem solid transparent;
-			top: 2.4rem;
-			border-right: 0.625rem solid transparent;
-			border-bottom: 0.625rem solid #fafafa;
-			position: absolute;
+			clip-path: polygon(0 0, 100% 0%, 0 100%);
 			z-index: 8;
 		}
 		@at-root #{&}__menu {
@@ -285,8 +270,8 @@
 			background-color: #fafafa;
 			width: 20rem;
 			border-radius: 0.25rem;
-			border: 0.125rem solid $color__gray--darker;
-			box-shadow: 0 7px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+			border: 1.5px solid $color__gray--darkest;
+			box-shadow: 0 0.25rem 1rem rgba(#000, 0.125);
 			min-height: 8rem;
 			max-height: 15rem;
 			overflow-y: auto;
@@ -392,9 +377,8 @@
 
 			@at-root #{&}__icon {
 				font-size: 1.5rem;
-				position: absolute;
-				top: 0.35rem;
-				left: 0.4rem;
+				position: relative;
+				top: -0.125rem;
 			}
 
 			@at-root #{&}__count {
@@ -483,10 +467,6 @@
 
 			@at-root #{&}__button {
 				border: none;
-
-				span {
-					top: 0.5rem;
-				}
 			}
 
 			@at-root #{&}__menu_group {
@@ -502,12 +482,8 @@
 					font-weight: normal;
 				}
 			}
-
-			@at-root #{&}__small_triangle {
-				left: unset;
-				right: 1.5rem;
-			}
-			@at-root #{&}__big_triangle {
+			
+			@at-root #{&}__triangle {
 				left: unset;
 				right: 1.55rem;
 			}
