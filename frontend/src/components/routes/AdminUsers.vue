@@ -2,6 +2,7 @@
 	<div class='admin_users'>
 		<h1 class='admin_users__header'>Users</h1>
 		<div class='category_widget__box'>
+			<div class='category_widget__text__title'>Filter users</div>
 			<div class='admin_users__filters'>
 				<select-filter
 					name='Username'
@@ -17,6 +18,8 @@
 				>
 				</select-filter>
 			</div>
+		</div>
+		<div class='category_widget__box'>
 			<table>
 				<tr>
 					<th>
@@ -35,18 +38,6 @@
 						<sort-menu v-model='tableSort' column='threads'></sort-menu>
 					</th>
 				</tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
-				<tr><td>Username</td><td>User</td><td>Today</td><td>10</td><td>2</td></tr>
 			</table>
 		</div>
 	</div>
@@ -118,6 +109,14 @@
 			}
 
 			tr {
+				cursor: default;
+				
+				&:first-child {
+					background-color: #fff;
+				}
+				&:nth-child(odd) {
+					background-color: lighten($color__gray--primary, 20%); 
+				}
 				&:nth-child(even) {
 					background-color: $color__gray--primary;
 				}
