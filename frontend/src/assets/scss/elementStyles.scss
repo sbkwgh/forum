@@ -163,15 +163,11 @@ b, strong {
 }
 
 .input {
-	border: 1px solid $color__gray--darker;
+	border: 1.5px solid $color__gray--darkest;
 	border-radius: 0.25rem;
 	@include text;
 	padding: 0.25rem;
 	outline: none;
-
-	&:hover, &:focus {
-		border-color: $color__gray--darkest;
-	}
 }
 
 .h1 {
