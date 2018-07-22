@@ -1,0 +1,205 @@
+process.env.NODE_ENV = 'test'
+
+let chai = require('chai')
+let server = require('../server')
+let should = chai.should()
+let expect = chai.expect
+
+let { sequelize, User, Category, Thread, Post} = require('../models')
+const Errors = require('../lib/errors.js')
+
+chai.use(require('chai-http'))
+chai.use(require('chai-things'))
+
+describe('GET /user', () => {
+	let adminAgent = chai.request.agent(server)
+
+	//Wait for app to start before commencing
+	before((done) => {
+		const NumUsers = 65;
+		const NumThreads = 5;
+		const NumPosts = 30;
+
+		function createCategory  () {
+			return Category.create({
+				name: 'category-name'
+			});
+		}
+
+		async function createUsers (category) {
+			let userPromises = [];
+			for(let i = 0; i < NumUsers; i++) {
+				userPromises.push(
+					User.create({
+						username: i === 1 ? 'admin123' : 'username' + i,
+						hash: 'password',
+						admin: i === 1
+					})
+				)
+			}
+			let users = await Promise.all(userPromises);
+
+			return { category, users };
+		}
+
+		async function createThreads (params) {
+			let { category, users } = params;
+
+			let threadPromises = [];
+			for(let i = 0; i < NumThreads; i++) {
+				threadPromises.push(
+					Thread.create({
+						name: 'thread' + i
+					})
+				);
+			}
+			let threads = await Promise.all(threadPromises);
+
+			threads.map(async (thread, i) => {
+				await thread.setCategory(category);
+				await thread.setUser(users[i]);
+			})
+
+			return { threads, category, users };
+		}
+
+		async function createPosts (params) {
+			let { threads, category, users } = params;
+
+			let postPromises = [];
+			for(let i = 0; i < NumPosts; i++) {
+				postPromises.push(
+					Post.create({
+						content: 'post' + i,
+						postNumber: 1
+					})
+				);
+			}
+			let posts = await Promise.all(postPromises);
+
+
+			posts.map(async (post, i) => {
+				await post.setUser(users[i % NumUsers]);
+				await post.setThread(threads[i % NumThreads]);
+			});
+
+			return posts;
+		}
+
+		function login () {
+			return adminAgent
+				.post('/api/v1/user/admin123/login')
+				.set('content-type', 'application/json')
+				.send({
+					password: 'password'
+				});
+		}
+
+		function createMockData () {
+			createCategory()
+				.then(createUsers)
+				.then(createThreads)
+				.then(createPosts)
+				.then(login)
+				.then(_ => {
+					done();
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		}
+
+		if(server.locals.appStarted) createMockData()
+		server.on('appStarted', () => {
+			createMockData()
+		})
+	})
+
+	//Delete all rows in table after
+	//tests completed
+	after(() => sequelize.sync({ force: true }) )
+
+	it('should get first 30 users, by default ordered by username descending', (done) => {
+		adminAgent.get('/api/v1/user').end((err, res) => {
+			if(err) done(err);
+
+			res.body.should.have.length(30);
+			res.body[0].username.should.equal('admin123');
+			res.body[29].username.should.equal('username28');
+
+			done();
+		});
+	})
+	it('should paginate correctly', (done) => {
+		adminAgent.get('/api/v1/user?offset=60').end((err, res) => {
+			if(err) done(err);
+
+			res.body.should.have.length(30);
+			res.body[0].username.should.equal('username60');
+			res.body[29].username.should.equal('username64');
+
+			done();
+		});
+	})
+	it('should enable sorting by username ascending', (done) => {
+		adminAgent.get('/api/v1/user?sort=username&order=asc').end((err, res) => {
+			if(err) done(err);
+
+			res.body.should.have.length(30);
+			res.body[0].username.should.equal('username64');
+			res.body[29].username.should.equal('username44');
+
+			done();
+		});
+	})
+	/*it('should enable filtering by username', (done) => {
+		adminAgent.get('/api/v1/user', (err, res) => {
+			res.body.should.contain
+		});
+	})*/
+	it('should enable filtering by role (admin or user)', (done) => {
+		adminAgent.get('/api/v1/user?role=admin').end((err, res) => {
+			if(err) done(err);
+
+			res.body.should.have.length(1);
+			res.body[0].username.should.equal('admin123');
+
+			done();
+		});
+	})
+	/*it('should enable sorting by date joined', (done) => {
+		adminAgent.get('/api/v1/user', (err, res) => {
+			res.body.should.contain
+		});
+	})*/
+	it('should enable sorting by number of posts', (done) => {
+		adminAgent.get('/api/v1/user?sort=posts&order=asc').end((err, res) => {
+			if(err) done(err);
+
+			res.body.should.have.length(30);
+			res.body[0].username.should.equal('username0');
+			res.body[29].username.should.equal('username28');
+
+			done();
+		});
+	})
+	it('should enable sorting by number of threads', (done) => {
+		adminAgent.get('/api/v1/user?sort=threads&order=asc').end((err, res) => {
+			if(err) done(err);
+
+			res.body.should.have.length(30);
+			res.body[0].username.should.equal('username0');
+			res.body[29].username.should.equal('username28');
+
+			done();
+		});
+	})
+	it('should throw an error if not logged in', (done) => {
+		adminAgent.get('/api/v1/user').end((err, res) => {
+			expect(err).to.exist;
+			res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
+
+			done();
+		});
+	})
+})
