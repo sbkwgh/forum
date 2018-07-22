@@ -26,7 +26,7 @@
 						<sort-menu v-model='tableSort' column='username'></sort-menu>
 					</th>
 					<th>
-						<sort-menu v-model='tableSort' column='role'></sort-menu>
+						Role
 					</th>
 					<th>
 						<sort-menu v-model='tableSort' column='date'></sort-menu>
