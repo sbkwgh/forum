@@ -5,7 +5,7 @@ let router = express.Router()
 
 const Errors = require('../lib/errors.js')
 let {
-	User, Post, ProfilePicture, AdminToken, Thread, Category, Sequelize, Ip, Ban
+	User, Post, ProfilePicture, AdminToken, Thread, Category, Sequelize, Ip, Ban, sequelize
 } = require('../models')
 let pagination = require('../lib/pagination.js')
 
@@ -294,19 +294,76 @@ router.all('*', (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
 	try {
-		if(req.query.admin) {
-			let admins = await User.findAll({
-				where: { admin: true },
-				attributes: {
-					exclude: ['hash']
-				}
-			})
-
-			res.json(admins)
+		let sortFields = {
+			id: 'id',
+			username: 'username',
+			date: 'createdAt'
+		};
+		let offset = Number.isInteger(+req.query.offset) ? +req.query.offset : 0;
+		let havingClause;
+		if(req.query.role === 'admin') {
+			havingClause = 'HAVING Users.admin = true';
+		} else if(req.query.role === 'user') {
+			havingClause = 'HAVING Users.admin = false';
 		} else {
-			res.json({})
+			havingClause = '';
 		}
+
+		let sql = `
+			SELECT X.username, X.admin, X.createdAt, X.postCount, COUNT(Threads.id) as threadCount
+			FROM (
+				SELECT Users.*, COUNT(Posts.id) as postCount
+				FROM Users
+				LEFT OUTER JOIN Posts
+				ON Users.id = Posts.UserId
+				GROUP BY Users.id
+				${havingClause}
+				ORDER BY Users.${sortFields[req.query.sort] || 'id'} ${req.query.order === 'asc' ? 'ASC' : 'DESC'}
+				LIMIT 30
+				OFFSET ${offset}
+			) as X
+			LEFT OUTER JOIN threads
+			ON X.id = Threads.UserId
+			GROUP BY X.id
+		`;
+
+		let users = await sequelize.query(sql, {
+			model: User
+		});
+
+		res.json(users)
 	} catch (e) { next(e) }
 })
 
 module.exports = router
+
+/*
+router.get('/', async (req, res, next) => {
+	try {
+		let sortOptions = {
+			'username': 'username',
+			'date': 'createdAt',
+			'threads': '',
+			'posts': ''
+		};
+		let sort = sortOptions[req.query.sort];
+		let order = req.query.order === 'asc' ? 'ASC' : 'DESC';
+
+		let users = await User.findAll({
+			include: [Post, Thread],
+			attributes: [
+				'username',
+				'id',
+				'createdAt',
+				[Sequelize.fn('COUNT', Sequelize.col('Posts.id')), 'postsCount'],
+			//	[Sequelize.fn('COUNT', Sequelize.col('Threads.id')), 'threadsCount']
+			],
+			limit: 30,
+		//	offset: req.query.offset || 0,
+			logging: console.log
+		})
+
+		res.json(users);
+	} catch (err) { next(err) }
+});
+*/
