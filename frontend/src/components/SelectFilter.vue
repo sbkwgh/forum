@@ -11,34 +11,26 @@
 		</button>
 
 		<template slot='menu'>
-			<fancy-input
-				class='select_filter__search'
-
-				v-if='searchPlaceholder'
-				:placeholder='searchPlaceholder'
-				width='100%'
-				v-model='search'
-			></fancy-input>
-
 			<div
 				class='select_filter__item select_filter__item--select_all'
+				v-if='selectAll'
 				@click='toggleSelectAll'
 			>
 				<div
 					class='select_filter__checkbox'
-					:class='{ "select_filter__checkbox--selected": selected.length === options.length }'
+					:class='{ "select_filter__checkbox--selected": value.length === options.length }'
 				></div>
 				<span>Select all</span>
 			</div>
 
 			<div
 				class='select_filter__item'
-				v-for='(item, $index) in options'
-				@click='toggledSelectItem($index)'
+				v-for='item in options'
+				@click='toggledSelectItem(item.value)'
 			>
 				<div
 					class='select_filter__checkbox'
-					:class='{ "select_filter__checkbox--selected": selected.includes($index) }'
+					:class='{ "select_filter__checkbox--selected": value.includes(item.value) }'
 				></div>
 				<span>{{item.name}}</span>
 			</div>
@@ -52,51 +44,32 @@
 
 	export default {
 		name: 'SelectFilter',
-		props: ['name', 'options', 'value', 'search-placeholder'],
-		components: {
-			FancyInput,
-			MenuTooltip
-		},
+		props: ['name', 'options', 'value', 'selectAll'],
+		components: { MenuTooltip },
 		data () {
 			return {
-				menuOpen: false,
-				search: '',
-				selected: []
+				menuOpen: false
 			}
 		},
 		methods: {
 			toggleSelectAll () {
 				//If everything is selected
-				if(this.selected.length === this.options.length) {
-					this.selected = [];
+				if(this.value.length === this.options.length) {
+					this.$emit('input', []);
 				} else {
-					this.selected = this.options.map((_, i) => i);
+					this.$emit('input', this.options.map(i => i.value));
 				}
 			},
-			toggledSelectItem (itemIndex) {
-				let selectedArrIndex = this.selected.indexOf(itemIndex);
-
-				if(selectedArrIndex === -1) {
-					this.selected.push(itemIndex);
+			toggledSelectItem (item) {
+				if(this.value.includes(item)) {
+					//If no select all, then do not allow to unselect all items
+					if(this.selectAll || (!this.selectAll && this.value.length > 1)) {
+						this.$emit('input', this.value.filter(i => i !== item));
+					}
 				} else {
-					this.selected.splice(selectedArrIndex, 1);
+					this.$emit('input', [...this.value, item]);
 				}
 			}
-		},
-		watch: {
-			selected () {
-				let selectedItems = this.options.filter((item, index) => {
-					return this.selected.includes(index);
-				});
-
-				this.$emit('value', selectedItems);
-			},
-			search () {
-				this.$emit('search', this.search);
-			}
-		},
-		mounted () {
-			this.toggleSelectAll();
 		}
 	}
 </script>

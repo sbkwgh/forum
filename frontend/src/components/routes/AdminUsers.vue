@@ -5,13 +5,6 @@
 			<div class='category_widget__text__title'>Filter users</div>
 			<div class='admin_users__filters'>
 				<select-filter
-					name='Username'
-					:options='usernameOptions'
-					v-model='usernameSelected'
-					search-placeholder='Filter users'
-				>
-				</select-filter>
-				<select-filter
 					name='Role'
 					:options='roleOptions'
 					v-model='roleSelected'
@@ -32,10 +25,10 @@
 						<sort-menu v-model='tableSort' column='createdAt' display='Account created at'></sort-menu>
 					</th>
 					<th>
-						<sort-menu v-model='tableSort' column='posts' display='Posts count'></sort-menu>
+						<sort-menu v-model='tableSort' column='postCount' display='Posts count'></sort-menu>
 					</th>
 					<th>
-						<sort-menu v-model='tableSort' column='threads' display='Threads count'></sort-menu>
+						<sort-menu v-model='tableSort' column='threadCount' display='Threads count'></sort-menu>
 					</th>
 				</tr>
 				<tr v-for='user in users'>
@@ -73,14 +66,7 @@
 					{ name: 'Admins', value: 'admin' },
 					{ name: 'Users', value: 'user' }
 				],
-				roleSelected: null,
-
-				usernameOptions: [
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-					{ name: 'User1', value: 'admin' },
-				],
-				usernameSelected: null,
+				roleSelected: ['admin', 'user'],
 
 				tableSort: {
 					column: 'username',
@@ -88,13 +74,27 @@
 				}
 			}
 		},
+		methods: {
+			fetchData () {
+				let url = `/api/v1/user?sort=${this.tableSort.column}&order=${this.tableSort.sort}`;
+				if(this.roleSelected.length === 1) {
+					url += '&role=' + this.roleSelected[0];
+				}
+
+				this.axios
+					.get(url)
+					.then(res => {
+						this.users = res.data;
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			}
+		},
 		mounted () {
-			this.axios
-				.get('/api/v1/user')
-				.then(res => {
-					this.users = res.data;
-				})
-				.catch(AjaxErrorHandler(this.$store))
+			this.fetchData();
+		},
+		watch: {
+			tableSort: 'fetchData',
+			roleSelected: 'fetchData'
 		}
 	}
 </script>

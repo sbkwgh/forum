@@ -295,9 +295,10 @@ router.all('*', (req, res, next) => {
 router.get('/', async (req, res, next) => {
 	try {
 		let sortFields = {
-			id: 'id',
-			username: 'username',
-			date: 'createdAt'
+			createdAt: 'X.id',
+			username: 'X.username',
+			threadCount: 'threadCount',
+			postCount: 'postCount'
 		};
 		let offset = Number.isInteger(+req.query.offset) ? +req.query.offset : 0;
 		let havingClause;
@@ -318,13 +319,13 @@ router.get('/', async (req, res, next) => {
 				ON Users.id = Posts.UserId
 				GROUP BY Users.id
 				${havingClause}
-				ORDER BY Users.${sortFields[req.query.sort] || 'id'} ${req.query.order === 'asc' ? 'ASC' : 'DESC'}
-				LIMIT 30
-				OFFSET ${offset}
 			) as X
 			LEFT OUTER JOIN threads
 			ON X.id = Threads.UserId
 			GROUP BY X.id
+			ORDER BY ${sortFields[req.query.sort] || 'X.id'} ${req.query.order === 'asc' ? 'ASC' : 'DESC'}
+			LIMIT 30
+			OFFSET ${offset}
 		`;
 
 		let users = await sequelize.query(sql, {
