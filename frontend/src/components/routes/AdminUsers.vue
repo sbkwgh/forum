@@ -23,20 +23,27 @@
 			<table>
 				<tr>
 					<th>
-						<sort-menu v-model='tableSort' column='username'></sort-menu>
+						<sort-menu v-model='tableSort' column='username' display='Username'></sort-menu>
 					</th>
 					<th>
 						Role
 					</th>
 					<th>
-						<sort-menu v-model='tableSort' column='date'></sort-menu>
+						<sort-menu v-model='tableSort' column='createdAt' display='Account created at'></sort-menu>
 					</th>
 					<th>
-						<sort-menu v-model='tableSort' column='posts'></sort-menu>
+						<sort-menu v-model='tableSort' column='posts' display='Posts count'></sort-menu>
 					</th>
 					<th>
-						<sort-menu v-model='tableSort' column='threads'></sort-menu>
+						<sort-menu v-model='tableSort' column='threads' display='Threads count'></sort-menu>
 					</th>
+				</tr>
+				<tr v-for='user in users'>
+					<td>{{user.username}}</td>
+					<td>{{user.admin ? "Admin" : "User"}}</td>
+					<td>{{user.createdAt | formatDate}}</td>
+					<td>{{user.postCount}}</td>
+					<td>{{user.threadCount}}</td>
 				</tr>
 			</table>
 		</div>
@@ -47,6 +54,9 @@
 	import SelectFilter from '../SelectFilter.vue';
 	import SortMenu from '../SortMenu.vue';
 	import FancyInput from '../FancyInput.vue';
+
+	import AjaxErrorHandler from '../../assets/js/errorHandler';
+
 	export default {
 		name: 'AdminUsers',
 		components: {
@@ -57,6 +67,7 @@
 		data () {
 			return {
 				search: '',
+				users: [],
 
 				roleOptions: [
 					{ name: 'Admins', value: 'admin' },
@@ -73,9 +84,17 @@
 
 				tableSort: {
 					column: 'username',
-					sort: 'descending'
+					sort: 'desc'
 				}
 			}
+		},
+		mounted () {
+			this.axios
+				.get('/api/v1/user')
+				.then(res => {
+					this.users = res.data;
+				})
+				.catch(AjaxErrorHandler(this.$store))
 		}
 	}
 </script>
