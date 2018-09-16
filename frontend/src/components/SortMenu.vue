@@ -6,13 +6,13 @@
 			:class='{ "sort_menu__button--selected": menuOpen }'
 			@click='menuOpen = true'
 		>
-			{{column}}
+			{{display}}
 			<span class='fa fa-fw' :class='iconName'></span>
 		</div>
 
 		<template slot='menu'>
 			<div
-				v-for='sort in ["ascending", "descending"]'
+				v-for='sort in ["asc", "desc"]'
 				
 				class='sort_menu__item'
 				:class='{
@@ -20,7 +20,7 @@
 				}'
 				@click='setSelected(sort)'
 			>
-				{{sort}}
+				{{sort === 'asc' ? 'Ascending' : 'Descending'}}
 			</div>
 		</template>
 	</menu-tooltip>
@@ -31,7 +31,7 @@
 
 	export default {
 		name: 'SortMenu',
-		props: ['value', 'column'],
+		props: ['value', 'column', 'display'],
 		components: { MenuTooltip },
 		data () {
 			return {
@@ -42,9 +42,9 @@
 			iconName () {
 				if(this.value.column !== this.column) {
 					return 'fa-chevron-down';
-				} else if(this.value.sort === 'ascending') {
+				} else if(this.value.sort === 'asc') {
 					return 'fa-sort-amount-up';
-				} else if(this.value.sort === 'descending') {
+				} else if(this.value.sort === 'desc') {
 					return 'fa-sort-amount-down';
 				}
 			}
