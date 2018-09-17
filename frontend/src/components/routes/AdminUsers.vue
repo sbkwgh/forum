@@ -4,6 +4,11 @@
 		<div class='category_widget__box'>
 			<div class='category_widget__text__title'>Filter users</div>
 			<div class='admin_users__filters'>
+				<fancy-input
+					placeholder='Filter users'
+					:large='true'
+					v-model='search'
+				></fancy-input>
 				<select-filter
 					name='Role'
 					:options='roleOptions'
@@ -48,6 +53,7 @@
 	import SortMenu from '../SortMenu.vue';
 	import FancyInput from '../FancyInput.vue';
 
+	import throttle from 'lodash.throttle';
 	import AjaxErrorHandler from '../../assets/js/errorHandler';
 
 	export default {
@@ -80,6 +86,9 @@
 				if(this.roleSelected.length === 1) {
 					url += '&role=' + this.roleSelected[0];
 				}
+				if(this.search.length) {
+					url += '&search=' + encodeURIComponent(this.search.trim());
+				}
 
 				this.axios
 					.get(url)
@@ -94,7 +103,10 @@
 		},
 		watch: {
 			tableSort: 'fetchData',
-			roleSelected: 'fetchData'
+			roleSelected: 'fetchData',
+			search: throttle(function (input) {
+				this.fetchData();
+			}, 200)
 		}
 	}
 </script>

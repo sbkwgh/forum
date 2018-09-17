@@ -301,13 +301,26 @@ router.get('/', async (req, res, next) => {
 			postCount: 'postCount'
 		};
 		let offset = Number.isInteger(+req.query.offset) ? +req.query.offset : 0;
-		let havingClause;
+		let havingClause = '';
+
 		if(req.query.role === 'admin') {
 			havingClause = 'HAVING Users.admin = true';
 		} else if(req.query.role === 'user') {
 			havingClause = 'HAVING Users.admin = false';
 		} else {
 			havingClause = '';
+		}
+
+
+		if(req.query.search) {
+			//I.e. if there is not already a HAVING clause
+			if(!havingClause.length) {
+				havingClause = 'HAVING ';
+			} else {
+				havingClause += ' AND ';
+			}
+
+			havingClause += 'Users.username LIKE $search';
 		}
 
 		let sql = `
@@ -329,7 +342,8 @@ router.get('/', async (req, res, next) => {
 		`;
 
 		let users = await sequelize.query(sql, {
-			model: User
+			model: User,
+			bind: { search: req.query.search + '%' }
 		});
 
 		res.json(users)
