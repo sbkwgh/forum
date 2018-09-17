@@ -1,5 +1,5 @@
 <template>
-	<div class='fancy_input'>
+	<div class='fancy_input' v-bind:style='{width: width || "auto"}'>
 		<div 
 			 style='position: relative; display: inline-block;'
 			 v-bind:style='{width: width || "10rem"}'
@@ -63,6 +63,7 @@
 	@import '../assets/scss/variables.scss';
 
 	.fancy_input {
+		display: inline-flex;
 		position: relative;
 		margin-top: 0.25rem;
 		margin-bottom: 0.5rem;

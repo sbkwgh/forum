@@ -15,18 +15,22 @@
 			<p class='p--condensed'>
 				For security, enter your current password
 			</p>
-			<fancy-input
-				placeholder='Current password'
-				v-model='password.current'
-				:error='password.errors["current password"]'
-				type='password'
-			></fancy-input>
-			<fancy-input
-				placeholder='New password'
-				v-model='password.new'
-				:error='password.errors["new password"]'
-				type='password'
-			></fancy-input>
+			<div>
+				<fancy-input
+					placeholder='Current password'
+					v-model='password.current'
+					:error='password.errors["current password"]'
+					type='password'
+				></fancy-input>
+			</div>
+			<div>
+				<fancy-input
+					placeholder='New password'
+					v-model='password.new'
+					:error='password.errors["new password"]'
+					type='password'
+				></fancy-input>
+			</div>
 			<loading-button
 				class='button button--green'
 				@click='savePassword'
