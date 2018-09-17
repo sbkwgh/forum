@@ -54,11 +54,12 @@
 		}
 
 		@at-root #{&}__search_box {
+			display: inline-table;
 			margin-left: 0.5rem
 		}
 	}
 
-	@media (max-width: 420px) {
+	@media (max-width: 525px) {
 		.not_found {
 			@at-root #{&}__title {
 				font-size: 2.5rem;
