@@ -44,6 +44,9 @@
 					<td>{{user.threadCount}}</td>
 				</tr>
 			</table>
+			<div class='overlay_message' v-if='!users.length'>
+				No users found
+			</div>
 		</div>
 	</div>
 </template>
@@ -156,6 +159,11 @@
 			td {
 				padding: 0.75rem;
 			}
+		}
+
+		.overlay_message {
+			padding-top: 2rem;
+			padding-bottom: 1rem;
 		}
 	}
 </style>
