@@ -44,9 +44,13 @@
 					<td>{{user.threadCount}}</td>
 				</tr>
 			</table>
-			<div class='overlay_message' v-if='!users.length'>
-				No users found
-			</div>
+
+			<transition name='fade' mode='out-in'>
+				<loading-message key='loading' v-if='loading'></loading-message>
+				<div class='overlay_message' v-if='!loading && !users.length'>
+					No users found
+				</div>
+			</transition>
 		</div>
 	</div>
 </template>
@@ -55,6 +59,7 @@
 	import SelectFilter from '../SelectFilter.vue';
 	import SortMenu from '../SortMenu.vue';
 	import FancyInput from '../FancyInput.vue';
+	import LoadingMessage from '../LoadingMessage';
 
 	import throttle from 'lodash.throttle';
 	import AjaxErrorHandler from '../../assets/js/errorHandler';
@@ -64,12 +69,15 @@
 		components: {
 			FancyInput,
 			SelectFilter,
-			SortMenu
+			SortMenu,
+			LoadingMessage
 		},
 		data () {
 			return {
 				search: '',
 				users: [],
+
+				loading: true,
 
 				roleOptions: [
 					{ name: 'Admins', value: 'admin' },
@@ -93,12 +101,23 @@
 					url += '&search=' + encodeURIComponent(this.search.trim());
 				}
 
+				let loading = true;
+				setTimeout(() => {
+					if(loading) {
+						this.loading = true;
+						this.users = [];
+					}
+				}, 200);
 				this.axios
 					.get(url)
 					.then(res => {
 						this.users = res.data;
+						this.loading = loading = false;
 					})
-					.catch(AjaxErrorHandler(this.$store))
+					.catch(e => {
+						AjaxErrorHandler(this.$store)(e);
+						this.loading = loading = false;
+					});
 			}
 		},
 		mounted () {
