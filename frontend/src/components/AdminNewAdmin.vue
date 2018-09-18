@@ -89,7 +89,7 @@
 		},
 		created () {
 			this.axios
-				.get('/api/v1/user?admin=true')
+				.get('/api/v1/user?role=admin')
 				.then(res => {
 					this.admins = res.data
 				})
