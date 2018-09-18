@@ -121,7 +121,7 @@ describe('Notifications', () => {
 				.send({ threadId: 1, content: 'POST 1', mentions: ['adminaccount', 123] })
 				.end((err, res) => {
 					res.should.have.status(400)
-					res.body.errors.should.contain.something.that.deep.equals(Errors.invalidParameterType('mention', 'string'))
+					res.body.errors.should.contain.something.that.has.property('message', 'mentions must be an array of strings');
 
 					done()
 				})
