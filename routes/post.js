@@ -114,7 +114,7 @@ router.post('/', async (req, res, next) => {
 			let ioUsers = req.app.get('io-users')
 			let io = req.app.get('io')
 
-			uniqueMentions.forEach(async mention => {
+			for(const mention of uniqueMentions) {
 				let mentionNotification = await Notification.createPostNotification({
 					usernameTo: mention,
 					userFrom: user,
@@ -122,8 +122,10 @@ router.post('/', async (req, res, next) => {
 					post
 				})
 
-				await mentionNotification.emitNotificationMessage(ioUsers, io)
-			})
+				if(mentionNotification) {
+					await mentionNotification.emitNotificationMessage(ioUsers, io)
+				}
+			}
 		}
 
 		res.json(await post.reload({

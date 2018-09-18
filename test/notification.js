@@ -127,30 +127,26 @@ describe('Notifications', () => {
 				})
 		})
 
-		it('should return an error if any mentions is not an array', async () => {
-			let res = await user
+		it('should return an error if any mentions is not an array', done => {
+			user
 				.post('/api/v1/post')
 				.set('content-type', 'application/json')
-				.send({ threadId: 1, content: 'POST 4', mentions: ['notrealaccount'] })
+				.send({ threadId: 1, content: 'POST 4', mentions: 123 })
+				.end((err, res) => {
+					res.should.have.status(400)
+					res.body.errors.should.contain.something.that.has.property('message', 'mentions must be an array of strings');
 
-			res.should.be.json
-			res.should.have.status(200)
+					done()
+				})
 		})
 
 		it('should not crash if user doesnt exist', async () => {
-			await admin.put('/api/v1/notification')
+			let res = await user
+				.post('/api/v1/post')
+				.set('content-type', 'application/json')
+				.send({ threadId: 1, content: 'POST 4', mentions: ['notrealaccount'] });
 
-			let res = await admin.get('/api/v1/notification')
-
-			res.should.have.status(200)
-			res.should.be.json
-			res.body.should.have.property('Notifications')
-			res.body.Notifications.should.have.property('length', 2)
-			res.body.Notifications.should.contain.something.that.has.deep.property('interacted', false)
-			res.body.Notifications.should.contain.something.that.has.deep.property('PostNotification.User.username', 'useraccount')
-			res.body.Notifications.should.contain.something.that.has.deep.property('PostNotification.Post.content', '<p>POST 1</p>\n')
-			res.body.should.have.property('unreadCount', 0)
-
+			res.should.have.status(200);
 		})
 
 		it('should set unreadCount to 0', async () => {
@@ -178,7 +174,7 @@ describe('Notifications', () => {
 			res.should.have.status(200)
 			res.should.be.json
 			res.body.Notifications.should.have.property('length', 2)
-			res.body.Notifications[0].should.have.property('interacted', true)
+			res.body.Notifications[1].should.have.property('interacted', true)
 		})
 		it('should return an error if notification does not exist', done => {
 			admin
