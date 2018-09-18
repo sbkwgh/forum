@@ -79,7 +79,7 @@ describe('User', () => {
 					res.should.have.status(400)
 					res.should.be.json
 					res.body.should.have.property('errors')
-					res.body.errors.should.include.something.that.deep.equals(Errors.missingParameter('token'))
+					res.body.errors.should.include.something.that.has.property('message', 'Missing token')
 
 					done()
 				})
@@ -448,45 +448,6 @@ describe('User', () => {
 			pageTwo.body.Threads[0].should.have.property('name', 'THREAD 9')
 			pageTwo.body.meta.should.have.property('nextThreadsCount', 0)
 			expect(pageTwo.body.meta.nextURL).to.be.null
-		})
-	})
-
-	describe('/?admin', () => {
-		let admin1 = chai.request.agent(server)
-		before(done => {
- 			admin1
-				.post('/api/v1/user/adminaccount/login')
-				.set('content-type', 'application/json')
-				.send({
-					password: 'password'
-				})
-				.then(_ =>  {
-					done()
-				})
-				.catch(done)
-		})
-
-		it('should return an array of admins', async () => {
-			let res = await admin1.get('/api/v1/user?admin=true')
-
-			res.should.be.json
-			res.should.have.status(200)
-			res.body.should.contain.something.with.property('username', 'adminaccount')
-			res.body.should.contain.something.with.property('username', 'adminaccount1')
-			res.body.should.not.contain.something.with.property('hash')
-			res.body.should.have.property('length', 2)
-		})
-
-		it('should return an error if not admin', done => {
-			chai.request(server)
-				.get('/api/v1/user?admin=true')
-				.end((err, res) => {
-					res.should.have.status(401)
-					res.body.should.have.property('errors')
-					res.body.errors.should.contain.something.that.deep.equals(Errors.requestNotAuthorized)
-
-					done()
-				})
 		})
 	})
 
