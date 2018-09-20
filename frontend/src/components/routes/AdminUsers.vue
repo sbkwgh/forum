@@ -150,10 +150,10 @@
 			this.fetchData();
 		},
 		watch: {
-			tableSort: 'fetchData',
-			roleSelected: 'fetchData',
+			tableSort: 'resetFetchData',
+			roleSelected: 'resetFetchData',
 			search: throttle(function (input) {
-				this.fetchData();
+				this.resetFetchData();
 			}, 200)
 		}
 	}
