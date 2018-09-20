@@ -337,7 +337,7 @@ router.get('/', async (req, res, next) => {
 			ON X.id = Threads.UserId
 			GROUP BY X.id
 			ORDER BY ${sortFields[req.query.sort] || 'X.id'} ${req.query.order === 'asc' ? 'ASC' : 'DESC'}
-			LIMIT 30
+			LIMIT 15
 			OFFSET ${offset}
 		`;
 
@@ -350,35 +350,4 @@ router.get('/', async (req, res, next) => {
 	} catch (e) { next(e) }
 })
 
-module.exports = router
-
-/*
-router.get('/', async (req, res, next) => {
-	try {
-		let sortOptions = {
-			'username': 'username',
-			'date': 'createdAt',
-			'threads': '',
-			'posts': ''
-		};
-		let sort = sortOptions[req.query.sort];
-		let order = req.query.order === 'asc' ? 'ASC' : 'DESC';
-
-		let users = await User.findAll({
-			include: [Post, Thread],
-			attributes: [
-				'username',
-				'id',
-				'createdAt',
-				[Sequelize.fn('COUNT', Sequelize.col('Posts.id')), 'postsCount'],
-			//	[Sequelize.fn('COUNT', Sequelize.col('Threads.id')), 'threadsCount']
-			],
-			limit: 30,
-		//	offset: req.query.offset || 0,
-			logging: console.log
-		})
-
-		res.json(users);
-	} catch (err) { next(err) }
-});
-*/
+module.exports = router;

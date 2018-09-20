@@ -17,7 +17,7 @@
 				</select-filter>
 			</div>
 		</div>
-		<div class='category_widget__box'>
+		<scroll-load class='category_widget__box' @loadNext='fetchData'>
 			<table>
 				<tr>
 					<th>
@@ -51,7 +51,7 @@
 					No users found
 				</div>
 			</transition>
-		</div>
+		</scroll-load>
 	</div>
 </template>
 
@@ -60,6 +60,7 @@
 	import SortMenu from '../SortMenu.vue';
 	import FancyInput from '../FancyInput.vue';
 	import LoadingMessage from '../LoadingMessage';
+	import ScrollLoad from '../ScrollLoad';
 
 	import throttle from 'lodash.throttle';
 	import AjaxErrorHandler from '../../assets/js/errorHandler';
@@ -70,7 +71,8 @@
 			FancyInput,
 			SelectFilter,
 			SortMenu,
-			LoadingMessage
+			LoadingMessage,
+			ScrollLoad
 		},
 		data () {
 			return {
@@ -78,6 +80,8 @@
 				users: [],
 
 				loading: true,
+				offset: 0,
+				limit: 15,
 
 				roleOptions: [
 					{ name: 'Admins', value: 'admin' },
@@ -93,7 +97,13 @@
 		},
 		methods: {
 			fetchData () {
-				let url = `/api/v1/user?sort=${this.tableSort.column}&order=${this.tableSort.sort}`;
+				if(this.offset === null) return;
+
+				let url = `/api/v1/user?
+					sort=${this.tableSort.column}
+					&order=${this.tableSort.sort}
+					&offset=${this.offset}
+				`;
 				if(this.roleSelected.length === 1) {
 					url += '&role=' + this.roleSelected[0];
 				}
@@ -101,23 +111,39 @@
 					url += '&search=' + encodeURIComponent(this.search.trim());
 				}
 
-				let loading = true;
+			/*	let loading = true;
 				setTimeout(() => {
 					if(loading) {
 						this.loading = true;
 						this.users = [];
 					}
-				}, 200);
+				}, 200);*/
+
+				this.loading = true;
 				this.axios
 					.get(url)
 					.then(res => {
-						this.users = res.data;
-						this.loading = loading = false;
+						this.users.push(...res.data);
+						this.loading = /*loading =*/ false;
+
+						//If returned data is less than the limit
+						//then there must be no more pages to paginate
+						if(res.data.length < this.limit) {
+							this.offset = null;
+						} else {
+							this.offset+= this.limit;
+						}
 					})
 					.catch(e => {
 						AjaxErrorHandler(this.$store)(e);
-						this.loading = loading = false;
+						this.loading = /*loading =*/ false;
 					});
+			},
+			resetFetchData () {
+				this.offset = 0;
+				this.users = [];
+
+				this.fetchData();
 			}
 		},
 		mounted () {

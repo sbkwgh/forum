@@ -15,7 +15,7 @@
 			LoadingButton
 		},
 		methods: {
-			onScroll (e) {
+			onScroll: throttle(function (e) {
 				if((window.innerHeight + window.pageYOffset) + 300 >= document.body.scrollHeight) {
 					if(!this.loading) {
 						this.$emit('loadNext')
@@ -25,18 +25,13 @@
 						this.$emit('loadPrevious')
 					}
 				}
-			}
-		},
-		computed: {
-			throttledOnScroll () {
-				return throttle(this.onScroll, 200)
-			}
+			})
 		},
 		created () {
-			window.addEventListener('scroll', this.throttledOnScroll)
+			window.addEventListener('scroll', this.onScroll)
 		},
 		destroyed () {
-			window.removeEventListener('scroll', this.throttledOnScroll)
+			window.removeEventListener('scroll', this.onScroll)
 		}
 	}
 </script>
