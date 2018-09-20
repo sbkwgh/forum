@@ -3,16 +3,20 @@
 		<div class='cateogry_widget__text'>
 			<div class='category_widget__text__title'>Forum info</div>
 		</div>
-		<fancy-input
-			placeholder='Forum name'
-			v-model='name'
-			:error='errors.forumName'
-		></fancy-input>
-		<fancy-input
-			placeholder='Forum description'
-			v-model='description'
-			:error='errors.forumDescription'
-		></fancy-input>
+		<div>
+			<fancy-input
+				placeholder='Forum name'
+				v-model='name'
+				:error='errors.forumName'
+			></fancy-input>
+		</div>
+		<div>
+			<fancy-input
+				placeholder='Forum description'
+				v-model='description'
+				:error='errors.forumDescription'
+			></fancy-input>
+		</div>
 		<div class='admin_forum_info__label'>
 			<toggle-switch v-model='showDescription'></toggle-switch>
 			<span>Show forum description on homepage</span>
