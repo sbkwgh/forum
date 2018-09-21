@@ -1,5 +1,5 @@
 <template>
-	<div class='admin_users'>
+	<div class='admin_users' ref='scrollElement'>
 		<h1 class='admin_users__header'>Users</h1>
 		<div class='category_widget__box'>
 			<div class='category_widget__text__title'>Filter users</div>
@@ -17,7 +17,13 @@
 				</select-filter>
 			</div>
 		</div>
-		<scroll-load class='category_widget__box' @loadNext='fetchData'>
+		<scroll-load
+			class='category_widget__box'
+			@loadNext='fetchData'
+			:loading='loading'
+			query-selector='.admin_users'
+			:padding-bottom='100'
+		>
 			<table>
 				<tr>
 					<th>
