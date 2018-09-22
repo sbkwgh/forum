@@ -154,7 +154,10 @@
 			<span class='fa fa-bars header__menu_button' @click='toggleMenu'></span>
 		</header>
 		<not-found v-show='$store.state.show404Page'></not-found>
-		<router-view v-show='!$store.state.show404Page'></router-view>
+		
+		<transition name='fade'>
+			<router-view v-show='!$store.state.show404Page'></router-view>
+		</transition>
 	</div>
 </template>
 
@@ -406,6 +409,7 @@
 	@import url('https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700');
 	@import './assets/scss/variables.scss';
 	@import './assets/scss/elementStyles.scss';
+	@import './assets/scss/nprogress.scss';
 
 	html, body {
 		width: 100%;

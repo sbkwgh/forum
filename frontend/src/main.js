@@ -1,5 +1,8 @@
+import NProgress from 'nprogress'
 import IO from 'socket.io-client'
 window.socket = IO()
+
+console.log(NProgress)
 
 socket.on('disconnect', () => {
 	socket.connect('http://localhost:3000', {
@@ -91,8 +94,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-	next()
 	router.app.$store.commit('set404Page', false)
+	NProgress.start()
+	next()
+})
+router.afterEach(() => {
+	NProgress.done()
+//	debugger
 })
 
 Vue.filter('formatDate', function (value, format = '', join = ' ') {
