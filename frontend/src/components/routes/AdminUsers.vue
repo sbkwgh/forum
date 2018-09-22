@@ -43,7 +43,10 @@
 					</th>
 				</tr>
 				<tr v-for='user in users'>
-					<td>{{user.username}}</td>
+					<td class='admin_users__user_column'>
+						<avatar-icon :user='user' size='small'></avatar-icon>
+						<router-link :to='"/user/" + user.username'>{{user.username}}</router-link>
+					</td>
 					<td>{{user.admin ? "Admin" : "User"}}</td>
 					<td>{{user.createdAt | formatDate}}</td>
 					<td>{{user.postCount}}</td>
@@ -67,6 +70,7 @@
 	import FancyInput from '../FancyInput.vue';
 	import LoadingMessage from '../LoadingMessage';
 	import ScrollLoad from '../ScrollLoad';
+	import AvatarIcon from '../AvatarIcon';
 
 	import throttle from 'lodash.throttle';
 	import AjaxErrorHandler from '../../assets/js/errorHandler';
@@ -78,7 +82,8 @@
 			SelectFilter,
 			SortMenu,
 			LoadingMessage,
-			ScrollLoad
+			ScrollLoad,
+			AvatarIcon
 		},
 		data () {
 			return {
@@ -209,6 +214,14 @@
 
 			td {
 				padding: 0.75rem;
+			}
+		}
+		@at-root #{&}__user_column {
+			display: flex;
+			align-items: center;
+
+			a {
+				margin: 0 0.25rem;
 			}
 		}
 

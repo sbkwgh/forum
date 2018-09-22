@@ -1,38 +1,46 @@
 <template>
-	<info-tooltip class='avatar_icon' @hover='loadUser' :noEvents='user === null'>
+	<info-tooltip class='avatar_icon' :noEvents='user === null'>
+		
 		<template slot='content'>
-			<template v-if='ajaxUser'>
+			
+			<template v-if='userData'>
 				<div class='avatar_icon__header'>
 					<div
 						class='avatar_icon__icon avatar_icon__icon--small picture_circle'
 						:style='{
-							"background-color": user.color,
-							"background-image": user.picture ? "url(" + user.picture + ")" : null,
+							"background-color": proxyUser.color,
+							"background-image": pictureURL,
 						}'
 						@click='goToUser'
 					>
-						{{userLetter}}
+						{{letter}}
 					</div>
 					<div class='avatar_icon__header_info'>
-						<span class='avatar_icon__username' @click.stop='goToUser'>{{ajaxUser.username}}</span>
-						<span class='avatar_icon__date'>User since {{ajaxUser.createdAt | formatDate('date') }}</span>
+						<span class='avatar_icon__username' @click.stop='goToUser'>{{proxyUser.username}}</span>
+						<span class='avatar_icon__date'>User since {{proxyUser.createdAt | formatDate('date') }}</span>
 					</div>
 				</div>
-				<div class='avatar_icon__description' v-if='ajaxUser.description'>
-					{{ajaxUser.description}}
+				<div class='avatar_icon__description' v-if='proxyUser.description'>
+					{{proxyUser.description}}
 				</div>
 			</template>
+
 			<template v-else>Loading...</template>
 		</template>
+
 		<div
 			slot='display'
 			class='avatar_icon__icon picture_circle'
 			:class='{"avatar_icon__icon--small": size === "small"}'
-			:style='{ "background-color": userColor, "background-image": userPicture, }'
+			:style='{
+				"background-color": proxyUser.color,
+				"background-image": pictureURL
+			}'
 			@click.stop='goToUser'
 		>
-			{{userLetter}}
+			{{letter}}
 		</div>
+
 	</info-tooltip>
 </template>
 
@@ -46,53 +54,56 @@
 		components: { InfoTooltip },
 		data () {
 			return {
-				ajaxUser: null
+				userData: null
 			}
 		},
 		computed: {
-			userLetter () {
-				if(this.user) {
-					if(this.userPicture) {
-						return ''
-					} else {
-						return this.user.username[0].toUpperCase()
-					}
+			//So that you never access a null variable
+			proxyUser () {
+				if(this.userData) {
+					//Data loaded via api 
+					return this.userData;
+				} else if (this.user) {
+					//Data provided as a prop
+					return this.user;
+				}
+
+				return {};
+			},
+			letter () {
+				if(this.proxyUser.username) {
+					return this.proxyUser.username[0].toUpperCase();
 				} else {
-					return ''
+					return '';
 				}
 			},
-			userColor () {
-				if(this.user) {
-					return this.user.color
-				} else {
-					return null
+			pictureURL () {
+				if(this.proxyUser.picture) {
+					return "url(" + this.proxyUser.picture + ")";
 				}
-			},
-			userPicture () {
-				if(this.user && this.user.picture) {
-					return "url(" + this.user.picture + ")"
-				} else {
-					return null
-				}
+				
+				return null;
 			}
 		},
 		methods: {
 			loadUser () {
-				if(this.ajaxUser || this.user === null) return
+				//If user is already loaded or no user provided as a prop
+				if(this.userData || this.user === null) return;
 
 				this.axios
-					.get('/api/v1/user/' + this.user.username)
+					.get('/api/v1/user/' + this.proxyUser.username)
 					.then((res) => {
-						this.ajaxUser = res.data
+						this.userData = res.data;
 					})
-					.catch(AjaxErrorHandler(this.$store))
+					.catch(AjaxErrorHandler(this.$store));
 			},
 			goToUser () {
-				if(this.user === null) return
+				if(this.user === null) return;
 
 				this.$router.push('/user/' + this.user.username)
 			}
-		}
+		},
+		mounted() { this.loadUser(); }
 	}
 </script>
 
