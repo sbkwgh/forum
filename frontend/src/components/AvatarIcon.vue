@@ -71,7 +71,7 @@
 				return {};
 			},
 			letter () {
-				if(this.proxyUser.username) {
+				if(this.proxyUser.username && !this.proxyUser.picture) {
 					return this.proxyUser.username[0].toUpperCase();
 				} else {
 					return '';
