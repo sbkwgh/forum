@@ -19,9 +19,22 @@ Simple and beautiful forum software - created using Express, Vue, and Sequelize.
   * Blocking user IP address
   * Suspending users from creating posts or starting threads
 
-## Screenshot of the homepage
+## Screenshots
 
-![forum-screenshot](https://user-images.githubusercontent.com/5166028/30886924-15a8bff8-a311-11e7-9833-981d60e0cd41.png)
+### Homepage
+![forum homepage](https://user-images.githubusercontent.com/5166028/45904046-ae0b4480-bde3-11e8-8cdf-f43ab82f1028.png)
+
+### Admin dashboard
+![forum dashboard](https://user-images.githubusercontent.com/5166028/45903589-283ac980-bde2-11e8-8297-ed73056c94d9.png)
+
+### Admin settings page
+![forum general](https://user-images.githubusercontent.com/5166028/45903591-28d36000-bde2-11e8-80e7-31de17914f50.png)
+
+### Admin user page
+![forum users page](https://user-images.githubusercontent.com/5166028/45903588-283ac980-bde2-11e8-89ae-0e08cf7a94a3.png)
+
+### Admin moderation page
+![forum moderation](https://user-images.githubusercontent.com/5166028/45903590-283ac980-bde2-11e8-9998-debd3041d5d3.png)
 
 ## Install
 
