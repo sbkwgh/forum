@@ -19,6 +19,7 @@
     "lodash.throttle": "^4.1.1",
     "marked": "^0.3.9",
     "node-sass": "^4.5.3",
+    "nprogress": "^0.2.0",
     "sass-loader": "^6.0.6",
     "socket.io-client": "^1.7.3",
     "vue": "^2.4.2",
