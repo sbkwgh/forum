@@ -2,7 +2,6 @@
 	<div class='fancy_input' v-bind:style='{width: width || "auto"}'>
 		<div 
 			 style='position: relative; display: inline-block;'
-			 v-bind:style='{width: width || "10rem"}'
 		>
 			<div
 				class='fancy_input__placeholder'
@@ -15,13 +14,12 @@
 			</div>
 			<input
 				v-bind:type='type || "text"'
-				class='input'
+				class='fancy_input__input input'
 				:class='{
 					"fancy_input__input--large": large,
 					"fancy_input__input--error": error
 				}'
 				v-bind:value='value'
-				v-bind:style='{width: width || "10rem"}'
 				v-on:input='updateValue($event.target.value)'
 				@focus='addActive'
 				@blur='removeActive'
@@ -71,6 +69,7 @@
 
 		@at-root #{&}__input {
 			transition: border-color 0.2s;
+			width: 100%;
 
 			@at-root #{&}--large {
 				padding: 0.5rem;

@@ -1,6 +1,6 @@
 <template>
 	<div class='route_container route_container--fullscreen'>
-		<div v-show='panel === 1'>
+		<div class='panel' v-show='panel === 1'>
 			<div class='h1'>Hi.</div>
 			<p class='explanation'>
 				First create your admin account for the forum.
@@ -36,7 +36,7 @@
 				</loading-button>
 			</div>
 		</div>
-		<div v-show='panel === 2'>
+		<div class='panel' v-show='panel === 2'>
 			<div class='h1'>A few settings</div>
 			<p class='explanation'>
 				You can change these later on the admin page
@@ -65,7 +65,7 @@
 				</loading-button>
 			</div>
 		</div>
-		<div v-show='panel === 3'>
+		<div class='panel' v-show='panel === 3'>
 			<div class='h1'>Categories</div>
 			<p class='explanation'>
 				People post threads in categories so that they're easier to sort through<br/>
@@ -81,12 +81,13 @@
 					<fancy-input
 						v-model='category'
 						:error='errors.name'
+						:large='true'
 						:error-bottom='true'
-						width='100%'
+						width='calc(100% - 9rem)'
 						placeholder='Category name'
 					></fancy-input>
 					<loading-button
-						class='button button--green'
+						class='button'
 						:loading='loading'
 						@click='addCategory'
 					>
@@ -259,12 +260,15 @@
 
 	.explanation {
 		font-size: 1.25rem;
-		width: 25rem;
 	}
 
 	.p--small {
 		margin: 0.5rem 0;
 		width: 25rem;
+	}
+
+	.panel {
+		width: 30rem;
 	}
 
 	.categories_form {
@@ -283,4 +287,11 @@
 		}
 	}
 
+
+	@media (max-width: 550px) {
+		.panel {
+			width: 100%;
+			padding: 0.5rem;
+		}
+	}
 </style>
