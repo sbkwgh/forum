@@ -5,7 +5,7 @@
 			<p class='explanation'>
 				First create your admin account for the forum.
 			</p>
-			<div>
+			<form @submit.prevent='createAccount'>
 				<fancy-input
 					v-model='username'
 					:error='errors.username'
@@ -30,18 +30,17 @@
 					style='width: 100%;'
 					class='button button--green'
 					:loading='loading'
-					@click='createAccount'
 				>
 					Create account
 				</loading-button>
-			</div>
+			</form>
 		</div>
 		<div class='panel' v-show='panel === 2'>
 			<div class='h1'>A few settings</div>
 			<p class='explanation'>
 				You can change these later on the admin page
 			</p>
-			<div>
+			<form @submit.prevent='addSettings'>
 				<fancy-input
 					v-model='forumName'
 					:error='errors.forumName'
@@ -59,11 +58,10 @@
 					style='width: 100%;'
 					class='button button--green'
 					:loading='loading'
-					@click='addSettings'
 				>
 					Add settings
 				</loading-button>
-			</div>
+			</form>
 		</div>
 		<div class='panel' v-show='panel === 3'>
 			<div class='h1'>Categories</div>
@@ -71,7 +69,7 @@
 				People post threads in categories so that they're easier to sort through<br/>
 				You can add or remove them later on the admin page
 			</p>
-			<div>
+			<form @submit.prevent='addCategory'>
 				<p v-if='categories.length'>
 					<b>Categories:</b>
 					{{categories.join(', ')}}
@@ -89,12 +87,11 @@
 					<loading-button
 						class='button'
 						:loading='loading'
-						@click='addCategory'
 					>
 						Add category
 					</loading-button>
 				</div>
-			</div>
+			</form>
 			<button style='width: 100%;' class='button button--green' @click='finish'>Finish</button>
 		</div>
 	</div>
@@ -273,7 +270,7 @@
 
 	.categories_form {
 		margin-bottom: 1rem;
-		align-items: center;
+		align-items: start;
 		display: flex;
 
 		.fancy_input {
