@@ -111,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
 						include: [
 							{ model: models.Thread, attributes: ['slug'] }, 
 							{ model: models.User, as: 'Likes', attributes: ['username', 'createdAt', 'id', 'color', 'picture'] },
-							{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color', 'picture'] }, 
+							{ model: models.User, attributes: ['username', 'createdAt', 'id', 'color', 'picture', 'admin'] }, 
 							{
 								model: models.Post, as: 'Replies', include:
 								[{ model: models.User, attributes: ['username', 'id', 'color', 'picture'] }]	
