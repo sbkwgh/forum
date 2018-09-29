@@ -11,7 +11,15 @@
 				{{userPicture ? '' : username[0].toUpperCase()}}
 			</div>
 			<div class='user_header__info'>
-				<span class='user_header__username'>{{username}}</span>
+				<span class='user_header__username'>
+					{{username}}
+					<span
+						class='admin_badge admin_badge--large'
+						v-if='user && user.admin'
+					>
+						admin
+					</span>
+				</span>
 				<span class='user_header__date' v-if='user'>User since {{user.createdAt | formatDate('date') }}</span>
 				<div class='user_description' v-if='user && user.description && user.description.length' v-html='user.description'></div>
 			</div>

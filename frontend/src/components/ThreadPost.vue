@@ -33,7 +33,12 @@
 					In thread <span class='post__thread__name'>{{post.Thread.name}}</span>
 					&nbsp;&middot;&nbsp;
 				</div>
-				<div class='post__user' v-else>{{username}}</div>
+				<div class='post__user' v-else>
+					{{username}}
+
+					<span class='admin_badge' v-if='post.User.admin'>admin</span>
+				</div>
+
 				<replying-to
 					style='margin-right: 0.5rem;'
 					v-if='post.replyingToUsername'

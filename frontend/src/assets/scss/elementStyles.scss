@@ -237,6 +237,20 @@ b, strong {
 	}
 }
 
+.admin_badge {
+	background: $color__darkgray--primary;
+	border-radius: 0.25rem;
+	color: #fff;
+	cursor: default;
+	font-size: 0.7rem;
+	font-weight: 400;
+	padding: 0.1rem 0.3rem;
+
+	@at-root #{&}--large {
+		font-size: 1.5rem;
+	}
+}
+
 .link_preview {
 	border: thick solid $color__gray--primary;
 	padding: 1rem;

@@ -16,7 +16,10 @@
 						{{letter}}
 					</div>
 					<div class='avatar_icon__header_info'>
-						<span class='avatar_icon__username' @click.stop='goToUser'>{{proxyUser.username}}</span>
+						<span class='avatar_icon__username' @click.stop='goToUser'>
+							{{proxyUser.username}}
+							<span class='admin_badge' v-if='proxyUser.admin'>admin</span>
+						</span>
 						<span class='avatar_icon__date'>User since {{proxyUser.createdAt | formatDate('date') }}</span>
 					</div>
 				</div>
