@@ -64,6 +64,7 @@
 
 	.fancy_input {
 		display: inline-flex;
+		flex-direction: column;
 		position: relative;
 		margin-top: 0.25rem;
 		margin-bottom: 0.5rem;
