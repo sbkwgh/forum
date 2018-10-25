@@ -18,12 +18,12 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.16.0",
     "cheerio": "^1.0.0-rc.2",
-    "compression": "^1.7.0",
+    "compression": "^1.7.3",
     "connect-session-sequelize": "^5.1.0",
     "cross-env": "^3.1.4",
     "ejs": "^2.5.7",
-    "express": "^4.14.1",
-    "express-session": "^1.15.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "helmet": "^3.9.0",
     "highlight.js": "^9.10.0",
     "lodash.debounce": "^4.0.8",
@@ -36,15 +36,15 @@
     "sequelize": "^3.33.0",
     "sequelize-cli": "^4.1.1",
     "sharp": "^0.18.4",
-    "slug": "^0.9.1",
-    "socket.io": "^1.7.3"
+    "socket.io": "^2.1.1",
+    "url-slug": "^2.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
+    "chai-http": "^4.2.0",
     "chai-things": "^0.2.0",
-    "mocha": "^3.2.0",
-    "socket.io-client": "^1.7.3",
-    "morgan": "^1.7.0"
+    "mocha": "^5.2.0",
+    "morgan": "^1.9.1",
+    "socket.io-client": "^2.1.1"
   }
 }

@@ -1,4 +1,4 @@
-let slug = require('slug')
+let urlSlug = require('url-slug')
 
 module.exports = (sequelize, DataTypes) => {
 	let Thread = sequelize.define('Thread', {
@@ -6,7 +6,15 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.TEXT,
 			set (val) {
 				this.setDataValue('name', val)
-				if(val) this.setDataValue('slug', slug(val).toLowerCase() || '_')
+				if(val) {
+					this.setDataValue(
+						'slug',
+						//if you don't covert to lowercase it doesn't
+						//correctly slugify diacritics, e.g. thrËad
+						//becomes 'thr-ead' not 'thread'
+						urlSlug(val.toString().toLowerCase() || '') || '_'
+					)
+				}
 			},
 			allowNull: false,
 			validate: {
