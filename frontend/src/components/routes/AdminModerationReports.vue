@@ -21,7 +21,7 @@
 
 				<div class='admin_moderation__report admin_moderation__report--header'>
 					<div class='admin_moderation__report__post admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
-						Post and thread reported
+						User and post reported
 					</div>
 					<div class='admin_moderation__report__reason admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>Report reason</div>
 					<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border admin_moderation__report--cell_border-hidden'>
@@ -35,13 +35,17 @@
 				<div class='admin_moderation__report' v-for='(report, $index) in filteredReports'>
 					<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
 						<div class='admin_moderation__report__post__header'>
-							<div class='admin_moderation__report__post__user'>{{report.PostUserUsername}}</div>
+							<avatar-icon class='admin_moderation__report__flagged_by__avatar' size='small' :user='report.Post.User'></avatar-icon>
+							<div>
+								<div class='admin_moderation__report__post__user'>{{report.PostUserUsername}}</div>
+								<div class='admin_moderation__report__flagged_by__date'>Posted {{report.createdAt| formatDate}}</div>
+							</div>
 						</div>
 						<div class='admin_moderation__report__post__content'>{{report.Post.content | stripTags | truncate(150)}}</div>
 					</div>
 					<div class='admin_moderation__report__reason admin_moderation__report--cell_border'>{{report.reason}}</div>
 					<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
-						<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='report.FlaggedByUser'></avatar-icon>
+						<avatar-icon class='admin_moderation__report__flagged_by__avatar' size='small' :user='report.FlaggedByUser'></avatar-icon>
 						<div class='admin_moderation__report__flagged_by__text_info'>
 							<div class='admin_moderation__report__flagged_by__user'>{{report.FlaggedByUserUsername}}</div>
 							<div class='admin_moderation__report__flagged_by__date'>{{report.createdAt| formatDate}}</div>
@@ -235,7 +239,7 @@
 		@at-root #{&}__report {
 			display: flex;
 			background-color: #fff;
-			border-bottom: thin solid $color__lightgray--primary;
+			border-bottom: thin solid $color__lightgray--darkest;
 			padding: 0.5rem;
 
 
@@ -245,7 +249,7 @@
 			@at-root #{&}--cell_border {
 				padding-right: 0.5rem;
 				margin-right: 0.5rem;
-				border-right: thin solid $color__lightgray--primary;
+				border-right: thin solid $color__lightgray--darkest;
 
 				@at-root #{&}-hidden {
 					border-right-color: transparent;
@@ -254,10 +258,13 @@
 
 			@at-root #{&}__post {
 				width: 35%;
+				display: flex;
 
 				@at-root #{&}__header {
 					display: flex;
 					justify-content: space-between;
+					border-right: thin solid $color__lightgray--darker;
+					padding-right: 0.25rem;
 				}
 				@at-root #{&}__thread {
 					font-size: 1rem;
@@ -265,7 +272,7 @@
 		
 				}
 				@at-root #{&}__content {
-
+					padding-left: 0.25rem;
 				}
 			}
 			@at-root #{&}__reason {
