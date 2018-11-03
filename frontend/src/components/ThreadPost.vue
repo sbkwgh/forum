@@ -36,7 +36,7 @@
 				<div class='post__user' v-else>
 					{{username}}
 
-					<span class='admin_badge' v-if='post.User.admin'>admin</span>
+					<span class='admin_badge' v-if='post.User && post.User.admin'>admin</span>
 				</div>
 
 				<replying-to
@@ -137,7 +137,7 @@
 				showReportPostModal: false,
 				postURL: `${location.origin}/p/${post.id}`,
 				selected: false,
-
+ 
 				postContentHTML: post.content
 			}
 		},

@@ -15,7 +15,7 @@
 
 			<div
 				class='admin_moderation__reports'
-				v-else-if='reports.length'
+				v-else-if='filteredReports.length'
 				key='reports'
 			>
 
@@ -32,11 +32,10 @@
 					</div>
 				</div>				
 
-				<div class='admin_moderation__report' v-for='(report, $index) in reports'>
+				<div class='admin_moderation__report' v-for='(report, $index) in filteredReports'>
 					<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
 						<div class='admin_moderation__report__post__header'>
-							<div class='admin_moderation__report__post__thread'>{{report.Post.Thread.name}}</div>
-							<div class='admin_moderation__report__post__user'>{{report.Post.User.username}}</div>
+							<div class='admin_moderation__report__post__user'>{{report.PostUserUsername}}</div>
 						</div>
 						<div class='admin_moderation__report__post__content'>{{report.Post.content | stripTags | truncate(150)}}</div>
 					</div>
@@ -44,7 +43,7 @@
 					<div class='admin_moderation__report__flagged_by admin_moderation__report--cell_border'>
 						<avatar-icon class='admin_moderation__report__flagged_by__avatar' :user='report.FlaggedByUser'></avatar-icon>
 						<div class='admin_moderation__report__flagged_by__text_info'>
-							<div class='admin_moderation__report__flagged_by__user'>{{report.FlaggedByUser.username}}</div>
+							<div class='admin_moderation__report__flagged_by__user'>{{report.FlaggedByUserUsername}}</div>
 							<div class='admin_moderation__report__flagged_by__date'>{{report.createdAt| formatDate}}</div>
 						</div>
 					</div>
@@ -111,6 +110,34 @@
 					report: null,
 					index: null
 				}
+			}
+		},
+		computed: {
+			filteredReports () {
+				if (!this.reports) return null;
+
+				return this.reports
+					//Only show reports not already deleted
+					.filter(report => report.Post)
+					.map(report => {
+						let clone = Object.create(report);
+
+						//Provide username text if user deleted for post
+						//or flaggedByUser	
+						if(!report.Post.User) {
+							clone.PostUserUsername = '[Deleted]';
+						} else {
+							clone.PostUserUsername = report.Post.User.username;
+						}
+
+						if(!report.FlaggedByUser) {
+							clone.FlaggedByUserUsername = '[Deleted]';
+						} else {
+							clone.FlaggedByUserUsername = report.FlaggedByUser.username;
+						}
+
+						return clone;
+					});
 			}
 		},
 		methods: {
