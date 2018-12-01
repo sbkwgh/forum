@@ -283,7 +283,7 @@
 		@at-root #{&}__quote {
 			background: #464646;
 			border-radius: 0.25rem;
-			box-shadow: 0 2px 0.25rem #84848499;
+			box-shadow: 0px 2px 0.25rem $color__gray--darkest;
 			color: #fff;
 			cursor: pointer;
 			font-size: 1rem;
