@@ -227,6 +227,10 @@ const mutations = {
 	setReply (state, payload) {
 		state.reply.username = payload.username;
 		state.reply.id = payload.id;
+
+		if(payload.quote) {
+			state.editor.value = payload.quote;
+		}
 	},
 	'thread/setPostNotification': (state, post) => {
 		state.postNotification = post

@@ -10,6 +10,21 @@
 
 		@click='goToPost'
 	>
+		<div
+			class='post__quote'
+			:class='{ "post__quote--show": showQuote && allowQuote && showReply && $store.state.username }'
+			:style='{
+				"left": quoteX + "px",
+				"top": quoteY + "px"
+			}'
+
+			@mousedown='emitReply'
+		>
+			<span class='post__quote__icon fa fa-quote-right'></span>
+			Quote post	
+		</div>
+
+
 		<span
 			class='post__remove_icon fa fa-check'
 			:class='{"post__remove_icon--show": showSelect && !post.removed}'
@@ -50,7 +65,13 @@
 			<div class='post__date'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
 		</div>
 		<div class='post__date post__date--mobile'>{{post.createdAt | formatDate('time|date', ', ')}}</div>
-		<div class='post__content' v-html='postContentHTML'></div>
+		<div
+			tabindex='-1'
+			class='post__content'
+			v-html='postContentHTML'
+			@mouseup='setShowQuote'
+			@blur='showQuote = false'
+		></div>
 		<div class='post__footer'>
 			<div
 				class='post__footer_group'
@@ -117,7 +138,8 @@
 			'showReply',
 			'showThread',
 			'showSelect',
-			'clickForPost'
+			'clickForPost',
+			'allowQuote'
 		],
 		components: {
 			PostReply,
@@ -138,6 +160,11 @@
 				postURL: `${location.origin}/p/${post.id}`,
 				selected: false,
  
+				showQuote: false,
+				quoteX: 0,
+				quoteY: 0,
+				quoteSelection: '',
+
 				postContentHTML: post.content
 			}
 		},
@@ -154,6 +181,26 @@
 			}
 		},
 		methods: {
+			emitReply (e) {
+				this.showQuote = false;
+				this.$emit('reply', this.post.id, this.username, this.quoteSelection);
+			},
+			setShowQuote (e) {
+				let rootCoords = this.$el.getBoundingClientRect();
+
+				let selection = window.getSelection();
+				let coords = selection.getRangeAt(0).getBoundingClientRect();
+				let text = selection.toString();
+
+				if(text.length) {
+					this.quoteY = coords.top - rootCoords.top - 30;
+					this.quoteX = coords.left - rootCoords.left;
+					this.quoteSelection =  '> ' + text.replace(/\n/g, '\n> ') + '\n\n';
+					this.showQuote = true;
+				} else {
+					this.showQuote = false;
+				}
+			},
 			setShareModalState (val) {
 				this.showShareModal = val
 			},
@@ -233,6 +280,35 @@
 			margin-bottom: 0;
 		}
 
+		@at-root #{&}__quote {
+			background: #464646;
+			border-radius: 0.25rem;
+			box-shadow: 0 2px 0.25rem #84848499;
+			color: #fff;
+			cursor: pointer;
+			font-size: 1rem;
+			font-weight: 400;
+			left: 70px;
+			opacity: 0;
+			padding: 0.25rem 0.4rem;
+			pointer-events: none;
+			position: absolute;
+			top: 19px;
+			transition: opacity 0.1s;
+			z-index: 3;
+
+			@at-root #{&}--show {
+				opacity: 1;
+				pointer-events: all;
+			}
+
+			@at-root #{&}__icon {
+				font-size: 0.8rem;
+				padding: 0 0.125rem;
+			}
+		}
+
+
 		@at-root #{&}__remove_icon {
 			position: absolute;
 			right: 1rem;
@@ -295,6 +371,7 @@
 		}
 		@at-root #{&}__content {
 			padding: 0 0.5rem 0 4rem;
+			outline: none;
 		}
 		@at-root #{&}__footer {
 			padding: 0.5rem 0 0.75rem 0.5rem;

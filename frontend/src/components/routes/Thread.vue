@@ -112,6 +112,7 @@
 					:show-reply='!$store.state.thread.locked'
 					:showSelect='$store.state.thread.showRemovePostsButton'
 					:highlight='highlightedPostIndex === index'
+					:allowQuote='true'
 
 					:class='{"post--last": index === posts.length-1}'
 					ref='posts'
@@ -240,12 +241,14 @@
 					this.$store.commit('setAccountModalState', true);
 				}
 			},
-			replyUser (id, username) {
+			replyUser (id, username, quote) {
 				this.$store.commit({
 					type: 'setReply',
 					username,
-					id
+					id,
+					quote
 				});
+
 				this.showEditor();
 			},
 			addPost () {
