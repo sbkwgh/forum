@@ -2,8 +2,6 @@ import NProgress from 'nprogress'
 import IO from 'socket.io-client'
 window.socket = IO()
 
-console.log(NProgress)
-
 socket.on('disconnect', () => {
 	socket.connect('http://localhost:3000', {
 		reconnection: true,
@@ -95,12 +93,19 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 	router.app.$store.commit('set404Page', false)
-	NProgress.start()
+
+	//Do not change progress bar when scrolling through posts on a thread
+	if(
+		(to.name !== 'thread-post' && from.name !== 'thread-post') &&
+		(!to.params.id || to.params.id !== from.params.id)
+	) {
+		NProgress.start()
+	}
+	
 	next()
 })
 router.afterEach(() => {
 	NProgress.done()
-//	debugger
 })
 
 Vue.filter('formatDate', function (value, format = '', join = ' ') {
