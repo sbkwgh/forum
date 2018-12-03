@@ -31,7 +31,7 @@
 		methods: {
 			goToSearch () {
 				if(this.searchField.trim().length) {
-					this.$router.push("/search/" + this.searchField)
+					this.$router.push("/search/" + encodeURIComponent(this.searchField))
 				}
 			}
 		}

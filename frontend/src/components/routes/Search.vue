@@ -1,6 +1,7 @@
 <template>
 	<div class='route_container'>
 		<h1>Search results for '{{$route.params.q}}'</h1>
+		<h2>Threads</h2>
 		<transition name='fade' mode='out-in'>
 			<div class='search__results' key='results' v-if='posts && posts.length'>
 				<scroll-load
@@ -24,6 +25,57 @@
 						:key='n'
 					></thread-post-placeholder>
 				</scroll-load>
+				<div class='search__more'>
+					<span class='fa fa-fw fa-pencil-alt'></span>
+					View 2 more threads
+				</div>
+			</div>
+			<div
+				class='overlay_message search__overlay_message'
+				v-else-if='posts && !posts.length'
+				key='no results'
+			>
+				<span class='fa fa-exclamation-circle'></span>
+				No results found
+			</div>
+			<div
+				class='search__results'
+				key='loading'
+				v-else
+			>
+				<thread-post-placeholder class='search__post'
+				></thread-post-placeholder>
+			</div>
+
+		</transition>
+		<h2>Posts</h2>
+		<transition name='fade' mode='out-in'>
+			<div class='search__results' key='results' v-if='posts && posts.length'>
+				<scroll-load
+					:loading='loading'
+					@loadNext='loadNextPage'
+				>
+					<thread-post
+						class='search__post'
+
+						v-for='post in posts'
+						:key='post.id'
+
+						:post='post'
+						:show-thread='true'
+						:click-for-post='true'
+					></thread-post>
+					<thread-post-placeholder
+						class='search__post'
+						v-if='loading'
+						v-for='n in next'
+						:key='n'
+					></thread-post-placeholder>
+				</scroll-load>
+				<div class='search__more'>
+					<span class='fa fa-fw fa-comments' style='font-weight: 300;'></span>
+					View 10 more posts
+				</div>
 			</div>
 			<div
 				class='overlay_message search__overlay_message'
@@ -138,7 +190,7 @@
 	@import '../../assets/scss/variables.scss';
 
 	.search {
-		@at-root #{&}__post {
+		@at-root #{&}__post, #{&}__more {
 			background-color: #fff;
 			padding-left: 0.75rem;
 			margin-bottom: 1rem;
@@ -150,6 +202,19 @@
 				@extend .shadow_border--hover;
 			}
 
+		}
+
+		@at-root #{&}__more {
+			border-radius: 0.25rem;
+			cursor: pointer;
+			font-weight: 500;
+			margin: 0 -0.5rem;
+			margin-top: 1rem;
+			padding: 0.75rem;
+
+			span {
+				color: $color__darkgray--darker;
+			}
 		}
 
 		@at-root #{&}__overlay_message {
