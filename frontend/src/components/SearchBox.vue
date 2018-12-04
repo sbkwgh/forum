@@ -125,6 +125,12 @@
 		methods: {
 			setShowResults () {
 				this.showResults = !!this.searchField.trim().length;
+				if(!this.showResults) this.resetResultsBox();
+			},
+			resetResultsBox () {
+				this.showResults = false;
+				this.highlightIndex = null;
+				this.$refs.results.scrollTop = 0;
 			},
 			//Produces a 'global' highlight index from the
 			//relative index of each array group, dependent on
@@ -179,17 +185,25 @@
 				let sign = e.keyCode === 40 ? 1 : -1;
 
 				if(this.highlightIndex === null) {
-					this.highlightIndex = 0;
+					//First highlight item
+					if(sign === 1) {
+						this.highlightIndex = 0;
+					//Last highlight item
+					} else {
+						this.highlightIndex = this.totalHighlightOptions - 1;
+					}
 				} else {
 					let updatedIndex = this.highlightIndex + sign;
-
-					if(updatedIndex === this.totalHighlightOptions) {
-						this.highlightIndex = 0;
-					} else if (updatedIndex < 0) {
-						this.highlightIndex = this.totalHighlightOptions-1;
-					} else {
-						this.highlightIndex = updatedIndex;
+					//Do not highlight anything, return 'focus' to input box
+					if(
+						updatedIndex === this.totalHighlightOptions ||
+						updatedIndex < 0
+					) {
+						this.highlightIndex = null;
+						return;
 					}
+					
+					this.highlightIndex = updatedIndex;
 				}
 
 				//Get the element for highlighted item
@@ -205,9 +219,12 @@
 				
 			},
 			goToSearch () {
-				if(this.searchField.trim().length) {
+				if(this.highlightIndex === null && this.searchField.trim().length) {
 					this.showResults = false;
 					this.$router.push("/search/" + encodeURIComponent(this.searchField));
+				} else {
+					//Do something
+					this.resetResultsBox();
 				}
 			}
 		},
@@ -216,7 +233,7 @@
 				//If results box is showing, the root element is loaded and the click target
 				//is not part of the search box, then hide the results box
 				if(this.showResults && this.$refs.root && !this.$refs.root.contains(e.target)) {
-					this.showResults = false;
+					this.resetResultsBox();
 				}
 			});
 		}
