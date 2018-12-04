@@ -14,6 +14,8 @@
 				:placeholder='placeholder || "Search this forum"'
 				v-model='searchField'
 				
+				ref='input'
+
 				@focus='setShowResults'
 				@input='setShowResults'
 				@keydown='setKeyHighlight'
@@ -43,7 +45,7 @@
 					@mouseover='highlightIndex = getHighlightIndex("threads header")'
 				>
 					<span class='fa fa-fw fa-search'></span>
-					Search all threads containing '<strong>{{searchField}}</strong>'
+					Search threads for '<strong>{{searchField}}</strong>'
 				</div>
 				<div
 					class='search_box__results__thread'
@@ -53,9 +55,10 @@
 					v-for='(thread, index) in threads'
 					ref='threads'
 					@mouseover='highlightIndex = getHighlightIndex("threads", index)'
+					@click='goToSearch'
 				>
-					<div class='search_box__results__title'>{{thread.title}}</div>
-					<div class='search_box__results__content'>{{thread.content}}</div>
+					<div class='search_box__results__title'>{{thread.name}}</div>
+					<div class='search_box__results__content'>{{thread.Posts[0].content | stripTags | truncate(140) }}</div>
 				</div>
 			</template>
 
@@ -70,7 +73,7 @@
 					@mouseover='highlightIndex = getHighlightIndex("users header")'
 				>
 					<span class='fa fa-fw fa-search'></span>
-					Search all users beginning '<strong>{{searchField}}</strong>'
+					Search users containing '<strong>{{searchField}}</strong>'
 				</div>
 				<div
 					class='search_box__results__user'
@@ -80,18 +83,27 @@
 					v-for='(user, index) in users'
 					ref='users'
 					@mouseover='highlightIndex = getHighlightIndex("users", index)'
+					@click='goToSearch'
 				>
 					<avatar-icon size='tiny' :user='user'></avatar-icon>
 					<div class='search_box__results__title'>{{user.username}}</div>
 				</div>
 			</template>
 
+			<div class='search_box__results__message' v-if='!threads.length && !users.length && !loading'>
+				No users or threads found for '<strong>{{searchField}}</strong>'
+			</div>
+			<div class='search_box__results__message' v-if='loading'>
+				Loading...
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 	import AvatarIcon from './AvatarIcon';
+
+	import AjaxErrorHandler from '../assets/js/errorHandler'
 
 	export default {
 		name: 'SearchBox',
@@ -101,15 +113,12 @@
 			return {
 				searchField: '',
 				showResults: false,
+				loading: false,
 
 				highlightIndex: null,
 
-				threads: [
-					{title: 'Thread', content: 'Body content here 123' },
-					{ title: 'Some other', content: 'Loremp ipsum dolor sit amet' },
-					{ title: 'What??', content: 'testtestt esttesttesttes ttestt esttest' }
-				],
-				users: [{ username: 'Username' }, { username: 'username' }, { username: 'username' }]
+				threads: [],
+				users: []
 			}
 		},
 		computed: {
@@ -127,17 +136,28 @@
 			setShowResults () {
 				//Return if results should not show
 				if(!this.headerBar) return;
-				
+
 				this.showResults = !!this.searchField.trim().length;
-				if(!this.showResults) this.resetResultsBox();
+				if(this.showResults) {
+					this.getResults();
+				} else {
+					this.resetResultsBox();
+				}
 			},
 			resetResultsBox () {
 				//Return if results should not show
 				if(!this.headerBar) return;
 
 				this.showResults = false;
-				this.highlightIndex = null;
-				this.$refs.results.scrollTop = 0;
+				
+				//These changes alter ui within the box
+				//therefore wait until transition completed
+				setTimeout(() => {
+					this.highlightIndex = null;
+					this.$refs.results.scrollTop = 0;
+					this.threads = [];
+					this.users = [];
+				}, 200);
 			},
 			//Produces a 'global' highlight index from the
 			//relative index of each array group, dependent on
@@ -233,9 +253,42 @@
 					this.showResults = false;
 					this.$router.push("/search/" + encodeURIComponent(this.searchField));
 				} else {
-					//Do something
+					let { group, index } = this.getGroupFromIndex(this.highlightIndex);
+					if(group === 'users') {
+						this.$router.push('/user/' + this.users[index].username);
+					} else if (group === 'threads') {
+						let thread = this.threads[index];
+						this.$router.push('/thread/' + thread.slug + '/' + thread.id);
+					}
+
 					this.resetResultsBox();
 				}
+
+				this.$refs.input.blur();
+			},
+			getResults () {
+				let q = this.searchField.trim();
+				if(!q.length) return;
+
+				this.loading = true;
+				this.threads = [];
+				this.users = [];
+
+				this.axios
+					.get('/api/v1/search/thread?q=' + q)
+					.then(res => {
+						this.threads = res.data.threads;
+						this.loading = false;
+					})
+					.catch(AjaxErrorHandler(this.$store));
+
+				this.axios
+					.get('/api/v1/search/user?q=' + q)
+					.then(res => {
+						this.users = res.data.users;
+						this.loading = false;
+					})
+					.catch(AjaxErrorHandler(this.$store));
 			}
 		},
 		mounted () {
@@ -307,7 +360,7 @@
 			right: 0;
 			transform: translateY(-0.25rem);
 			transition: opacity 0.2s, transform 0.2s;
-			width: 150%;
+			width: 100%;
 
 			@at-root #{&}--show {
 				opacity: 1;
@@ -326,7 +379,7 @@
 				position: sticky;
 
 				@at-root #{&}--divider {
-					border-top: thin solid $color__gray--primary;
+					border-top: thin solid $color__gray--darker;
 				}
 			}
 		
@@ -378,6 +431,11 @@
 			@at-root #{&}__content {
 				color: $color__text--secondary;
 				font-size: 0.85rem;
+			}
+
+			@at-root #{&}__message {
+				cursor: default;
+				padding: 1rem;
 			}
 		}
 	}

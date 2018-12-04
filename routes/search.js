@@ -1,52 +1,100 @@
 let express = require('express')
 let router = express.Router()
 
-let { Post, Thread, Sequelize } = require('../models')
+let { Post, Thread, User, Sequelize } = require('../models')
 const Errors = require('../lib/errors')
 
-router.get('/', async (req, res, next) => {
+router.get('/thread', async (req, res, next) => {
 	try {
-		let q = req.query.q
-		let qRegexp = new RegExp(q, 'g')
+		let searchString = req.query.q
+
 		let offset = +req.query.offset || 0
+		let limit = 10
 
-		let count = await Post.count({
-			where: {
-				content: { $like: '%' + q + '%' }
-			}
-		})
+		/*  
+		Task is to find threads that either have the 
+		string in the title or in the content of the first post
 
-		let posts = await Post.findAll({
+		Method
+		  1) Select first n items from each group (posts and threads), where n is the LIMIT,
+		     greater than id x, where x is previous OFFSET
+		  2) Merge results from both, remove duplicates and sort
+		  3) Select first n items from merged group
+		  4) Set x as the last item from merged group
+		*/
+
+		let threadTitles = await Thread.findAll({
 			where: {
-				content: { $like: '%' + q + '%' }
+				name: { $like: '%' + searchString + '%' }
 			},
 			order: [ ['id', 'DESC'] ],
-			include: Post.includeOptions(),
-			limit: 10,
+			include: [{
+				model: Post,
+				where: {
+					postNumber: 0
+				}
+			}],
+			limit,
 			offset
 		})
 
-		let retPosts = posts.map(p => {
-			let ret = p.toJSON()
-			ret.content = ret.content.replace(qRegexp, '<b>' + q + '</b>')
-
-			return ret
+		let threadPosts = await Thread.findAll({
+			order: [ ['id', 'DESC'] ],
+			include: [{
+				model: Post,
+				where: {
+					postNumber: 0,
+					content: { $like: '%' + searchString + '%' }
+				}
+			}],
+			limit,
+			offset
 		})
 
-		let remainingResults = count - (offset + 10)
-		let next;
-		if(remainingResults < 0) {
-			next = 0
-		} else if(remainingResults < 10) {
-			next = remainingResults
-		} else {
-			next = 10
-		}
+		let merged = [...threadTitles, ...threadPosts];
+		let unique = [];
+		merged.forEach(thread => {
+			let includes = unique.filter(u => thread.id === u.id);
+
+			if(!includes.length) unique.push(thread);
+		});
+		
+		let sorted = unique
+			.sort((a, b) => {
+				return a.id - b.id;
+			})
+			.slice(0, limit);
 
 		res.json({
-			posts: retPosts,
-			offset: offset + 10,
-			next
+			threads: sorted,
+			offset: sorted.length ? sorted.slice(-1)[0].id : null,
+			next: sorted.length < limit ? null : limit
+		})
+
+	} catch (e) { next(e) }
+})
+
+router.get('/user', async (req, res, next) => {
+	try {
+		let searchString = req.query.q
+
+		let offset = +req.query.offset || 0
+		let limit = 10
+
+		let users = await User.findAll({
+			where: {
+				username: { $like: '%' + searchString + '%' }
+			},
+			order: [ ['username', 'DESC'] ],
+			attributes: { exclude: ['hash'] },
+			limit,
+			offset
+		})
+
+		res.json({
+			users,
+			offset: users.length? users.slice(-1)[0].id : null,
+			next: users.length < limit ? null : limit
 		})
 
 	} catch (e) { next(e) }
