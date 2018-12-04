@@ -7,12 +7,13 @@
 			class='search_box__input'
 			tabindex='0'
 			@keydown.enter='goToSearch'
-			@click='showResults = true'
 		>
 			<input
 				class='search_box__input__field'
 				:class='{ "search_box__input__field--header": headerBar }'
 				:placeholder='placeholder || "Search this forum"'
+				@focus='setShowResults'
+				@input='setShowResults'
 				v-model='searchField'
 			>
 			<button
@@ -46,7 +47,7 @@
 </template>
 
 <script>
-	import AvatarIcon from './AvatarIcon'
+	import AvatarIcon from './AvatarIcon';
 
 	export default {
 		name: 'SearchBox',
@@ -59,9 +60,13 @@
 			}
 		},
 		methods: {
+			setShowResults () {
+				this.showResults = !!this.searchField.trim().length;
+			},
 			goToSearch () {
 				if(this.searchField.trim().length) {
-					this.$router.push("/search/" + encodeURIComponent(this.searchField))
+					this.showResults = false;
+					this.$router.push("/search/" + encodeURIComponent(this.searchField));
 				}
 			}
 		},
@@ -72,7 +77,7 @@
 				if(this.showResults && this.$refs.root && !this.$refs.root.contains(e.target)) {
 					this.showResults = false;
 				}
-			})
+			});
 		}
 	}
 </script>
