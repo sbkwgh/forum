@@ -2,6 +2,8 @@
 	<div
 		class='search_box'
 		ref='root'
+		tabindex='0'
+		@keydown='setKeyHighlight'
 	>
 		<div
 			class='search_box__input'
@@ -24,24 +26,43 @@
 			</button>
 		</div>
 		<div class='search_box__results' :class='{ "search_box__results--show": showResults }'>
-			<div class='search_box__results__header'>Threads</div>
-			<div class='search_box__results__search_all'>
-				<span class='fa fa-fw fa-search'></span>
-				Search all threads containing '{{searchField}}'
-			</div>
-			<div class='search_box__results__thread' v-for='i in 5'>
-				<div class='search_box__results__title'>Thread title</div>
-				<div class='search_box__results__content'>Title content here</div>
-			</div>
-			<div class='search_box__results__header search_box__results__header--divider'>Users</div>
-			<div class='search_box__results__search_all'>
-				<span class='fa fa-fw fa-search'></span>
-				Search all users beginning '{{searchField}}'
-			</div>
-			<div class='search_box__results__user' for='i in 2'>
-				<avatar-icon size='tiny' :user='{ username: "username" }'></avatar-icon>
-				<div class='search_box__results__title'>Username here</div>
-			</div>
+
+			<template v-if='threads.length'>
+				<div class='search_box__results__header'>Threads</div>
+				<div class='search_box__results__search_all'>
+					<span class='fa fa-fw fa-search'></span>
+					Search all threads containing '<strong>{{searchField}}</strong>'
+				</div>
+				<div
+					class='search_box__results__thread'
+					:class='{
+						"search_box__results--highlight": highlightItem && highlightItem.index === index && highlightItem.groupIndex === 0
+					}'
+					v-for='(thread, index) in threads'
+				>
+					<div class='search_box__results__title'>{{thread.title}}</div>
+					<div class='search_box__results__content'>{{thread.content}}</div>
+				</div>
+			</template>
+
+			<template v-if='users.length'>
+				<div class='search_box__results__header search_box__results__header--divider'>Users</div>
+				<div class='search_box__results__search_all'>
+					<span class='fa fa-fw fa-search'></span>
+					Search all users beginning '<strong>{{searchField}}</strong>'
+				</div>
+				<div
+					class='search_box__results__user'
+					:class='{
+						"search_box__results--highlight": highlightItem && highlightItem.index === index && highlightItem.groupIndex === 1
+					}'
+					v-for='(user, index) in users'
+				>
+					<avatar-icon size='tiny' :user='user'></avatar-icon>
+					<div class='search_box__results__title'>{{user.username}}</div>
+				</div>
+			</template>
+
 		</div>
 	</div>
 </template>
@@ -56,12 +77,57 @@
 		data () {
 			return {
 				searchField: '',
-				showResults: false
+				showResults: false,
+
+				highlightItem: null,
+				groups: ['threads', 'users'],
+
+				threads: [
+					{title: 'Thread', content: 'Body content here 123' },
+					{ title: 'Some other', content: 'Loremp ipsum dolor sit amet' },
+					{ title: 'What??', content: 'testtestt esttesttesttes ttestt esttest' }
+				],
+				users: [{ username: 'Username' }, { username: 'username' }, { username: 'username' }]
 			}
 		},
 		methods: {
 			setShowResults () {
 				this.showResults = !!this.searchField.trim().length;
+			},
+			setKeyHighlight (e) {
+				//Return if not up or down arrow
+				if(![38, 40].includes(e.keyCode)) return;
+
+				//Increment or decrement
+				let sign = e.keyCode === 40 ? 1 : -1;
+
+				if(this.highlightItem === null) {
+					this.highlightItem = { groupIndex: 0, index: 0 };
+					return;
+				}
+
+				//get length of current group
+				//add or decrement
+				//if less than 0...
+				//if greater then group length...
+
+				let currentGroupName = this.groups[this.highlightItem.groupIndex];
+				let groupLength = this[currentGroupName].length;
+				let updatedIndex = this.highlightItem.index + sign;
+
+				//If index greater than number of items in that group
+				if(groupLength === updatedIndex) {
+					this.highlightItem.groupIndex = (this.highlightItem.groupIndex+1) % this.groups.length;
+					this.highlightItem.index = 0;
+				} else if (updatedIndex < 0) {
+					this.highlightItem.groupIndex = Math.abs((this.highlightItem.groupIndex-1) % this.groups.length);
+
+					let updatedGroupName = this.groups[this.highlightItem.groupIndex];
+
+					this.highlightItem.index = this[updatedGroupName].length-1;
+				} else {
+					this.highlightItem.index = updatedIndex;
+				}
 			},
 			goToSearch () {
 				if(this.searchField.trim().length) {
@@ -145,6 +211,9 @@
 				opacity: 1;
 				pointer-events: all;
 				transform: translateY(0rem);
+			}
+			@at-root #{&}--highlight {
+				background-color: $color__lightgray--darker;
 			}
 
 			@at-root #{&}__header {
