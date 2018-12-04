@@ -2,8 +2,6 @@
 	<div
 		class='search_box'
 		ref='root'
-		tabindex='0'
-		@keydown='setKeyHighlight'
 	>
 		<div
 			class='search_box__input'
@@ -14,9 +12,11 @@
 				class='search_box__input__field'
 				:class='{ "search_box__input__field--header": headerBar }'
 				:placeholder='placeholder || "Search this forum"'
+				v-model='searchField'
+				
 				@focus='setShowResults'
 				@input='setShowResults'
-				v-model='searchField'
+				@keydown='setKeyHighlight'
 			>
 			<button
 				class='search_box__input__button'
@@ -25,20 +25,33 @@
 				<span class='fa fa-search'></span>
 			</button>
 		</div>
-		<div class='search_box__results' :class='{ "search_box__results--show": showResults }'>
+		<div
+			class='search_box__results'
+			:class='{ "search_box__results--show": showResults }'
+			ref='results'
+		>
 
 			<template v-if='threads.length'>
 				<div class='search_box__results__header'>Threads</div>
-				<div class='search_box__results__search_all'>
+				<div
+					class='search_box__results__search_all'
+					:class='{
+						"search_box__results--highlight": highlightIndex === getHighlightIndex("threads header")
+					}'
+					ref='threads header'
+					@mouseover='highlightIndex = getHighlightIndex("threads header")'
+				>
 					<span class='fa fa-fw fa-search'></span>
 					Search all threads containing '<strong>{{searchField}}</strong>'
 				</div>
 				<div
 					class='search_box__results__thread'
 					:class='{
-						"search_box__results--highlight": highlightItem && highlightItem.index === index && highlightItem.groupIndex === 0
+						"search_box__results--highlight": highlightIndex === getHighlightIndex("threads", index)
 					}'
 					v-for='(thread, index) in threads'
+					ref='threads'
+					@mouseover='highlightIndex = getHighlightIndex("threads", index)'
 				>
 					<div class='search_box__results__title'>{{thread.title}}</div>
 					<div class='search_box__results__content'>{{thread.content}}</div>
@@ -47,16 +60,25 @@
 
 			<template v-if='users.length'>
 				<div class='search_box__results__header search_box__results__header--divider'>Users</div>
-				<div class='search_box__results__search_all'>
+				<div
+					class='search_box__results__search_all'
+					:class='{
+						"search_box__results--highlight": highlightIndex === getHighlightIndex("users header")
+					}'
+					ref='users header'
+					@mouseover='highlightIndex = getHighlightIndex("users header")'
+				>
 					<span class='fa fa-fw fa-search'></span>
 					Search all users beginning '<strong>{{searchField}}</strong>'
 				</div>
 				<div
 					class='search_box__results__user'
 					:class='{
-						"search_box__results--highlight": highlightItem && highlightItem.index === index && highlightItem.groupIndex === 1
+						"search_box__results--highlight": highlightIndex === getHighlightIndex("users", index)
 					}'
 					v-for='(user, index) in users'
+					ref='users'
+					@mouseover='highlightIndex = getHighlightIndex("users", index)'
 				>
 					<avatar-icon size='tiny' :user='user'></avatar-icon>
 					<div class='search_box__results__title'>{{user.username}}</div>
@@ -79,8 +101,7 @@
 				searchField: '',
 				showResults: false,
 
-				highlightItem: null,
-				groups: ['threads', 'users'],
+				highlightIndex: null,
 
 				threads: [
 					{title: 'Thread', content: 'Body content here 123' },
@@ -90,9 +111,65 @@
 				users: [{ username: 'Username' }, { username: 'username' }, { username: 'username' }]
 			}
 		},
+		computed: {
+			totalHighlightOptions () {
+				let totalHighlightOptions = 0;
+
+				//Add one to include the 'search all option'
+				if(this.threads.length) totalHighlightOptions += this.threads.length + 1;
+				if(this.users.length) totalHighlightOptions += this.users.length + 1;
+
+				return totalHighlightOptions;
+			}
+		},
 		methods: {
 			setShowResults () {
 				this.showResults = !!this.searchField.trim().length;
+			},
+			//Produces a 'global' highlight index from the
+			//relative index of each array group, dependent on
+			//whether or not other array groups are empty or not
+			getHighlightIndex (group, index) {
+				if (group === 'threads header') {
+					return 0;
+				} else if(group === 'threads') {
+					return 1 + index;
+				} else if (group === 'users' || group === 'users header') {
+					let ret = 0;
+
+					if(this.threads.length) {
+						ret += 1 + this.threads.length;
+					}
+
+					if(group === 'users') {
+						ret += 1 + index;
+					}
+
+					return ret;
+				}
+			},
+			//Produces relative group and index
+			//from overall highlight index
+			getGroupFromIndex (index) {
+				if(this.threads.length && index <= this.threads.length) {
+					if(index === 0) {
+						return { group: 'threads header', index: null };
+					} else {
+						return { group: 'threads', index: index-1 };
+					}
+				} else if (this.threads.length && index > this.threads.length) {
+					if(index === this.threads.length + 1) {
+						return { group: 'users header', index: null };
+					} else {
+						return { group: 'users', index: index-1-this.threads.length-1 };
+					}
+				} else if(this.users.length) {
+					if(index === 0) {
+						return { group: 'users header', index: null };
+					} else {
+						return { group: 'users', index: index-1 };
+					}
+				}
 			},
 			setKeyHighlight (e) {
 				//Return if not up or down arrow
@@ -101,33 +178,31 @@
 				//Increment or decrement
 				let sign = e.keyCode === 40 ? 1 : -1;
 
-				if(this.highlightItem === null) {
-					this.highlightItem = { groupIndex: 0, index: 0 };
-					return;
-				}
-
-				//get length of current group
-				//add or decrement
-				//if less than 0...
-				//if greater then group length...
-
-				let currentGroupName = this.groups[this.highlightItem.groupIndex];
-				let groupLength = this[currentGroupName].length;
-				let updatedIndex = this.highlightItem.index + sign;
-
-				//If index greater than number of items in that group
-				if(groupLength === updatedIndex) {
-					this.highlightItem.groupIndex = (this.highlightItem.groupIndex+1) % this.groups.length;
-					this.highlightItem.index = 0;
-				} else if (updatedIndex < 0) {
-					this.highlightItem.groupIndex = Math.abs((this.highlightItem.groupIndex-1) % this.groups.length);
-
-					let updatedGroupName = this.groups[this.highlightItem.groupIndex];
-
-					this.highlightItem.index = this[updatedGroupName].length-1;
+				if(this.highlightIndex === null) {
+					this.highlightIndex = 0;
 				} else {
-					this.highlightItem.index = updatedIndex;
+					let updatedIndex = this.highlightIndex + sign;
+
+					if(updatedIndex === this.totalHighlightOptions) {
+						this.highlightIndex = 0;
+					} else if (updatedIndex < 0) {
+						this.highlightIndex = this.totalHighlightOptions-1;
+					} else {
+						this.highlightIndex = updatedIndex;
+					}
 				}
+
+				//Get the element for highlighted item
+				//and scroll into view if not visible
+				let { group, index } = this.getGroupFromIndex(this.highlightIndex);
+				let el = index === null ? this.$refs[group] : this.$refs[group][index];
+				if(
+					el.offsetHeight + el.offsetTop > this.$refs.results.offsetHeight ||
+					 el.offsetHeight + el.offsetTop < this.$refs.results.scrollTop
+				) {
+					el.scrollIntoView();
+				}
+				
 			},
 			goToSearch () {
 				if(this.searchField.trim().length) {
