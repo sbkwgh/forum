@@ -54,7 +54,7 @@
 		}
 
 		@at-root #{&}__search_box {
-			display: inline-table;
+			display: inline-flex;
 			margin-left: 0.5rem
 		}
 	}
