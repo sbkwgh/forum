@@ -34,7 +34,10 @@
 		<div
 			slot='display'
 			class='avatar_icon__icon picture_circle'
-			:class='{"avatar_icon__icon--small": size === "small"}'
+			:class='{
+				"avatar_icon__icon--small": size === "small",
+				"avatar_icon__icon--tiny": size === "tiny"
+			}'
 			:style='{
 				"background-color": proxyUser.color,
 				"background-image": pictureURL
@@ -141,6 +144,12 @@
 				width: 2.5rem;
 				font-size: 1.75rem;
 				line-height: 2.5rem;
+			}
+			@at-root #{&}--tiny {
+				height: 1.5rem;
+				width: 1.5rem;
+				font-size: 1rem;
+				line-height: 1.5rem;
 			}
 		}
 		@at-root #{&}__header_info {

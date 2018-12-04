@@ -1,9 +1,13 @@
 <template>
-	<div class='search_box'>
+	<div
+		class='search_box'
+		ref='root'
+	>
 		<div
 			class='search_box__input'
 			tabindex='0'
 			@keydown.enter='goToSearch'
+			@click='showResults = true'
 		>
 			<input
 				class='search_box__input__field'
@@ -18,19 +22,40 @@
 				<span class='fa fa-search'></span>
 			</button>
 		</div>
-		<div class='search_box__results'>
-			
+		<div class='search_box__results' :class='{ "search_box__results--show": showResults }'>
+			<div class='search_box__results__header'>Threads</div>
+			<div class='search_box__results__search_all'>
+				<span class='fa fa-fw fa-search'></span>
+				Search all threads containing '{{searchField}}'
+			</div>
+			<div class='search_box__results__thread' v-for='i in 5'>
+				<div class='search_box__results__title'>Thread title</div>
+				<div class='search_box__results__content'>Title content here</div>
+			</div>
+			<div class='search_box__results__header search_box__results__header--divider'>Users</div>
+			<div class='search_box__results__search_all'>
+				<span class='fa fa-fw fa-search'></span>
+				Search all users beginning '{{searchField}}'
+			</div>
+			<div class='search_box__results__user' for='i in 2'>
+				<avatar-icon size='tiny' :user='{ username: "username" }'></avatar-icon>
+				<div class='search_box__results__title'>Username here</div>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+	import AvatarIcon from './AvatarIcon'
+
 	export default {
 		name: 'SearchBox',
 		props: ['placeholder', 'header-bar'],
+		components: { AvatarIcon },
 		data () {
 			return {
-				searchField: ''
+				searchField: '',
+				showResults: false
 			}
 		},
 		methods: {
@@ -39,6 +64,15 @@
 					this.$router.push("/search/" + encodeURIComponent(this.searchField))
 				}
 			}
+		},
+		mounted () {
+			document.body.addEventListener('click', e => {
+				//If results box is showing, the root element is loaded and the click target
+				//is not part of the search box, then hide the results box
+				if(this.showResults && this.$refs.root && !this.$refs.root.contains(e.target)) {
+					this.showResults = false;
+				}
+			})
 		}
 	}
 </script>
@@ -48,6 +82,8 @@
 	@import '../assets/scss/elementStyles.scss';
 
 	.search_box {
+		position: relative;
+
 		@at-root #{&}__input {
 			border: 1.5px solid $color__gray--darkest;
 			border-right: 0;
@@ -85,7 +121,88 @@
 		}
 		
 		@at-root #{&}__results {
-			
+			background-color: #fff;
+			border: 1.5px solid $color__gray--darkest;
+			border-radius: 0.25rem;
+			box-shadow: 0 0.25rem 1rem rgba(#000, 0.125);
+			max-height: 20rem;
+			opacity: 0;
+			overflow-y: auto;
+			overflow-x: hidden;
+			pointer-events: none;
+			position: absolute;
+			right: 0;
+			transform: translateY(-0.25rem);
+			transition: opacity 0.2s, transform 0.2s;
+			width: 150%;
+
+			@at-root #{&}--show {
+				opacity: 1;
+				pointer-events: all;
+				transform: translateY(0rem);
+			}
+
+			@at-root #{&}__header {
+				cursor: default;
+				font-weight: 600;
+				font-size: 0.9rem;
+				padding: 0.5rem 1rem;
+				position: sticky;
+
+				@at-root #{&}--divider {
+					border-top: thin solid $color__gray--primary;
+				}
+			}
+		
+			@at-root #{&}__search_all {
+				display: flex;
+				flex-direction: row;
+
+				span {
+					padding-top: 0.15rem;
+					margin-right: 0.5rem;
+				}
+			}
+
+			@at-root #{&}__thread, #{&}__user, #{&}__search_all {
+				cursor: pointer;
+				padding: 0.5rem 1rem;
+				transition: background-color 0.2s;
+
+				&:hover {
+					background-color: $color__lightgray--darker;
+				}
+				&:focus {
+					outline: none;
+					background-color: $color__lightgray--darker;
+				}
+				&:last-of-type {
+					margin-bottom: 0.5rem;
+				}
+			}
+			@at-root #{&}__user {
+				align-items: center;
+				display: flex;
+				flex-direction: row;
+				padding: 0.25rem 1rem;
+
+				.avatar_icon {
+					pointer-events: none;
+				}
+
+				&:last-of-type {
+					margin-bottom: 0.5rem;
+				}
+			}
+
+			@at-root #{&}__title, #{&}__search_all {
+				font-weight: 400;
+				font-size: 0.9rem;
+			}
+			@at-root #{&}__content {
+				color: $color__text--secondary;
+				font-size: 0.85rem;
+			}
 		}
 	}
 
