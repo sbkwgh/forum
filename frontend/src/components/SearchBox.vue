@@ -29,6 +29,7 @@
 			class='search_box__results'
 			:class='{ "search_box__results--show": showResults }'
 			ref='results'
+			v-if='headerBar'
 		>
 
 			<template v-if='threads.length'>
@@ -124,10 +125,16 @@
 		},
 		methods: {
 			setShowResults () {
+				//Return if results should not show
+				if(!this.headerBar) return;
+				
 				this.showResults = !!this.searchField.trim().length;
 				if(!this.showResults) this.resetResultsBox();
 			},
 			resetResultsBox () {
+				//Return if results should not show
+				if(!this.headerBar) return;
+
 				this.showResults = false;
 				this.highlightIndex = null;
 				this.$refs.results.scrollTop = 0;
@@ -178,6 +185,9 @@
 				}
 			},
 			setKeyHighlight (e) {
+				//Return if results should not show
+				if(!this.headerBar) return;
+
 				//Return if not up or down arrow
 				if(![38, 40].includes(e.keyCode)) return;
 
