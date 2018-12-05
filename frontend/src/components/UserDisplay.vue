@@ -31,6 +31,7 @@
 		cursor: pointer;
 		display: flex;
 		flex-direction: row;
+		margin-bottom: 1rem;
 		padding: 0.25rem 0.5rem;
 		transition: box-shadow 0.2s;
 		
