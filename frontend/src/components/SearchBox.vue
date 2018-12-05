@@ -46,7 +46,7 @@
 					@click='goToSearch'
 				>
 					<span class='fa fa-fw fa-search'></span>
-					Search threads for '<strong>{{searchField}}</strong>'
+					Search all threads for '<strong>{{searchField}}</strong>'
 				</div>
 				<div
 					class='search_box__results__thread'
@@ -75,7 +75,7 @@
 					@click='goToSearch'
 				>
 					<span class='fa fa-fw fa-search'></span>
-					Search users containing '<strong>{{searchField}}</strong>'
+					Search all users containing '<strong>{{searchField}}</strong>'
 				</div>
 				<div
 					class='search_box__results__user'
@@ -285,7 +285,7 @@
 				this.axios
 					.get('/api/v1/search/thread?q=' + q)
 					.then(res => {
-						this.threads = res.data.threads;
+						this.threads = res.data.threads.slice(0, 3);
 						this.loading = false;
 					})
 					.catch(AjaxErrorHandler(this.$store));
@@ -293,7 +293,7 @@
 				this.axios
 					.get('/api/v1/search/user?q=' + q)
 					.then(res => {
-						this.users = res.data.users;
+						this.users = res.data.users.slice(0, 5);
 						this.loading = false;
 					})
 					.catch(AjaxErrorHandler(this.$store));
