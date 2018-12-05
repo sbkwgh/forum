@@ -1,107 +1,52 @@
 <template>
 	<div class='route_container'>
 		<h1>Search results for '{{$route.params.q}}'</h1>
-		<h2>Threads</h2>
 		<transition name='fade' mode='out-in'>
-			<div class='search__results' key='results' v-if='posts && posts.length'>
-				<scroll-load
-					:loading='loading'
-					@loadNext='loadNextPage'
-				>
-					<thread-post
-						class='search__post'
+			<div class='search__results' key='results' v-if='threads && threads.length && !loadingThreads'>
+				<h2>Threads</h2>
+				<thread-display v-for='thread in threads.slice(0, 3)' :key='thread.id' :thread='thread'></thread-display>
 
-						v-for='post in posts'
-						:key='post.id'
-
-						:post='post'
-						:show-thread='true'
-						:click-for-post='true'
-					></thread-post>
-					<thread-post-placeholder
-						class='search__post'
-						v-if='loading'
-						v-for='n in next'
-						:key='n'
-					></thread-post-placeholder>
-				</scroll-load>
-				<div class='search__more'>
-					<span class='fa fa-fw fa-pencil-alt'></span>
-					View 2 more threads
+				<div class='search__more search__item' v-if='threads.length > 3'>
+					<span class='fa fa-fw fa-comments'></span>
+					View all matching threads
 				</div>
 			</div>
-			<div
-				class='overlay_message search__overlay_message'
-				v-else-if='posts && !posts.length'
-				key='no results'
-			>
-				<span class='fa fa-exclamation-circle'></span>
-				No results found
-			</div>
-			<div
-				class='search__results'
-				key='loading'
-				v-else
-			>
-				<thread-post-placeholder class='search__post'
-				></thread-post-placeholder>
-			</div>
 
+			<div
+				key='loading'
+				v-if='loadingThreads'
+			>
+				<h2>Threads</h2>
+				<thread-display-placeholder></thread-display-placeholder>
+			</div>
 		</transition>
-		<h2>Posts</h2>
 		<transition name='fade' mode='out-in'>
-			<div class='search__results' key='results' v-if='posts && posts.length'>
-				<scroll-load
-					:loading='loading'
-					@loadNext='loadNextPage'
-				>
-					<thread-post
-						class='search__post'
-
-						v-for='post in posts'
-						:key='post.id'
-
-						:post='post'
-						:show-thread='true'
-						:click-for-post='true'
-					></thread-post>
-					<thread-post-placeholder
-						class='search__post'
-						v-if='loading'
-						v-for='n in next'
-						:key='n'
-					></thread-post-placeholder>
-				</scroll-load>
-				<div class='search__more'>
-					<span class='fa fa-fw fa-comments' style='font-weight: 300;'></span>
-					View 10 more posts
+			<div class='search__results' key='results' v-if='users && users.length && !loadingUsers'>
+				<h2>Users</h2>
+				<user-display v-for='user in users.slice(0, 5)' :key='user.id' :user='user'></user-display>
+				
+				<div class='search__item search__more' v-if='users.length > 5'>
+					<span class='fa fa-fw fa-user'></span>
+					View all matching users
 				</div>
 			</div>
+
 			<div
-				class='overlay_message search__overlay_message'
-				v-else-if='posts && !posts.length'
-				key='no results'
-			>
-				<span class='fa fa-exclamation-circle'></span>
-				No results found
-			</div>
-			<div
-				class='search__results'
 				key='loading'
-				v-else
+				v-if='loadingUsers'
 			>
-				<thread-post-placeholder class='search__post'
-				></thread-post-placeholder>
+				<h2>Users</h2>
+				<user-placeholder></user-placeholder>
 			</div>
 		</transition>
 	</div>
 </template>
 
 <script>
-	import LoadingIcon from '../LoadingIcon'
-	import ScrollLoad from '../ScrollLoad'
-	import ThreadPost from '../ThreadPost'
-	import ThreadPostPlaceholder from '../ThreadPostPlaceholder'
+	import UserDisplay from '../UserDisplay'
+	import UserPlaceholder from '../UserPlaceholder'
+	import ThreadDisplay from '../ThreadDisplay'
+	import ThreadDisplayPlaceholder from '../ThreadDisplayPlaceholder'
 
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
@@ -109,69 +54,48 @@
 	export default {
 		name: 'Search',
 		components: {
-			LoadingIcon,
-			ThreadPost,
-			ScrollLoad,
-			ThreadPostPlaceholder
+			UserDisplay,
+			UserPlaceholder,
+			ThreadDisplay,
+			ThreadDisplayPlaceholder
 		},
 		data () {
 			return {
-				posts: null,
-				next: 0,
-				offset: 0,
-
-				loading: false,
-				postsLoaded: false
+				threads: [],
+				loadingThreads: false,
+				
+				users: [],
+				loadingUsers: false
 			}
 		},
 		methods: {
-			//Delay of 300ms so that you won't see
-			//a flash of placeholders when it's not necessary
-			setDelayedPostsNull () {
-				this.postsLoaded = false
-
-				setTimeout(() => {
-					if(!this.postsLoaded) {
-						this.posts = null
-					}
-				}, 300)
-			},
-			getResults () {
-				this.$store.dispatch('setTitle', 'Search | ' + this.$route.params.q)
-				this.setDelayedPostsNull()
+			getUsers () {
+				this.loadingUsers = true;
 
 				this.axios
-					.get('/api/v1/search?q=' + this.$route.params.q)
+					.get('/api/v1/search/user?q=' + this.$route.params.q)
 					.then(res => {
-						this.posts = res.data.posts
-						this.next = res.data.next
-						this.offset = res.data.offset
-						this.postsLoaded = true
+						this.loadingUsers = false;
+						this.users = res.data.users;
 					})
 					.catch(AjaxErrorHandler(this.$store))
 			},
-			loadNextPage () {
-				if(this.next === 0) return
-
-				this.loading = true
+			getThreads () {
+				this.loadingThreads = true;
 
 				this.axios
-					.get(
-						`/api/v1/search?q=${this.$route.params.q}&offset=${this.offset}`
-					)
+					.get('/api/v1/search/thread?q=' + this.$route.params.q)
 					.then(res => {
-						this.posts.push(...res.data.posts)
-						this.next = res.data.next
-						this.offset = res.data.offset
+						this.loadingThreads = false;
+						this.threads = res.data.threads;
+					})
+					.catch(AjaxErrorHandler(this.$store))
+			},
+			getResults () {
+				this.$store.dispatch('setTitle', 'Search | ' + this.$route.params.q)
 
-						this.loading = false
-						this.postsLoaded = true
-					})
-					.catch(e => {
-						this.loading = false
-						this.postsLoaded = true
-						AjaxErrorHandler(this.$store)(e)
-					})
+				this.getThreads();
+				this.getUsers();
 			}
 		},
 		watch: {
@@ -190,9 +114,8 @@
 	@import '../../assets/scss/variables.scss';
 
 	.search {
-		@at-root #{&}__post, #{&}__more {
+		@at-root #{&}__item {
 			background-color: #fff;
-			padding-left: 0.75rem;
 			margin-bottom: 1rem;
 			border: thin solid $color__gray--darker;
 			transition: box-shadow 0.2s;
@@ -208,12 +131,12 @@
 			border-radius: 0.25rem;
 			cursor: pointer;
 			font-weight: 500;
-			margin: 0 -0.5rem;
 			margin-top: 1rem;
 			padding: 0.75rem;
 
 			span {
 				color: $color__darkgray--darker;
+				font-weight: 300;
 			}
 		}
 

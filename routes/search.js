@@ -1,7 +1,7 @@
 let express = require('express')
 let router = express.Router()
 
-let { Post, Thread, User, Sequelize } = require('../models')
+let { Post, Thread, User, Category, Sequelize } = require('../models')
 const Errors = require('../lib/errors')
 
 router.get('/thread', async (req, res, next) => {
@@ -28,25 +28,35 @@ router.get('/thread', async (req, res, next) => {
 				name: { $like: '%' + searchString + '%' }
 			},
 			order: [ ['id', 'DESC'] ],
-			include: [{
-				model: Post,
-				where: {
-					postNumber: 0
-				}
-			}],
+			include: [
+				{
+					model: Post,
+					include: [{ model: User, attributes: { exclude: ['hash'] } }],
+					where: {
+						postNumber: 0
+					}
+				},
+				{ model: Category },
+				{ model: User, attributes: { exclude: ['hash'] } }
+			],
 			limit,
 			offset
 		})
 
 		let threadPosts = await Thread.findAll({
 			order: [ ['id', 'DESC'] ],
-			include: [{
-				model: Post,
-				where: {
-					postNumber: 0,
-					content: { $like: '%' + searchString + '%' }
-				}
-			}],
+			include: [
+				{
+					model: Post,
+					include: [{ model: User, attributes: { exclude: ['hash'] } }],
+					where: {
+						postNumber: 0,
+						content: { $like: '%' + searchString + '%' }
+					}
+				},
+				{ model: Category },
+				{ model: User, attributes: { exclude: ['hash'] } }
+			],
 			limit,
 			offset
 		})
