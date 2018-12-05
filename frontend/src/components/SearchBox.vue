@@ -43,6 +43,7 @@
 					}'
 					ref='threads header'
 					@mouseover='highlightIndex = getHighlightIndex("threads header")'
+					@click='goToSearch'
 				>
 					<span class='fa fa-fw fa-search'></span>
 					Search threads for '<strong>{{searchField}}</strong>'
@@ -71,6 +72,7 @@
 					}'
 					ref='users header'
 					@mouseover='highlightIndex = getHighlightIndex("users header")'
+					@click='goToSearch'
 				>
 					<span class='fa fa-fw fa-search'></span>
 					Search users containing '<strong>{{searchField}}</strong>'
@@ -249,9 +251,11 @@
 				
 			},
 			goToSearch () {
+				let searchEncoded = encodeURIComponent(this.searchField.trim());
+
 				if(this.highlightIndex === null && this.searchField.trim().length) {
 					this.showResults = false;
-					this.$router.push("/search/" + encodeURIComponent(this.searchField));
+					this.$router.push("/search/" + searchEncoded);
 				} else {
 					let { group, index } = this.getGroupFromIndex(this.highlightIndex);
 					if(group === 'users') {
@@ -259,6 +263,10 @@
 					} else if (group === 'threads') {
 						let thread = this.threads[index];
 						this.$router.push('/thread/' + thread.slug + '/' + thread.id);
+					} else if (group === 'users header') {
+						this.$router.push('/search/users/' + searchEncoded);
+					} else {
+						this.$router.push('/search/threads/' + searchEncoded);
 					}
 
 					this.resetResultsBox();
