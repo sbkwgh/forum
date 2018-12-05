@@ -247,8 +247,10 @@
 				let { group, index } = this.getGroupFromIndex(this.highlightIndex);
 				let el = index === null ? this.$refs[group] : this.$refs[group][index];
 				if(
+					//Below fold
 					el.offsetHeight + el.offsetTop > this.$refs.results.offsetHeight ||
-					 el.offsetHeight + el.offsetTop < this.$refs.results.scrollTop
+					//Above fold
+					el.offsetTop < this.$refs.results.scrollTop
 				) {
 					el.scrollIntoView();
 				}
