@@ -46,7 +46,9 @@
 					@click='goToSearch'
 				>
 					<span class='fa fa-fw fa-search'></span>
-					Search all threads for '<strong>{{searchField}}</strong>'
+					<div>
+						Search all threads for '<strong>{{searchField}}</strong>'
+					</div>
 				</div>
 				<div
 					class='search_box__results__thread'
@@ -75,7 +77,9 @@
 					@click='goToSearch'
 				>
 					<span class='fa fa-fw fa-search'></span>
-					Search all users containing '<strong>{{searchField}}</strong>'
+					<div>
+						Search all users containing '<strong>{{searchField}}</strong>'
+					</div>
 				</div>
 				<div
 					class='search_box__results__user'
