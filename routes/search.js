@@ -103,7 +103,7 @@ router.get('/user', async (req, res, next) => {
 
 		res.json({
 			users,
-			offset: users.length? users.slice(-1)[0].id : null,
+			offset: users.length < limit ? null : offset + limit,
 			next: users.length < limit ? null : limit
 		})
 

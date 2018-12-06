@@ -6,7 +6,10 @@
 				<h2>Threads</h2>
 				<thread-display v-for='thread in threads.slice(0, 3)' :key='thread.id' :thread='thread'></thread-display>
 
-				<div class='search__more search__item' v-if='threads.length > 3'>
+				<div
+					class='search__more search__item' v-if='threads.length > 3'
+					@click='$router.push("/search/threads/" + $route.params.q)'
+				>
 					<span class='fa fa-fw fa-comments'></span>
 					View all matching threads
 				</div>
@@ -25,7 +28,10 @@
 				<h2>Users</h2>
 				<user-display v-for='user in users.slice(0, 5)' :key='user.id' :user='user'></user-display>
 				
-				<div class='search__item search__more' v-if='users.length > 5'>
+				<div
+					class='search__item search__more' v-if='users.length > 5'
+					@click='$router.push("/search/users/" + $route.params.q)'
+				>
 					<span class='fa fa-fw fa-user'></span>
 					View all matching users
 				</div>

@@ -36,7 +36,9 @@ const P = () => import('./components/routes/P')
 const Start = () => import('./components/routes/Start')
 const Thread = () => import('./components/routes/Thread')
 const ThreadNew = () => import('./components/routes/ThreadNew')
+
 const Search = () => import('./components/routes/Search')
+const SearchUsersThreads = () => import('./components/routes/SearchUsersThreads')
 
 const User = () => import('./components/routes/User')
 const UserPosts = () => import('./components/routes/UserPosts')
@@ -70,6 +72,8 @@ const router = new VueRouter({
 		{ path: '/thread/:slug/:id/:post_number', name: 'thread-post', component: Thread },
 		{ path: '/thread/new', component: ThreadNew },
 		{ path: '/search/:q', component: Search },
+		{ path: '/search/users/:q', component: SearchUsersThreads, name: 'search/users' },
+		{ path: '/search/threads/:q', component: SearchUsersThreads, name: 'search/threads' },
 		{ path: '/user/:username', redirect: '/user/:username/posts', component: User, children: [
 			{ path: 'posts', component: UserPosts },
 			{ path: 'threads', component: UserThreads }
