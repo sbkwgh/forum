@@ -8,7 +8,11 @@ router.get('/thread', async (req, res, next) => {
 	try {
 		let searchString = req.query.q
 
-		let offset = +req.query.offset || 0
+		//Offset is really the previously lowest id
+		//(as a proxy for oldest thread of the previous search)
+		//if there is no offset, just use a clause that will always be true
+		//i.e. greater than 0 id
+		let offset = +req.query.offset ? { $lt: +req.query.offset } : { $gt: 0 }
 		let limit = 10
 
 		/*  
@@ -25,7 +29,8 @@ router.get('/thread', async (req, res, next) => {
 
 		let threadTitles = await Thread.findAll({
 			where: {
-				name: { $like: '%' + searchString + '%' }
+				name: { $like: '%' + searchString + '%' },
+				id: offset
 			},
 			order: [ ['id', 'DESC'] ],
 			include: [
@@ -39,11 +44,13 @@ router.get('/thread', async (req, res, next) => {
 				{ model: Category },
 				{ model: User, attributes: { exclude: ['hash'] } }
 			],
-			limit,
-			offset
+			limit
 		})
 
 		let threadPosts = await Thread.findAll({
+			where: {
+				id: offset
+			},
 			order: [ ['id', 'DESC'] ],
 			include: [
 				{
@@ -57,8 +64,7 @@ router.get('/thread', async (req, res, next) => {
 				{ model: Category },
 				{ model: User, attributes: { exclude: ['hash'] } }
 			],
-			limit,
-			offset
+			limit
 		})
 
 		let merged = [...threadTitles, ...threadPosts];
@@ -71,7 +77,7 @@ router.get('/thread', async (req, res, next) => {
 		
 		let sorted = unique
 			.sort((a, b) => {
-				return a.id - b.id;
+				return b.id - a.id;
 			})
 			.slice(0, limit);
 
