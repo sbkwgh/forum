@@ -30,10 +30,10 @@
 		<div
 			class='search_box__results'
 			:class='{ "search_box__results--show": showResults }'
-			ref='results'
 			v-if='headerBar'
 		>
-			<div class='search_box__results__container'>
+	
+			<div class='search_box__results__container' ref='results'>
 
 				<template v-if='threads.length'>
 					<div class='search_box__results__header'>Threads</div>
