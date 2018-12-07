@@ -33,74 +33,77 @@
 			ref='results'
 			v-if='headerBar'
 		>
+			<div class='search_box__results__container'>
 
-			<template v-if='threads.length'>
-				<div class='search_box__results__header'>Threads</div>
-				<div
-					class='search_box__results__search_all'
-					:class='{
-						"search_box__results--highlight": highlightIndex === getHighlightIndex("threads header")
-					}'
-					ref='threads header'
-					@mouseover='highlightIndex = getHighlightIndex("threads header")'
-					@click='goToSearch'
-				>
-					<span class='fa fa-fw fa-search'></span>
-					<div>
-						Search all threads for '<strong>{{searchField}}</strong>'
+				<template v-if='threads.length'>
+					<div class='search_box__results__header'>Threads</div>
+					<div
+						class='search_box__results__search_all'
+						:class='{
+							"search_box__results--highlight": highlightIndex === getHighlightIndex("threads header")
+						}'
+						ref='threads header'
+						@mouseover='highlightIndex = getHighlightIndex("threads header")'
+						@click='goToSearch'
+					>
+						<span class='fa fa-fw fa-search'></span>
+						<div>
+							Search all threads for '<strong>{{searchField}}</strong>'
+						</div>
 					</div>
-				</div>
-				<div
-					class='search_box__results__thread'
-					:class='{
-						"search_box__results--highlight": highlightIndex === getHighlightIndex("threads", index)
-					}'
-					v-for='(thread, index) in threads'
-					ref='threads'
-					@mouseover='highlightIndex = getHighlightIndex("threads", index)'
-					@click='goToSearch'
-				>
-					<div class='search_box__results__title'>{{thread.name}}</div>
-					<div class='search_box__results__content'>{{thread.Posts[0].content | stripTags | truncate(140) }}</div>
-				</div>
-			</template>
-
-			<template v-if='users.length'>
-				<div class='search_box__results__header search_box__results__header--divider'>Users</div>
-				<div
-					class='search_box__results__search_all'
-					:class='{
-						"search_box__results--highlight": highlightIndex === getHighlightIndex("users header")
-					}'
-					ref='users header'
-					@mouseover='highlightIndex = getHighlightIndex("users header")'
-					@click='goToSearch'
-				>
-					<span class='fa fa-fw fa-search'></span>
-					<div>
-						Search all users containing '<strong>{{searchField}}</strong>'
+					<div
+						class='search_box__results__thread'
+						:class='{
+							"search_box__results--highlight": highlightIndex === getHighlightIndex("threads", index)
+						}'
+						v-for='(thread, index) in threads'
+						ref='threads'
+						@mouseover='highlightIndex = getHighlightIndex("threads", index)'
+						@click='goToSearch'
+					>
+						<div class='search_box__results__title'>{{thread.name}}</div>
+						<div class='search_box__results__content'>{{thread.Posts[0].content | stripTags | truncate(140) }}</div>
 					</div>
-				</div>
-				<div
-					class='search_box__results__user'
-					:class='{
-						"search_box__results--highlight": highlightIndex === getHighlightIndex("users", index)
-					}'
-					v-for='(user, index) in users'
-					ref='users'
-					@mouseover='highlightIndex = getHighlightIndex("users", index)'
-					@click='goToSearch'
-				>
-					<avatar-icon size='tiny' :user='user'></avatar-icon>
-					<div class='search_box__results__title'>{{user.username}}</div>
-				</div>
-			</template>
+				</template>
 
-			<div class='search_box__results__message' v-if='!threads.length && !users.length && !loading'>
-				No users or threads found for '<strong>{{searchField}}</strong>'
-			</div>
-			<div class='search_box__results__message' v-if='loading'>
-				Loading...
+				<template v-if='users.length'>
+					<div class='search_box__results__header search_box__results__header--divider'>Users</div>
+					<div
+						class='search_box__results__search_all'
+						:class='{
+							"search_box__results--highlight": highlightIndex === getHighlightIndex("users header")
+						}'
+						ref='users header'
+						@mouseover='highlightIndex = getHighlightIndex("users header")'
+						@click='goToSearch'
+					>
+						<span class='fa fa-fw fa-search'></span>
+						<div>
+							Search all users containing '<strong>{{searchField}}</strong>'
+						</div>
+					</div>
+					<div
+						class='search_box__results__user'
+						:class='{
+							"search_box__results--highlight": highlightIndex === getHighlightIndex("users", index)
+						}'
+						v-for='(user, index) in users'
+						ref='users'
+						@mouseover='highlightIndex = getHighlightIndex("users", index)'
+						@click='goToSearch'
+					>
+						<avatar-icon size='tiny' :user='user'></avatar-icon>
+						<div class='search_box__results__title'>{{user.username}}</div>
+					</div>
+				</template>
+
+				<div class='search_box__results__message' v-if='!threads.length && !users.length && !loading'>
+					No users or threads found for '<strong>{{searchField}}</strong>'
+				</div>
+				<div class='search_box__results__message' v-if='loading'>
+					Loading...
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -365,16 +368,20 @@
 			border: 1.5px solid $color__gray--darkest;
 			border-radius: 0.25rem;
 			box-shadow: 0 0.25rem 1rem rgba(#000, 0.125);
-			max-height: 20rem;
 			opacity: 0;
-			overflow-y: auto;
-			overflow-x: hidden;
+			overflow: hidden;
 			pointer-events: none;
 			position: absolute;
 			right: 0;
 			transform: translateY(-0.25rem);
 			transition: opacity 0.2s, transform 0.2s;
 			width: 100%;
+
+			@at-root #{&}__container {			
+				max-height: 20rem;
+				overflow-y: auto;
+				overflow-x: hidden;
+			}
 
 			@at-root #{&}--show {
 				opacity: 1;
