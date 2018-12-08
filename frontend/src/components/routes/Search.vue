@@ -44,7 +44,20 @@
 				<h2>Users</h2>
 				<user-placeholder></user-placeholder>
 			</div>
+
+			<div
+				class='overlay_message search__overlay_message'
+				v-if='showNoResults || queryTooShort'
+				key='no results'
+			>
+				<span class='fa fa-exclamation-circle'></span>
+					{{queryTooShort ?
+						"Search term is too short" :
+						"No results found"
+					}}
+			</div>
 		</transition>
+
 	</div>
 </template>
 
@@ -74,6 +87,17 @@
 				loadingUsers: false
 			}
 		},
+		computed: {
+			showNoResults () {
+				return (
+					!this.loadingUsers && !this.loadingThreads &&
+					!this.threads.length && !this.users.length
+				);
+			},
+			queryTooShort () {
+				return this.$route.params.q.length < 4
+			}
+		},
 		methods: {
 			getUsers () {
 				this.loadingUsers = true;
@@ -98,6 +122,8 @@
 					.catch(AjaxErrorHandler(this.$store))
 			},
 			getResults () {
+				if(this.queryTooShort) return;
+
 				this.$store.dispatch('setTitle', 'Search | ' + this.$route.params.q)
 
 				this.getThreads();

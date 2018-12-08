@@ -45,11 +45,14 @@
 
 			<div
 				class='overlay_message search__overlay_message'
-				v-else-if='results && !results.length'
+				v-if='showNoResults || queryTooShort'
 				key='no results'
 			>
 				<span class='fa fa-exclamation-circle'></span>
-				No {{searchType}} found
+					{{queryTooShort ?
+						"Search term is too short" :
+						"No results found"
+					}}
 			</div>
 
 			<div key='loading' v-else>
@@ -100,10 +103,20 @@
 				} else if (name === 'search/threads') {
 					return 'threads';
 				}
+			},
+			showNoResults () {
+				return (
+					!this.loading && this.results && !this.results.length
+				);
+			},
+			queryTooShort () {
+				return this.$route.params.q.length < 4
 			}
 		},
 		methods: {
 			getResults () {
+				if (this.queryTooShort) return;
+
 				this.$store.dispatch('setTitle', 'Search | ' + this.$route.params.q)
 			
 				this.axios

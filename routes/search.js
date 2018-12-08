@@ -6,7 +6,14 @@ const Errors = require('../lib/errors')
 
 router.get('/thread', async (req, res, next) => {
 	try {
-		let searchString = req.query.q
+		let searchString = req.query.q.trim()
+
+		if(searchString.length < 4) {
+			throw Errors.sequelizeValidation(Sequelize, {
+				error: 'search string must be at least 4 characters',
+				value: searchString
+			})
+		}
 
 		//Offset is really the previously lowest id
 		//(as a proxy for oldest thread of the previous search)
@@ -85,7 +92,6 @@ router.get('/thread', async (req, res, next) => {
 		//the post number is equal to the overal posts count
 		//and the post number > 0 (i.e. there are replies)
 		let whereClause = sorted.reduce((arr, thread) => {
-			console.log(thread.postsCount)
 			if(thread.postsCount > 1) {
 				let clause = {
 					$and: {
