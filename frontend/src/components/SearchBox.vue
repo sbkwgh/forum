@@ -61,8 +61,8 @@
 						@mouseover='highlightIndex = getHighlightIndex("threads", index)'
 						@click='goToSearch'
 					>
-						<div class='search_box__results__title'>{{thread.name}}</div>
-						<div class='search_box__results__content'>{{thread.Posts[0].content | stripTags | truncate(140) }}</div>
+						<div class='search_box__results__title'>{{thread.name | truncate(50)}}</div>
+						<div class='search_box__results__content'>{{thread.Posts[0].content | stripTags | truncate(75) }}</div>
 					</div>
 				</template>
 
