@@ -157,10 +157,8 @@ Vue.filter('formatDate', function (value, format = '', join = ' ') {
 });
 
 Vue.filter('stripTags', function (value) {
-	let div = document.createElement('div')
-	div.innerHTML = value
-
-	return div.textContent
+	let doc = new DOMParser().parseFromString(value, 'text/html')
+	return doc.body.textContent || ''
 });
 
 Vue.filter('truncate', function (value, length) {
