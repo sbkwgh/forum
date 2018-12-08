@@ -22,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
 					msg: 'The title cannot be empty'
 				},
 				len: {
-					args: [0, 256],
-					msg: 'The title can only be up to 256 characters'
+					args: [4, 256],
+					msg: 'The title must be between 4 and 256 characters'
 				},
 				isString (val) {
 					if(typeof val !== 'string') {
