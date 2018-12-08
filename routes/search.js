@@ -81,10 +81,47 @@ router.get('/thread', async (req, res, next) => {
 			})
 			.slice(0, limit);
 
+		//To get latest post, find threads where
+		//the post number is equal to the overal posts count
+		//and the post number > 0 (i.e. there are replies)
+		let whereClause = sorted.reduce((arr, thread) => {
+			console.log(thread.postsCount)
+			if(thread.postsCount > 1) {
+				let clause = {
+					$and: {
+						ThreadId: thread.id,
+						postNumber: thread.postsCount-1
+					}
+				}
+
+				return [...arr, clause];
+			} else {
+				return arr;
+			}
+		}, []);
+
+		let latestPosts = await Post.findAll({
+			where: {
+				$or: whereClause
+			},
+			order: [ ['ThreadId', 'DESC'] ],
+			include: [{ model: User, attributes: { exclude: ['hash'] } }]
+		})
+
+		//Merge latest posts with threads array
+		let ret = sorted.map(thread => {
+			if(thread.postsCount > 1) {
+				let post = latestPosts.filter(p => p.ThreadId === thread.id)[0];
+				thread.Posts.push(post);
+			} 
+
+			return thread;
+		})
+
 		res.json({
-			threads: sorted,
-			offset: sorted.length ? sorted.slice(-1)[0].id : null,
-			next: sorted.length < limit ? null : limit
+			threads: ret,
+			offset: ret.length ? ret.slice(-1)[0].id : null,
+			next: ret.length < limit ? null : limit
 		})
 
 	} catch (e) { next(e) }
