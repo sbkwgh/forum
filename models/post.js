@@ -1,4 +1,6 @@
 let marked = require('marked')
+let cheerio = require('cheerio')
+
 const Errors = require('../lib/errors')
 
 marked.setOptions({
@@ -19,10 +21,14 @@ module.exports = (sequelize, DataTypes) => {
 					path: 'content'
 				})
 
-				this.setDataValue('content', marked(val))
+				let md = marked(val);
+
+				this.setDataValue('content', md)
+				this.setDataValue('plainText', cheerio(md).text())
 			},
 			allowNull: false
 		},
+		plainText: DataTypes.TEXT,
 		postNumber: DataTypes.INTEGER,
 		replyingToUsername: DataTypes.STRING,
 		removed: {

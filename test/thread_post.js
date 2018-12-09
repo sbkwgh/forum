@@ -346,13 +346,14 @@ describe('Thread and post', () => {
 				.post('/api/v1/post')
 				.set('content-type', 'application/json')
 				.send({
-					content: 'content',
+					content: 'content **here**',
 					threadId: 1
 				})
 
 			res.should.be.json
 			res.should.have.status(200)
-			res.body.should.have.property('content', '<p>content</p>\n')
+			res.body.should.have.property('content', '<p>content <strong>here</strong></p>\n')
+			res.body.should.have.property('plainText', 'content here\n')
 			res.body.should.have.property('postNumber', 0)
 			res.body.should.have.deep.property('User.username', 'username')
 			res.body.should.have.deep.property('Thread.name', 'thread')
@@ -472,6 +473,7 @@ describe('Thread and post', () => {
 			res.should.have.status(200)
 			res.body.should.have.property('postNumber', 1)
 			res.body.should.have.property('content', '<p>another post</p>\n')
+			res.body.should.have.property('plainText', 'another post\n')
 			res.body.should.have.deep.property('User.username', 'username1')
 			res.body.should.have.deep.property('Thread.name', 'thread')
 			res.body.should.have.deep.property('Thread.postsCount', 2)
@@ -669,7 +671,7 @@ describe('Thread and post', () => {
 
 			res.should.have.status(200)
 			res.should.be.json
-			res.body.should.have.property('content', '<p>content</p>\n')
+			res.body.should.have.property('content', '<p>content <strong>here</strong></p>\n')
 			res.body.should.have.deep.property('User.username', 'username')
 			res.body.should.have.deep.property('Thread.name', 'thread')
 			res.body.should.have.deep.property('Thread.Category.name', 'category_name')

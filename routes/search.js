@@ -65,7 +65,7 @@ router.get('/thread', async (req, res, next) => {
 					include: [{ model: User, attributes: { exclude: ['hash'] } }],
 					where: {
 						postNumber: 0,
-						content: { $like: '%' + searchString + '%' }
+						plainText: { $like: '%' + searchString + '%' }
 					}
 				},
 				{ model: Category },
