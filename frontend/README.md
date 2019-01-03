@@ -10,6 +10,12 @@ Vue-CLI 3 project with vuex, routes and jest for unit test.
 npm install
 ```
 
+or use docker to build and run project:
+
+```
+docker-compose up
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
