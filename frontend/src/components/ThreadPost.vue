@@ -372,6 +372,7 @@
 		@at-root #{&}__content {
 			padding: 0 0.5rem 0 4rem;
 			outline: none;
+			word-wrap: anywhere;
 		}
 		@at-root #{&}__footer {
 			padding: 0.5rem 0 0.75rem 0.5rem;
