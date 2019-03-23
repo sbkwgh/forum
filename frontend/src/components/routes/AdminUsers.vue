@@ -24,7 +24,6 @@
 			query-selector='.admin_users'
 			:padding-bottom='100'
 		>
-			<div class='category_widget__text__title'>Showing 18 / 18 users</div>
 			<table>
 				<tr>
 					<th>
