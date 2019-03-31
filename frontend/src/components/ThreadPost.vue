@@ -96,12 +96,13 @@
 			<div
 				class='post__footer_group post__actions'
 				:class='{ "post__actions--show": showActions }'
+				v-if='!post.removed'
 			>
 				<div class='post__action post__share' @click.stop='setShareModalState(true)'>share</div>
 				<div
 					class='post__action'
 					@click.stop='setShowReportPostModal(true)'
-					v-if='$store.state.username && !post.removed'
+					v-if='$store.state.username'
 				>
 					report
 				</div>
