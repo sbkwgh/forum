@@ -7,7 +7,7 @@
 				<thread-display v-for='thread in threads.slice(0, 3)' :key='thread.id' :thread='thread'></thread-display>
 
 				<div
-					class='search__more search__item' v-if='threads.length > 3'
+					class='search__more search__item' v-if='threads.length > ($store.state.MinQueryLength-1)'
 					@click='$router.push("/search/threads/" + $route.params.q)'
 				>
 					<span class='fa fa-fw fa-comments'></span>
@@ -95,7 +95,7 @@
 				);
 			},
 			queryTooShort () {
-				return this.$route.params.q.length < 4
+				return this.$route.params.q.length < this.$store.state.MinQueryLength
 			}
 		},
 		methods: {

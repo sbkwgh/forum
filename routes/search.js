@@ -8,9 +8,9 @@ router.get('/thread', async (req, res, next) => {
 	try {
 		let searchString = req.query.q.trim()
 
-		if(searchString.length < 4) {
+		if(searchString.length < 2) {
 			throw Errors.sequelizeValidation(Sequelize, {
-				error: 'search string must be at least 4 characters',
+				error: 'search string must be at least 2 characters',
 				value: searchString
 			})
 		}

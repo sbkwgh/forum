@@ -45,7 +45,7 @@
 			<div style='display: inline-flex;'>
 				<avatar-icon :user='post.User' class='post__avatar'></avatar-icon>
 				<div class='post__thread' v-if='showThread' @click.stop='goToThread'>
-					In thread <span class='post__thread__name'>{{post.Thread.name}}</span>
+					In thread <span class='post__thread__name'>{{post.Thread.name | truncateMid(50)}}</span>
 					&nbsp;&middot;&nbsp;
 				</div>
 				<div class='post__user' v-else>

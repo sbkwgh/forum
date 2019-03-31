@@ -110,7 +110,7 @@
 				);
 			},
 			queryTooShort () {
-				return this.$route.params.q.length < 4
+				return this.$route.params.q.length < this.$store.state.MinQueryLength
 			}
 		},
 		methods: {

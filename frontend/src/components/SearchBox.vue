@@ -126,6 +126,8 @@
 
 				highlightIndex: null,
 
+				MinQueryLength: 2,
+
 				threads: [],
 				users: []
 			}
@@ -146,7 +148,7 @@
 				//Return if results should not show
 				if(!this.headerBar) return;
 
-				this.showResults = this.searchField.trim().length > 3;
+				this.showResults = this.searchField.trim().length > (this.$store.state.MinQueryLength-1);
 				if(this.showResults) {
 					this.getResults();
 				} else {
@@ -285,7 +287,7 @@
 			},
 			getResults () {
 				let q = this.searchField.trim();
-				if(q.length < 4) return;
+				if(q.length < this.$store.state.MinQueryLength) return;
 
 				this.loading = true;
 				this.threads = [];

@@ -26,7 +26,9 @@ export default new Vuex.Store({
 		show404Page: false,
 
 		ajaxErrors: [],
-		ajaxErrorsModal: false
+		ajaxErrorsModal: false,
+
+		MinQueryLength: 2
 	},
 	getters: {
 		categoriesWithoutAll (state) {
