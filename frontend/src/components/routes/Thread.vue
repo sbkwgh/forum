@@ -407,9 +407,10 @@
 		justify-content: space-between;
 
 		@at-root #{&}__thread_title {
-			@include text($font--role-default, 3rem, 400);
-			width: calc(100% - 8rem);
+			@include text($font--role-default, 2rem, 400);
+			width: 80%;
 			margin-bottom: 1rem;
+			word-break: break-all;
 		}
 	}
 
@@ -484,7 +485,11 @@
 			width: 100%;
 		}
 		div.thread_side_bar {
-			padding-left: 2.25rem;
+			padding-left: 2rem;
+
+			&> :first-child {
+				margin-left: 0;
+			}
 		}
 	}
 
@@ -499,8 +504,11 @@
 			flex-direction: row;
 			align-items: flex-end;
 
-			padding-left: 0.25rem;
+			margin-left: 1rem;
 
+			& > :first-child {
+				margin-left: 0;
+			}
 			> * {
 				margin: 0 0.5rem;
 			}

@@ -135,6 +135,7 @@
 		@at-root #{&}__question {
 			font-weight: bold;
 			font-size: 1.125rem;
+			word-break: break-all;
 		}
 
 		@at-root #{&}__answers, #{&}__results {
@@ -149,6 +150,8 @@
 			cursor: pointer;
 			transition: all 0.2s;
 			position: relative;
+			overflow: hidden;
+			text-overflow: ellipsis;
 
 			&::after {
 				content: '';
@@ -192,6 +195,7 @@
 		}
 		@at-root #{&}__result {
 			margin: 0.5rem 0;
+			word-break: break-all;
 
 			@at-root #{&}__info {
 				color: $color__text--secondary;

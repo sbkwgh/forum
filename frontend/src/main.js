@@ -165,7 +165,17 @@ Vue.filter('truncate', function (value, length) {
 	if(value.length <= length) {
 		return value
 	} else {
-		return value.slice(0, length) + '...'
+		return value.slice(0, length) + '…'
+	}
+});
+Vue.filter('truncateMid', function (value, length) {
+	if(value.length <= length) {
+		return value
+	} else {
+		let firstLen = Math.round(length/2);
+		let secondLen = length - firstLen;
+
+		return value.slice(0, firstLen) + '…' + value.slice(value.length-secondLen, value.length)
 	}
 });
 
