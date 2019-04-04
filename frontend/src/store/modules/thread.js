@@ -137,8 +137,12 @@ const actions = {
 				commit('setTotalPostsCount', res.data.postsCount)
 				commit('setPosts', res.data.Posts)
 
+				vue.$router.replace({ name: 'thread-post', params: {
+					post_number: postNumber || 0,
+					slug: res.data.slug 
+				}});
+
 				if(postNumber !== undefined) {
-					vue.$router.push({ name: 'thread-post', params: { post_number: postNumber } })
 					vue.highlightPost(+postNumber)
 				}
 			}).catch(e => {
