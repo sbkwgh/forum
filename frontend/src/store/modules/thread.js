@@ -142,11 +142,7 @@ const actions = {
 					vue.highlightPost(+postNumber)
 				}
 			}).catch(e => {
-				let invalidId = e.response.data.errors.find(error => {
-					return error.name === 'invalidParameter' && error.parameter === 'id'
-				})
-
-				if(invalidId) {
+				if(e.response.status === 400) {
 					commit('set404Page', true)
 				} else {
 					AjaxErrorHandler(vue.$store)(e)
