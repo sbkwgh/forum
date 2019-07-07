@@ -10,6 +10,19 @@ marked.setOptions({
 	sanitize: true
 });
 
+const renderer = new marked.Renderer();
+renderer.link = function (href, title, text) {
+	if(!href.match(/[a-z]+:\/\/.+/i)) {
+		href = 'http://' + href;
+	}
+
+	return `
+		<a href='${href}' ${title ? "title='" + title + "'" : "" } target='_blank' rel='noopener'>
+			${text}
+		</a>
+	`;
+};
+
 
 module.exports = (sequelize, DataTypes) => {
 	let Post = sequelize.define('Post', {
@@ -21,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
 					path: 'content'
 				})
 
-				let md = marked(val);
+				let md = marked(val, { renderer });
 
 				this.setDataValue('content', md)
 				this.setDataValue('plainText', cheerio(md).text())

@@ -25,6 +25,19 @@
 		sanitize: true
 	});
 
+	const renderer = new Marked.Renderer();
+	renderer.link = function (href, title, text) {
+		if(!href.match(/[a-z]+:\/\/.+/i)) {
+			href = 'http://' + href;
+		}
+
+		return `
+			<a href='${href}' ${title ? "title='" + title + "'" : "" } target='_blank' rel='noopener'>
+				${text}
+			</a>
+		`;
+	};
+
 	export default {
 		name: 'InputEditorPreview',
 		props: ['value', 'mentions'],
@@ -48,7 +61,7 @@
 					replacedMd = replacedMd.replace(regexp, `$1[@${mention}](/user/${mention})$2`)
 				})
 
-				let HTML = Marked(replacedMd);
+				let HTML = Marked(replacedMd, { renderer });
 
 				this.HTML = HTML;
 				this.$linkExpander(HTML, v => this.HTML = v);
