@@ -7,7 +7,7 @@
 			@click='menuOpen = true'
 		>
 			{{display}}
-			<font-awesome-icon :icon='["fa", iconName]' full-width />
+			<font-awesome-icon :icon='["fa", iconName]' fixed-width />
 		</div>
 
 		<template slot='menu'>

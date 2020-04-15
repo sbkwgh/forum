@@ -29,15 +29,15 @@
 					class='thread_display__latest_reply'
 					v-if='thread.Posts.length === 2'
 				>
-					<font-awesome-icon :icon='["fa", "reply"]' full-width />
-					<span class='thread_display__latest_reply__text'>Latest reply by</span>
+					<font-awesome-icon :icon='["fa", "reply"]' fixed-width />
+					<span class='thread_display__latest_reply__text'>Latest reply by &nbsp;</span>
 					<span class='thread_display__username'>{{replyUsername}}</span>
 					&middot;
 					<span class='thread_display__date'>{{thread.Posts[1].createdAt | formatDate}}</span>
 				</div>
 				<span style='cursor: default;' v-else>No replies</span>
 				<div class='thread_display__replies' title='Replies to thread'>
-					<font-awesome-icon :icon='["far", "comment"]' full-width />
+					<font-awesome-icon :icon='["far", "comment"]' fixed-width />
 					{{thread.postsCount - 1}}
 				</div>
 			</div>

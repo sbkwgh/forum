@@ -10,7 +10,7 @@
 					class='search__more search__item' v-if='threads.length > ($store.state.MinQueryLength-1)'
 					@click='$router.push("/search/threads/" + $route.params.q)'
 				>
-					<font-awesome-icon :icon='["fa", "comments"]' full-width />
+					<font-awesome-icon :icon='["fa", "comments"]' fixed-width />
 					View all matching threads
 				</div>
 			</div>
@@ -32,7 +32,7 @@
 					class='search__item search__more' v-if='users.length > 5'
 					@click='$router.push("/search/users/" + $route.params.q)'
 				>
-					<font-awesome-icon :icon='["fa", "user"]' full-width />
+					<font-awesome-icon :icon='["fa", "user"]' fixed-width />
 					View all matching users
 				</div>
 			</div>

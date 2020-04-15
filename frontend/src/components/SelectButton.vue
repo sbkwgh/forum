@@ -14,7 +14,7 @@
 				{{options[selectedIndex].name}}
 				<font-awesome-icon
 					:icon='["fa", "chevron-down"]'
-					full-width
+					fixed-width
 					class='button__icon select_button__icon'
 				/>
 			</div>
