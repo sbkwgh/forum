@@ -13,15 +13,15 @@
 		</div>
 		<div class='widgets__new_post__message'>
 			<template v-if='change === 0'>
-				<span class='fa fa-minus'></span>
+				<font-awesome-icon :icon='["fa", "minus"]' />
 				No change since yesterday
 			</template>
 			<template v-else-if='change > 0'>
-				<span class='fa fa-caret-up'></span>
+				<font-awesome-icon :icon='["fa", "caret-up"]' />
 				Up {{change}} since yesterday
 			</template>
 			<template v-else>
-				<span class='fa fa-caret-down'></span>
+				<font-awesome-icon :icon='["fa", "caret-down"]' />
 				Down {{Math.abs(change)}} since yesterday
 			</template>
 		</div>

@@ -1,15 +1,5 @@
 import NProgress from 'nprogress'
-import IO from 'socket.io-client'
-window.socket = IO()
-
-socket.on('disconnect', () => {
-	socket.connect('http://localhost:3000', {
-		reconnection: true,
-		reconnectionDelay: 1000,
-		reconnectionDelayMax : 5000,
-		reconnectionAttempts: Infinity
-	} );
-})
+import io from 'socket.io-client'
 
 window.onload = () => {
 	let div = document.createElement('div');
@@ -30,6 +20,31 @@ import linkExpander from './assets/js/linkExpander'
 
 import App from './App'
 import store from './store/index'
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faBell, faComment } from '@fortawesome/free-regular-svg-icons'
+import {
+	faBars, faPlus, faGrin, faLink, faCode,
+	faTimes, faUnlockAlt, faReply, faHome, faTh,
+	faExclamationCircle, faUserCircle, faThumbsUp,
+	faComments, faUser, faCog, faLock, faCloudUploadAlt,
+	faSearch, faChevronDown, faSortAmountUp, faSortAmountDown,
+	faCheck, faQuoteRight, faMinus, faCaretUp, faCaretDown,
+	faHeart
+} from '@fortawesome/free-solid-svg-icons'
+
+library.add(
+	faBars, faPlus, faGrin, faLink, faCode,
+	faTimes, faBell, faUnlockAlt, faReply, faHome,
+	faTh, faExclamationCircle, faUserCircle, faThumbsUp,
+	faComments, faUser, faCog, faLock, faCloudUploadAlt,
+	faSearch, faChevronDown, faSortAmountUp, faSortAmountDown,
+	faComment, faCheck, faQuoteRight, faMinus, faCaretUp, faCaretDown,
+	faHeart
+);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
 
 const Index = () => import('./components/routes/Index')
 const P = () => import('./components/routes/P')
@@ -61,6 +76,21 @@ Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueAxios, axios)
 Vue.use(linkExpander)
+
+Vue.use({
+	install (Vue) {
+		Vue.prototype.$socket = io('http://localhost:8080')
+	}
+})
+
+/* Vue.$socket.on('disconnect', () => {
+	Vue.$socket.connect('http://localhost:3000', {
+		reconnection: true,
+		reconnectionDelay: 1000,
+		reconnectionDelayMax : 5000,
+		reconnectionAttempts: Infinity
+	} );
+}) */
 
 const router = new VueRouter({
 	routes: [
@@ -112,7 +142,7 @@ router.afterEach(() => {
 	NProgress.done()
 })
 
-Vue.filter('formatDate', function (value, format = '', join = ' ') {
+Vue.filter('formatDate', function (value) {
 	if(typeof value !== 'object') {
 		value = new Date(value)
 	}
@@ -188,12 +218,11 @@ Vue.filter('pluralize', function(number, value) {
 })
 
 let Root = new Vue({
-	el: '#app',
-	template: '<App/>',
 	store,
-	components: { App },
-	router
-})
+	router,
+	render: h => h(App)
+}).$mount('#app');
+
 
 let cookieDict = document.cookie
 	.split(';')

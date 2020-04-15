@@ -13,7 +13,7 @@
 			class='replying_to__display'
 			@click.stop='$emit("click")'
 		>
-			<span class='fa fa-reply replying_to__icon'></span>
+			<font-awesome-icon :icon='["fa", "reply"]' class='replying_to__icon' />
 			{{username || '[deleted]'}}
 		</div>
 	</info-tooltip>

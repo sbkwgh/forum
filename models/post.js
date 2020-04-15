@@ -1,13 +1,16 @@
-let marked = require('marked')
-let cheerio = require('cheerio')
+let marked = require('marked');
+let createDOMPurify = require('dompurify');
+let { JSDOM } = require('jsdom');
+
+let window = new JSDOM('').window;
+let DOMPurify = createDOMPurify(window);
 
 const Errors = require('../lib/errors')
 
 marked.setOptions({
 	highlight: function (code) {
 		return require('highlight.js').highlightAuto(code).value;
-	},
-	sanitize: true
+	}
 });
 
 const renderer = new marked.Renderer();
@@ -29,15 +32,27 @@ module.exports = (sequelize, DataTypes) => {
 		content: {
 			type: DataTypes.TEXT,
 			set (val) {
-				if(!val) throw Errors.sequelizeValidation(sequelize, {
-					error: 'content must be a string',
-					path: 'content'
-				})
+				if(!val) {
+					throw Errors.sequelizeValidation(sequelize, {
+						error: 'content must be a string',
+						path: 'content'
+					})
+				}
 
-				let md = marked(val, { renderer });
+				let rawHTML = marked(val, { renderer });
+				let cleanHTML = DOMPurify.sanitize(rawHTML);
+				let plainText =  (new JSDOM(cleanHTML)).window.document.body.textContent;
 
-				this.setDataValue('content', md)
-				this.setDataValue('plainText', cheerio(md).text())
+				if (!plainText.trim().length) {
+					throw Errors.sequelizeValidation(sequelize, {
+						error: 'Post content must not be empty',
+						path: 'content'
+					})
+				}
+
+
+				this.setDataValue('content', cleanHTML)
+				this.setDataValue('plainText', plainText)
 			},
 			allowNull: false
 		},

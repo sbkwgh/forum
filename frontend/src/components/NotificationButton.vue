@@ -10,7 +10,7 @@
 			:class='{ "notification_button__button--shake": shake }'
 			@click='setShowMenu(!showMenu)'
 		>
-			<span class='far fa-bell notification_button__button__icon'></span>
+			<font-awesome-icon class='notification_button__button__icon' :icon='["far", "bell"]' />
 			<span
 				class='notification_button__button__count'
 				:class='{
@@ -27,8 +27,8 @@
 			<div class='notification_button__triangle'></div>
 			<div class='notification_button__menu'>
 				<div
-					v-for='(notification, index) in notifications'
-					v-if='notification.PostNotification.Post'
+					:key='"notification-" + index'
+					v-for='(notification, index) in postNotifications'
 					class='notification_button__menu__item'
 					:class='{
 						"notification_button__menu__item--uninteracted": !notification.interacted,
@@ -94,6 +94,9 @@
 				} else {
 					return this.unreadCount
 				}
+			},
+			postNotifications () {
+				return this.notifications.filter(n => n.PostNotification.Post);
 			}
 		},
 		methods: {
@@ -106,7 +109,7 @@
 				if(val) {
 					this.resetUnreadCount()
 				} else {
-					setTimeout(_ => {
+					setTimeout(() => {
 						this.emojiIndex++
 					}, 200)
 				}
@@ -134,7 +137,7 @@
 			resetUnreadCount () {
 				this.axios
 					.put('/api/v1/notification')
-					.then(res => {
+					.then(() => {
 						this.unreadCount = 0
 					})
 					.catch(AjaxErrorHandler(this.$store))
@@ -144,7 +147,7 @@
 
 				this.axios
 					.delete('/api/v1/notification/' + id)
-					.then(res => {
+					.then(() => {
 						this.notifications.splice(index, 1)
 					})
 					.catch(AjaxErrorHandler(this.$store))
@@ -155,7 +158,7 @@
 				
 				this.axios
 					.put('/api/v1/notification/' + id)
-					.then(res => {
+					.then(() => {
 						this.$set(
 							this.notifications,
 							index,
@@ -181,12 +184,12 @@
 		created () {
 			if(this.$store.state.username) this.getNotifications()
 
-			socket.on('notification', notification => {
+			this.$socket.on('notification', notification => {
 				this.unreadCount++
 				this.notifications.unshift(notification)
 
 				this.shake = true
-				setTimeout(_ => {
+				setTimeout(() => {
 					this.shake = false
 				}, 1000)
 			})
@@ -433,17 +436,17 @@
 		//so we cover it with its own overlay
 		//hacky but it works...
 		.notification_button__button::before {
-		 	content: '';
-		 	position: absolute;
-		 	top: 0;
-		 	left: 0;
-		 	pointer-events: none;
-		 	opacity: 0;
-		 	width: 100%;
-		 	border-radius: 0.25rem;
-		 	height: 100%;
-		 	background-color: hsla(215, 13%, 25%, 0.5);
-		 	transition: all 0.4s;
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			pointer-events: none;
+			opacity: 0;
+			width: 100%;
+			border-radius: 0.25rem;
+			height: 100%;
+			background-color: hsla(215, 13%, 25%, 0.5);
+			transition: all 0.4s;
 		}
 		.header__group--show .notification_button {
 			cursor: default;

@@ -13,8 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 		hooks: {
 			beforeUpdate (profilePicture, options, cb) {
 				sharp(profilePicture.file)
-					.resize(400, 400)
-					.max()
+					.resize(300, 300, { fit: 'cover' })
 					.toBuffer((err, buff) => {
 						profilePicture.file = buff
 

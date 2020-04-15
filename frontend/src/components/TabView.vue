@@ -9,6 +9,7 @@
 		>
 			<div
 				class='tab_view__tab'
+				:key='"tab-" + index'
 				v-for='(tab, index) in tabs'
 				:class='{
 					"tab_view__tab--selected": tabIndex === index,
@@ -29,12 +30,7 @@
 				"tab_view__content--transparent": transparent
 			}'
 		>
-			<slot
-				v-for='(tab, index) in tabs'
-				:name='tab'
-				v-if='tabIndex === index'
-			>
-			</slot>
+			<slot :name='currentTab'></slot>
 		</div>
 	</div>
 </template>
@@ -51,6 +47,9 @@
 		computed: {
 			tabIndex () {
 				return this.value
+			},
+			currentTab () {
+				return this.tabs[this.tabIndex]
 			}
 		}
 	}

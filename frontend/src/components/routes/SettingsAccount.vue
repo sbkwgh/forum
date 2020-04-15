@@ -10,7 +10,7 @@
 		</confirm-modal>
 
 		<div class='h1'>Account settings</div>
-		<p>
+		<div>
 			<div class='h3'>Change your password</div>
 			<p class='p--condensed'>
 				For security, enter your current password
@@ -36,8 +36,8 @@
 				@click='savePassword'
 				:loading='password.loading'
 			>Change password</loading-button>
-		</p>
-		<p>
+		</div>
+		<div>
 			<div class='h3 h3--margin_top'>Delete your account</div>
 			<p class='p--condensed'>
 				Once this is done, your account <strong>cannot</strong> be restored <br/>
@@ -48,7 +48,7 @@
 				:loading='deleteAccountLoading'
 				@click='showConfirmModal = true'
 			>Delete my account</loading-button>
-		</p>
+		</div>
 	</div>
 </template>
 
@@ -107,7 +107,7 @@
 						currentPassword: this.password.current,
 						newPassword: this.password.new
 					})
-					.then(_ => {
+					.then(() => {
 						this.password.loading = false
 
 						this.password.current = ''
@@ -131,7 +131,7 @@
 
 				this.axios
 					.delete('/api/v1/user/' + this.$store.state.username)
-					.then(_ => {
+					.then(() => {
 						this.deleteAccountLoading = false
 
 						this.$store.commit('setUsername', null)

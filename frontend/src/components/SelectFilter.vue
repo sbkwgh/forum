@@ -7,7 +7,7 @@
 			@click='menuOpen = true'
 		>
 			{{name}}
-			<span class='fa fa-chevron-down'></span>
+			<font-awesome-icon :icon='["fa", "chevron-down"]' />
 		</button>
 
 		<template slot='menu'>
@@ -25,7 +25,8 @@
 
 			<div
 				class='select_filter__item'
-				v-for='item in options'
+				v-for='(item, index) in options'
+				:key='"select-filter-item-" + item.name + index'
 				@click='toggledSelectItem(item.value)'
 			>
 				<div
@@ -39,7 +40,6 @@
 </template>
 
 <script>
-	import FancyInput from './FancyInput';
 	import MenuTooltip from './MenuTooltip';
 
 	export default {

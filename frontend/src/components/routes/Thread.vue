@@ -41,7 +41,7 @@
 				@delete_thread='showConfirmModal = true'
 			>
 				<button class='button button--thin_text'>
-					<span class='fa fa-cogs' style='margin-right: 0.25rem;'></span>
+					<font-awesome-icon :icon='["fa", "cog"]' style='margin-right: 0.25rem;' />
 					Manage thread
 				</button>
 			</menu-button>
@@ -87,22 +87,24 @@
 				@loadNext='loadNextPosts'
 				@loadPrevious='loadPreviousPosts'
 			>
-				<thread-post-placeholder
-					v-if='!posts.length'
-					v-for='n in 3'
-					:key='n'
-					:class='{"post--last": n === 2}'
-				></thread-post-placeholder>
+				<template v-if='!posts.length'>
+					<thread-post-placeholder
+						v-for='n in 3'
+						:key='"thread-post-placeholder-loading-" + n'
+						:class='{"post--last": n === 2}'
+					></thread-post-placeholder>
+				</template>
 
-				<thread-post-placeholder
-					v-if='$store.state.thread.loadingPosts === "previous"'
-					v-for='n in $store.state.thread.previousPostsCount'
-					:key='n'
-				>
-				</thread-post-placeholder>
+				<template v-if='$store.state.thread.loadingPosts === "previous"'>
+					<thread-post-placeholder
+						v-for='n in $store.state.thread.previousPostsCount'
+						:key='"thread-post-placeholder-upper-" + n'
+					>
+					</thread-post-placeholder>
+				</template>
 				<thread-post
 					v-for='(post, index) in posts'
-					:key='post.id'
+					:key='"thread-post-" + post.id'
 
 					@reply='replyUser'
 					@goToPost='goToPost'
@@ -117,12 +119,13 @@
 					:class='{"post--last": index === posts.length-1}'
 					ref='posts'
 				></thread-post>
-				<thread-post-placeholder
-					v-if='$store.state.thread.loadingPosts === "next"'
-					v-for='n in $store.state.thread.nextPostsCount'
-					:key='n'
-				>
-				</thread-post-placeholder>
+				<template v-if='$store.state.thread.loadingPosts === "next"'>
+					<thread-post-placeholder
+						v-for='n in $store.state.thread.nextPostsCount'
+						:key='"thread-post-placeholder-lower-" + n'
+					>
+					</thread-post-placeholder>
+				</template>
 			</scroll-load>
 		</div>
 
@@ -147,7 +150,6 @@
 	import ConfirmModal from '../ConfirmModal'
 	import MoreThreads from '../MoreThreads'
 
-	import AjaxErrorHandler from '../../assets/js/errorHandler'
 	import logger from '../../assets/js/logger'
 
 	import throttle from 'lodash.throttle'
@@ -306,7 +308,7 @@
 							if(this.$refs.posts) {
 								scroll(i)
 							} else {
-								this.$nextTick(_ => scroll(i))
+								this.$nextTick(() => scroll(i))
 							}
 
 							break;
@@ -330,7 +332,7 @@
 				this.$store.commit('thread/setPostNotification', null)
 				this.$store.commit('thread/setPostNotification', post)
 
-				setTimeout(_ => {
+				setTimeout(() => {
 					this.$store.commit('thread/setPostNotification', null)
 				}, 5000)
 			},
@@ -370,8 +372,8 @@
 
 			this.loadInitialPosts()
 			
-			socket.emit('join', 'thread/' + this.$route.params.id)
-			socket.on('new post', post => {
+			this.$socket.emit('join', 'thread/' + this.$route.params.id)
+			this.$socket.on('new post', post => {
 				this.showPostNotification(post)
 				this.$store.dispatch('loadNewPostsSinceLoad', post)
 			})
@@ -379,8 +381,8 @@
 			logger('thread', this.$route.params.id)
 		},
 		destroyed () {
-			socket.emit('leave', 'thread/' + this.$route.params.id)
-			socket.off('new post')
+			this.$socket.emit('leave', 'thread/' + this.$route.params.id)
+			this.$socket.off('new post')
 		}
 	}
 </script>

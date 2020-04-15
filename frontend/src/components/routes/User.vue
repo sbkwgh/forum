@@ -28,6 +28,7 @@
 			<div class='user__links'>
 				<div
 					class='user__links__menu_item'
+					:key='"user-menu-item-" + index'
 					v-for='(item, index) in menuItems'
 					:class="{'user__links__menu_item--selected': index === selected}"
 					@click='$router.push(`/user/${username}/${item.route}`)'
@@ -58,7 +59,7 @@
 			}
 		},
 		watch: {
-			$route (to, from) {
+			$route (to) {
 				this.selected = this.getIndexFromRoute(to.path)
 			}
 		},

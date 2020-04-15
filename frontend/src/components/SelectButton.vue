@@ -12,7 +12,11 @@
 				v-if='options.length'
 			>
 				{{options[selectedIndex].name}}
-				<span class='button__icon select_button__icon fa fa-fw fa-chevron-down'></span>
+				<font-awesome-icon
+					:icon='["fa", "chevron-down"]'
+					full-width
+					class='button__icon select_button__icon'
+				/>
 			</div>
 
 			<div class='button' v-else>
@@ -23,6 +27,7 @@
 		<template slot='menu'>
 			<div
 				v-for='(option, index) in options'
+				:key='"select-button-option-" + option.name + index'
 				@click='select(index, option.disabled)'
 				class='select_button__option'
 				:class='{

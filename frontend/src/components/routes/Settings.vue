@@ -5,11 +5,12 @@
 			<div class='settings_menu__items'>
 				<div
 					class='settings_menu__item'
+					:key='"menu-item-" + index'
 					v-for='(item, index) in menuItems'
 					:class="{'settings_menu__item--selected': index === selected}"
 					@click='$router.push("/settings/" + item.route)'
 				>
-					<span class='fa' :class='item.icon'></span>
+					<font-awesome-icon :icon='["fa", item.icon]' />
 					{{item.name}}
 				</div>
 			</div>
@@ -26,14 +27,14 @@
 		data () {
 			return {
 				menuItems: [
-					{ name: 'General', route: 'general', icon: 'fa-cog' }, 
-					{ name: 'Account', route: 'account', icon: 'fa-lock'},
+					{ name: 'General', route: 'general', icon: 'cog' }, 
+					{ name: 'Account', route: 'account', icon: 'lock'},
 				],
 				selected: 0
 			}
 		},
 		watch: {
-			$route (to, from) {
+			$route (to) {
 				this.selected = this.getIndexFromRoute(to.path)
 			},
 			'$store.state.username' (username) {

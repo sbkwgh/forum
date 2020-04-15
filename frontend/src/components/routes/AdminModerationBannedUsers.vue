@@ -16,7 +16,7 @@
 					<th>Message</th>
 					<th>Action</th>
 				</tr>
-				<tr v-for='(ban, $index) in bans'>
+				<tr :key='"ban-row-" + $index' v-for='(ban, $index) in bans'>
 					<td>{{ban.User.username}}</td>
 					<td>{{ban.type}}</td>
 					<td>{{ban.createdAt | formatDate}}</td>
@@ -36,7 +36,7 @@
 			</table>
 
 			<div class='overlay_message' v-else key='no bans'>
-				<span class='fa fa-thumbs-up'></span>
+				<font-awesome-icon :icon='["fa", "thumbs-up"]' />
 				No banned users
 			</div>
 		</transition>
@@ -107,13 +107,9 @@
 </template>
 
 <script>
-	import TabView from '../TabView'
 	import ModalWindow from '../ModalWindow'
 	import FancyInput from '../FancyInput'
 	import SelectButton from '../SelectButton'
-	import MenuButton from '../MenuButton'
-	import AvatarIcon from '../AvatarIcon'
-	import ConfirmModal from '../ConfirmModal'
 	import ModerationHeader from '../ModerationHeader'
 	import LoadingIcon from '../LoadingIcon'
 	import LoadingMessage from '../LoadingMessage'
@@ -123,13 +119,9 @@
 	export default {
 		name: 'AdminDashboard',
 		components: {
-			TabView,
 			ModalWindow,
 			FancyInput,
 			SelectButton,
-			MenuButton,
-			AvatarIcon,
-			ConfirmModal,
 			ModerationHeader,
 			LoadingIcon,
 			LoadingMessage
@@ -203,7 +195,7 @@
 			deleteBan (ban, index) {
 				this.axios
 					.delete('/api/v1/ban/' + ban.id)
-					.then(res => {
+					.then(() => {
 						this.bans_.splice(index, 1)
 					})
 					.catch(AjaxErrorHandler(this.$store))

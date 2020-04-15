@@ -17,6 +17,7 @@
 			<div class='widgets__categories_chart__main__legend'>
 				<div class='widgets__categories_chart__title'>categories</div>
 				<div
+					:key='"category-label-" + $index'
 					v-for='(category, $index) in data'
 					class='widgets__categories_chart__label'
 					@mouseover='toggleLabelHover($index)'
@@ -33,11 +34,8 @@
 
 <script>
 	import LoadingIcon from '../LoadingIcon'
-
 	import AjaxErrorHandler from '../../assets/js/errorHandler'
-
 	import * as d3 from 'd3'
-	import throttle from 'lodash.throttle'
 
 	export default {
 		name: 'CategoriesChart',
@@ -79,7 +77,8 @@
 
 				let g = d3.select(this.$refs.g).attr('transform', `translate(${translate}, ${translate})`)
 
-				let arcs = g.selectAll('path')
+				//Arcs
+				g.selectAll('path')
 					.data(pieSegments)
 					.enter()
 					.append('path')
@@ -87,7 +86,8 @@
 					.attr('data-index', (d, i) => i)
 					.attr('fill', (d, i) => this.data[i].color)
 
-				let labels = g.selectAll('text')
+				//Labels
+				g.selectAll('text')
 					.data(pieSegments)
 					.enter()
 					.append('text')
@@ -193,7 +193,7 @@
 			margin-left: 1rem;
 
 		
-		 	&:hover {
+			&:hover {
 				text-decoration: underline;
 			}
 

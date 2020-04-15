@@ -7,11 +7,12 @@
 			@click='menuOpen = true'
 		>
 			{{display}}
-			<span class='fa fa-fw' :class='iconName'></span>
+			<font-awesome-icon :icon='["fa", iconName]' full-width />
 		</div>
 
 		<template slot='menu'>
 			<div
+				:key='sort'
 				v-for='sort in ["asc", "desc"]'
 				
 				class='sort_menu__item'
@@ -41,11 +42,11 @@
 		computed: {
 			iconName () {
 				if(this.value.column !== this.column) {
-					return 'fa-chevron-down';
+					return 'chevron-down';
 				} else if(this.value.sort === 'asc') {
-					return 'fa-sort-amount-up';
-				} else if(this.value.sort === 'desc') {
-					return 'fa-sort-amount-down';
+					return 'sort-amount-up';
+				} else { // if this.value.sort === 'desc'
+					return 'sort-amount-down';
 				}
 			}
 		},

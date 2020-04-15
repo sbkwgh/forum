@@ -35,7 +35,7 @@
 				<div
 					class='admin_categories__category'
 					v-for='(category, $index) in categories'
-					:key='category.id'		
+					:key='"category-box-" + category.id'		
 				>
 					<div class='admin_categories__category__actions_holder'>
 						<div class='admin_categories__category__actions'>
@@ -59,9 +59,8 @@
 			</transition-group>
 			<div style="margin-top: 0.5rem;">
 				<div class='admin_categories__category admin_categories__category--add' @click='toggleAddModal'>
-					<div
-						class='admin_categories__category__color fa fa-plus'
-					>
+					<div class='admin_categories__category__color'>
+						<font-awesome-icon :icon='["fa", "plus"]' />
 					</div>
 					<div class='admin_categories__category__name'>Add new category</div>
 				</div>
@@ -73,7 +72,6 @@
 <script>
 	import ModalWindow from './ModalWindow'
 	import FancyInput from './FancyInput'
-	import LoadingIcon from './LoadingIcon'
 	import ColourPicker from './ColourPicker'
 
 	import AjaxErrorHandler from '../assets/js/errorHandler'
@@ -83,7 +81,6 @@
 		components: {
 			ModalWindow,
 			FancyInput,
-			LoadingIcon,
 			ColourPicker
 		},
 		data () {

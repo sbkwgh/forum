@@ -32,7 +32,7 @@
 					</div>
 				</div>				
 
-				<div class='admin_moderation__report' v-for='(report, $index) in filteredReports'>
+				<div class='admin_moderation__report' :key='"report-" + $index' v-for='(report, $index) in filteredReports'>
 					<div class='admin_moderation__report__post admin_moderation__report--cell_border'>
 						<div class='admin_moderation__report__post__header'>
 							<avatar-icon class='admin_moderation__report__flagged_by__avatar' size='small' :user='report.Post.User'></avatar-icon>
@@ -66,7 +66,7 @@
 			</div>
 
 			<div class='overlay_message' v-else key='no reports'>
-				<span class='fa fa-thumbs-up'></span>
+				<font-awesome-icon :icon='["fa", "thumbs-up"]' />
 				No user reports
 			</div>
 		</transition>
@@ -74,10 +74,6 @@
 </template>
 
 <script>
-	import TabView from '../TabView'
-	import ModalWindow from '../ModalWindow'
-	import FancyInput from '../FancyInput'
-	import SelectButton from '../SelectButton'
 	import MenuButton from '../MenuButton'
 	import LoadingMessage from '../LoadingMessage'
 	import AvatarIcon from '../AvatarIcon'
@@ -89,10 +85,6 @@
 	export default {
 		name: 'AdminDashboard',
 		components: {
-			TabView,
-			ModalWindow,
-			FancyInput,
-			SelectButton,
 			MenuButton,
 			LoadingMessage,
 			AvatarIcon,
@@ -148,7 +140,7 @@
 			deleteReport (id, index) {
 				return this.axios
 					.delete('/api/v1/report/' + id)
-					.then(_ => {
+					.then(() => {
 						this.reports.splice(index, 1)
 					})
 					.catch(AjaxErrorHandler(this.$store))
@@ -184,17 +176,17 @@
 				} else {
 					this.axios
 						.delete('/api/v1/post/' + this.removePostObj.report.Post.id)
-						.then(_ => {
+						.then(() => {
 							return this.axios.delete('/api/v1/report/' + this.removePostObj.report.id)
 						})
-						.then(_ => {
+						.then(() => {
 							this.reports.splice(this.removePostObj.index, 1)
 						})
 						.catch(AjaxErrorHandler(this.$store))
 				}
 			
 			},
-			banUser (report, index) {
+			banUser (report) {
 				this.$router.push('bans')
 
 				setTimeout(() => {

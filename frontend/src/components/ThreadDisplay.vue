@@ -29,7 +29,7 @@
 					class='thread_display__latest_reply'
 					v-if='thread.Posts.length === 2'
 				>
-					<span class='fa fa-reply fa-fw'></span>
+					<font-awesome-icon :icon='["fa", "reply"]' full-width />
 					<span class='thread_display__latest_reply__text'>Latest reply by</span>
 					<span class='thread_display__username'>{{replyUsername}}</span>
 					&middot;
@@ -37,7 +37,7 @@
 				</div>
 				<span style='cursor: default;' v-else>No replies</span>
 				<div class='thread_display__replies' title='Replies to thread'>
-					<span class='fa fa-comment-o fa-fw'></span>
+					<font-awesome-icon :icon='["far", "comment"]' full-width />
 					{{thread.postsCount - 1}}
 				</div>
 			</div>
@@ -107,8 +107,8 @@
 		}
 
 		@at-root #{&}__username,
-		         #{&}__category,
-		         #{&}__date {
+				#{&}__category,
+				#{&}__date {
 			color: $color--text__primary;
 		}	
 

@@ -2,7 +2,7 @@
 	<div id='app'>
 		<modal-window v-model='showAjaxErrorsModal' style='z-index: 100' width='25rem' :no-padding='true'>
 			<div slot='main'>
-				<p v-for='error in this.$store.state.ajaxErrors' style='margin: 1rem;'>{{error}}</p>
+				<p :key='error' v-for='error in this.$store.state.ajaxErrors' style='margin: 1rem;'>{{error}}</p>
 			</div>
 			<button
 				slot='footer'
@@ -101,7 +101,8 @@
 								:loading='login.loading'
 								@click='doLogin'
 							>
-								<span class='fa fa-unlock-alt' style='margin-right:0.25rem'></span> Log in
+								<font-awesome-icon :icon='["fa", "unlock-alt"]' style='margin-right: 0.25rem;' />
+								Log in
 							</loading-button>
 							<div class='button button--borderless' @click='closeAccountModal'>
 								Cancel
@@ -151,7 +152,9 @@
 				<search-box header-bar='true'></search-box>
 			</div>
 			<div class='header__overlay' :class='{ "header__overlay--show": showMenu }' @click='toggleMenu'></div>
-			<span class='fa fa-bars header__menu_button' @click='toggleMenu'></span>
+			<span class='header__menu_button' @click='toggleMenu'>
+				<font-awesome-icon :icon='["fa", "bars"]' />
+			</span>
 		</header>
 		<not-found v-show='$store.state.show404Page'></not-found>
 		
@@ -230,7 +233,7 @@
 				set (val) { this.$store.commit('setAjaxErrorsModalState', val) }
 			},
 			showAccountTab : {
-				get (val) { return this.$store.state.accountTabs },
+				get () { return this.$store.state.accountTabs },
 				set (index) { this.$store.commit('setAccountTabs', index) }
 			},
 			categories() {
@@ -259,7 +262,7 @@
 					this.$store.commit('setUsername', '')
 					this.$store.commit('setAdmin', res.data.admin)
 
-					socket.emit('accountEvent')
+					this.$socket.emit('accountEvent')
 
 					this.$router.push('/')
 				}).catch(err => {
@@ -317,7 +320,7 @@
 						this.$store.commit('setAdmin', res.data.admin)
 						this.closeAccountModal()
 
-						socket.emit('accountEvent')
+						this.$socket.emit('accountEvent')
 					}).catch(e => {
 						this.signup.loading = false
 
@@ -349,7 +352,7 @@
 					this.$store.commit('setAdmin', res.data.admin)
 					this.closeAccountModal()
 
-					socket.emit('accountEvent')
+					this.$socket.emit('accountEvent')
 				}).catch(e => {
 					this.login.loading = false
 					this.ajaxErrorHandler(e, (error) => {

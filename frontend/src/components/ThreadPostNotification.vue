@@ -56,7 +56,7 @@
 			padding-top: 0.5rem;
 		}
 		@at-root #{&}__close {
-			    position: absolute;
+				position: absolute;
 				right: 0.5rem;
 				top: 0.5rem;
 				cursor: pointer;

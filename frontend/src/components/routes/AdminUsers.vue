@@ -42,7 +42,7 @@
 						<sort-menu v-model='tableSort' column='threadCount' display='Threads count'></sort-menu>
 					</th>
 				</tr>
-				<tr v-for='user in users'>
+				<tr v-for='user in users' :key='"user-row" + user.username'>
 					<td class='admin_users__user_column'>
 						<avatar-icon :user='user' size='small'></avatar-icon>
 						<router-link :to='"/user/" + user.username'>{{user.username}}</router-link>
@@ -122,14 +122,6 @@
 					url += '&search=' + encodeURIComponent(this.search.trim());
 				}
 
-			/*	let loading = true;
-				setTimeout(() => {
-					if(loading) {
-						this.loading = true;
-						this.users = [];
-					}
-				}, 200);*/
-
 				this.loading = true;
 				this.axios
 					.get(url)
@@ -163,7 +155,7 @@
 		watch: {
 			tableSort: 'resetFetchData',
 			roleSelected: 'resetFetchData',
-			search: throttle(function (input) {
+			search: throttle(function () {
 				this.resetFetchData();
 			}, 200)
 		}

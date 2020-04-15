@@ -122,7 +122,7 @@
 					this.clientY = e.clientY
 				}
 			})
-			window.addEventListener('mouseup', e => {		
+			window.addEventListener('mouseup', () => {		
 				if(this.dragging) {
 					this.dragging = false
 					this.$emit('input', this.currentPost-1)

@@ -4,13 +4,13 @@
 		<transition name='fade' mode='out-in'>
 			<div class='search__results' key='results' v-if='threads && threads.length && !loadingThreads'>
 				<h2>Threads</h2>
-				<thread-display v-for='thread in threads.slice(0, 3)' :key='thread.id' :thread='thread'></thread-display>
+				<thread-display v-for='thread in threads.slice(0, 3)' :key='"search-thread-" + thread.id' :thread='thread'></thread-display>
 
 				<div
 					class='search__more search__item' v-if='threads.length > ($store.state.MinQueryLength-1)'
 					@click='$router.push("/search/threads/" + $route.params.q)'
 				>
-					<span class='fa fa-fw fa-comments'></span>
+					<font-awesome-icon :icon='["fa", "comments"]' full-width />
 					View all matching threads
 				</div>
 			</div>
@@ -26,13 +26,13 @@
 		<transition name='fade' mode='out-in'>
 			<div class='search__results' key='results' v-if='users && users.length && !loadingUsers'>
 				<h2>Users</h2>
-				<user-display v-for='user in users.slice(0, 5)' :key='user.id' :user='user'></user-display>
+				<user-display v-for='user in users.slice(0, 5)' :key='"search-user-" + user.id' :user='user'></user-display>
 				
 				<div
 					class='search__item search__more' v-if='users.length > 5'
 					@click='$router.push("/search/users/" + $route.params.q)'
 				>
-					<span class='fa fa-fw fa-user'></span>
+					<font-awesome-icon :icon='["fa", "user"]' full-width />
 					View all matching users
 				</div>
 			</div>
@@ -50,7 +50,7 @@
 				v-if='showNoResults || queryTooShort'
 				key='no results'
 			>
-				<span class='fa fa-exclamation-circle'></span>
+				<font-awesome-icon :icon='["fa", "exclamation-circle"]' />
 					{{queryTooShort ?
 						"Search term is too short" :
 						"No results found"

@@ -39,7 +39,11 @@
 						</button>
 					</div>
 					<div>
-						<div class='thread_meta_info__poll__answer' v-for='(pollAnswer, $index) in pollAnswers'>
+						<div
+							class='thread_meta_info__poll__answer'
+							:key='"poll-answer-" + $index'
+							v-for='(pollAnswer, $index) in pollAnswers'
+						>
 							<fancy-input
 								v-model='pollAnswer.answer'
 								width='15rem'
@@ -198,10 +202,10 @@
 					errors.push({name: 'name', error: 'Cannot be blank'})
 				} if(this.showPoll && !this.pollQuestion.trim().length) {
 					errors.push({name: 'pollQuestion', error: 'Cannot be blank'})
-			 	} if (this.showPoll && this.pollAnswers.length < 2) {
-			 		errors.push({name: 'pollAnswer', error: 'You need at least 2 answers'})
+				} if (this.showPoll && this.pollAnswers.length < 2) {
+					errors.push({name: 'pollAnswer', error: 'You need at least 2 answers'})
 				} if (this.showPoll && this.hasDuplicates(this.pollAnswers, i => i.answer)) {
-			 		errors.push({name: 'pollAnswer', error: 'Your answers can\'t contain any duplicates'})
+					errors.push({name: 'pollAnswer', error: 'Your answers can\'t contain any duplicates'})
 				} if(errors.length) {
 					this.setErrors(errors)
 					return
@@ -235,7 +239,7 @@
 					}
 
 					return Promise.all(ajax)
-				}).then(res => {
+				}).then(() => {
 					this.loading = false
 					this.$router.push(`/thread/${thread.slug}/${thread.id}/0`)
 				}).catch(e => {

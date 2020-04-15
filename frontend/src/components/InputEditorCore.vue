@@ -15,7 +15,7 @@
 					title='Emoji'
 					@click='emojiSelectorVisible = true'
 				>
-					<span class='far fa-grin'></span>
+					<font-awesome-icon :icon='["fa", "grin"]' />
 				</div>
 				<div
 					class='input_editor_core__format_button'
@@ -36,7 +36,7 @@
 					title='Link (ctrl + l)'
 					@click='setModalState("link", true)'
 				>
-					<span class='fa fa-link'></span>
+					<font-awesome-icon :icon='["fa", "link"]' />
 				</div>
 				<div
 					class='input_editor_core__format_button'
@@ -44,7 +44,7 @@
 					title='Code (ctrl + k)'
 					@click='formatCode'
 				>
-					<span class='fa fa-code'></span>
+					<font-awesome-icon :icon='["fa", "code"]' />
 				</div>
 			</div>
 			<textarea
@@ -91,8 +91,6 @@
 <script>
 	import ModalWindow from './ModalWindow'
 	import FancyInput from './FancyInput'
-	import TabView from './TabView'
-	import ErrorTooltip from './ErrorTooltip'
 	import EmojiSelector from './EmojiSelector'
 
 	let usernames = {}
@@ -103,7 +101,6 @@
 		components: {
 			ModalWindow,
 			FancyInput,
-			ErrorTooltip,
 			EmojiSelector
 		},
 		data () {
@@ -158,11 +155,11 @@
 				} else if(checkedUsername === undefined) {				
 					this.axios
 						.get('/api/v1/user/' + username)
-						.then(_ => {
+						.then(() => {
 							usernames[username] = username
 							cb(username)
 						})
-						.catch(_ => {
+						.catch(() => {
 							usernames[username] = null
 							cb(null)
 						})

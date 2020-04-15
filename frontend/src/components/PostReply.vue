@@ -14,7 +14,7 @@
 		>
 			<div
 				class='post_reply__letter'
-				:style='{"background-color": user.color}'
+				:style='{ "background-color": user.color }'
 			>
 				{{user.letter}}
 			</div>
@@ -100,15 +100,18 @@
 			}
 		}
 		@at-root #{&}__letter {
-			height: 1.25rem;
-			width: 1.25rem;
-			display: flex;
 			align-items: center;
-			justify-content: center;
-			@include text($font--role-emphasis, 1rem)
-			border-radius: 100%;
 			background-color: $color__gray--darkest;
+			border-radius: 100%;
+			box-shadow: inset 0 0 1px 1.5px rgba(256, 256, 256, 0.75);
 			color: #fff;
+			display: flex;
+			height: 1.25rem;
+			justify-content: center;
+			padding-bottom: 0.2rem;
+			width: 1.25rem;
+
+			@include text($font--role-emphasis, 1rem);
 		}
 	}
 </style>

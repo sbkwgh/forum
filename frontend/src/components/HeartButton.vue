@@ -11,6 +11,7 @@
 				<div
 					class='heart_button__modal__user'
 					v-for='user in likes'
+					:key='"heart-user-" + user.id'
 					@click='$router.push("/user/" + user.username)'
 				>
 					<avatar-icon
@@ -26,14 +27,14 @@
 			</div>
 		</modal-window>
 
-		<span
-			class='heart_button__heart fa'
+		<font-awesome-icon :icon='["fa", "heart"]'
+			class='heart_button__heart'
 			:class='{
 				"heart_button__heart--unlikeable": !likeable,
 				"heart_button__heart--liked": liked
 			}'
 			@click='changeLike'
-		></span>
+		/>
 		<span class='heart_button__count' @click='showModal = true'>{{likes.length}}</span>
 	</div>
 </template>
@@ -89,7 +90,7 @@
 
 				return index
 			},
-			changeLike (e) {
+			changeLike () {
 				let id = this.post.id
 
 				if(!this.likeable) return
@@ -179,18 +180,14 @@
 
 			cursor: pointer;
 			color: $color__gray--darkest;
-			transition: transform 0.2s, text-shadow 0.2s, color 0.2s, filter 0.2s;
 			font-size: 1rem;
+			margin-right: 0.25rem;
+			transition: transform 0.2s, text-shadow 0.2s, color 0.2s, filter 0.2s;
 
 			&:hover {
 				filter: brightness(0.9);
 				transform: scale(1.1);
 			}
-
-			&::before {
-				content: "\f004";
-			}
-
 
 			@at-root #{&}--liked {
 				color: #E91E63;

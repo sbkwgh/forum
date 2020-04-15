@@ -20,17 +20,16 @@
 
 			@mousedown='emitReply'
 		>
-			<span class='post__quote__icon fa fa-quote-right'></span>
+			<font-awesome-icon :icon='["fa", "quote-right"]' class='post__quote__icon' />
 			Quote post	
 		</div>
 
-
-		<span
-			class='post__remove_icon fa fa-check'
+		<font-awesome-icon
+			:icon='["fa", "check"]'
+			class='post__remove_icon'
 			:class='{"post__remove_icon--show": showSelect && !post.removed}'
 			@click.stop='toggleSelected'
-		></span>
-
+		/>
 		<modal-window v-model='showShareModal' @click.stop='() => {}'>
 			<div slot='main'>
 				<p>Copy this URL to share the post</p>
@@ -83,7 +82,7 @@
 					<span class='post__footer_sub_group__text post__footer_sub_group__text--replies'>replies</span>
 					<post-reply
 						v-for='(reply, index) in post.Replies'
-						:key='reply.postNumber'
+						:key='"post-reply-" + reply.postNumber'
 
 						:post='reply'
 						:hover='hover'
@@ -128,8 +127,6 @@
 	import ReplyingTo from './ReplyingTo'
 	import AvatarIcon from './AvatarIcon'
 	import ReportPostModal from './ReportPostModal'
-
-	import AjaxErrorHandler from '../assets/js/errorHandler'
 
 	export default {
 		name: 'ThreadPost',
@@ -182,11 +179,11 @@
 			}
 		},
 		methods: {
-			emitReply (e) {
+			emitReply () {
 				this.showQuote = false;
 				this.$emit('reply', this.post.id, this.username, this.quoteSelection);
 			},
-			setShowQuote (e) {
+			setShowQuote () {
 				let rootCoords = this.$el.getBoundingClientRect();
 
 				let selection = window.getSelection();

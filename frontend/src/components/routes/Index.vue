@@ -13,7 +13,7 @@
 				class='thread_sorting__filter'
 			></select-options>
 			<div class='thread_sorting__add_and_categories'>
-				<select-button v-model='selectedCategory':options='categories'></select-button>
+				<select-button v-model='selectedCategory' :options='categories'></select-button>
 				<router-link
 					class='button button--blue'
 					to='/thread/new'
@@ -28,8 +28,8 @@
 					categories
 				</div>
 				<router-link
-					v-for='category in categories'
-					:key='category.value'
+					v-for='(category, $index) in categories'
+					:key='"category-link-" + $index'
 
 					class='threads_main__side_bar__menu_item'
 					:class='{"threads_main__side_bar__menu_item--selected": category.value === selectedCategory}'
@@ -65,16 +65,26 @@
 					:loading='loading'
 					@loadNext='getThreads'
 				>
-					<thread-display-placeholder v-for='n in newThreads' v-if='loadingNewer' :key='n'></thread-display-placeholder>
+					<template v-if='loadingNewer'>
+						<thread-display-placeholder v-for='n in newThreads' :key='"placeholder-upper-" + n'>
+						</thread-display-placeholder>
+					</template>
 					<div class='threads_main__load_new' v-if='newThreads' @click='getNewerThreads'>
-						Load {{newThreads}} new {{newThreads | pluralize('thread')}}</span>
+						Load {{newThreads}} new {{newThreads | pluralize('thread')}}
 					</div>
-					<thread-display v-for='thread in filteredThreads' :thread='thread' :key='thread.id'></thread-display>
-					<thread-display-placeholder v-for='n in nextThreadsCount' :key='n' v-if='loading'></thread-display-placeholder>
+					<thread-display
+						v-for='thread in filteredThreads'
+						:thread='thread'
+						:key='"thread-display-" + thread.id'
+					></thread-display>
+					<template  v-if='loading'>
+						<thread-display-placeholder v-for='n in nextThreadsCount' :key='"placeholder-lower-" + n'>
+						</thread-display-placeholder>
+					</template>
 				</scroll-load>
 
 				<div key='no threads' v-else class='threads_main__threads overlay_message'>
-					<span class='fa fa-exclamation-circle'></span>
+					<font-awesome-icon :icon='["fa", "exclamation-circle"]' />
 					No threads or posts.
 				</div>
 			</transition>
@@ -83,7 +93,6 @@
 </template>
 
 <script>
-	import TabView from '../TabView'
 	import ScrollLoad from '../ScrollLoad'
 	import ThreadDisplay from '../ThreadDisplay'
 	import ThreadDisplayPlaceholder from '../ThreadDisplayPlaceholder'
@@ -96,7 +105,6 @@
 	export default {
 		name: 'index',
 		components: {
-			TabView,
 			ScrollLoad,
 			ThreadDisplay,
 			ThreadDisplayPlaceholder,
@@ -241,8 +249,8 @@
 			this.selectedCategory = this.$route.path.split('/')[2].toUpperCase()
 			this.getThreads(true)
 
-			socket.emit('join', 'index')
-			socket.on('new thread', data => {
+			this.$socket.emit('join', 'index')
+			this.$socket.on('new thread', data => {
 				if(data.value === this.selectedCategory || this.selectedCategory == 'ALL') {
 					this.newThreads++
 				}
@@ -257,8 +265,8 @@
 			logger('index')
 		},
 		destroyed () {
-			socket.emit('leave', 'index')
-			socket.off('new thread')
+			this.$socket.emit('leave', 'index')
+			this.$socket.off('new thread')
 		}
 	}
 </script>

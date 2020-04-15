@@ -35,9 +35,11 @@
 				<div class='profile_picture_modal__drag_area'>
 					<span
 						v-if='!picture.dataURL'
-						class='fa fa-cloud-upload profile_picture_modal__drag_area__icon'
+						class='profile_picture_modal__drag_area__icon'
 						:class='{ "profile_picture_modal__drag_area__icon--picture.dragging": picture.dragging }' 
-					></span>
+					>
+						<font-awesome-icon :icon='["fa", "cloud-upload-alt"]' />
+					</span>
 					<div
 						class='profile_picture_modal__drag_area__image picture_circle'
 						:style='{ "background-image": "url(" + picture.dataURL + ")" }'
@@ -58,7 +60,7 @@
 		</modal-window>
 
 		<div class='h1'>General settings</div>
-		<p>
+		<div>
 			<div class='h3'>About me</div>
 			<p class='p--condensed'>
 				Write something about yourself to be displayed on your user page
@@ -76,8 +78,8 @@
 			>
 				Save description
 			</loading-button>
-		</p>
-		<p>
+		</div>
+		<div>
 			<div class='h3'>Profile picture</div>
 			<p class='p--condensed'>
 				This will be displayed by your posts on the site
@@ -98,14 +100,13 @@
 			>
 				Remove
 			</button>
-		</p>
+		</div>
 	</div>
 </template>
 
 <script>
 	import FancyTextarea from '../FancyTextarea'
 	import LoadingButton from '../LoadingButton'
-	import LoadingIcon from '../LoadingIcon'
 	import ModalWindow from '../ModalWindow'
 	import ConfirmModal from '../ConfirmModal'
 
@@ -117,7 +118,6 @@
 		components: {
 			FancyTextarea,
 			LoadingButton,
-			LoadingIcon,
 			ModalWindow,
 			ConfirmModal
 		},
@@ -150,7 +150,7 @@
 					.put('/api/v1/user/' + this.$store.state.username, {
 						description: this.description.value
 					})
-					.then(res => {
+					.then(() => {
 						this.description.loading = false
 					})
 					.catch(e => {
@@ -187,7 +187,7 @@
 			removeProfilePicture () {
 				this.axios
 					.delete('/api/v1/user/' + this.$store.state.username + '/picture')
-					.then(res => {
+					.then(() => {
 						this.picture.current = null
 					})
 					.catch(AjaxErrorHandler(this.$store))

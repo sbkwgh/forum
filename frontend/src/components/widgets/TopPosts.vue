@@ -6,6 +6,7 @@
 			<div
 				class='widgets__top_posts__item'
 				:class='"widgets__top_posts__item--" + $index'
+				:key='"post-title-" + $index'
 				v-for='(thread, $index) in data'
 				@click='goToThread(thread)'
 			>

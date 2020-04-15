@@ -12,32 +12,34 @@
 					<template v-if='searchType === "users"'>
 						<user-display
 							v-for='result in results'
-							:key='result.id'
+							:key='"search-user-result-" + result.id'
 							:user='result'
 						>
 						</user-display>
 						
-						<user-placeholder
-							v-if='loading'
-							v-for='n in next'
-							:key='n'
-						></user-placeholder>
+						<template v-if='loading'>
+							<user-placeholder
+								v-for='n in next'
+								:key='"user-placeholder-" + n'
+							></user-placeholder>
+						</template>
 					</template>
 
 					<template v-if='searchType === "threads"'>
 						<thread-display
 							v-for='result in results'
-							:key='result.id'
+							:key='"search-thread-result-" + result.id'
 							:thread='result'
 						>
 						</thread-display>
 						
-						<thread-display-placeholder
-							v-if='loading'
-							v-for='n in next'
-							:key='n'
-						>
-						</thread-display-placeholder>
+						<template v-if='loading'>
+							<thread-display-placeholder
+								v-for='n in next'
+								:key='"thread-placeholder-" + n'
+							>
+							</thread-display-placeholder>
+						</template>
 					</template>
 
 				</scroll-load>
@@ -48,11 +50,11 @@
 				v-if='showNoResults || queryTooShort'
 				key='no results'
 			>
-				<span class='fa fa-exclamation-circle'></span>
-					{{queryTooShort ?
-						"Search term is too short" :
-						"No results found"
-					}}
+				<font-awesome-icon :icon='["fa", "exclamation-circle"]' />
+				{{queryTooShort ?
+					"Search term is too short" :
+					"No results found"
+				}}
 			</div>
 
 			<div key='loading' v-else>
@@ -100,7 +102,7 @@
 
 				if(name === 'search/users') {
 					return 'users';
-				} else if (name === 'search/threads') {
+				} else {
 					return 'threads';
 				}
 			},

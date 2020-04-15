@@ -1,7 +1,8 @@
 <template>
 	<div class='select_options'>
 		<button
-			v-for='option in options'
+			:key='"select-option-" + index'
+			v-for='(option, index) in options'
 			class='button button--thin_text'
 			:class='{"button--lightblue": option.value === value}'
 			@click='select(option.value)'

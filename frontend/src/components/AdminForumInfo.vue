@@ -76,7 +76,7 @@
 				}).catch(e => {
 					this.loading = false
 
-					AjaxErrorHandler(this.$store)(err, (error, modalErrors) => {
+					AjaxErrorHandler(this.$store)(e, (error, modalErrors) => {
 						if(this.errors[error.path] !== undefined) {
 							this.errors[error.path] = error.message
 						} else {

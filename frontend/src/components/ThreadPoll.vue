@@ -12,7 +12,8 @@
 						<div
 							class='poll__answer'
 							:class='{ "poll__answer--selected" : answer === selected }'
-							v-for='answer in poll.PollAnswers'
+							:key='"poll-answer-" + $index'
+							v-for='(answer, $index) in poll.PollAnswers'
 							@click='selected = answer'
 						>
 							{{answer.answer}}
@@ -39,11 +40,11 @@
 					</div>
 
 					<div class='poll__results'>
-						<div class='poll__result' v-for='result in poll.PollAnswers'>
+						<div class='poll__result' :key='"poll-result-" + $index' v-for='(result, $index) in poll.PollAnswers'>
 							<div>
 								{{result.answer}}
 								<span class='poll__result__info'>
-									 &middot;
+									&middot;
 									{{result.PollVotes.length}} {{result.PollVotes.length | pluralize('vote')}}
 									({{result.percent || 0}}%)
 								</span>

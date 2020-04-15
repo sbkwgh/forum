@@ -38,7 +38,7 @@ const getters = {
 }
 
 const actions = {
-	deleteThread ({ state, commit }, vue) {
+	deleteThread ({ state }, vue) {
 		vue.axios
 			.delete('/api/v1/thread/' + state.threadId)
 			.then(() => {
@@ -52,7 +52,7 @@ const actions = {
 		let promises = state.selectedPosts.map(id => vue.axios.delete('/api/v1/post/' + id))
 
 		Promise.all(promises)
-			.then(res => {
+			.then(() => {
 				commit('setRemovePostsButtonLoading', false)
 				commit('setShowRemovePostsButton', false)
 
@@ -71,7 +71,7 @@ const actions = {
 				AjaxErrorHandler(vue.$store)(e)
 			})
 	},
-	addPostAsync ({ state, commit, rootState }, vue) {
+	addPostAsync ({ state, commit }, vue) {
 		let content = state.editor.value
 		state.mentions.forEach(mention => {
 			let regexp = new RegExp('(^|\\s)@' + mention + '($|\\s)')
@@ -110,7 +110,7 @@ const actions = {
 				AjaxErrorHandler(vue.$store)(e)
 			})
 	},
-	loadInitialPostsAsync ({ state, commit, dispatch, rootState }, vue) {
+	loadInitialPostsAsync ({ commit, dispatch }, vue) {
 		commit('setPosts', [])
 		commit('setThread', { name: 'Loading...' })
 		dispatch('setTitle', 'Loading...')
@@ -153,7 +153,7 @@ const actions = {
 				}
 			})
 	},
-	loadPostsAsync ({ state, commit, rootState }, { vue, previous }) {
+	loadPostsAsync ({ state, commit }, { vue, previous }) {
 		let URL
 
 		if(previous) {
@@ -213,7 +213,7 @@ const actions = {
 	setThreadLockedState ({ state, commit }, vue) {
 		vue.axios
 			.put('/api/v1/thread/' + state.threadId, { locked: !state.locked })
-			.then(res => {
+			.then(() => {
 				commit('setLocked', !state.locked)
 			})
 			.catch((e) => {

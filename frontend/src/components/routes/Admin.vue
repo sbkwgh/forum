@@ -3,12 +3,13 @@
 		<div class='admin__menu'>
 			<div 
 				class='admin__menu__item'
+				:key='route.path'
 				v-for='route in routes'
 				:class='{ "admin__menu__item--selected" : route.route.includes(selected) }'
 				@click='$router.push("/admin/" + route.route)'
 			>
 				<div>
-					<span class='fa admin__menu__item__icon' :class='route.icon'></span>
+					<font-awesome-icon :icon='["fa", route.icon]' class='admin__menu__item__icon' />
 				</div>
 				<div>
 					<div class='admin__menu__item__title'>
@@ -35,31 +36,31 @@
 						title: 'Dashboard',
 						route: 'dashboard',
 						description: 'Quick links and stats about your forum',
-						icon: 'fa-home' 
+						icon: 'home' 
 					},
 					{
 						title: 'General',
 						route: 'general',
 						description: 'Admin accounts, categories and settings',
-						icon: 'fa-th'
+						icon: 'th'
 					},
 					{
 						title: 'Moderation',
 						route: 'moderation/reports',
 						description: 'View and respond to user reports',
-						icon: 'fa-exclamation-circle'
+						icon: 'exclamation-circle'
 					},
 					{
 						title: 'Users',
 						route: 'users',
 						description: 'View current user accounts',
-						icon: 'fa-user-circle'
+						icon: 'user-circle'
 					}
 				]
 			}
 		},
 		watch: {
-			$route (to, from) {
+			$route (to) {
 				this.selected = to.path.split('/')[2]
 			}
 		},

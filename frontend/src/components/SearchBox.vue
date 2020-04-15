@@ -24,7 +24,7 @@
 				class='search_box__input__button'
 				@click='goToSearch'
 			>
-				<span class='fa fa-search'></span>
+				<font-awesome-icon :icon='["fa", "search"]' />
 			</button>
 		</div>
 		<div
@@ -46,7 +46,7 @@
 						@mouseover='highlightIndex = getHighlightIndex("threads header")'
 						@click='goToSearch'
 					>
-						<span class='fa fa-fw fa-search'></span>
+						<div class='search_box__results__icon'><font-awesome-icon :icon='["fa", "search"]' fixed-width /></div>
 						<div>
 							Search all threads for '<strong>{{searchField}}</strong>'
 						</div>
@@ -57,6 +57,7 @@
 							"search_box__results--highlight": highlightIndex === getHighlightIndex("threads", index)
 						}'
 						v-for='(thread, index) in threads'
+						:key='"thread-result-" + index'
 						ref='threads'
 						@mouseover='highlightIndex = getHighlightIndex("threads", index)'
 						@click='goToSearch'
@@ -77,7 +78,7 @@
 						@mouseover='highlightIndex = getHighlightIndex("users header")'
 						@click='goToSearch'
 					>
-						<span class='fa fa-fw fa-search'></span>
+						<div class='search_box__results__icon'><font-awesome-icon :icon='["fa", "search"]' /></div>
 						<div>
 							Search all users containing '<strong>{{searchField}}</strong>'
 						</div>
@@ -88,6 +89,7 @@
 							"search_box__results--highlight": highlightIndex === getHighlightIndex("users", index)
 						}'
 						v-for='(user, index) in users'
+						:key='"user-result-" + index'
 						ref='users'
 						@mouseover='highlightIndex = getHighlightIndex("users", index)'
 						@click='goToSearch'
@@ -392,6 +394,10 @@
 			}
 			@at-root #{&}--highlight {
 				background-color: $color__lightgray--darker;
+			}
+
+			@at-root #{&}__icon {
+				padding-right: 0.5rem;
 			}
 
 			@at-root #{&}__header {

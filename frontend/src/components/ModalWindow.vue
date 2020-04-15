@@ -11,10 +11,12 @@
 			</div>
 
 			<span
-				class='modal_window__close fa fa-times'
+				class='modal_window__close'
 				@click='closeModal'
 				v-if='closeButton'
-			></span>
+			>
+				<font-awesome-icon :icon='["fa", "times"]' />
+			</span>
 			<div class='modal_window__main' :class='{ "modal_window__main--no_padding": noPadding }'>
 				<slot name='main'></slot>
 			</div>

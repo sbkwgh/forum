@@ -25,7 +25,8 @@
 			></g>
 			<path :d='linePath' fill='none' stroke-width='2' stroke='#fff'></path>
 			<circle
-				v-for='circle in circles'
+				:key='"filled-circle-" + $index'
+				v-for='(circle, $index) in circles'
 				:cx='circle.x'
 				:cy='circle.y'
 				r='4'
@@ -33,6 +34,7 @@
 			>
 			</circle>
 			<circle
+				:key='"hover-circle-" + $index'
 				v-for='(circle, $index) in circles'
 				:cx='circle.x'
 				:cy='circle.y'
@@ -49,9 +51,7 @@
 
 <script>
 	import LoadingIcon from '../LoadingIcon'
-
 	import * as d3 from 'd3'
-	import throttle from 'lodash.throttle'
 
 	export default {
 		name: 'LineChart',

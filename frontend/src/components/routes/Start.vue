@@ -270,7 +270,7 @@
 
 	.categories_form {
 		margin-bottom: 1rem;
-		align-items: start;
+		align-items: flex-start;
 		display: flex;
 
 		.fancy_input {

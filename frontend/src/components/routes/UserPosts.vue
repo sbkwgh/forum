@@ -14,18 +14,19 @@
 		>
 			<thread-post
 				v-for='(post, index) in posts'
-				:key='post.id'
+				:key='"thread-post-" + post.id'
 
 				:post='post'
 				:show-thread='true'
 				:click-for-post='true'
 				:class='{"post--last": index === posts.length-1}'
 			></thread-post>
-			<thread-post-placeholder
-				v-if='loadingPosts'
-				v-for='n in nextPostsCount'
-				:key='n'
-			></thread-post-placeholder>
+			<template v-if='loadingPosts'>
+				<thread-post-placeholder
+					v-for='n in nextPostsCount'
+					:key='"thread-post-placeholder-" + n'
+				></thread-post-placeholder>
+			</template>
 		</scroll-load>
 		<template v-else>This user hasn't posted anything yet</template>
 	</div>

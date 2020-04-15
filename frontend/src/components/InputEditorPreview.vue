@@ -15,14 +15,12 @@
 </template>
 
 <script>
-	import throttle from 'lodash.throttle'
 	import Marked from 'marked'
 
 	Marked.setOptions({
 		highlight: function (code) {
 			return require('highlight.js').highlightAuto(code).value;
-		},
-		sanitize: true
+		}
 	});
 
 	const renderer = new Marked.Renderer();
