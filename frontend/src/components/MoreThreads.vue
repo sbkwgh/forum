@@ -12,7 +12,7 @@
 				<div class='more_threads__date_created'>Date created</div>
 			</div>
 
-			<div class='more_threads__thread' v-for='thread in threads' @click='goToThread(thread)'>
+			<div class='more_threads__thread' :key='"thread-id-" + thread.id' v-for='thread in threads' @click='goToThread(thread)'>
 				<div class='more_threads__name' >{{thread.name}}</div>
 				<div class='more_threads__date_created'>{{ thread.createdAt | formatDate }}</div>
 			</div>

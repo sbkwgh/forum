@@ -5,15 +5,11 @@
 </template>
 
 <script>
-	import LoadingButton from './LoadingButton'
 	import throttle from 'lodash.throttle'
 
 	export default {
 		name: 'ScrollLoad',
 		props: ['loading', 'query-selector', 'padding-bottom', 'padding-top'],
-		components: {
-			LoadingButton
-		},
 		computed: {
 			element () {
 				if(this.querySelector){
@@ -24,7 +20,7 @@
 			}
 		},
 		methods: {
-			onScroll: throttle(function (e) {
+			onScroll: throttle(function () {
 				let paddingBottom = this.paddingBottom || 300;
 				let paddingTop = this.paddingTop || 150;
 				

@@ -28,7 +28,7 @@
 					<strong v-if='filteredAdmins.length === 0'>There are no other admins</strong>
 					<template v-else>
 						Current admins are you,
-						<span v-for='(admin, $index) in filteredAdmins'>
+						<span v-for='(admin, $index) in filteredAdmins' :key='admin.username'>
 							<router-link :to='"/user/" + admin.username'>{{admin.username}}</router-link>
 							<template v-if='$index !== filteredAdmins.length-1'>,</template>
 						</span>

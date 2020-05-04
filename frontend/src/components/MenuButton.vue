@@ -13,6 +13,7 @@
 		<template slot='menu'>
 			<div
 				class='menu_button__option'
+				:key='"menu-button-option-" + option.value + "-" + $index'
 				v-for='(option, $index) in options'
 				@click='emit(option.event)'
 				:style="{ 'border-bottom' : $index === options.length-1 ? 'none' :  'solid thin rgb(245, 245, 245)' }"

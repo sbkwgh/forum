@@ -130,7 +130,7 @@
 		watch: {
 			value () {
 				let e = document.createElement('span');
-				    e.style.backgroundColor = this.value;
+				e.style.backgroundColor = this.value;
 
 				let rgbString = e.style.backgroundColor;
 				let rgbArray = this.rgbStringToArray(rgbString);
@@ -212,10 +212,7 @@
 
 			
 				let rect = this.$refs.hue.getBoundingClientRect();
-
 				let left = e.clientX - rect.left - 2;
-				let top = e.clientY - rect.top - 2;
-
 
 				if (e.clientX > rect.right) left = rect.width - 2;
 				if (e.clientX < rect.left) left = -2;

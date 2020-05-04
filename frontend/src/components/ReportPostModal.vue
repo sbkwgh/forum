@@ -54,7 +54,7 @@
 							postId: this.postId,
 							reason: this.selectedOption
 						})
-						.then(res => {
+						.then(() => {
 							this.setShowModal(false)
 							this.selectedOption = 0
 							this.loading  = false

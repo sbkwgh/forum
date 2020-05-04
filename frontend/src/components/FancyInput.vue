@@ -1,7 +1,7 @@
 <template>
 	<div class='fancy_input' v-bind:style='{width: width || "auto"}'>
 		<div 
-			 style='position: relative; display: inline-block;'
+			style='position: relative; display: inline-block;'
 		>
 			<div
 				class='fancy_input__placeholder'

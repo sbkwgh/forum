@@ -14,7 +14,7 @@
 					"emoji_selector__tooltip--right" : rightAlign
 				}'
 			>
-				<template v-for='(row, $index) in emojis'>
+				<div v-for='(row, $index) in emojis' :key="'emoji-row-' + $index">
 					<div class='emoji_selector__title'>
 						{{row.title}}
 					</div>
@@ -22,10 +22,11 @@
 						<span
 							class='emoji_selector__emoji'
 							v-for='emoji in row.emojis'
+							:key='emoji'
 							@click='emitEmoji(emoji)'
 						>{{emoji}}</span>
 					</div>
-				</template>
+				</div>
 			</div>
 		</div>
 	</div>
