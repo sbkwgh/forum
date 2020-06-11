@@ -79,7 +79,7 @@ Vue.use(linkExpander)
 
 Vue.use({
 	install (Vue) {
-		Vue.prototype.$socket = $socket;
+		Vue.prototype.$socket = io();
 	}
 })
 
