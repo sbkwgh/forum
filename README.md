@@ -48,7 +48,7 @@ To install on Heroku:
  6. Add database add-on, get database URL
  7. `heroku config:set DATABASE_URL=<database-url>`
  8. `cd frontend && npm install`
- 9. `npm run build`
+ 9. `npx vue-cli-service build`
  10. Remove the line `dist/` from `.gitignore`
  11. `cd .. && git add -A && git commit -m "Update .gitignore"`
  12. `git push heroku master`

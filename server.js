@@ -51,7 +51,7 @@ app.use('/api/v1/log', require('./routes/log'))
 app.use('/api/v1/poll', require('./routes/poll'))
 app.use('/api/v1/link_preview', require('./routes/link_preview'))
 
-app.use('/static', express.static(path.join(__dirname, 'frontend', 'dist', 'static')))
+app.use('/static', express.static(path.join(__dirname, 'frontend', 'dist')))
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
 })

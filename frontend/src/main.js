@@ -79,18 +79,10 @@ Vue.use(linkExpander)
 
 Vue.use({
 	install (Vue) {
-		Vue.prototype.$socket = io('http://localhost:8080')
+		Vue.prototype.$socket = $socket;
 	}
 })
 
-/* Vue.$socket.on('disconnect', () => {
-	Vue.$socket.connect('http://localhost:3000', {
-		reconnection: true,
-		reconnectionDelay: 1000,
-		reconnectionDelayMax : 5000,
-		reconnectionAttempts: Infinity
-	} );
-}) */
 
 const router = new VueRouter({
 	routes: [
