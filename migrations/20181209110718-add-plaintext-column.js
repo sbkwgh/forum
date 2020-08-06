@@ -2,12 +2,12 @@ let cheerio = require('cheerio');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('posts', 'plainText', {
+    await queryInterface.addColumn('Posts', 'plainText', {
       type: Sequelize.TEXT
     });
 
     let posts = await queryInterface.sequelize.query(
-      'SELECT id, content FROM posts',
+      'SELECT id, content FROM Posts',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
 
@@ -18,7 +18,7 @@ module.exports = {
       }
 
       return queryInterface.sequelize.query(
-        'UPDATE posts SET plainText = :text WHERE id = :id',
+        'UPDATE Posts SET plainText = :text WHERE id = :id',
         { replacements }       
       )
     });
@@ -27,6 +27,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn('posts', 'plainText');
+    return queryInterface.removeColumn('Posts', 'plainText');
   }
 };

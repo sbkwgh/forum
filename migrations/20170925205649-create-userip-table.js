@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('userip', {
+    return queryInterface.createTable('UserIp', {
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
 
@@ -14,6 +14,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('userip');
+    return queryInterface.dropTable('UserIp');
   }
 };
