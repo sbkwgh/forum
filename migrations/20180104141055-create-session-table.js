@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('sessions', {
+    return queryInterface.createTable('Sessions', {
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
       
@@ -18,6 +18,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('sessions');
+    return queryInterface.dropTable('Sessions');
   }
 };
