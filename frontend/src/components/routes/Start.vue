@@ -244,7 +244,7 @@
 		position: fixed;
 		top: 0;
 		margin: 0;
-		z-index: 10;
+		z-index: 1;
 		left: 0;
 		height: 100%;
 		padding: 0;
