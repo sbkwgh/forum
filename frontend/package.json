@@ -17,7 +17,7 @@
     "core-js": "^3.6.4",
     "d3": "^4.9.1",
     "fs": "0.0.1-security",
-    "highlight.js": "^9.10.0",
+    "highlight.js": "^10.1.2",
     "lodash.throttle": "^4.1.1",
     "marked": "^0.8.2",
     "node-sass": "^4.13.1",
